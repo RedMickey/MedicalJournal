@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        imageInit();
+        //imageInit();
 
         Calendar calendar = Calendar.getInstance();
         selectedDate = new DateData(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH));
@@ -133,7 +133,7 @@ public class MainActivity extends AppCompatActivity
         return monthName + " " + String.valueOf(year);
     }
 
-    private boolean ifExpand = true;
+    private boolean ifExpand = false;
 
     private void imageInit() {
         final ImageView expandIV = (ImageView) findViewById(R.id.main_expandIV);
@@ -145,7 +145,7 @@ public class MainActivity extends AppCompatActivity
                     CellConfig.ifMonth = false;
                     expandIV.setImageResource(R.mipmap.icon_arrow_down);
                     CellConfig.weekAnchorPointDate = selectedDate;
-                    expCalendarView.shrink();
+                    expCalendarView.expand();
                 } else {
                     CellConfig.Week2MonthPos = CellConfig.middlePosition;
                     CellConfig.ifMonth = true;

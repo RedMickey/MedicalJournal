@@ -21,9 +21,6 @@ import com.example.michel.mycalendar2.calendarview.utils.CurrentCalendar;
 import com.example.michel.mycalendar2.calendarview.data.DateData;
 import com.example.michel.mycalendar2.calendarview.data.MarkedDates;
 
-/**
- * Created by 明明大美女 on 2015/12/8.
- */
 public class ExpCalendarView extends ViewPager {
     private int dateCellViewResId = -1;
     private View dateCellView = null;
@@ -79,7 +76,6 @@ public class ExpCalendarView extends ViewPager {
 
     //// TODO: 15/8/28 May cause trouble when invoked after inited
     public ExpCalendarView travelTo(DateData dateData) {
-        // 获得当前页面的年月（position=500）
         Calendar calendar = Calendar.getInstance();
         int thisYear = calendar.get(Calendar.YEAR);
         int thisMonth = calendar.get(Calendar.MONTH);
@@ -87,7 +83,6 @@ public class ExpCalendarView extends ViewPager {
          if (realPosition > 1000 || realPosition < 0)
              throw new RuntimeException("Please travelto a right date: today-500~today~today+500");
 
-         // 来个步进滑动？因为一次滑个几百页，界面有时候不刷新（蛋疼）
          for (int i = getCurrentItem(); i < realPosition; i=i+50) {
              setCurrentItem(i);
              Log.i("step", " "+i);
@@ -97,7 +92,7 @@ public class ExpCalendarView extends ViewPager {
              Log.i("step", " "+i);
          }
          setCurrentItem(realPosition);
-         // 标记
+
          MarkedDates.getInstance().add(dateData);
           return this;
     }

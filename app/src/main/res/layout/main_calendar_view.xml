@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -7,48 +8,7 @@
     android:orientation="vertical"
     android:background="#f0f0f0"
     tools:context="com.example.michel.mycalendar2.activities.ExpMainActivity"
-    >
-
-
-    <TextView
-        android:id="@+id/main_YYMM_Tv"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#A777BE"
-        android:gravity="center_vertical"
-        android:padding="10dp"
-        android:text="Month"
-        android:textColor="#fff"
-        android:textAlignment="center"/>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="#ccc" />
-
-    <com.example.michel.mycalendar2.calendarview.views.WeekColumnView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="12dp"
-        android:paddingTop="12dp" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="#ccc" />
-
-    <com.example.michel.mycalendar2.calendarview.views.ExpCalendarView
-        android:id="@+id/calendar_exp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:context=".MainActivity" />
-
-    <ImageView
-        android:id="@+id/main_expandIV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:src="@mipmap/icon_arrow_up" />
+    tools:showIn="@layout/app_bar_main">
 
     <com.sothree.slidinguppanel.SlidingUpPanelLayout
         xmlns:sothree="http://schemas.android.com/apk/res-auto"
@@ -56,7 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="top"
-        sothree:umanoPanelHeight="68dp"
+        sothree:umanoPanelHeight="141dp"
         sothree:umanoShadowHeight="4dp">
 
         <FrameLayout
@@ -94,7 +54,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#f0f0f0"
+            android:background="#ff0000"
             android:orientation="vertical"
             android:clickable="true"
             android:focusable="false"
@@ -122,29 +82,42 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="68dp"
-                android:orientation="horizontal"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
                 android:layout_alignParentBottom = "true">
 
                 <TextView
-                    android:id="@+id/name"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:textSize="14sp"
+                    android:id="@+id/main_YYMM_Tv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#A777BE"
                     android:gravity="center_vertical"
-                    android:paddingLeft="10dp"
-                    android:text="sdfsdfsdfs"/>
+                    android:padding="10dp"
+                    android:text="Month"
+                    android:textColor="#fff"
+                    android:textAlignment="center"/>
 
-                <Button
-                    android:id="@+id/follow"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:textSize="14sp"
-                    android:gravity="center_vertical|right"
-                    android:paddingRight="10dp"
-                    android:paddingLeft="10dp"
-                    android:text="button"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="#ccc" />
+
+                <com.example.michel.mycalendar2.calendarview.views.WeekColumnView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="12dp"
+                    android:paddingTop="12dp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="#ccc" />
+
+                <com.example.michel.mycalendar2.calendarview.views.ExpCalendarView
+                    android:id="@+id/calendar_exp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:context=".MainActivity" />
 
             </LinearLayout>
             <!--<ScrollView-->

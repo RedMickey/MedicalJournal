@@ -9,9 +9,6 @@ import com.example.michel.mycalendar2.calendarview.views.ExpCalendarView;
 import com.example.michel.mycalendar2.calendarview.views.MonthExpFragment;
 import com.example.michel.mycalendar2.calendarview.data.DateData;
 
-/**
- * Created by 明明大美女 on 2015/12/8.
- */
 public class CalendarViewExpAdapter extends FragmentStatePagerAdapter {
 
     private DateData date;
