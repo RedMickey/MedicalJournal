@@ -28,7 +28,7 @@ public class MonthWeekData {
      *
      * @param position
      */
-    public MonthWeekData(int position) {
+    public MonthWeekData(int position, boolean ifExpand) {
         realPosition = position;
         calendar = Calendar.getInstance();
         DateData today = new DateData(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH));
@@ -42,7 +42,7 @@ public class MonthWeekData {
             CellConfig.weekAnchorPointDate = today;
         }
 
-        if (CellConfig.ifMonth) {
+        if (ifExpand) {
             getPointDate();
             initMonthArray();
         } else {
@@ -171,8 +171,8 @@ public class MonthWeekData {
         return 1;
     }
 
-    public ArrayList getData() {
-        if (CellConfig.ifMonth)
+    public ArrayList getData(boolean ifExpand) {
+        if (ifExpand)
             return monthContent;
         else
             return weekContent;

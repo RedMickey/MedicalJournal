@@ -28,6 +28,7 @@ public class ExpCalendarView extends ViewPager {
     private int markedCellResId = -1;
     private View markedCellView = null;
     private boolean hasTitle = true;
+    private boolean ifExpand = false;
 
     private boolean initted = false;
 
@@ -63,7 +64,7 @@ public class ExpCalendarView extends ViewPager {
         if (this.getId() == View.NO_ID) {
             this.setId(R.id.calendarViewPager);
         }
-        adapter = new CalendarViewExpAdapter(activity.getSupportFragmentManager()).setDate(currentDate);
+        adapter = new CalendarViewExpAdapter(activity.getSupportFragmentManager(), ifExpand).setDate(currentDate);
         this.setAdapter(adapter);
         this.setCurrentItem(500);
 //        addBackground();
@@ -117,6 +118,9 @@ public class ExpCalendarView extends ViewPager {
 
     public ExpCalendarView markDate(DateData date) {
         MarkedDates.getInstance().add(date);
+        //int curItem = getCurrentItem();
+        //Log.i("INFO",String.valueOf(curItem));
+
         return this;
     }
 
@@ -132,6 +136,15 @@ public class ExpCalendarView extends ViewPager {
     public ExpCalendarView setDateCell(int resId) {
         adapter.setDateCellId(resId);
         return this;
+    }
+
+    public void setIfExpand(boolean ifExpand){
+        this.ifExpand = ifExpand;
+        adapter.setIfExpand(this.ifExpand);
+    }
+
+    public boolean getIfExpand(){
+        return this.ifExpand;
     }
 
     public ExpCalendarView setMarkedStyle(int style, int color) {
@@ -156,6 +169,7 @@ public class ExpCalendarView extends ViewPager {
     }
 
     public ExpCalendarView setOnMonthScrollListener(OnMonthScrollListener listener) {
+        listener.setIfExpand(this.ifExpand);
         this.addOnPageChangeListener(listener);
         return this;
     }
@@ -199,7 +213,7 @@ public class ExpCalendarView extends ViewPager {
         int specSize = MeasureSpec.getSize(measureSpec);
         float density = getContext().getResources().getSystem().getDisplayMetrics().density;
         if (specMode == MeasureSpec.AT_MOST) {
-            if (CellConfig.ifMonth)
+            if (this.ifExpand)
                 return (int) (CellConfig.cellHeight * 6 * density);
             else
                 return (int) (CellConfig.cellHeight * density);

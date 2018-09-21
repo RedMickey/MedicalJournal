@@ -16,7 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="top"
-        sothree:umanoPanelHeight="141dp"
+        sothree:umanoPanelHeight="142dp"
         sothree:umanoShadowHeight="4dp">
 
         <FrameLayout
@@ -62,21 +62,45 @@
             >
 
             <LinearLayout
-                android:id="@+id/list"
                 android:layout_width="match_parent"
-                android:orientation="horizontal"
+                android:orientation="vertical"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop = "true">
+                android:layout_alignParentTop = "true"
+                android:id="@+id/month_layout"
+                android:visibility="gone">
 
                 <TextView
-                    android:id="@+id/name2"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:textSize="14sp"
+                    android:id="@+id/m_YYMM_Tv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#A777BE"
                     android:gravity="center_vertical"
-                    android:paddingLeft="10dp"
-                    android:text="sdfsdfsdfs"/>
+                    android:padding="10dp"
+                    android:text="Month"
+                    android:textColor="#fff"
+                    android:textAlignment="center" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="#ccc" />
+
+                <com.example.michel.mycalendar2.calendarview.views.WeekColumnView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="12dp"
+                    android:paddingTop="12dp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="#ccc" />
+
+                <com.example.michel.mycalendar2.calendarview.views.ExpCalendarView
+                    android:id="@+id/calendar_month"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:context=".MainActivity" />
 
             </LinearLayout>
 
@@ -84,10 +108,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_alignParentBottom = "true">
+                android:layout_alignParentBottom = "true"
+                android:id="@+id/week_layout">
 
                 <TextView
-                    android:id="@+id/main_YYMM_Tv"
+                    android:id="@+id/w_YYMM_Tv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="#A777BE"
@@ -114,7 +139,7 @@
                     android:background="#ccc" />
 
                 <com.example.michel.mycalendar2.calendarview.views.ExpCalendarView
-                    android:id="@+id/calendar_exp"
+                    android:id="@+id/calendar_week"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     tools:context=".MainActivity" />

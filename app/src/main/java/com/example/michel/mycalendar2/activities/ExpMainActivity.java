@@ -55,7 +55,7 @@ public class ExpMainActivity extends AppCompatActivity {
             }
         });
 
-        imageInit();
+        //imageInit();
 
         Calendar calendar = Calendar.getInstance();
         selectedDate = new DateData(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH));
@@ -106,7 +106,7 @@ public class ExpMainActivity extends AppCompatActivity {
     }
 
     private boolean ifExpand = true;
-
+/*
     private void imageInit() {
         final ImageView expandIV = (ImageView) findViewById(R.id.main_expandIV);
         expandIV.setOnClickListener(new View.OnClickListener() {
@@ -128,7 +128,7 @@ public class ExpMainActivity extends AppCompatActivity {
             }
         });
     }
-
+*/
     /*public void TravelToClick(View v) {
         expCalendarView.travelTo(new DateData(1980, 11, 14));
     }*/

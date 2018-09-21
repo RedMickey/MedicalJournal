@@ -21,14 +21,14 @@ public class MonthViewExpd extends MonthView {
         super(context, attrs);
     }
 
-    public void initMonthAdapter(int pagePosition, int cellView, int markView) {
-        getMonthWeekData(pagePosition);
-        adapter = new CalendarExpAdapter(getContext(), 1, monthWeekData.getData()).setCellViews(cellView, markView);
+    public void initMonthAdapter(int pagePosition, int cellView, int markView, boolean ifExpand) {
+        getMonthWeekData(pagePosition, ifExpand);
+        adapter = new CalendarExpAdapter(getContext(), 1, monthWeekData.getData(ifExpand)).setCellViews(cellView, markView);
         this.setAdapter(adapter);
     }
 
-    private void getMonthWeekData(int position) {
-        monthWeekData = new MonthWeekData(position);
+    private void getMonthWeekData(int position, boolean ifExpand) {
+        monthWeekData = new MonthWeekData(position, ifExpand);
     }
 
 

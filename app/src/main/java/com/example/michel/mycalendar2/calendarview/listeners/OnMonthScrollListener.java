@@ -12,6 +12,8 @@ import com.example.michel.mycalendar2.calendarview.data.DateData;
  * add a onMonthScroll . the aim is for cool effect
  */
 public abstract class OnMonthScrollListener implements ViewPager.OnPageChangeListener {
+    private boolean ifExpand = false;
+
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
         onMonthScroll(positionOffset);
@@ -21,7 +23,7 @@ public abstract class OnMonthScrollListener implements ViewPager.OnPageChangeLis
     public void onPageSelected(int position) {
         CellConfig.middlePosition = position;
         DateData date;
-        if (CellConfig.ifMonth)
+        if (this.ifExpand)
             date = ExpCalendarUtil.position2Month(position);
         else
             date = ExpCalendarUtil.position2Week(position);
@@ -31,6 +33,14 @@ public abstract class OnMonthScrollListener implements ViewPager.OnPageChangeLis
     @Override
     public void onPageScrollStateChanged(int state) {
 
+    }
+
+    public void setIfExpand(boolean ifExpand){
+        this.ifExpand = ifExpand;
+    }
+
+    public boolean getIfExpand(){
+        return this.ifExpand;
     }
 
     public abstract void onMonthChange(int year, int month);

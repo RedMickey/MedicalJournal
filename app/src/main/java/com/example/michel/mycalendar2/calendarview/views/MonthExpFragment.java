@@ -16,10 +16,11 @@ public class MonthExpFragment extends Fragment {
     private MonthViewExpd monthViewExpd;
     private boolean ifExpand = false;
 
-    public void setData(int pagePosition, int cellView, int markView) {
+    public void setData(int pagePosition, int cellView, int markView, boolean ifExpand) {
         this.pagePosition = pagePosition;
         this.cellView = cellView;
         this.markView = markView;
+        this.ifExpand = ifExpand;
     }
 
     @Override
@@ -29,7 +30,7 @@ public class MonthExpFragment extends Fragment {
         ret.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
         monthViewExpd = new MonthViewExpd(getContext());
-        monthViewExpd.initMonthAdapter(pagePosition, cellView, markView);
+        monthViewExpd.initMonthAdapter(pagePosition, cellView, markView, ifExpand);
         ret.addView(monthViewExpd);
 
         return ret;

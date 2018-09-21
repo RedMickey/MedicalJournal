@@ -3,6 +3,7 @@ package com.example.michel.mycalendar2.activities;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -13,7 +14,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.michel.mycalendar2.calendarview.CellConfig;
 import com.example.michel.mycalendar2.calendarview.data.DateData;
@@ -21,15 +25,23 @@ import com.example.michel.mycalendar2.calendarview.listeners.OnDateClickListener
 import com.example.michel.mycalendar2.calendarview.listeners.OnExpDateClickListener;
 import com.example.michel.mycalendar2.calendarview.listeners.OnMonthScrollListener;
 import com.example.michel.mycalendar2.calendarview.views.ExpCalendarView;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private TextView YearMonthTv;
-    private ExpCalendarView expCalendarView;
+    private TextView YearMonthTvW;
+    private TextView YearMonthTvM;
+    private ExpCalendarView weekCalendarView;
+    private ExpCalendarView monthCalendarView;
     private DateData selectedDate;
+
+    private SlidingUpPanelLayout slidingUpPanelLayout;
+
+    private LinearLayout weekCalendarLayout;
+    private LinearLayout monthCalendarLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,16 +65,49 @@ public class MainActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        //      Get instance.
-        expCalendarView = ((ExpCalendarView) findViewById(R.id.calendar_exp));
-        YearMonthTv = (TextView) findViewById(R.id.main_YYMM_Tv);
-        YearMonthTv.setText(getDateString(Calendar.getInstance().get(Calendar.YEAR),(Calendar.getInstance().get(Calendar.MONTH) + 1)));
+        // Get slidingUpPanelLayout
+        slidingUpPanelLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
 
+        weekCalendarLayout = (LinearLayout) findViewById(R.id.week_layout);
+        monthCalendarLayout = (LinearLayout) findViewById(R.id.month_layout);
+
+        slidingUpPanelLayout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
+            @Override
+            public void onPanelSlide(View panel, float slideOffset) {
+
+            }
+
+            @Override
+            public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
+                switch (newState){
+                    case EXPANDED:
+                        weekCalendarLayout.setVisibility(View.GONE);
+                        monthCalendarLayout.setVisibility(View.VISIBLE);
+                        break;
+                    case COLLAPSED:
+                        weekCalendarLayout.setVisibility(View.VISIBLE);
+                        monthCalendarLayout.setVisibility(View.GONE);
+                        break;
+                }
+            }
+        });
+
+        //      Get instance.
+        weekCalendarView = ((ExpCalendarView) findViewById(R.id.calendar_week));
+        YearMonthTvW = (TextView) findViewById(R.id.w_YYMM_Tv);
+        YearMonthTvW.setText(getDateString(Calendar.getInstance().get(Calendar.YEAR),(Calendar.getInstance().get(Calendar.MONTH) + 1)));
+
+        monthCalendarView = ((ExpCalendarView) findViewById(R.id.calendar_month));
+        YearMonthTvM = (TextView) findViewById(R.id.m_YYMM_Tv);
+        YearMonthTvM.setText(getDateString(Calendar.getInstance().get(Calendar.YEAR),(Calendar.getInstance().get(Calendar.MONTH) + 1)));
 //      Set up listeners.
-        expCalendarView.setOnDateClickListener(new OnExpDateClickListener()).setOnMonthScrollListener(new OnMonthScrollListener() {
+
+        monthCalendarView.setIfExpand(true);
+
+        weekCalendarView.setOnDateClickListener(new OnExpDateClickListener()).setOnMonthScrollListener(new OnMonthScrollListener() {
             @Override
             public void onMonthChange(int year, int month) {
-                YearMonthTv.setText(getDateString(year, month));
+                YearMonthTvW.setText(getDateString(year, month));
             }
 
             @Override
@@ -71,11 +116,32 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        expCalendarView.setOnDateClickListener(new OnDateClickListener() {
+        monthCalendarView.setOnDateClickListener(new OnExpDateClickListener()).setOnMonthScrollListener(new OnMonthScrollListener() {
+            @Override
+            public void onMonthChange(int year, int month) {
+                YearMonthTvM.setText(getDateString(year, month));
+            }
+
+            @Override
+            public void onMonthScroll(float positionOffset) {
+//                Log.i("listener", "onMonthScroll:" + positionOffset);
+            }
+        });
+
+        monthCalendarView.setOnDateClickListener(new OnDateClickListener() {
             @Override
             public void onDateClick(View view, DateData date) {
-                expCalendarView.getMarkedDates().removeAdd();
-                expCalendarView.markDate(date);
+                monthCalendarView.getMarkedDates().removeAdd();
+                monthCalendarView.markDate(date);
+                selectedDate = date;
+            }
+        });
+
+        weekCalendarView.setOnDateClickListener(new OnDateClickListener() {
+            @Override
+            public void onDateClick(View view, DateData date) {
+                weekCalendarView.getMarkedDates().removeAdd();
+                weekCalendarView.markDate(date);
                 selectedDate = date;
             }
         });
@@ -84,7 +150,8 @@ public class MainActivity extends AppCompatActivity
 
         Calendar calendar = Calendar.getInstance();
         selectedDate = new DateData(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH));
-        expCalendarView.markDate(selectedDate);
+        weekCalendarView.markDate(selectedDate);
+        monthCalendarView.markDate(selectedDate);
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -134,29 +201,29 @@ public class MainActivity extends AppCompatActivity
     }
 
     private boolean ifExpand = false;
-
+/*
     private void imageInit() {
-        final ImageView expandIV = (ImageView) findViewById(R.id.main_expandIV);
+        final ImageView expandIV = (ImageView) findViewById(R.id.w_expandIV);
         expandIV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (ifExpand) {
                     CellConfig.Month2WeekPos = CellConfig.middlePosition;
-                    CellConfig.ifMonth = false;
+                    weekCalendarView.setIfExpand(false);
                     expandIV.setImageResource(R.mipmap.icon_arrow_down);
                     CellConfig.weekAnchorPointDate = selectedDate;
-                    expCalendarView.expand();
+                    weekCalendarView.expand();
                 } else {
                     CellConfig.Week2MonthPos = CellConfig.middlePosition;
-                    CellConfig.ifMonth = true;
+                    weekCalendarView.setIfExpand(true);
                     expandIV.setImageResource(R.mipmap.icon_arrow_up);
-                    expCalendarView.expand();
+                    weekCalendarView.expand();
                 }
                 ifExpand = !ifExpand;
             }
         });
     }
-
+*/
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

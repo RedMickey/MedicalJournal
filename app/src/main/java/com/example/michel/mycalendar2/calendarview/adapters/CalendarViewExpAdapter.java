@@ -16,12 +16,18 @@ public class CalendarViewExpAdapter extends FragmentStatePagerAdapter {
     private int dateCellId;
     private int markCellId;
     private boolean hasTitle = true;
+    private boolean ifExpand;
 
     private Context context;
     private int mCurrentPosition = -1;
 
-    public CalendarViewExpAdapter(FragmentManager fm) {
+    public CalendarViewExpAdapter(FragmentManager fm, boolean ifExpand) {
         super(fm);
+        this.ifExpand = ifExpand;
+    }
+
+    public void setIfExpand(boolean ifExpand){
+        this.ifExpand = ifExpand;
     }
 
     public CalendarViewExpAdapter setDate(DateData date){
@@ -48,7 +54,7 @@ public class CalendarViewExpAdapter extends FragmentStatePagerAdapter {
     @Override
     public Fragment getItem(int position) {
         MonthExpFragment fragment = new MonthExpFragment();
-        fragment.setData(position, dateCellId, markCellId);
+        fragment.setData(position, dateCellId, markCellId, this.ifExpand);
         return fragment;
     }
 

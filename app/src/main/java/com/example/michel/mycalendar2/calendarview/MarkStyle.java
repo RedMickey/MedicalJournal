@@ -6,9 +6,6 @@ import android.graphics.ColorFilter;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 
-/**
- * Created by bob.sun on 15/8/28.
- */
 public class MarkStyle {
     public static final int BACKGROUND = 1;
     public static final int DOT = 2;
