@@ -13,6 +13,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.michel.mycalendar2.calendarview.CellConfig;
@@ -21,6 +23,7 @@ import com.example.michel.mycalendar2.calendarview.listeners.OnDateClickListener
 import com.example.michel.mycalendar2.calendarview.listeners.OnExpDateClickListener;
 import com.example.michel.mycalendar2.calendarview.listeners.OnMonthScrollListener;
 import com.example.michel.mycalendar2.calendarview.views.ExpCalendarView;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.util.Calendar;
 
@@ -28,8 +31,11 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private TextView YearMonthTv;
-    private ExpCalendarView expCalendarView;
+    private ExpCalendarView calendarView;
     private DateData selectedDate;
+
+    private SlidingUpPanelLayout slidingUpPanelLayout;
+    private LinearLayout calendarLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,13 +59,18 @@ public class MainActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
+        // Get slidingUpPanelLayout
+        slidingUpPanelLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
+
+        calendarLayout = (LinearLayout) findViewById(R.id.calendar_layout);
+
         //      Get instance.
-        expCalendarView = ((ExpCalendarView) findViewById(R.id.calendar_exp));
-        YearMonthTv = (TextView) findViewById(R.id.main_YYMM_Tv);
+        calendarView = ((ExpCalendarView) findViewById(R.id.calendar_view));
+        YearMonthTv = (TextView) findViewById(R.id.YYMM_Tv);
         YearMonthTv.setText(getDateString(Calendar.getInstance().get(Calendar.YEAR),(Calendar.getInstance().get(Calendar.MONTH) + 1)));
 
 //      Set up listeners.
-        expCalendarView.setOnDateClickListener(new OnExpDateClickListener()).setOnMonthScrollListener(new OnMonthScrollListener() {
+        calendarView.setOnDateClickListener(new OnExpDateClickListener()).setOnMonthScrollListener(new OnMonthScrollListener() {
             @Override
             public void onMonthChange(int year, int month) {
                 YearMonthTv.setText(getDateString(year, month));
@@ -71,20 +82,49 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        expCalendarView.setOnDateClickListener(new OnDateClickListener() {
+        calendarView.setOnDateClickListener(new OnDateClickListener() {
             @Override
             public void onDateClick(View view, DateData date) {
-                expCalendarView.getMarkedDates().removeAdd();
-                expCalendarView.markDate(date);
+                calendarView.getMarkedDates().removeAdd();
+                calendarView.markDate(date);
                 selectedDate = date;
             }
         });
 
+        slidingUpPanelLayout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
+            @Override
+            public void onPanelSlide(View panel, float slideOffset) {
+            }
+            @Override
+            public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
+                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+                        RelativeLayout.LayoutParams.WRAP_CONTENT);
+                switch (newState){
+                    case EXPANDED:
+                        params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+                        calendarLayout.setLayoutParams(params);
+
+                        CellConfig.Week2MonthPos = CellConfig.middlePosition;
+                        CellConfig.ifMonth = true;
+                        calendarView.expand();
+                        break;
+                    case COLLAPSED:
+                        params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+                        calendarLayout.setLayoutParams(params);
+
+                        CellConfig.Month2WeekPos = CellConfig.middlePosition;
+                        CellConfig.ifMonth = false;
+                        CellConfig.weekAnchorPointDate = selectedDate;
+                        calendarView.expand();
+                        break;
+                }
+            }
+        });
         //imageInit();
 
         Calendar calendar = Calendar.getInstance();
         selectedDate = new DateData(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH));
-        expCalendarView.markDate(selectedDate);
+        calendarView.markDate(selectedDate);
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -145,12 +185,12 @@ public class MainActivity extends AppCompatActivity
                     CellConfig.ifMonth = false;
                     expandIV.setImageResource(R.mipmap.icon_arrow_down);
                     CellConfig.weekAnchorPointDate = selectedDate;
-                    expCalendarView.expand();
+                    calendarView.expand();
                 } else {
                     CellConfig.Week2MonthPos = CellConfig.middlePosition;
                     CellConfig.ifMonth = true;
                     expandIV.setImageResource(R.mipmap.icon_arrow_up);
-                    expCalendarView.expand();
+                    calendarView.expand();
                 }
                 ifExpand = !ifExpand;
             }
