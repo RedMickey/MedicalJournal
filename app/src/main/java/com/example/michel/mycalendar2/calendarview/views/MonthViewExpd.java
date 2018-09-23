@@ -6,9 +6,6 @@ import android.util.AttributeSet;
 import com.example.michel.mycalendar2.calendarview.adapters.CalendarExpAdapter;
 import com.example.michel.mycalendar2.calendarview.data.MonthWeekData;
 
-/**
- * Created by Bigflower on 2015/12/8.
- */
 public class MonthViewExpd extends MonthView {
     private MonthWeekData monthWeekData;
     private CalendarExpAdapter adapter;

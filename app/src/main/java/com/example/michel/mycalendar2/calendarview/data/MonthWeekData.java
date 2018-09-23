@@ -9,10 +9,6 @@ import java.util.Calendar;
 
 import com.example.michel.mycalendar2.calendarview.CellConfig;
 
-
-/**
- * Created by Bigflower on 2015/12/8.
- */
 public class MonthWeekData {
     private DateData pointDate;
     private Calendar calendar;
@@ -23,11 +19,6 @@ public class MonthWeekData {
     private ArrayList<DayData> monthContent;
     private ArrayList<DayData> weekContent;
 
-    /**
-     * 绝对位置
-     *
-     * @param position
-     */
     public MonthWeekData(int position) {
         realPosition = position;
         calendar = Calendar.getInstance();
@@ -66,7 +57,6 @@ public class MonthWeekData {
 
     private void initMonthParams() {
         weekIndex = calendar.get(Calendar.DAY_OF_WEEK);
-        //我擦 败家的11月有问题，获得星期不对，拟合一下 TODO
 //        if (calendar.get(Calendar.MONTH) == 11)
 //            weekIndex--;
         preNumber = weekIndex - 1;
@@ -116,9 +106,6 @@ public class MonthWeekData {
 
     }
 
-    /**
-     * Week2MonthPos 与 Month2WeekPos 是关键。
-     */
     private void initWeekArray() {
         weekContent = new ArrayList<DayData>();
 

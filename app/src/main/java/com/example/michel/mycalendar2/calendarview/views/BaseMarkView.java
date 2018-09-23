@@ -8,9 +8,6 @@ import android.widget.LinearLayout;
 import com.example.michel.mycalendar2.calendarview.listeners.OnDateClickListener;
 import com.example.michel.mycalendar2.calendarview.data.DateData;
 
-/**
- * Created by bob.sun on 15/8/28.
- */
 public abstract class BaseMarkView extends BaseCellView{
     private OnDateClickListener clickListener;
     private DateData date;

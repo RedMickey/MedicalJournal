@@ -16,7 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="top"
-        sothree:umanoPanelHeight="142dp"
+        sothree:umanoPanelHeight="134dp"
         sothree:umanoShadowHeight="4dp">
 
         <FrameLayout

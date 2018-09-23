@@ -8,9 +8,6 @@ import java.util.Calendar;
 import com.example.michel.mycalendar2.calendarview.CellConfig;
 import com.example.michel.mycalendar2.calendarview.data.DateData;
 
-/**
- * Created by Bigflower on 2015/12/8.
- */
 public class ExpCalendarUtil {
 
     /** ExpCalendarUtil.java

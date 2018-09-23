@@ -9,10 +9,6 @@ import android.widget.TextView;
 
 import com.example.michel.mycalendar2.calendarview.utils.ExpCalendarUtil;
 
-
-/**
- * Created by Bigflower on 2015/12/8.
- */
 public class WeekColumnView extends LinearLayout {
 
     private int backgroundColor = Color.rgb(105, 75, 125);

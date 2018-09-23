@@ -13,9 +13,6 @@ import com.example.michel.mycalendar2.calendarview.adapters.CalendarAdapter;
 import com.example.michel.mycalendar2.calendarview.views.MonthView;
 import com.example.michel.mycalendar2.calendarview.data.MonthData;
 
-/**
- * Created by bob.sun on 15/8/27.
- */
 public class MonthFragment extends Fragment {
     private MonthData monthData;
     private int cellView = -1;

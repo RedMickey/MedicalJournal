@@ -7,9 +7,6 @@ import android.widget.GridView;
 import com.example.michel.mycalendar2.calendarview.adapters.CalendarAdapter;
 import com.example.michel.mycalendar2.calendarview.data.MonthData;
 
-/**
- * Created by bob.sun on 15/8/27.
- */
 public class MonthView extends GridView {
     private MonthData monthData;
     private CalendarAdapter adapter;

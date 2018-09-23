@@ -21,9 +21,6 @@ import com.example.michel.mycalendar2.calendarview.MarkStyle;
 import com.example.michel.mycalendar2.calendarview.data.DateData;
 import com.example.michel.mycalendar2.calendarview.data.DayData;
 
-/**
- * Created by bob.sun on 15/8/28.
- */
 public class DefaultMarkView extends BaseMarkView {
     private TextView textView;
     private AbsListView.LayoutParams matchParentParams;

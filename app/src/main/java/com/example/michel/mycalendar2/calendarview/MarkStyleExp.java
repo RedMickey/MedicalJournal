@@ -6,9 +6,6 @@ import android.graphics.ColorFilter;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 
-/**
- * Created by 明明大美女 on 2015/12/10.
- */
 public class MarkStyleExp {
 
     public static final int chooseColor = Color.rgb(105, 75, 125);

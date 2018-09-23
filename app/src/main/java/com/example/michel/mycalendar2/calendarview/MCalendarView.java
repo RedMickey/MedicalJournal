@@ -19,9 +19,6 @@ import com.example.michel.mycalendar2.calendarview.utils.CurrentCalendar;
 import com.example.michel.mycalendar2.calendarview.data.DateData;
 import com.example.michel.mycalendar2.calendarview.data.MarkedDates;
 
-/**
- * Created by bob.sun on 15/8/27.
- */
 public class MCalendarView extends ViewPager {
     private int dateCellViewResId = -1;
     private View dateCellView = null;
