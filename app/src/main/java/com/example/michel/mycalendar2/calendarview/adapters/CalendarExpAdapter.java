@@ -19,9 +19,6 @@ import com.example.michel.mycalendar2.calendarview.views.DefaultMarkView;
 import com.example.michel.mycalendar2.calendarview.data.DayData;
 import com.example.michel.mycalendar2.calendarview.data.MarkedDates;
 
-/**
- * Created by Bigflower on 2015/12/8.
- */
 public class CalendarExpAdapter extends ArrayAdapter implements Observer {
     private ArrayList data;
     private int cellView = -1;

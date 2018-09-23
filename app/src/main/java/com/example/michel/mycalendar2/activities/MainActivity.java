@@ -18,11 +18,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.michel.mycalendar2.calendarview.CellConfig;
+import com.example.michel.mycalendar2.calendarview.adapters.DayAdapter;
 import com.example.michel.mycalendar2.calendarview.data.DateData;
 import com.example.michel.mycalendar2.calendarview.listeners.OnDateClickListener;
 import com.example.michel.mycalendar2.calendarview.listeners.OnExpDateClickListener;
 import com.example.michel.mycalendar2.calendarview.listeners.OnMonthScrollListener;
 import com.example.michel.mycalendar2.calendarview.views.ExpCalendarView;
+import com.example.michel.mycalendar2.calendarview.views.WeekDayViewPager;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.util.Calendar;
@@ -36,6 +38,8 @@ public class MainActivity extends AppCompatActivity
 
     private SlidingUpPanelLayout slidingUpPanelLayout;
     private LinearLayout calendarLayout;
+
+    private WeekDayViewPager weekDayViewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +67,10 @@ public class MainActivity extends AppCompatActivity
         slidingUpPanelLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
 
         calendarLayout = (LinearLayout) findViewById(R.id.calendar_layout);
+
+        weekDayViewPager = (WeekDayViewPager) findViewById((R.id.day_view));
+
+        //weekDayViewPager.setAdapter(new DayAdapter(getSupportFragmentManager()));
 
         //      Get instance.
         calendarView = ((ExpCalendarView) findViewById(R.id.calendar_view));
