@@ -3,6 +3,7 @@ package com.example.michel.mycalendar2.calendarview.adapters;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.view.View;
 
 import com.example.michel.mycalendar2.calendarview.views.DayFragment;
 
@@ -22,4 +23,7 @@ public class DayAdapter extends FragmentStatePagerAdapter{
     public int getCount() {
         return 7000;
     }
+
 }
+
+
