@@ -9,14 +9,19 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.michel.mycalendar2.activities.R;
+import com.example.michel.mycalendar2.calendarview.data.DateData;
 import com.example.michel.mycalendar2.calendarview.data.DayData;
 
 public class DayFragment extends Fragment{
 
-    private DayData dayData;
+    private DateData dayData;
     private TextView mText;
 
-    public static DayFragment newInstance(DayData dayData) {
+    public void setData(DateData currentDate){
+        this.dayData = currentDate;
+    }
+
+    public static DayFragment newInstance(DateData dayData) {
         DayFragment dayFragment = new DayFragment();
         dayFragment.dayData = dayData;
         return dayFragment;
@@ -35,6 +40,6 @@ public class DayFragment extends Fragment{
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mText = (TextView) view.findViewById(R.id.text);
-        mText.setText("123456");
+        mText.setText(dayData.getDayString());
     }
 }

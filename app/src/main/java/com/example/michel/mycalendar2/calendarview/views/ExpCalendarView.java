@@ -74,6 +74,10 @@ public class ExpCalendarView extends ViewPager {
 //        this.addOnPageChangeListener(new );
     }
 
+    public DateData getCurrentDate() {
+        return currentDate;
+    }
+
     //// TODO: 15/8/28 May cause trouble when invoked after inited
     public ExpCalendarView travelTo(DateData dateData) {
         Calendar calendar = Calendar.getInstance();

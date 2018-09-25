@@ -3,6 +3,7 @@ package com.example.michel.mycalendar2.activities;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -77,6 +78,8 @@ public class MainActivity extends AppCompatActivity
         YearMonthTv = (TextView) findViewById(R.id.YYMM_Tv);
         YearMonthTv.setText(getDateString(Calendar.getInstance().get(Calendar.YEAR),(Calendar.getInstance().get(Calendar.MONTH) + 1)));
 
+//        weekDayViewPager.setExpCalendarView(calendarView);
+
 //      Set up listeners.
         calendarView.setOnDateClickListener(new OnExpDateClickListener()).setOnMonthScrollListener(new OnMonthScrollListener() {
             @Override
@@ -134,6 +137,7 @@ public class MainActivity extends AppCompatActivity
         selectedDate = new DateData(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH));
         calendarView.markDate(selectedDate);
 
+        weekDayViewPager.init(calendarView);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
