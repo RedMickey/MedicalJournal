@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 
@@ -12,23 +13,29 @@ import com.example.michel.mycalendar2.calendarview.adapters.DayAdapter;
 public class WeekDayViewPager extends ViewPager{
 
     private ExpCalendarView expCalendarView;
+    private DayAdapter dayAdapter;
 
     public WeekDayViewPager(@NonNull Context context) {
         super(context);
-        if (context instanceof FragmentActivity) {
+     /*   if (context instanceof FragmentActivity) {
             init((FragmentActivity) context);
-        }
+        }*/
     }
 
     public WeekDayViewPager(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        if (context instanceof FragmentActivity) {
+      /*  if (context instanceof FragmentActivity) {
             init((FragmentActivity) context);
-        }
+        }*/
     }
 
-    public void init(FragmentActivity activity){
-        setAdapter(new DayAdapter(activity.getSupportFragmentManager()));
+    public void init(ExpCalendarView expCalendarView){
+        this.expCalendarView = expCalendarView;
+        dayAdapter = new DayAdapter(((FragmentActivity)getContext()).getSupportFragmentManager());
+        
+        dayAdapter.setCurrentDate(this.expCalendarView.getMarkedDates().getAll().get(0));
+        setAdapter(dayAdapter);
+
         this.setCurrentItem(3500);
     }
 
