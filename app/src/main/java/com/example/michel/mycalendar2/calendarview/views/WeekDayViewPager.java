@@ -14,6 +14,7 @@ public class WeekDayViewPager extends ViewPager{
 
     private ExpCalendarView expCalendarView;
     private DayAdapter dayAdapter;
+    public int LastPage;
 
     public WeekDayViewPager(@NonNull Context context) {
         super(context);
@@ -33,10 +34,12 @@ public class WeekDayViewPager extends ViewPager{
         this.expCalendarView = expCalendarView;
         dayAdapter = new DayAdapter(((FragmentActivity)getContext()).getSupportFragmentManager());
         
-        dayAdapter.setCurrentDate(this.expCalendarView.getMarkedDates().getAll().get(0));
+        dayAdapter.setInitCurrentDate(this.expCalendarView.getMarkedDates().getAll().get(0));
+        dayAdapter.setPreDate(this.expCalendarView.getMarkedDates().getAll().get(0));
         setAdapter(dayAdapter);
 
         this.setCurrentItem(3500);
+        LastPage = 3500;
     }
 
     public void setExpCalendarView(ExpCalendarView expCalendarView) {

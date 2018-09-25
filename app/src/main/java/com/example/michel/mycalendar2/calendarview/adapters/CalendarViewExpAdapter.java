@@ -20,6 +20,8 @@ public class CalendarViewExpAdapter extends FragmentStatePagerAdapter {
     private Context context;
     private int mCurrentPosition = -1;
 
+    private Fragment mCurrentFragment;
+
     public CalendarViewExpAdapter(FragmentManager fm) {
         super(fm);
     }
@@ -44,6 +46,9 @@ public class CalendarViewExpAdapter extends FragmentStatePagerAdapter {
         return this;
     }
 
+    public Fragment getCurrentFragment() {
+        return mCurrentFragment;
+    }
 
     @Override
     public Fragment getItem(int position) {
@@ -64,6 +69,9 @@ public class CalendarViewExpAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public void setPrimaryItem(ViewGroup container, int position, Object object) {
+        if (getCurrentFragment() != object) {
+            mCurrentFragment = ((Fragment) object);
+        }
         super.setPrimaryItem(container, position, object);
         ((ExpCalendarView) container).measureCurrentView(position);
     }

@@ -16,6 +16,10 @@ public class MonthExpFragment extends Fragment {
     private MonthViewExpd monthViewExpd;
     private boolean ifExpand = false;
 
+    public MonthViewExpd getMonthViewExpd() {
+        return monthViewExpd;
+    }
+
     public void setData(int pagePosition, int cellView, int markView) {
         this.pagePosition = pagePosition;
         this.cellView = cellView;

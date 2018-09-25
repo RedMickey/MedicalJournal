@@ -6,6 +6,8 @@ import android.util.AttributeSet;
 import com.example.michel.mycalendar2.calendarview.adapters.CalendarExpAdapter;
 import com.example.michel.mycalendar2.calendarview.data.MonthWeekData;
 
+import java.util.ArrayList;
+
 public class MonthViewExpd extends MonthView {
     private MonthWeekData monthWeekData;
     private CalendarExpAdapter adapter;
@@ -22,6 +24,15 @@ public class MonthViewExpd extends MonthView {
         getMonthWeekData(pagePosition);
         adapter = new CalendarExpAdapter(getContext(), 1, monthWeekData.getData()).setCellViews(cellView, markView);
         this.setAdapter(adapter);
+    }
+
+    public ArrayList getMonthWeekData() {
+        return monthWeekData.getData();
+    }
+
+    @Override
+    public CalendarExpAdapter getAdapter() {
+        return adapter;
     }
 
     private void getMonthWeekData(int position) {

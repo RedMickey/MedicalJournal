@@ -14,16 +14,22 @@ import com.example.michel.mycalendar2.calendarview.data.DayData;
 
 public class DayFragment extends Fragment{
 
-    private DateData dayData;
+    private DateData currentData;
     private TextView mText;
 
     public void setData(DateData currentDate){
-        this.dayData = currentDate;
+        this.currentData = currentDate;
     }
 
-    public static DayFragment newInstance(DateData dayData) {
+    public static DayFragment newInstance(DateData currentData, int dayDelta) {
         DayFragment dayFragment = new DayFragment();
-        dayFragment.dayData = dayData;
+        /*if (dayDelta>0)
+            dayFragment.currentData = new DateData(currentData.getYear(), currentData.getMonth(), currentData.getDay()+dayDelta);
+        else if (dayDelta == 0)
+            dayFragment.currentData = currentData;
+        else
+            dayFragment.currentData = new DateData(currentData.getYear(), currentData.getMonth(), currentData.getDay()-dayDelta);*/
+        dayFragment.currentData = currentData;
         return dayFragment;
     }
 
@@ -40,6 +46,6 @@ public class DayFragment extends Fragment{
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mText = (TextView) view.findViewById(R.id.text);
-        mText.setText(dayData.getDayString());
+        mText.setText(currentData.getDayString());
     }
 }

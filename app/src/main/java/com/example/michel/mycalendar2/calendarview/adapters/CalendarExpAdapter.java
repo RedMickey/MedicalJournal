@@ -10,6 +10,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 import com.example.michel.mycalendar2.calendarview.MarkStyle;
+import com.example.michel.mycalendar2.calendarview.data.DateData;
 import com.example.michel.mycalendar2.calendarview.listeners.OnDateClickListener;
 import com.example.michel.mycalendar2.calendarview.utils.CurrentCalendar;
 import com.example.michel.mycalendar2.calendarview.views.BaseCellView;
@@ -36,6 +37,27 @@ public class CalendarExpAdapter extends ArrayAdapter implements Observer {
         return this;
     }
 
+    public ArrayList getData() {
+        return data;
+    }
+
+    public DateData findItemInListByDate(DateData dateExample){
+        for (Object dt: data) {
+            DateData buf = ((DayData)dt).getDate();
+            if (buf.getDay()==dateExample.getDay()&&buf.getMonth()==dateExample.getMonth()&&buf.getYear()==dateExample.getYear())
+                return buf;
+        }
+        return null;
+    }
+
+    public boolean listContainItemByDate(DateData dateExample){
+        for (Object dt: data) {
+            DateData buf = ((DayData)dt).getDate();
+            if (buf.getDay()==dateExample.getDay()&&buf.getMonth()==dateExample.getMonth()&&buf.getYear()==dateExample.getYear())
+                return true;
+        }
+        return false;
+    }
 
     public View getView(int position, View convertView, ViewGroup viewGroup) {
         View ret = null;

@@ -3,7 +3,10 @@ package com.example.michel.mycalendar2.activities;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -19,15 +22,19 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.michel.mycalendar2.calendarview.CellConfig;
+import com.example.michel.mycalendar2.calendarview.adapters.CalendarViewExpAdapter;
 import com.example.michel.mycalendar2.calendarview.adapters.DayAdapter;
 import com.example.michel.mycalendar2.calendarview.data.DateData;
+import com.example.michel.mycalendar2.calendarview.data.DayData;
 import com.example.michel.mycalendar2.calendarview.listeners.OnDateClickListener;
 import com.example.michel.mycalendar2.calendarview.listeners.OnExpDateClickListener;
 import com.example.michel.mycalendar2.calendarview.listeners.OnMonthScrollListener;
 import com.example.michel.mycalendar2.calendarview.views.ExpCalendarView;
+import com.example.michel.mycalendar2.calendarview.views.MonthExpFragment;
 import com.example.michel.mycalendar2.calendarview.views.WeekDayViewPager;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity
@@ -89,7 +96,7 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public void onMonthScroll(float positionOffset) {
-//                Log.i("listener", "onMonthScroll:" + positionOffset);
+               //Log.i("listener", "onMonthScroll:" + positionOffset);
             }
         });
 
@@ -99,8 +106,11 @@ public class MainActivity extends AppCompatActivity
                 calendarView.getMarkedDates().removeAdd();
                 calendarView.markDate(date);
                 selectedDate = date;
+
             }
         });
+
+
 
         slidingUpPanelLayout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
             @Override
@@ -138,6 +148,59 @@ public class MainActivity extends AppCompatActivity
         calendarView.markDate(selectedDate);
 
         weekDayViewPager.init(calendarView);
+
+        weekDayViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                Log.i("Item", String.valueOf(weekDayViewPager.getCurrentItem()));
+                Log.i("Pos", String.valueOf(position));
+                DateData date = calendarView.getMarkedDates().getAll().get(0);
+                if (position>weekDayViewPager.LastPage)
+                {
+                    calendarView.getMarkedDates().removeAdd();
+                    calendarView.markDate(new DateData(date.getYear(),date.getMonth(),date.getDay()+1));
+                    ((DayAdapter)weekDayViewPager.getAdapter()).setCurrentDate(new DateData(date.getYear(),date.getMonth(),date.getDay()+2));
+                    //calendarView.getCurrentItem()
+                    //((CalendarViewExpAdapter)calendarView.getAdapter()).
+
+                    MonthExpFragment fr = (MonthExpFragment)((CalendarViewExpAdapter)calendarView.getAdapter()).getCurrentFragment();
+
+                    //ArrayList ar = fr.getMonthViewExpd().getMonthWeekData();
+                    if (!fr.getMonthViewExpd().getAdapter().listContainItemByDate(calendarView.getMarkedDates().getAll().get(0)))
+                        Log.i("IsContein", "does not contain");
+                    //fr.getMonthViewExpd().getMonthWeekData();
+
+                }
+                if (position<weekDayViewPager.LastPage)
+                {
+                    calendarView.getMarkedDates().removeAdd();
+                    calendarView.markDate(new DateData(date.getYear(),date.getMonth(),date.getDay()-1));
+                    ((DayAdapter)weekDayViewPager.getAdapter()).setCurrentDate(new DateData(date.getYear(),date.getMonth(),date.getDay()-2));
+
+                    MonthExpFragment fr = (MonthExpFragment)((CalendarViewExpAdapter)calendarView.getAdapter()).getCurrentFragment();
+
+                    if (!fr.getMonthViewExpd().getAdapter().listContainItemByDate(calendarView.getMarkedDates().getAll().get(0)))
+                        Log.i("IsContein", "does not contain");
+                }
+
+                weekDayViewPager.LastPage = position;
+
+                Log.i("DateP", date.getMonthString()+ " " + date.getDayString());
+                DateData date2 = calendarView.getMarkedDates().getAll().get(0);
+                Log.i("DateN", date2.getMonthString()+ " " + date2.getDayString());
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
