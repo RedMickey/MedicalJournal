@@ -29,6 +29,7 @@ import com.example.michel.mycalendar2.calendarview.data.DayData;
 import com.example.michel.mycalendar2.calendarview.listeners.OnDateClickListener;
 import com.example.michel.mycalendar2.calendarview.listeners.OnExpDateClickListener;
 import com.example.michel.mycalendar2.calendarview.listeners.OnMonthScrollListener;
+import com.example.michel.mycalendar2.calendarview.utils.CalendarUtil;
 import com.example.michel.mycalendar2.calendarview.views.ExpCalendarView;
 import com.example.michel.mycalendar2.calendarview.views.MonthExpFragment;
 import com.example.michel.mycalendar2.calendarview.views.WeekDayViewPager;
@@ -83,7 +84,7 @@ public class MainActivity extends AppCompatActivity
         //      Get instance.
         calendarView = ((ExpCalendarView) findViewById(R.id.calendar_view));
         YearMonthTv = (TextView) findViewById(R.id.YYMM_Tv);
-        YearMonthTv.setText(getDateString(Calendar.getInstance().get(Calendar.YEAR),(Calendar.getInstance().get(Calendar.MONTH) + 1)));
+        YearMonthTv.setText(CalendarUtil.getDateString(Calendar.getInstance().get(Calendar.YEAR),(Calendar.getInstance().get(Calendar.MONTH) + 1)));
 
 //        weekDayViewPager.setExpCalendarView(calendarView);
 
@@ -91,7 +92,7 @@ public class MainActivity extends AppCompatActivity
         calendarView.setOnDateClickListener(new OnExpDateClickListener()).setOnMonthScrollListener(new OnMonthScrollListener() {
             @Override
             public void onMonthChange(int year, int month) {
-                YearMonthTv.setText(getDateString(year, month));
+                YearMonthTv.setText(CalendarUtil.getDateString(year, month));
             }
 
             @Override
@@ -143,7 +144,7 @@ public class MainActivity extends AppCompatActivity
         });
         //imageInit();
 
-        Calendar calendar = Calendar.getInstance();
+        final Calendar calendar = Calendar.getInstance();
         selectedDate = new DateData(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH));
         calendarView.markDate(selectedDate);
 
@@ -160,32 +161,80 @@ public class MainActivity extends AppCompatActivity
                 Log.i("Item", String.valueOf(weekDayViewPager.getCurrentItem()));
                 Log.i("Pos", String.valueOf(position));
                 DateData date = calendarView.getMarkedDates().getAll().get(0);
+                int newYear, newMonth, newDay;
                 if (position>weekDayViewPager.LastPage)
                 {
                     calendarView.getMarkedDates().removeAdd();
-                    calendarView.markDate(new DateData(date.getYear(),date.getMonth(),date.getDay()+1));
-                    ((DayAdapter)weekDayViewPager.getAdapter()).setCurrentDate(new DateData(date.getYear(),date.getMonth(),date.getDay()+2));
-                    //calendarView.getCurrentItem()
-                    //((CalendarViewExpAdapter)calendarView.getAdapter()).
+                    if(date.getDay()==CalendarUtil.getDaysInMonth(date.getMonth()-1,date.getYear()))
+                    {
+                        newDay = 1;
+                        if (date.getMonth()==12)
+                        {
+                            newMonth = 1;
+                            newYear = date.getYear()+1;
+                        }
+                        else {
+                            newMonth = date.getMonth() + 1;
+                            newYear = date.getYear();
+                        }
+                        calendarView.markDate(new DateData(newYear,newMonth,newDay));
+                        ((DayAdapter)weekDayViewPager.getAdapter()).setCurrentDate(new DateData(newYear, newMonth,newDay+1));
+                    }
+                    else if(date.getDay()+1==CalendarUtil.getDaysInMonth(date.getMonth()-1,date.getYear()))
+                    {
+                        calendarView.markDate(new DateData(date.getYear(),date.getMonth(),date.getDay()+1));
+                        ((DayAdapter)weekDayViewPager.getAdapter()).setCurrentDate(new DateData(date.getYear(),date.getMonth(),1));
+                    }
+                    else {
+                        calendarView.markDate(new DateData(date.getYear(),date.getMonth(),date.getDay()+1));
+                        ((DayAdapter)weekDayViewPager.getAdapter()).setCurrentDate(new DateData(date.getYear(),date.getMonth(),date.getDay()+2));
+                    }
 
                     MonthExpFragment fr = (MonthExpFragment)((CalendarViewExpAdapter)calendarView.getAdapter()).getCurrentFragment();
 
-                    //ArrayList ar = fr.getMonthViewExpd().getMonthWeekData();
-                    if (!fr.getMonthViewExpd().getAdapter().listContainItemByDate(calendarView.getMarkedDates().getAll().get(0)))
+                    if (!fr.getMonthViewExpd().getAdapter().listContainItemByDate(calendarView.getMarkedDates().getAll().get(0))){
                         Log.i("IsContein", "does not contain");
-                    //fr.getMonthViewExpd().getMonthWeekData();
-
+                        calendarView.setCurrentItem(calendarView.getCurrentItem()+1);
+                    }
                 }
                 if (position<weekDayViewPager.LastPage)
                 {
                     calendarView.getMarkedDates().removeAdd();
-                    calendarView.markDate(new DateData(date.getYear(),date.getMonth(),date.getDay()-1));
-                    ((DayAdapter)weekDayViewPager.getAdapter()).setCurrentDate(new DateData(date.getYear(),date.getMonth(),date.getDay()-2));
+                    if(date.getDay()==1)
+                    {
+                        if (date.getMonth()==1)
+                        {
+                            newDay = 31;
+                            newMonth = 12;
+                            newYear = date.getYear()-1;
+                        }
+                        else {
+                            newDay = CalendarUtil.getDaysInMonth(date.getMonth()-2,date.getYear());
+                            newMonth = date.getMonth() - 1;
+                            newYear = date.getYear();
+                        }
+                        calendarView.markDate(new DateData(newYear,newMonth,newDay));
+                        ((DayAdapter)weekDayViewPager.getAdapter()).setCurrentDate(new DateData(newYear, newMonth,newDay-1));
+                    }
+                    else if(date.getDay()-1==1)
+                    {   if (date.getMonth()==1)
+                            newDay = 31;
+                        else
+                            newDay = CalendarUtil.getDaysInMonth(date.getMonth()-2,date.getYear());
+                        calendarView.markDate(new DateData(date.getYear(),date.getMonth(),date.getDay()-1));
+                        ((DayAdapter)weekDayViewPager.getAdapter()).setCurrentDate(new DateData(date.getYear(),date.getMonth(),newDay));
+                    }
+                    else {
+                        calendarView.markDate(new DateData(date.getYear(),date.getMonth(),date.getDay()-1));
+                        ((DayAdapter)weekDayViewPager.getAdapter()).setCurrentDate(new DateData(date.getYear(),date.getMonth(),date.getDay()-2));
+                    }
 
                     MonthExpFragment fr = (MonthExpFragment)((CalendarViewExpAdapter)calendarView.getAdapter()).getCurrentFragment();
 
-                    if (!fr.getMonthViewExpd().getAdapter().listContainItemByDate(calendarView.getMarkedDates().getAll().get(0)))
+                    if (!fr.getMonthViewExpd().getAdapter().listContainItemByDate(calendarView.getMarkedDates().getAll().get(0))) {
                         Log.i("IsContein", "does not contain");
+                        calendarView.setCurrentItem(calendarView.getCurrentItem()-1);
+                    }
                 }
 
                 weekDayViewPager.LastPage = position;
@@ -203,49 +252,6 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-    }
-
-    private String getDateString(int year, int month){
-        String monthName = "";
-        switch (month){
-            case 1:
-                monthName = "Январь";
-                break;
-            case 2:
-                monthName = "Февраль";
-                break;
-            case 3:
-                monthName = "Март";
-                break;
-            case 4:
-                monthName = "Апрель";
-                break;
-            case 5:
-                monthName = "Май";
-                break;
-            case 6:
-                monthName = "Июнь";
-                break;
-            case 7:
-                monthName = "Июль";
-                break;
-            case 8:
-                monthName = "Август";
-                break;
-            case 9:
-                monthName = "Сентябрь";
-                break;
-            case 10:
-                monthName = "Октябрь";
-                break;
-            case 11:
-                monthName = "Ноябрь";
-                break;
-            case 12:
-                monthName = "Декабрь";
-                break;
-        }
-        return monthName + " " + String.valueOf(year);
     }
 
     private boolean ifExpand = false;

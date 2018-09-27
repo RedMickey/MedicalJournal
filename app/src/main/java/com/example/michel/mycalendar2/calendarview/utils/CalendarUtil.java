@@ -58,4 +58,69 @@ public class CalendarUtil {
         calendar = null;
         return ret;
     }
+
+    public static int getDaysInMonth(int month, int year) {
+        switch (month) {
+            case Calendar.JANUARY:
+            case Calendar.MARCH:
+            case Calendar.MAY:
+            case Calendar.JULY:
+            case Calendar.AUGUST:
+            case Calendar.OCTOBER:
+            case Calendar.DECEMBER:
+                return 31;
+            case Calendar.APRIL:
+            case Calendar.JUNE:
+            case Calendar.SEPTEMBER:
+            case Calendar.NOVEMBER:
+                return 30;
+            case Calendar.FEBRUARY:
+                return (year % 4 == 0) ? 29 : 28;
+            default:
+                throw new IllegalArgumentException("Invalid Month");
+        }
+    }
+
+    public static String getDateString(int year, int month){
+        String monthName = "";
+        switch (month){
+            case 1:
+                monthName = "Январь";
+                break;
+            case 2:
+                monthName = "Февраль";
+                break;
+            case 3:
+                monthName = "Март";
+                break;
+            case 4:
+                monthName = "Апрель";
+                break;
+            case 5:
+                monthName = "Май";
+                break;
+            case 6:
+                monthName = "Июнь";
+                break;
+            case 7:
+                monthName = "Июль";
+                break;
+            case 8:
+                monthName = "Август";
+                break;
+            case 9:
+                monthName = "Сентябрь";
+                break;
+            case 10:
+                monthName = "Октябрь";
+                break;
+            case 11:
+                monthName = "Ноябрь";
+                break;
+            case 12:
+                monthName = "Декабрь";
+                break;
+        }
+        return monthName + " " + String.valueOf(year);
+    }
 }
