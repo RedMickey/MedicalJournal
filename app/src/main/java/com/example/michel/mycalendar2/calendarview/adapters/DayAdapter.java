@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 
 import com.example.michel.mycalendar2.calendarview.data.DateData;
+import com.example.michel.mycalendar2.calendarview.utils.CalendarUtil;
 import com.example.michel.mycalendar2.calendarview.views.DayFragment;
 
 public class DayAdapter extends FragmentStatePagerAdapter{
@@ -17,9 +18,46 @@ public class DayAdapter extends FragmentStatePagerAdapter{
     private DateData currentDate;
     private DateData preDate;
     private int i=0;
+    private boolean isDayClicked = false;
+    private DateData dayClickedDate;
+
+    public void setDayClicked(boolean dayClicked) {
+        isDayClicked = dayClicked;
+    }
+
+    public void setDayClickedDate(DateData dayClickedDate) {
+        this.dayClickedDate = dayClickedDate;
+    }
+
+    public boolean isDayClicked() {
+        return isDayClicked;
+    }
+
+    public DateData getDayClickedDate() {
+        return dayClickedDate;
+    }
 
     public void setCurrentDate(DateData currentDate){
         this.currentDate = currentDate;
+    }
+
+    public DateData getCurrentDate() {
+        /*int newYear, newMonth, newDay;
+
+        if(currentDate.getDay()== CalendarUtil.getDaysInMonth(currentDate.getMonth()-1,currentDate.getYear()))
+        {
+            newDay = 1;
+            if (dateBuff.getMonth()==12)
+            {
+                newMonth = 1;
+                newYear = dateBuff.getYear()+1;
+            }
+            else {
+                newMonth = dateBuff.getMonth() + 1;
+                newYear = dateBuff.getYear();
+            }
+        */
+        return currentDate;
     }
 
     public void setPreDate(DateData preDate) {
@@ -52,6 +90,9 @@ public class DayAdapter extends FragmentStatePagerAdapter{
         }
         DayFragment fragment = DayFragment.newInstance(currentDate, dayDelta);
         preDate = currentDate;
+        if (i==3){
+            currentDate = new DateData(currentDate.getYear(), currentDate.getMonth(), currentDate.getDay()-1);
+        }
         return fragment;
     }
 

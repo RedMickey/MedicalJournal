@@ -26,6 +26,7 @@ import com.example.michel.mycalendar2.calendarview.adapters.CalendarViewExpAdapt
 import com.example.michel.mycalendar2.calendarview.adapters.DayAdapter;
 import com.example.michel.mycalendar2.calendarview.data.DateData;
 import com.example.michel.mycalendar2.calendarview.data.DayData;
+import com.example.michel.mycalendar2.calendarview.data.DayDifference;
 import com.example.michel.mycalendar2.calendarview.listeners.OnDateClickListener;
 import com.example.michel.mycalendar2.calendarview.listeners.OnExpDateClickListener;
 import com.example.michel.mycalendar2.calendarview.listeners.OnMonthScrollListener;
@@ -79,14 +80,10 @@ public class MainActivity extends AppCompatActivity
 
         weekDayViewPager = (WeekDayViewPager) findViewById((R.id.day_view));
 
-        //weekDayViewPager.setAdapter(new DayAdapter(getSupportFragmentManager()));
-
         //      Get instance.
         calendarView = ((ExpCalendarView) findViewById(R.id.calendar_view));
         YearMonthTv = (TextView) findViewById(R.id.YYMM_Tv);
         YearMonthTv.setText(CalendarUtil.getDateString(Calendar.getInstance().get(Calendar.YEAR),(Calendar.getInstance().get(Calendar.MONTH) + 1)));
-
-//        weekDayViewPager.setExpCalendarView(calendarView);
 
 //      Set up listeners.
         calendarView.setOnDateClickListener(new OnExpDateClickListener()).setOnMonthScrollListener(new OnMonthScrollListener() {
@@ -104,10 +101,83 @@ public class MainActivity extends AppCompatActivity
         calendarView.setOnDateClickListener(new OnDateClickListener() {
             @Override
             public void onDateClick(View view, DateData date) {
-                calendarView.getMarkedDates().removeAdd();
-                calendarView.markDate(date);
-                selectedDate = date;
+                DateData preData = calendarView.getMarkedDates().getAll().get(0);
+                //DateData dateDelta = new DateData(preData.getYear()-date.getYear(),preData.getMonth()-date.getMonth(),preData.getDay()-date.getDay());
+                DateData dateBuff = new DateData(preData.getYear(),preData.getMonth(),preData.getDay());
+                DayDifference dayDifference = CalendarUtil.calculateDaysBetweenDates(preData, date);
 
+                ((DayAdapter)weekDayViewPager.getAdapter()).setDayClickedDate(date);
+
+                for(int i = 0; i<dayDifference.getDays();i++)
+                {
+                    ((DayAdapter)weekDayViewPager.getAdapter()).setDayClicked(true);
+                    int newYear, newMonth, newDay;
+                    if (dayDifference.isSwipeRight()){
+                        dateBuff.setDay(dateBuff.getDay()+1);
+                        if(dateBuff.getDay()>=CalendarUtil.getDaysInMonth(dateBuff.getMonth()-1,dateBuff.getYear()))
+                        {
+                            newDay = 1;
+                            if (dateBuff.getMonth()==12)
+                            {
+                                newMonth = 1;
+                                newYear = dateBuff.getYear()+1;
+                            }
+                            else {
+                                newMonth = dateBuff.getMonth() + 1;
+                                newYear = dateBuff.getYear();
+                            }
+                            if (dateBuff.getDay()>CalendarUtil.getDaysInMonth(dateBuff.getMonth()-1,dateBuff.getYear()))
+                                ((DayAdapter)weekDayViewPager.getAdapter()).setCurrentDate(new DateData(newYear, newMonth, newDay+1));
+                            else
+                                ((DayAdapter)weekDayViewPager.getAdapter()).setCurrentDate(new DateData(newYear, newMonth, newDay));
+                        }
+                        else {
+                            ((DayAdapter)weekDayViewPager.getAdapter()).setCurrentDate(new DateData(dateBuff.getYear(),dateBuff.getMonth(),dateBuff.getDay()+1));
+                        }
+
+                        weekDayViewPager.setCurrentItem(weekDayViewPager.getCurrentItem()+1);
+                    }
+
+                    else {
+                        dateBuff.setDay(dateBuff.getDay()-1);
+                        if(dateBuff.getDay()<=1)
+                        {
+                            if (dateBuff.getMonth()==1)
+                            {
+                                newDay = 31;
+                                newMonth = 12;
+                                newYear = dateBuff.getYear()-1;
+                            }
+                            else {
+                                newDay = CalendarUtil.getDaysInMonth(dateBuff.getMonth()-2,dateBuff.getYear());
+                                newMonth = dateBuff.getMonth() - 1;
+                                newYear = dateBuff.getYear();
+                            }
+
+                            if (dateBuff.getDay()==1)
+                                ((DayAdapter)weekDayViewPager.getAdapter()).setCurrentDate(new DateData(newYear, newMonth, newDay));
+                            else
+                                ((DayAdapter)weekDayViewPager.getAdapter()).setCurrentDate(new DateData(newYear, newMonth, newDay-1));
+                        }
+                        else {
+                            ((DayAdapter)weekDayViewPager.getAdapter()).setCurrentDate(new DateData(dateBuff.getYear(),dateBuff.getMonth(),dateBuff.getDay()-1));
+                        }
+
+                        weekDayViewPager.setCurrentItem(weekDayViewPager.getCurrentItem()-1);
+
+                        //((DayAdapter)weekDayViewPager.getAdapter()).setCurrentDate(new DateData(date.getYear(),date.getMonth(),date.getDay()-1));
+                        //weekDayViewPager.setCurrentItem(weekDayViewPager.getCurrentItem()-1);
+                    }
+
+                    preData = calendarView.getMarkedDates().getAll().get(0);
+                    dateBuff = new DateData(preData.getYear(),preData.getMonth(),preData.getDay());
+                }
+
+                DateData cd2 = ((DayAdapter)weekDayViewPager.getAdapter()).getCurrentDate();
+
+                /*calendarView.getMarkedDates().removeAdd();
+                calendarView.markDate(date);
+                selectedDate = date;*/
             }
         });
 
@@ -192,8 +262,10 @@ public class MainActivity extends AppCompatActivity
 
                     MonthExpFragment fr = (MonthExpFragment)((CalendarViewExpAdapter)calendarView.getAdapter()).getCurrentFragment();
 
-                    if (!fr.getMonthViewExpd().getAdapter().listContainItemByDate(calendarView.getMarkedDates().getAll().get(0))){
+                    if (!fr.getMonthViewExpd().getAdapter().listContainItemByDate(calendarView.getMarkedDates().getAll().get(0))&&
+                            !((DayAdapter)weekDayViewPager.getAdapter()).isDayClicked()){
                         Log.i("IsContein", "does not contain");
+                        ((DayAdapter)weekDayViewPager.getAdapter()).setDayClicked(false);
                         calendarView.setCurrentItem(calendarView.getCurrentItem()+1);
                     }
                 }
@@ -227,12 +299,15 @@ public class MainActivity extends AppCompatActivity
                     else {
                         calendarView.markDate(new DateData(date.getYear(),date.getMonth(),date.getDay()-1));
                         ((DayAdapter)weekDayViewPager.getAdapter()).setCurrentDate(new DateData(date.getYear(),date.getMonth(),date.getDay()-2));
+                        Log.i("IsContein", "does not contain");
                     }
 
                     MonthExpFragment fr = (MonthExpFragment)((CalendarViewExpAdapter)calendarView.getAdapter()).getCurrentFragment();
 
-                    if (!fr.getMonthViewExpd().getAdapter().listContainItemByDate(calendarView.getMarkedDates().getAll().get(0))) {
+                    if (!fr.getMonthViewExpd().getAdapter().listContainItemByDate(calendarView.getMarkedDates().getAll().get(0))&&
+                            !((DayAdapter)weekDayViewPager.getAdapter()).isDayClicked()) {
                         Log.i("IsContein", "does not contain");
+                        ((DayAdapter)weekDayViewPager.getAdapter()).setDayClicked(false);
                         calendarView.setCurrentItem(calendarView.getCurrentItem()-1);
                     }
                 }

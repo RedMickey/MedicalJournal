@@ -3,6 +3,7 @@ package com.example.michel.mycalendar2.calendarview.utils;
 import java.util.Calendar;
 
 import com.example.michel.mycalendar2.calendarview.data.DateData;
+import com.example.michel.mycalendar2.calendarview.data.DayDifference;
 
 public class CalendarUtil {
     public static DateData date = CurrentCalendar.getCurrentDateData();
@@ -122,5 +123,20 @@ public class CalendarUtil {
                 break;
         }
         return monthName + " " + String.valueOf(year);
+    }
+    public static DayDifference calculateDaysBetweenDates(DateData curDate, DateData date2)
+    {
+        Calendar firstDate = Calendar.getInstance();
+        firstDate.set(Calendar.DAY_OF_MONTH, curDate.getDay());
+        firstDate.set(Calendar.MONTH, curDate.getMonth()-1); // 0-11 so 1 less
+        firstDate.set(Calendar.YEAR, curDate.getYear());
+
+        Calendar secondDate = Calendar.getInstance();
+        secondDate.set(Calendar.DAY_OF_MONTH,date2.getDay());
+        secondDate.set(Calendar.MONTH,date2.getMonth()-1); // 0-11 so 1 less
+        secondDate.set(Calendar.YEAR, date2.getYear());
+
+        int difference = (int)((firstDate.getTimeInMillis() - secondDate.getTimeInMillis())/(24 * 60 * 60 * 1000));
+        return new DayDifference(Math.abs(difference), difference<0?true:false);
     }
 }
