@@ -6,6 +6,7 @@ import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.example.michel.mycalendar2.calendarview.data.DateData;
 import com.example.michel.mycalendar2.calendarview.utils.DatabaseHelper;
 import com.example.michel.mycalendar2.models.TakingMedicine;
 
@@ -41,7 +42,7 @@ public class DatabaseAdapter {
     }
 
     private Cursor getAllEntries(){
-        String[] columns = new String[] {"ID_pill", "pill_name"};
+        String[] columns = new String[] {"_id_pill", "pill_name", "time_of_drug_usage"};
         return  database.query("pills", columns, null, null, null, null, null);
     }
 
@@ -58,13 +59,30 @@ public class DatabaseAdapter {
         Log.i("table", "here2");
     }
 
+    public List<TakingMedicine> getTakingMedicineByDate(DateData date){
+        ArrayList<TakingMedicine> takingMedicines = new ArrayList<>();
+        Cursor cursor = database.query("pills", new String[]{"_id_pill", "pill_name", "time_of_drug_usage"}, "time_of_drug_usage = ?", new String[]{date.getDateString()}, null,null,null);
+        if(cursor.moveToFirst()){
+            do{
+                int id = cursor.getInt(cursor.getColumnIndex("_id_pill"));
+                String name = cursor.getString(cursor.getColumnIndex("pill_name"));
+                String dateStr = cursor.getString(cursor.getColumnIndex("time_of_drug_usage"));
+                takingMedicines.add(new TakingMedicine(id, name));
+            }
+            while (cursor.moveToNext());
+        }
+        cursor.close();
+        return  takingMedicines;
+    }
+
     public List<TakingMedicine> getTakingMedicine(){
         ArrayList<TakingMedicine> takingMedicines = new ArrayList<>();
         Cursor cursor = getAllEntries();
         if(cursor.moveToFirst()){
             do{
-                int id = cursor.getInt(cursor.getColumnIndex("ID_pill"));
+                int id = cursor.getInt(cursor.getColumnIndex("_id_pill"));
                 String name = cursor.getString(cursor.getColumnIndex("pill_name"));
+                String dateStr = cursor.getString(cursor.getColumnIndex("time_of_drug_usage"));
                 takingMedicines.add(new TakingMedicine(id, name));
             }
             while (cursor.moveToNext());

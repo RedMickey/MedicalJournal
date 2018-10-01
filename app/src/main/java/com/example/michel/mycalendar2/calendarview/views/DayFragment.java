@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.michel.mycalendar2.activities.R;
+import com.example.michel.mycalendar2.calendarview.appAsyncTasks.TasksViewCreationTask;
 import com.example.michel.mycalendar2.calendarview.data.DateData;
 import com.example.michel.mycalendar2.calendarview.data.DayData;
 
@@ -43,7 +44,9 @@ public class DayFragment extends Fragment{
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mText = (TextView) view.findViewById(R.id.text);
-        mText.setText(currentData.getDayString());
+        TasksViewCreationTask tv = new TasksViewCreationTask(view);
+        tv.execute(currentData);
+        //mText = (TextView) view.findViewById(R.id.text);
+        //mText.setText(currentData.getDayString());
     }
 }

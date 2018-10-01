@@ -5,6 +5,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
@@ -334,10 +335,11 @@ public class MainActivity extends AppCompatActivity
         // создаем базу данных
         databaseHelper.create_db();
         DatabaseAdapter.AppContext = getApplicationContext();
-        DatabaseAdapter d = new DatabaseAdapter();
-        d.open();
+
+        //DatabaseAdapter d = new DatabaseAdapter();
+        /*d.open();
         d.getAllTables();
-        d.close();
+        d.close();*/
         //TasksViewCreationTask t = new TasksViewCreationTask();
         //t.execute(selectedDate);
 
@@ -405,10 +407,12 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
+        Fragment fragment = null;
+        Class fragmentClass;
         int id = item.getItemId();
-
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
+        /*
+        if (id == R.id.nav_medicines) {
+            fragmentClass = AddTreatmentFragment.class;
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_slideshow) {
@@ -419,7 +423,25 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_send) {
 
+        }*/
+
+        switch(id) {
+            case R.id.nav_medicines:
+                fragment = new AddTreatmentFragment();
+                break;
+            default:
+                fragment = new AddTreatmentFragment();
         }
+
+
+
+        // Вставить фрагмент, заменяя любой существующий
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.flContent, fragment).addToBackStack(null).commit();
+
+        // Выделение существующего элемента выполнено с помощью
+        // NavigationView
+        item.setChecked(true);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

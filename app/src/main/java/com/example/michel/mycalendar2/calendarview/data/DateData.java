@@ -99,4 +99,8 @@ public class DateData {
         this.markStyle = new MarkStyle(style, color);
         return this;
     }
+
+    public String getDateString(){
+        return String.valueOf(year)+"-"+getMonthString()+"-"+getDayString();
+    }
 }
