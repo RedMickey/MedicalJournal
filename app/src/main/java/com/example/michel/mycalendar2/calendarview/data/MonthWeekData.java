@@ -117,6 +117,7 @@ public class MonthWeekData {
             calendar.add(Calendar.MONTH, distance);
         }
 
+        calendar.set(Calendar.MONTH, CellConfig.weekAnchorPointDate.getMonth()-1);
         calendar.set(Calendar.DAY_OF_MONTH, getAnchorDayOfMonth(CellConfig.weekAnchorPointDate));
 ///////////////////////////////////////////////////////////////////////////////////////////
 

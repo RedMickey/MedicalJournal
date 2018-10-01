@@ -25,12 +25,12 @@ import com.example.michel.mycalendar2.calendarview.CellConfig;
 import com.example.michel.mycalendar2.calendarview.adapters.CalendarViewExpAdapter;
 import com.example.michel.mycalendar2.calendarview.adapters.DayAdapter;
 import com.example.michel.mycalendar2.calendarview.data.DateData;
-import com.example.michel.mycalendar2.calendarview.data.DayData;
 import com.example.michel.mycalendar2.calendarview.data.DayDifference;
 import com.example.michel.mycalendar2.calendarview.listeners.OnDateClickListener;
 import com.example.michel.mycalendar2.calendarview.listeners.OnExpDateClickListener;
 import com.example.michel.mycalendar2.calendarview.listeners.OnMonthScrollListener;
 import com.example.michel.mycalendar2.calendarview.utils.CalendarUtil;
+import com.example.michel.mycalendar2.calendarview.utils.DatabaseHelper;
 import com.example.michel.mycalendar2.calendarview.views.ExpCalendarView;
 import com.example.michel.mycalendar2.calendarview.views.MonthExpFragment;
 import com.example.michel.mycalendar2.calendarview.views.WeekDayViewPager;
@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity
     private TextView YearMonthTv;
     private ExpCalendarView calendarView;
     private DateData selectedDate;
+    private DatabaseHelper databaseHelper;
 
     private SlidingUpPanelLayout slidingUpPanelLayout;
     private LinearLayout calendarLayout;
@@ -173,8 +174,8 @@ public class MainActivity extends AppCompatActivity
                     dateBuff = new DateData(preData.getYear(),preData.getMonth(),preData.getDay());
                 }
 
-                DateData cd2 = ((DayAdapter)weekDayViewPager.getAdapter()).getCurrentDate();
-
+                selectedDate = calendarView.getMarkedDates().getAll().get(0);
+                DateData s = selectedDate;
                 /*calendarView.getMarkedDates().removeAdd();
                 calendarView.markDate(date);
                 selectedDate = date;*/
@@ -207,6 +208,7 @@ public class MainActivity extends AppCompatActivity
                         CellConfig.Month2WeekPos = CellConfig.middlePosition;
                         CellConfig.ifMonth = false;
                         CellConfig.weekAnchorPointDate = selectedDate;
+                        YearMonthTv.setText(CalendarUtil.getDateString(selectedDate.getYear(), selectedDate.getMonth()));
                         calendarView.expand();
                         break;
                 }
@@ -231,6 +233,7 @@ public class MainActivity extends AppCompatActivity
                 Log.i("Item", String.valueOf(weekDayViewPager.getCurrentItem()));
                 Log.i("Pos", String.valueOf(position));
                 DateData date = calendarView.getMarkedDates().getAll().get(0);
+                boolean y = ((DayAdapter)weekDayViewPager.getAdapter()).isDayClicked();
                 int newYear, newMonth, newDay;
                 if (position>weekDayViewPager.LastPage)
                 {
@@ -265,7 +268,6 @@ public class MainActivity extends AppCompatActivity
                     if (!fr.getMonthViewExpd().getAdapter().listContainItemByDate(calendarView.getMarkedDates().getAll().get(0))&&
                             !((DayAdapter)weekDayViewPager.getAdapter()).isDayClicked()){
                         Log.i("IsContein", "does not contain");
-                        ((DayAdapter)weekDayViewPager.getAdapter()).setDayClicked(false);
                         calendarView.setCurrentItem(calendarView.getCurrentItem()+1);
                     }
                 }
@@ -307,11 +309,11 @@ public class MainActivity extends AppCompatActivity
                     if (!fr.getMonthViewExpd().getAdapter().listContainItemByDate(calendarView.getMarkedDates().getAll().get(0))&&
                             !((DayAdapter)weekDayViewPager.getAdapter()).isDayClicked()) {
                         Log.i("IsContein", "does not contain");
-                        ((DayAdapter)weekDayViewPager.getAdapter()).setDayClicked(false);
                         calendarView.setCurrentItem(calendarView.getCurrentItem()-1);
                     }
                 }
 
+                ((DayAdapter)weekDayViewPager.getAdapter()).setDayClicked(false);
                 weekDayViewPager.LastPage = position;
 
                 Log.i("DateP", date.getMonthString()+ " " + date.getDayString());
@@ -324,6 +326,10 @@ public class MainActivity extends AppCompatActivity
 
             }
         });
+
+        databaseHelper = new DatabaseHelper(getApplicationContext());
+        // создаем базу данных
+        databaseHelper.create_db();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);

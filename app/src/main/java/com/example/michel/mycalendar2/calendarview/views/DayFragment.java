@@ -37,8 +37,6 @@ public class DayFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View result = inflater.inflate(R.layout.day_fragment, container, false);
-        TextView mText2 = (TextView)result.findViewById(R.id.text);
-        mText2.setText("123456");
         return result;
     }
 
