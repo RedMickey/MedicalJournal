@@ -23,7 +23,9 @@ import android.widget.TextView;
 
 import com.example.michel.mycalendar2.calendarview.CellConfig;
 import com.example.michel.mycalendar2.calendarview.adapters.CalendarViewExpAdapter;
+import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
 import com.example.michel.mycalendar2.calendarview.adapters.DayAdapter;
+import com.example.michel.mycalendar2.calendarview.appAsyncTasks.TasksViewCreationTask;
 import com.example.michel.mycalendar2.calendarview.data.DateData;
 import com.example.michel.mycalendar2.calendarview.data.DayDifference;
 import com.example.michel.mycalendar2.calendarview.listeners.OnDateClickListener;
@@ -34,6 +36,7 @@ import com.example.michel.mycalendar2.calendarview.utils.DatabaseHelper;
 import com.example.michel.mycalendar2.calendarview.views.ExpCalendarView;
 import com.example.michel.mycalendar2.calendarview.views.MonthExpFragment;
 import com.example.michel.mycalendar2.calendarview.views.WeekDayViewPager;
+import com.example.michel.mycalendar2.models.TakingMedicine;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.util.ArrayList;
@@ -330,6 +333,13 @@ public class MainActivity extends AppCompatActivity
         databaseHelper = new DatabaseHelper(getApplicationContext());
         // создаем базу данных
         databaseHelper.create_db();
+        DatabaseAdapter.AppContext = getApplicationContext();
+        DatabaseAdapter d = new DatabaseAdapter();
+        d.open();
+        d.getAllTables();
+        d.close();
+        //TasksViewCreationTask t = new TasksViewCreationTask();
+        //t.execute(selectedDate);
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
