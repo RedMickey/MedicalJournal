@@ -19,10 +19,12 @@ import java.util.List;
 public class TasksViewCreationTask extends AsyncTask<DateData, Void, List<TakingMedicine>>{
 
     private WeakReference viewRef;
+    private View view;
 
     public TasksViewCreationTask(View view){
         super();
         viewRef = new WeakReference(view);
+        this.view = view;
     }
 
     @Override
@@ -38,9 +40,11 @@ public class TasksViewCreationTask extends AsyncTask<DateData, Void, List<Taking
 
     @Override
     protected void onPostExecute(List<TakingMedicine> takingMedicines) {
-        LinearLayout tasksLayout = (LinearLayout)((View)viewRef.get()).findViewById(R.id.tasks_layout);
+        //LinearLayout tasksLayout = (LinearLayout)((View)viewRef.get()).findViewById(R.id.tasks_layout);
+        LinearLayout tasksLayout = (LinearLayout)view.findViewById(R.id.tasks_layout);
         for (TakingMedicine tm: takingMedicines) {
-            TextView taskNote = new TextView(((View)viewRef.get()).getContext());
+            //TextView taskNote = new TextView(((View)viewRef.get()).getContext());
+            TextView taskNote = new TextView(view.getContext());
             LinearLayout.LayoutParams taskNoteParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             taskNote.setText(tm.getName());
             taskNote.setLayoutParams(taskNoteParams);
@@ -48,7 +52,8 @@ public class TasksViewCreationTask extends AsyncTask<DateData, Void, List<Taking
             tasksLayout.addView(taskNote);
         }
         if (takingMedicines.isEmpty()){
-            TextView taskNote = new TextView(((View)viewRef.get()).getContext());
+            //TextView taskNote = new TextView(((View)viewRef.get()).getContext());
+            TextView taskNote = new TextView(view.getContext());
             LinearLayout.LayoutParams taskNoteParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             taskNote.setText("Empty");
             taskNote.setLayoutParams(taskNoteParams);

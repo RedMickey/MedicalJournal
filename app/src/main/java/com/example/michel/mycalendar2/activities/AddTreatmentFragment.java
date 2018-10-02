@@ -2,12 +2,14 @@ package com.example.michel.mycalendar2.activities;
 
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v7.widget.ViewUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 public class AddTreatmentFragment extends Fragment {
 
+    private View view;
     public AddTreatmentFragment() {
         super();
     }
@@ -16,9 +18,8 @@ public class AddTreatmentFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.add_pill_view, container,
-                false);
+        this.view = inflater.inflate(R.layout.add_pill_view, container, false);
 
-        return rootView;
+        return view;
     }
 }
