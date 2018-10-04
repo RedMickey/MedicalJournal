@@ -1,6 +1,7 @@
 package com.example.michel.mycalendar2.activities;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -75,6 +76,16 @@ public class MainFragment extends Fragment{
 
         //      Get instance.
         calendarView = ((ExpCalendarView) view.findViewById(R.id.calendar_view));
+
+
+      /*  new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                calendarView.setCurrentItem(500);
+            }
+        });
+*/
+        //calendarView.setCurrentItem(500);
         YearMonthTv = (TextView) view.findViewById(R.id.YYMM_Tv);
         YearMonthTv.setText(CalendarUtil.getDateString(Calendar.getInstance().get(Calendar.YEAR),(Calendar.getInstance().get(Calendar.MONTH) + 1)));
 
@@ -166,8 +177,8 @@ public class MainFragment extends Fragment{
                     dateBuff = new DateData(preData.getYear(),preData.getMonth(),preData.getDay());
                 }
 
-                selectedDate = calendarView.getMarkedDates().getAll().get(0);
-                DateData s = selectedDate;
+                CellConfig.selectedDate = calendarView.getMarkedDates().getAll().get(0);
+                DateData s = CellConfig.selectedDate;
                 /*calendarView.getMarkedDates().removeAdd();
                 calendarView.markDate(date);
                 selectedDate = date;*/
@@ -197,8 +208,8 @@ public class MainFragment extends Fragment{
 
                         CellConfig.Month2WeekPos = CellConfig.middlePosition;
                         CellConfig.ifMonth = false;
-                        CellConfig.weekAnchorPointDate = selectedDate;
-                        YearMonthTv.setText(CalendarUtil.getDateString(selectedDate.getYear(), selectedDate.getMonth()));
+                        CellConfig.weekAnchorPointDate = CellConfig.selectedDate;
+                        YearMonthTv.setText(CalendarUtil.getDateString(CellConfig.selectedDate.getYear(), CellConfig.selectedDate.getMonth()));
                         calendarView.expand();
                         break;
                 }
@@ -207,8 +218,9 @@ public class MainFragment extends Fragment{
         //imageInit();
 
         final Calendar calendar = Calendar.getInstance();
-        selectedDate = new DateData(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH));
-        calendarView.markDate(selectedDate);
+        if (CellConfig.selectedDate==null)
+            CellConfig.selectedDate = new DateData(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH)+1);
+        calendarView.markDate(CellConfig.selectedDate);
 
         weekDayViewPager.init(calendarView);
 
@@ -322,6 +334,7 @@ public class MainFragment extends Fragment{
         databaseHelper.create_db();
         DatabaseAdapter.AppContext = getActivity().getApplicationContext();
 
+        //calendarView.setCurrentItem(500);
         return view;
     }
 /*
@@ -340,7 +353,16 @@ public class MainFragment extends Fragment{
     @Override
     public void onResume() {
         super.onResume();
+
+
+
         //slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
         //calendarView.expand();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        CellConfig.resetAllDatas();
     }
 }

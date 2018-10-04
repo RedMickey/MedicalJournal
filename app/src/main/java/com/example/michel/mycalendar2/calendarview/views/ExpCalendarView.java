@@ -1,10 +1,12 @@
 package com.example.michel.mycalendar2.calendarview.views;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.View;
+import android.os.Handler;
 
 import android.util.Log;
 
@@ -46,9 +48,16 @@ public class ExpCalendarView extends ViewPager {
 
     public ExpCalendarView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        Context c = context;
         if (context instanceof FragmentActivity) {
             init((FragmentActivity) context);
         }
+    }
+
+    @Nullable
+    @Override
+    public CalendarViewExpAdapter getAdapter() {
+        return adapter;
     }
 
     public void init(FragmentActivity activity) {
@@ -65,6 +74,7 @@ public class ExpCalendarView extends ViewPager {
         }
         adapter = new CalendarViewExpAdapter(activity.getSupportFragmentManager()).setDate(currentDate);
         this.setAdapter(adapter);
+
         this.setCurrentItem(500);
 //        addBackground();
         float density = getContext().getResources().getSystem().getDisplayMetrics().density;

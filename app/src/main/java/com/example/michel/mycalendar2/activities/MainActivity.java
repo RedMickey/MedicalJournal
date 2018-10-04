@@ -22,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.michel.mycalendar2.calendarview.CellConfig;
 import com.example.michel.mycalendar2.calendarview.adapters.CalendarViewExpAdapter;
@@ -63,7 +64,7 @@ public class MainActivity extends AppCompatActivity
         MainFragment mainFragment = MainFragment.newInstance();
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
-                .add(R.id.frame_container, mainFragment)
+                .add(R.id.frame_container, mainFragment, "MAIN_FRAGMENT")
                 .commit();
 
         //DatabaseAdapter d = new DatabaseAdapter();
@@ -77,7 +78,6 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
     }
 
-    private boolean ifExpand = false;
 /*
     private void imageInit() {
         final ImageView expandIV = (ImageView) findViewById(R.id.main_expandIV);
@@ -107,7 +107,17 @@ public class MainActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            Fragment mainFragment = (MainFragment)getSupportFragmentManager().findFragmentByTag("MAIN_FRAGMENT");
+            if (mainFragment == null || !mainFragment.isVisible()) {
+                MainFragment mainFragmentNew = MainFragment.newInstance();
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                fragmentManager.beginTransaction()
+                        .add(R.id.frame_container, mainFragmentNew, "MAIN_FRAGMENT")
+                        .commit();
+                //Toast.makeText(this,"here",Toast.LENGTH_SHORT).show();
+            }
+            else
+                super.onBackPressed();
         }
     }
 
@@ -160,7 +170,7 @@ public class MainActivity extends AppCompatActivity
                 fragment = new AddTreatmentFragment();
                 break;
             default:
-                fragment = new AddTreatmentFragment();
+                fragment = new MainFragment();
         }
 
 
@@ -170,7 +180,7 @@ public class MainActivity extends AppCompatActivity
         //fragmentManager.beginTransaction().replace(R.id.flContent, fragment).addToBackStack(null).commit();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.frame_container, fragment);
-        transaction.addToBackStack(null);
+        //transaction.addToBackStack(null);
         transaction.commit();
         // Выделение существующего элемента выполнено с помощью
         // NavigationView
