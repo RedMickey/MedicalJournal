@@ -6,4 +6,24 @@
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_add_treatment">AddTreatmentActivity</string>
+
+    <string name="rb_every_day">Каждый день</string>
+    <string name="rb_specific_days">По определённыйм дням</string>
+    <string name="rb_day_interval">Дневной интервал</string>
+
+    <string-array name="dose_type">
+        <item>шт</item>
+        <item>мл</item>
+        <item>гр</item>
+        <item>мг</item>
+        <item>капли</item>
+    </string-array>
+
+    <string-array name="date_type">
+        <item>дн.</item>
+        <item>нед.</item>
+        <item>мес.</item>
+    </string-array>
+
 </resources>

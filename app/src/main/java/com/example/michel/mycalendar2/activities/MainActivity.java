@@ -1,5 +1,6 @@
 package com.example.michel.mycalendar2.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -147,9 +148,9 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
-        Fragment fragment = null;
         Class fragmentClass;
         int id = item.getItemId();
+        Intent intent;
         /*
         if (id == R.id.nav_medicines) {
             fragmentClass = AddTreatmentFragment.class;
@@ -167,10 +168,10 @@ public class MainActivity extends AppCompatActivity
 
         switch(id) {
             case R.id.nav_medicines:
-                fragment = new AddTreatmentFragment();
+                intent = new Intent(this, AddTreatmentActivity.class);
                 break;
             default:
-                fragment = new MainFragment();
+                intent = new Intent(this, AddTreatmentActivity.class);
         }
 
 
@@ -178,16 +179,17 @@ public class MainActivity extends AppCompatActivity
         // Вставить фрагмент, заменяя любой существующий
         //FragmentManager fragmentManager = getSupportFragmentManager();
         //fragmentManager.beginTransaction().replace(R.id.flContent, fragment).addToBackStack(null).commit();
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.frame_container, fragment);
+        //FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        //transaction.replace(R.id.frame_container, fragment);
         //transaction.addToBackStack(null);
-        transaction.commit();
+        //transaction.commit();
         // Выделение существующего элемента выполнено с помощью
         // NavigationView
         item.setChecked(true);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
+        startActivity(intent);
         return true;
     }
 }

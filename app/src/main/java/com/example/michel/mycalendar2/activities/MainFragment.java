@@ -219,7 +219,7 @@ public class MainFragment extends Fragment{
 
         final Calendar calendar = Calendar.getInstance();
         if (CellConfig.selectedDate==null)
-            CellConfig.selectedDate = new DateData(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH)+1);
+            CellConfig.selectedDate = new DateData(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH));
         calendarView.markDate(CellConfig.selectedDate);
 
         weekDayViewPager.init(calendarView);
