@@ -82,6 +82,48 @@ public class CalendarUtil {
         }
     }
 
+    public static String getShortMonthName(int month){
+        String monthName = "";
+        switch (month){
+            case 1:
+                monthName = "янв.";
+                break;
+            case 2:
+                monthName = "Февр.";
+                break;
+            case 3:
+                monthName = "марта";
+                break;
+            case 4:
+                monthName = "апр.";
+                break;
+            case 5:
+                monthName = "мая";
+                break;
+            case 6:
+                monthName = "июня";
+                break;
+            case 7:
+                monthName = "июля";
+                break;
+            case 8:
+                monthName = "авг.";
+                break;
+            case 9:
+                monthName = "сент.";
+                break;
+            case 10:
+                monthName = "окт.";
+                break;
+            case 11:
+                monthName = "нояб.";
+                break;
+            case 12:
+                monthName = "дек.";
+                break;
+        }
+        return monthName;
+    }
     public static String getDateString(int year, int month){
         String monthName = "";
         switch (month){

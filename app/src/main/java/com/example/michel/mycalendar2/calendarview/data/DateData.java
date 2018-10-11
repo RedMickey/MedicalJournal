@@ -13,6 +13,15 @@ public class DateData {
     private int minute;
     private MarkStyle markStyle;
 
+    public DateData(){
+        this.day = 0;
+        this.month = 0;
+        this.year = 0;
+        this.hour = 0;
+        this.minute = 0;
+        this.markStyle = new MarkStyle();
+    }
+
     public DateData(int year, int month, int day){
         this.day = day;
         this.month = month;
