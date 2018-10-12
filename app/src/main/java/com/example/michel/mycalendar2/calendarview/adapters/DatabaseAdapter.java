@@ -8,7 +8,7 @@ import android.util.Log;
 
 import com.example.michel.mycalendar2.calendarview.data.DateData;
 import com.example.michel.mycalendar2.calendarview.utils.DatabaseHelper;
-import com.example.michel.mycalendar2.models.TakingMedicine;
+import com.example.michel.mycalendar2.models.PillReminderEntry;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,7 +58,7 @@ public class DatabaseAdapter {
         }
         Log.i("table", "here2");
     }
-
+/*
     public List<TakingMedicine> getTakingMedicineByDate(DateData date){
         ArrayList<TakingMedicine> takingMedicines = new ArrayList<>();
         Cursor cursor = database.query("pills", new String[]{"_id_pill", "pill_name", "time_of_drug_usage"}, "time_of_drug_usage = ?", new String[]{date.getDateString()}, null,null,null);
@@ -90,9 +90,29 @@ public class DatabaseAdapter {
         cursor.close();
         return  takingMedicines;
     }
+*/
+
+    public List<PillReminderEntry> getPillReminderEntriesByDate(DateData date){
+        ArrayList<PillReminderEntry> pillReminderEntries = new ArrayList<>();
+        String rawQuery = "select pre._id_pill_reminder, pre.is_done, rt.time, pi.pill_name from pill_reminder_entries pre inner join pill_reminders pr on pre._id_pill_reminder=pr._id_pill_reminder inner join" +
+                " reminder_times rt on pr._id_pill_reminder=rt._id_pill_reminder inner join pills pi on pi._id_pill=pr._id_pill where pre.reminder_date=?";
+        Cursor cursor = database.rawQuery(rawQuery, new String[]{date.getDateString()});
+        if(cursor.moveToFirst()){
+            do{
+                int id = cursor.getInt(cursor.getColumnIndex("_id_pill_reminder"));
+                String name = cursor.getString(cursor.getColumnIndex("pill_name"));
+                String dateStr = cursor.getString(cursor.getColumnIndex("time"));
+                pillReminderEntries.add(new PillReminderEntry(id, name, dateStr));
+            }
+            while (cursor.moveToNext());
+        }
+        cursor.close();
+        return  pillReminderEntries;
+    }
+
 
     public long getCount(){
-        return DatabaseUtils.queryNumEntries(database, DatabaseHelper.TABLE_PILLS);
+        return DatabaseUtils.queryNumEntries(database, DatabaseHelper.TABLE_pill_reminders);
     }
 
   /*  public User getUser(long id){

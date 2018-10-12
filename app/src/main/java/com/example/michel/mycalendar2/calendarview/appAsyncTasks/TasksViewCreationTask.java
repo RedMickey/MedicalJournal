@@ -1,7 +1,6 @@
 package com.example.michel.mycalendar2.calendarview.appAsyncTasks;
 
 import android.os.AsyncTask;
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -9,14 +8,12 @@ import android.widget.TextView;
 import com.example.michel.mycalendar2.activities.R;
 import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
 import com.example.michel.mycalendar2.calendarview.data.DateData;
-import com.example.michel.mycalendar2.calendarview.views.DayFragment;
-import com.example.michel.mycalendar2.models.TakingMedicine;
+import com.example.michel.mycalendar2.models.PillReminderEntry;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 import java.util.List;
 
-public class TasksViewCreationTask extends AsyncTask<DateData, Void, List<TakingMedicine>>{
+public class TasksViewCreationTask extends AsyncTask<DateData, Void, List<PillReminderEntry>>{
 
     private WeakReference viewRef;
     private View view;
@@ -28,30 +25,31 @@ public class TasksViewCreationTask extends AsyncTask<DateData, Void, List<Taking
     }
 
     @Override
-    protected List<TakingMedicine> doInBackground(DateData... dateData) {
+    protected List<PillReminderEntry> doInBackground(DateData... dateData) {
         DatabaseAdapter databaseAdapter = new DatabaseAdapter();
         databaseAdapter.open();
-        List<TakingMedicine> takingMedicines = databaseAdapter.getTakingMedicineByDate(dateData[0]);
+        List<PillReminderEntry> pillReminderEntries = databaseAdapter.getPillReminderEntriesByDate(dateData[0]);
         //List<TakingMedicine> takingMedicines = databaseAdapter.getTakingMedicine();
         databaseAdapter.close();
 
-        return takingMedicines;
+        return pillReminderEntries;
     }
 
     @Override
-    protected void onPostExecute(List<TakingMedicine> takingMedicines) {
+    protected void onPostExecute(List<PillReminderEntry> pillReminderEntries) {
         //LinearLayout tasksLayout = (LinearLayout)((View)viewRef.get()).findViewById(R.id.tasks_layout);
+
         LinearLayout tasksLayout = (LinearLayout)view.findViewById(R.id.tasks_layout);
-        for (TakingMedicine tm: takingMedicines) {
+        for (PillReminderEntry pre: pillReminderEntries) {
             //TextView taskNote = new TextView(((View)viewRef.get()).getContext());
             TextView taskNote = new TextView(view.getContext());
             LinearLayout.LayoutParams taskNoteParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            taskNote.setText(tm.getName());
+            taskNote.setText(pre.getName() + " "+ pre.getTime());
             taskNote.setLayoutParams(taskNoteParams);
 
             tasksLayout.addView(taskNote);
         }
-        if (takingMedicines.isEmpty()){
+        if (pillReminderEntries.isEmpty()){
             //TextView taskNote = new TextView(((View)viewRef.get()).getContext());
             TextView taskNote = new TextView(view.getContext());
             LinearLayout.LayoutParams taskNoteParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -60,5 +58,6 @@ public class TasksViewCreationTask extends AsyncTask<DateData, Void, List<Taking
 
             tasksLayout.addView(taskNote);
         }
+
     }
 }

@@ -17,7 +17,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static String DB_NAME = "test.db";
     private static final int SCHEMA = 1; // версия базы данных
 
-    public static final String TABLE_PILLS = "pills"; // название таблицы в бд
+    public static final String TABLE_pill_reminders = "pill_reminder_entries"; // название таблицы в бд
 
     private Context myContext;
     /* названия столбцов
