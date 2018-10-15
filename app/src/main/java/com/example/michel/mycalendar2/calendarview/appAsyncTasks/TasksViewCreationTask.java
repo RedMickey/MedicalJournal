@@ -1,6 +1,7 @@
 package com.example.michel.mycalendar2.calendarview.appAsyncTasks;
 
 import android.os.AsyncTask;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -15,12 +16,10 @@ import java.util.List;
 
 public class TasksViewCreationTask extends AsyncTask<DateData, Void, List<PillReminderEntry>>{
 
-    private WeakReference viewRef;
     private View view;
 
     public TasksViewCreationTask(View view){
         super();
-        viewRef = new WeakReference(view);
         this.view = view;
     }
 
@@ -37,9 +36,17 @@ public class TasksViewCreationTask extends AsyncTask<DateData, Void, List<PillRe
 
     @Override
     protected void onPostExecute(List<PillReminderEntry> pillReminderEntries) {
-        //LinearLayout tasksLayout = (LinearLayout)((View)viewRef.get()).findViewById(R.id.tasks_layout);
+        LinearLayout tasksLayout = (LinearLayout)view.findViewById(R.id.pill_reminder_entries_layout);
 
-        LinearLayout tasksLayout = (LinearLayout)view.findViewById(R.id.tasks_layout);
+        LayoutInflater inflater = LayoutInflater.from(view.getContext());
+
+        View pillReminderEntryView = inflater.inflate(R.layout.pill_reminder_entry, null, false);
+
+        if(pillReminderEntries.size()>0)
+            ((TextView) pillReminderEntryView.findViewById(R.id.pill_name_tv)).setText(pillReminderEntries.get(0).getName());
+        else
+            ((TextView) pillReminderEntryView.findViewById(R.id.pill_name_tv)).setText("Empty");
+/*
         for (PillReminderEntry pre: pillReminderEntries) {
             //TextView taskNote = new TextView(((View)viewRef.get()).getContext());
             TextView taskNote = new TextView(view.getContext());
@@ -58,6 +65,7 @@ public class TasksViewCreationTask extends AsyncTask<DateData, Void, List<PillRe
 
             tasksLayout.addView(taskNote);
         }
-
+*/
+        tasksLayout.addView(pillReminderEntryView);
     }
 }

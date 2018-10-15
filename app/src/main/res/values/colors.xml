@@ -4,4 +4,5 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="add_timeBT_BG">#ECEFF1</color>
+    <color name="line_BG">#dedede</color>
 </resources>

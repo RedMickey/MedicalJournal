@@ -12,6 +12,7 @@ import com.example.michel.mycalendar2.activities.R;
 import com.example.michel.mycalendar2.calendarview.appAsyncTasks.TasksViewCreationTask;
 import com.example.michel.mycalendar2.calendarview.data.DateData;
 import com.example.michel.mycalendar2.calendarview.data.DayData;
+import com.example.michel.mycalendar2.calendarview.utils.CalendarUtil;
 
 public class DayFragment extends Fragment{
 
@@ -44,6 +45,9 @@ public class DayFragment extends Fragment{
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        ((TextView) view.findViewById(R.id.text_current_date)).setText(currentData.getDayString()+" "+ CalendarUtil.getRusMonthName(currentData.getMonth(),1));
+        //((TextView) view.findViewById(R.id.text_day_of_week)).setText(CalendarUtil.getDayOfWeekRusName(currentData));
+        ((TextView) view.findViewById(R.id.text_day_of_week)).setText(CalendarUtil.getDayOfWeekRusName(currentData));
         TasksViewCreationTask tv = new TasksViewCreationTask(view);
         tv.execute(currentData);
         //mText = (TextView) view.findViewById(R.id.text);

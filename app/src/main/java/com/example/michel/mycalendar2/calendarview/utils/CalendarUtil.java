@@ -1,6 +1,7 @@
 package com.example.michel.mycalendar2.calendarview.utils;
 
 import java.util.Calendar;
+import java.util.Date;
 
 import com.example.michel.mycalendar2.calendarview.data.DateData;
 import com.example.michel.mycalendar2.calendarview.data.DayDifference;
@@ -82,20 +83,41 @@ public class CalendarUtil {
         }
     }
 
-    public static String getShortMonthName(int month){
+    public static String getRusMonthName(int month, int type){
         String monthName = "";
         switch (month){
             case 1:
-                monthName = "янв.";
+                switch (type){
+                    case 0:
+                        monthName = "янв.";
+                        break;
+                    case 1:
+                        monthName = "января";
+                        break;
+                }
                 break;
             case 2:
-                monthName = "Февр.";
+                switch (type){
+                    case 0:
+                        monthName = "Февр.";
+                        break;
+                    case 1:
+                        monthName = "февраля";
+                        break;
+                }
                 break;
             case 3:
                 monthName = "марта";
                 break;
             case 4:
-                monthName = "апр.";
+                switch (type){
+                    case 0:
+                        monthName = "апр.";
+                        break;
+                    case 1:
+                        monthName = "апреля";
+                        break;
+                }
                 break;
             case 5:
                 monthName = "мая";
@@ -107,23 +129,91 @@ public class CalendarUtil {
                 monthName = "июля";
                 break;
             case 8:
-                monthName = "авг.";
+                switch (type){
+                    case 0:
+                        monthName = "авг.";
+                        break;
+                    case 1:
+                        monthName = "августа";
+                        break;
+                }
                 break;
             case 9:
-                monthName = "сент.";
+                switch (type){
+                    case 0:
+                        monthName = "сент.";
+                        break;
+                    case 1:
+                        monthName = "сентября";
+                        break;
+                }
                 break;
             case 10:
-                monthName = "окт.";
+                switch (type){
+                    case 0:
+                        monthName = "окт.";
+                        break;
+                    case 1:
+                        monthName = "октября";
+                        break;
+                }
                 break;
             case 11:
-                monthName = "нояб.";
+                switch (type){
+                    case 0:
+                        monthName = "нояб.";
+                        break;
+                    case 1:
+                        monthName = "ноября";
+                        break;
+                }
                 break;
             case 12:
-                monthName = "дек.";
+                switch (type){
+                    case 0:
+                        monthName = "дек.";
+                        break;
+                    case 1:
+                        monthName = "декабря";
+                        break;
+                }
                 break;
         }
         return monthName;
     }
+
+    public static String getDayOfWeekRusName(DateData dateData){
+        Calendar cal = Calendar.getInstance();
+        cal.set(dateData.getYear(), dateData.getMonth()-1, dateData.getDay());
+        int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
+
+        String dayName="";
+        switch (dayOfWeek){
+            case 2:
+                dayName = "понедельник";
+                break;
+            case 3:
+                dayName = "вторник";
+                break;
+            case 4:
+                dayName = "среда";
+                break;
+            case 5:
+                dayName = "четверг";
+                break;
+            case 6:
+                dayName = "пятница";
+                break;
+            case 7:
+                dayName = "суббота";
+                break;
+            case 1:
+                dayName = "воскресение";
+                break;
+        }
+        return dayName;
+    }
+
     public static String getDateString(int year, int month){
         String monthName = "";
         switch (month){

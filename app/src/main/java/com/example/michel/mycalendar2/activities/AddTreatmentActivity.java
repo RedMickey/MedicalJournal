@@ -194,7 +194,7 @@ public class AddTreatmentActivity extends AppCompatActivity {
         pickDateButtonDateData.setMonth(month);
         pickDateButtonDateData.setYear(year);
 
-        return String.valueOf(day)+" "+ CalendarUtil.getShortMonthName(month)
+        return String.valueOf(day)+" "+ CalendarUtil.getRusMonthName(month, 0)
                 +" "+String.valueOf(year)+" г.";
     }
 
