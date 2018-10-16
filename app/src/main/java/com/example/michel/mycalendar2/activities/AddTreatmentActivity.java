@@ -32,7 +32,8 @@ public class AddTreatmentActivity extends AppCompatActivity {
     private ExpandableRelativeLayout mExpandLayout1;
     private ExpandableRelativeLayout mExpandLayout2;
 
-    private RadioGroup radioGroup12;
+    private RadioGroup radioGroupCycleType;
+    private RadioGroup radioGroupRegardingMeals;
     private Calendar cal;
     private Button pickDateButton;
     private DateData pickDateButtonDateData;
@@ -58,7 +59,11 @@ public class AddTreatmentActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+
+
+
+
+                Snackbar.make(view, "Ready", Snackbar.LENGTH_SHORT)
                         .setAction("Action", null).show();
             }
         });
@@ -68,15 +73,15 @@ public class AddTreatmentActivity extends AppCompatActivity {
         mExpandLayout1 = (ExpandableRelativeLayout) findViewById(R.id.expandableLayout);
         mExpandLayout2 = (ExpandableRelativeLayout) findViewById(R.id.expandableLayout2);
 
-        RadioGroup radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
+        radioGroupCycleType = (RadioGroup) findViewById(R.id.cycle_type);
 
-        radioGroup12 = (RadioGroup) findViewById(R.id.radioGroup2);
+        radioGroupRegardingMeals = (RadioGroup) findViewById(R.id.regarding_meals);
 
         timesOfTakingMedicine = (LinearLayout) findViewById(R.id.times_of_taking_medicine);
         cal = Calendar.getInstance();
         time.add(String.valueOf(cal.get(Calendar.HOUR_OF_DAY))+":00");
 
-        pickDateButton = (Button) findViewById(R.id.pick_date_button);
+        pickDateButton = (Button) findViewById(R.id.pick_start_date_button);
         pickDateButton.setText(setDate(cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.MONTH)+1, cal.get(Calendar.YEAR)));
 
         timesOfTakingMedicineAdapter = new TimesOfTakingMedicineAdapter(this, R.layout.reminder_time_item, time);
@@ -86,7 +91,7 @@ public class AddTreatmentActivity extends AppCompatActivity {
             timesOfTakingMedicine.addView(item);
         }
 
-        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+        radioGroupCycleType.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -106,7 +111,7 @@ public class AddTreatmentActivity extends AppCompatActivity {
             }
         });
 
-        ((RadioGroup) findViewById(R.id.radioGroup2)).setOnCheckedChangeListener(
+        radioGroupRegardingMeals.setOnCheckedChangeListener(
                 new RadioGroup.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(RadioGroup radioGroup, int i) {

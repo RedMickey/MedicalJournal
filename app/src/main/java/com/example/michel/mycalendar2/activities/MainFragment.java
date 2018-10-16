@@ -43,7 +43,6 @@ public class MainFragment extends Fragment{
     private TextView YearMonthTv;
     private ExpCalendarView calendarView;
     private DateData selectedDate;
-    private DatabaseHelper databaseHelper;
 
     private SlidingUpPanelLayout slidingUpPanelLayout;
     private LinearLayout calendarLayout;
@@ -328,12 +327,6 @@ public class MainFragment extends Fragment{
 
             }
         });
-
-        databaseHelper = new DatabaseHelper(getActivity().getApplicationContext());
-        // создаем базу данных
-        databaseHelper.create_db();
-        DatabaseAdapter.AppContext = getActivity().getApplicationContext();
-
         //calendarView.setCurrentItem(500);
         return view;
     }

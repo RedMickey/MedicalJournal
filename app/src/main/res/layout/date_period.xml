@@ -20,7 +20,7 @@ android:orientation="horizontal">
     android:textSize="17dp"/>
 
 <Spinner
-    android:id="@+id/spinner2"
+    android:id="@+id/date_type"
     android:layout_width="70dp"
     android:layout_height="wrap_content"
     android:entries="@array/date_type"

@@ -13,7 +13,7 @@
     <string name="rb_day_interval">Дневной интервал</string>
 
     <string-array name="dose_type">
-        <item>шт</item>
+        <item id="1">шт</item>
         <item>мл</item>
         <item>гр</item>
         <item>мг</item>

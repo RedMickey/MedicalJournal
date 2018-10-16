@@ -40,14 +40,18 @@ import com.example.michel.mycalendar2.calendarview.utils.DatabaseHelper;
 import com.example.michel.mycalendar2.calendarview.views.ExpCalendarView;
 import com.example.michel.mycalendar2.calendarview.views.MonthExpFragment;
 import com.example.michel.mycalendar2.calendarview.views.WeekDayViewPager;
+import com.example.michel.mycalendar2.models.PillReminderEntry;
+import com.example.michel.mycalendar2.utils.DBStaticEntries;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    private DatabaseHelper databaseHelper;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,6 +77,21 @@ public class MainActivity extends AppCompatActivity
         d.close();*/
         //TasksViewCreationTask t = new TasksViewCreationTask();
         //t.execute(selectedDate);
+        databaseHelper = new DatabaseHelper(getApplicationContext());
+        // создаем базу данных
+        databaseHelper.create_db();
+        DatabaseAdapter.AppContext = getApplicationContext();
+
+        DatabaseAdapter databaseAdapter = new DatabaseAdapter();
+        databaseAdapter.open();
+
+        DBStaticEntries.cycleTypes = databaseAdapter.getCycleTypes();
+        DBStaticEntries.dateTypes = databaseAdapter.getDateTypes();
+        DBStaticEntries.doseTypes = databaseAdapter.getDoseTypes();
+
+        /*databaseAdapter.insertPillReminder("pill1", 0,0, null, 0, 0,
+                null, null, 0);*/
+        databaseAdapter.close();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);

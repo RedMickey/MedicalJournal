@@ -52,6 +52,7 @@
                     android:layout_height="wrap_content">
                     <EditText
                         android:layout_width="100dp"
+                        android:id="@+id/edit_text_dose"
                         android:layout_height="wrap_content"
                         android:inputType="number"
                         android:hint="Доза"
@@ -59,9 +60,9 @@
                         />
                 </android.support.design.widget.TextInputLayout>
                 <Spinner
-                    android:id="@+id/spinner"
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
+                    android:id="@+id/dose_type"
                     android:entries="@array/dose_type"
                     android:textSize="17dp"
                     android:layout_marginTop="23dp"/>
@@ -97,7 +98,7 @@
                     -->
                 <Button
                     android:layout_width="160dp"
-                    android:id="@+id/pick_date_button"
+                    android:id="@+id/pick_start_date_button"
                     android:layout_height="wrap_content"
                     android:textSize="15dp"
                     android:layout_gravity="center_vertical"
@@ -113,7 +114,7 @@
                 android:orientation="vertical"
                 android:paddingLeft="45dp">
                 <RadioGroup
-                    android:id="@+id/radioGroup"
+                    android:id="@+id/cycle_type"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
@@ -153,7 +154,8 @@
                     app:ael_orientation="vertical"
                     app:ael_defaultChildIndex="0">
 
-                    <include layout="@layout/date_period"/>
+                    <include layout="@layout/date_period"
+                        android:id="@+id/every_day_period"/>
 
                     <include layout="@layout/specific_days_layout" />
 
@@ -174,7 +176,7 @@
                                 android:layout_marginRight="20dp"/>
 
                             <EditText
-                                android:id="@+id/count_of_dates"
+                                android:id="@+id/edit_text_day_interval"
                                 android:layout_width="70dp"
                                 android:layout_height="wrap_content"
                                 android:inputType="number"
@@ -182,7 +184,7 @@
                                 android:textSize="17dp"/>
 
                             <Spinner
-                                android:id="@+id/spinner2"
+                                android:id="@+id/date_type_di"
                                 android:layout_width="70dp"
                                 android:layout_height="wrap_content"
                                 android:entries="@array/date_type"
@@ -190,7 +192,8 @@
 
                         </LinearLayout>
 
-                        <include layout="@layout/date_period"/>
+                        <include layout="@layout/date_period"
+                            android:id="@+id/day_interval_period"/>
 
                     </LinearLayout>
                 </com.example.michel.mycalendar2.expandableLayout.ExpandableRelativeLayout>
@@ -217,7 +220,7 @@
                         />
 
                     <RadioGroup
-                        android:id="@+id/radioGroup2"
+                        android:id="@+id/regarding_meals"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
