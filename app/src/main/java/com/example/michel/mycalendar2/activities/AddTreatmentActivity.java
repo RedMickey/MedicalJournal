@@ -11,7 +11,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
+import android.widget.GridLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioGroup;
@@ -60,6 +62,11 @@ public class AddTreatmentActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
+                GridLayout gridLayout = (GridLayout) findViewById(R.id.specific_days_layout_id);
+                int[] weekSchedule = new int[7];
+                for (int i=7; i< 14; i++){
+                    weekSchedule[i-7]=((CheckBox) gridLayout.getChildAt(i)).isChecked() ? 1 : 0;
+                }
 
 
 

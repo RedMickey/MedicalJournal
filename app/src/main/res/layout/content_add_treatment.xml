@@ -157,7 +157,8 @@
                     <include layout="@layout/date_period"
                         android:id="@+id/every_day_period"/>
 
-                    <include layout="@layout/specific_days_layout" />
+                    <include layout="@layout/specific_days_layout"
+                        android:id="@+id/specific_days_layout_id"/>
 
                     <LinearLayout
                         android:layout_width="match_parent"
