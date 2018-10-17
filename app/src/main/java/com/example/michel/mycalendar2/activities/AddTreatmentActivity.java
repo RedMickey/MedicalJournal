@@ -186,19 +186,21 @@ public class AddTreatmentActivity extends AppCompatActivity {
 
     public void delete_reminder_time(View view) {
         int j = 0;
-        for (j = 0; j < timesOfTakingMedicine.getChildCount(); j++) {
-            LinearLayout bView = (LinearLayout) timesOfTakingMedicine.getChildAt(j);
-            if (bView == ((View) view.getParent()))
-                //Log.i("del",String.valueOf(j));
-                break;
+        if (timesOfTakingMedicine.getChildCount()>1) {
+            for (j = 0; j < timesOfTakingMedicine.getChildCount(); j++) {
+                LinearLayout bView = (LinearLayout) timesOfTakingMedicine.getChildAt(j);
+                if (bView == ((View) view.getParent()))
+                    //Log.i("del",String.valueOf(j));
+                    break;
+            }
+            timesOfTakingMedicineAdapter.remove(time.get(j));
+            timesOfTakingMedicineAdapter.notifyDataSetChanged();
+            timesOfTakingMedicine.removeView((View) view.getParent());
+            /*Log.i("del",String.valueOf(time.size()));
+            for (String s: time) {
+                Log.i("timeStr",s);
+            }*/
         }
-        timesOfTakingMedicineAdapter.remove(time.get(j));
-        timesOfTakingMedicineAdapter.notifyDataSetChanged();
-        timesOfTakingMedicine.removeView((View) view.getParent());
-        /*Log.i("del",String.valueOf(time.size()));
-        for (String s: time) {
-            Log.i("timeStr",s);
-        }*/
     }
 
     private String setDate(int day, int month, int year){

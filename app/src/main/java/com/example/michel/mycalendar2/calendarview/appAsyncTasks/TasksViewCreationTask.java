@@ -1,6 +1,8 @@
 package com.example.michel.mycalendar2.calendarview.appAsyncTasks;
 
 import android.os.AsyncTask;
+import android.text.Layout;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -40,32 +42,22 @@ public class TasksViewCreationTask extends AsyncTask<DateData, Void, List<PillRe
 
         LayoutInflater inflater = LayoutInflater.from(view.getContext());
 
-        View pillReminderEntryView = inflater.inflate(R.layout.pill_reminder_entry, null, false);
-
         if(pillReminderEntries.size()>0)
+        {
+            View pillReminderEntryView = inflater.inflate(R.layout.pill_reminder_entry, null, false);
             ((TextView) pillReminderEntryView.findViewById(R.id.pill_name_tv)).setText(pillReminderEntries.get(0).getName());
-        else
-            ((TextView) pillReminderEntryView.findViewById(R.id.pill_name_tv)).setText("Empty");
-/*
-        for (PillReminderEntry pre: pillReminderEntries) {
-            //TextView taskNote = new TextView(((View)viewRef.get()).getContext());
-            TextView taskNote = new TextView(view.getContext());
-            LinearLayout.LayoutParams taskNoteParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            taskNote.setText(pre.getName() + " "+ pre.getTime());
-            taskNote.setLayoutParams(taskNoteParams);
-
-            tasksLayout.addView(taskNote);
+            tasksLayout.addView(pillReminderEntryView);
         }
-        if (pillReminderEntries.isEmpty()){
-            //TextView taskNote = new TextView(((View)viewRef.get()).getContext());
+        else
+        {
             TextView taskNote = new TextView(view.getContext());
-            LinearLayout.LayoutParams taskNoteParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            LinearLayout.LayoutParams taskNoteParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT);
             taskNote.setText("Empty");
             taskNote.setLayoutParams(taskNoteParams);
-
+            taskNote.setGravity(Gravity.CENTER);
             tasksLayout.addView(taskNote);
         }
-*/
-        tasksLayout.addView(pillReminderEntryView);
+
     }
 }
