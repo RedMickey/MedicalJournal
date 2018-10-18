@@ -23,6 +23,16 @@ public class CycleDBInsertEntry {
         this.weekSchedule=weekSchedule;
     }
 
+    public CycleDBInsertEntry()
+    {
+        this.period=null;
+        this.periodDMType=null;
+        this.once_aPeriod=null;
+        this.once_aPeriodDMType=null;
+        this.idCyclingType=null;
+        this.weekSchedule=null;
+    }
+
     public Integer getPeriod() {
         return period;
     }
@@ -45,5 +55,29 @@ public class CycleDBInsertEntry {
 
     public int[] getWeekSchedule() {
         return weekSchedule;
+    }
+
+    public void setIdCyclingType(Integer idCyclingType) {
+        this.idCyclingType = idCyclingType;
+    }
+
+    public void setPeriod(Integer period) {
+        this.period = period;
+    }
+
+    public void setOnce_aPeriod(Integer once_aPeriod) {
+        this.once_aPeriod = once_aPeriod;
+    }
+
+    public void setOnce_aPeriodDMType(Integer once_aPeriodDMType) {
+        this.once_aPeriodDMType = once_aPeriodDMType;
+    }
+
+    public void setPeriodDMType(Integer periodDMType) {
+        this.periodDMType = periodDMType;
+    }
+
+    public void setWeekSchedule(int[] weekSchedule) {
+        this.weekSchedule = weekSchedule;
     }
 }

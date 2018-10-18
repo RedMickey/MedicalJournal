@@ -13,10 +13,12 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.GridLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -25,6 +27,8 @@ import com.example.michel.mycalendar2.adapters.TimesOfTakingMedicineAdapter;
 import com.example.michel.mycalendar2.calendarview.data.DateData;
 import com.example.michel.mycalendar2.calendarview.utils.CalendarUtil;
 import com.example.michel.mycalendar2.expandableLayout.ExpandableRelativeLayout;
+import com.example.michel.mycalendar2.models.CycleDBInsertEntry;
+import com.example.michel.mycalendar2.utils.DBStaticEntries;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -62,11 +66,48 @@ public class AddTreatmentActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                GridLayout gridLayout = (GridLayout) findViewById(R.id.specific_days_layout_id);
-                int[] weekSchedule = new int[7];
-                for (int i=7; i< 14; i++){
-                    weekSchedule[i-7]=((CheckBox) gridLayout.getChildAt(i)).isChecked() ? 1 : 0;
+                CycleDBInsertEntry cycleDBInsertEntry = new CycleDBInsertEntry();
+                int[] weekSchedule = null;
+                switch (radioGroupCycleType.getCheckedRadioButtonId()){
+                    case R.id.every_day:
+                        cycleDBInsertEntry.setIdCyclingType(DBStaticEntries.cycleTypes.get("every_day"));
+                        LinearLayout everyDayPeriodLayout = (LinearLayout) findViewById(R.id.every_day_period);
+                        /*
+                        cycleDBInsertEntry.setPeriod(
+                                Integer.parseInt(((EditText)everyDayPeriodLayout.getChildAt(1)).getText().toString())); //required verification
+                        cycleDBInsertEntry.setPeriodDMType(
+                                DBStaticEntries.dateTypes.get(
+                                        ((Spinner)everyDayPeriodLayout.getChildAt(2)).getSelectedItem().toString() //required verification
+                                )
+                        );
+                        */
+                        setPeriodParams(cycleDBInsertEntry,everyDayPeriodLayout);
+
+                        /*Toast.makeText(view.getContext(),
+                                DBStaticEntries.dateTypes.get(
+                                        ((Spinner)everyDayPeriodLayout.getChildAt(2)).getSelectedItem().toString()
+                                ),
+                                Toast.LENGTH_SHORT).show();*/
+                        break;
+                    case R.id.specific_days:
+                        cycleDBInsertEntry.setIdCyclingType(DBStaticEntries.cycleTypes.get("specific_days"));
+
+                        GridLayout gridLayout = (GridLayout) findViewById(R.id.specific_days_layout_id);
+                        weekSchedule = new int[7];
+                        for (int i=7; i< 14; i++){
+                            weekSchedule[i-7]=((CheckBox) gridLayout.getChildAt(i)).isChecked() ? 1 : 0;
+                        }
+
+                        setPeriodParams(cycleDBInsertEntry,(LinearLayout)gridLayout.getChildAt(14));
+                        //gridLayout.getCh);
+                        break;
+                    case R.id.day_interval:
+                        cycleDBInsertEntry.setIdCyclingType(DBStaticEntries.cycleTypes.get("day_interval"));
+
+                        break;
                 }
+
+
 
 
 
@@ -201,6 +242,16 @@ public class AddTreatmentActivity extends AppCompatActivity {
                 Log.i("timeStr",s);
             }*/
         }
+    }
+
+    private void setPeriodParams(CycleDBInsertEntry cycleDBInsertEntry, LinearLayout linearLayout){
+        cycleDBInsertEntry.setPeriod(
+                Integer.parseInt(((EditText)linearLayout.getChildAt(1)).getText().toString())); //required verification
+        cycleDBInsertEntry.setPeriodDMType(
+                DBStaticEntries.dateTypes.get(
+                        ((Spinner)linearLayout.getChildAt(2)).getSelectedItem().toString() //required verification
+                )
+        );
     }
 
     private String setDate(int day, int month, int year){
