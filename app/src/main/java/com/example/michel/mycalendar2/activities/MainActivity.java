@@ -168,7 +168,8 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         Class fragmentClass;
         int id = item.getItemId();
-        Intent intent;
+        Fragment newFragment;
+        //Intent intent;
         /*
         if (id == R.id.nav_medicines) {
             fragmentClass = AddTreatmentFragment.class;
@@ -186,10 +187,12 @@ public class MainActivity extends AppCompatActivity
 
         switch(id) {
             case R.id.nav_medicines:
-                intent = new Intent(this, AddTreatmentActivity.class);
+                //intent = new Intent(this, AddTreatmentActivity.class);
+                newFragment=ReminderListFragment.newInstance();
                 break;
             default:
-                intent = new Intent(this, AddTreatmentActivity.class);
+                //intent = new Intent(this, AddTreatmentActivity.class);
+                newFragment=ReminderListFragment.newInstance();
         }
 
 
@@ -197,17 +200,17 @@ public class MainActivity extends AppCompatActivity
         // Вставить фрагмент, заменяя любой существующий
         //FragmentManager fragmentManager = getSupportFragmentManager();
         //fragmentManager.beginTransaction().replace(R.id.flContent, fragment).addToBackStack(null).commit();
-        //FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        //transaction.replace(R.id.frame_container, fragment);
-        //transaction.addToBackStack(null);
-        //transaction.commit();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.frame_container, newFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
         // Выделение существующего элемента выполнено с помощью
         // NavigationView
         item.setChecked(true);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
-        startActivity(intent);
+        //startActivity(intent);
         return true;
     }
 }

@@ -108,10 +108,28 @@ public class DatabaseAdapter {
         }
         Log.i("table", "here2");
     }
+/*
+    public void inserReminderTimes(String time, @Nullable Integer idPillReminder,
+                                   @Nullable Integer idMeasurementReminder){
+        ContentValues reminderTimeTableValues = new ContentValues();
+        reminderTimeTableValues.put("time", time);
+        reminderTimeTableValues.put("_id_pill_reminder", idPillReminder);
+        reminderTimeTableValues.put("_id_measurement_reminder", idMeasurementReminder);
+        database.insert("reminder_times", null, reminderTimeTableValues);
+    }
+*/
+    public void insertPillReminderEntries(String reminder_date, Integer idPillReminder, String reminderTime){
+        ContentValues pillReminderEntryTableValues = new ContentValues();
+        pillReminderEntryTableValues.put("is_done", 0);
+        pillReminderEntryTableValues.put("reminder_date", reminder_date);
+        pillReminderEntryTableValues.put("_id_pill_reminder", idPillReminder);
+        pillReminderEntryTableValues.put("reminder_time", reminderTime);
+        database.insert("pill_reminder_entries", null, pillReminderEntryTableValues);
+    }
 
-    public void insertPillReminder(String pillName, int pillCount, int idPillCountType,
-                                   String startDate, int idCycle, @Nullable int idHavingMealsType,
-                                   @Nullable String havingMealsTime, String annotation, int isActive){
+    public int insertPillReminder(String pillName, Integer pillCount, Integer idPillCountType,
+                                   String startDate, Integer idCycle, @Nullable Integer idHavingMealsType,
+                                   @Nullable String havingMealsTime, String annotation, Integer isActive){
 
         ContentValues pillTableValues = new ContentValues();
         pillTableValues.put("pill_name", pillName);
@@ -128,13 +146,14 @@ public class DatabaseAdapter {
         pillReminderTableValues.put("having_meals_time", havingMealsTime);
         pillReminderTableValues.put("annotation", annotation);
         pillReminderTableValues.put("IsActive", isActive);
-        database.insert("pill_reminders", null, pillReminderTableValues);
+        long pillReminderId = database.insert("pill_reminders", null, pillReminderTableValues);
 
         //Log.i("pill_new_id", String.valueOf(pillId));
+        return (int)pillReminderId;
     }
 
-    public void insertCycle(int period, int periodDMType, @Nullable int once_aPeriod,
-                            @Nullable int once_aPeriodDMType, int idCyclingType,
+    public int insertCycle(Integer period, Integer periodDMType, @Nullable Integer once_aPeriod,
+                            @Nullable Integer once_aPeriodDMType, Integer idCyclingType,
                             @Nullable int[] weekSchedule){
         long weekScheduleID = -1;
         if (weekSchedule!=null)
@@ -157,52 +176,25 @@ public class DatabaseAdapter {
         cycleTableValues.put("once_a_period_DM_type", once_aPeriodDMType);
         cycleTableValues.put("_id_week_schedule", weekScheduleID==-1?null:weekScheduleID);
         cycleTableValues.put("_id_cycling_type", idCyclingType);
-        database.insert("cycles", null, cycleTableValues);
-    }
-/*
-    public List<TakingMedicine> getTakingMedicineByDate(DateData date){
-        ArrayList<TakingMedicine> takingMedicines = new ArrayList<>();
-        Cursor cursor = database.query("pills", new String[]{"_id_pill", "pill_name", "time_of_drug_usage"}, "time_of_drug_usage = ?", new String[]{date.getDateString()}, null,null,null);
-        if(cursor.moveToFirst()){
-            do{
-                int id = cursor.getInt(cursor.getColumnIndex("_id_pill"));
-                String name = cursor.getString(cursor.getColumnIndex("pill_name"));
-                String dateStr = cursor.getString(cursor.getColumnIndex("time_of_drug_usage"));
-                takingMedicines.add(new TakingMedicine(id, name));
-            }
-            while (cursor.moveToNext());
-        }
-        cursor.close();
-        return  takingMedicines;
-    }
+        long cycleId = database.insert("cycles", null, cycleTableValues);
 
-    public List<TakingMedicine> getTakingMedicine(){
-        ArrayList<TakingMedicine> takingMedicines = new ArrayList<>();
-        Cursor cursor = getAllEntries();
-        if(cursor.moveToFirst()){
-            do{
-                int id = cursor.getInt(cursor.getColumnIndex("_id_pill"));
-                String name = cursor.getString(cursor.getColumnIndex("pill_name"));
-                String dateStr = cursor.getString(cursor.getColumnIndex("time_of_drug_usage"));
-                takingMedicines.add(new TakingMedicine(id, name));
-            }
-            while (cursor.moveToNext());
-        }
-        cursor.close();
-        return  takingMedicines;
+        return (int)cycleId;
     }
-*/
 
     public List<PillReminderEntry> getPillReminderEntriesByDate(DateData date){
         ArrayList<PillReminderEntry> pillReminderEntries = new ArrayList<>();
-        String rawQuery = "select pre._id_pill_reminder, pre.is_done, rt.time, pi.pill_name from pill_reminder_entries pre inner join pill_reminders pr on pre._id_pill_reminder=pr._id_pill_reminder inner join" +
-                " reminder_times rt on pr._id_pill_reminder=rt._id_pill_reminder inner join pills pi on pi._id_pill=pr._id_pill where pre.reminder_date=?";
+        String rawQuery = "select pre._id_pill_reminder, pre.is_done, pre.reminder_time, pi.pill_name from pill_reminder_entries pre inner join pill_reminders pr on pre._id_pill_reminder=pr._id_pill_reminder" +
+                " inner join pills pi on pi._id_pill=pr._id_pill where pre.reminder_date=?";
+        //String rawQuery = "select * from pill_reminder_entries pre inner join pill_reminders pr on pre._id_pill_reminder=pr._id_pill_reminder where reminder_date=?";
         Cursor cursor = database.rawQuery(rawQuery, new String[]{date.getDateString()});
+        String g = date.getDateString();
         if(cursor.moveToFirst()){
             do{
                 int id = cursor.getInt(cursor.getColumnIndex("_id_pill_reminder"));
-                String name = cursor.getString(cursor.getColumnIndex("pill_name"));
-                String dateStr = cursor.getString(cursor.getColumnIndex("time"));
+                //String name = cursor.getString(cursor.getColumnIndex("pill_name"));
+                //String dateStr = cursor.getString(cursor.getColumnIndex("time"));
+                String name = String.valueOf(id);
+                String dateStr = "f";
                 pillReminderEntries.add(new PillReminderEntry(id, name, dateStr));
             }
             while (cursor.moveToNext());
@@ -215,18 +207,5 @@ public class DatabaseAdapter {
     public long getCount(){
         return DatabaseUtils.queryNumEntries(database, DatabaseHelper.TABLE_pill_reminders);
     }
-
-  /*  public User getUser(long id){
-        User user = null;
-        String query = String.format("SELECT * FROM %s WHERE %s=?",DatabaseHelper.TABLE, DatabaseHelper.COLUMN_ID);
-        Cursor cursor = database.rawQuery(query, new String[]{ String.valueOf(id)});
-        if(cursor.moveToFirst()){
-            String name = cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_NAME));
-            int year = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_YEAR));
-            user = new User(id, name, year);
-        }
-        cursor.close();
-        return  user;
-    }*/
 
 }

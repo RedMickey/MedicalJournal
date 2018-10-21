@@ -45,6 +45,8 @@
         android:layout_column="6"
         android:layout_row="0"
         android:text="Вс"
+        android:layout_gravity="start"
+        android:layout_marginLeft="8dp"
         style="@style/DaysOfWeekStyle"
         />
 
@@ -82,6 +84,7 @@
         android:layout_column="6"
         android:layout_row="1"
         android:id="@+id/cb_syn"
+        android:layout_gravity="start"
         style="@style/DaysOfWeekStyle"/>
 
     <include layout="@layout/date_period"

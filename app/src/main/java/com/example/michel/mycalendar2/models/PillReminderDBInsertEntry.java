@@ -6,19 +6,22 @@ package com.example.michel.mycalendar2.models;
 
 import android.support.annotation.Nullable;
 
+import com.example.michel.mycalendar2.calendarview.data.DateData;
+
 public class PillReminderDBInsertEntry {
     private String pillName;
     private Integer pillCount;
     private Integer idPillCountType;
-    private String startDate;
+    private DateData startDate;
     private Integer idCycle;
     private Integer idHavingMealsType;
     private String havingMealsTime;
     private String annotation;
     private Integer isActive;
+    private String[] reminderTimes;
 
     public PillReminderDBInsertEntry(String pillName, Integer pillCount, Integer idPillCountType,
-                                     String startDate, Integer idCycle, @Nullable Integer idHavingMealsType,
+                                     DateData startDate, Integer idCycle, @Nullable Integer idHavingMealsType,
                                      @Nullable String havingMealsTime, String annotation, Integer isActive)
     {
         this.pillName=pillName;
@@ -30,6 +33,21 @@ public class PillReminderDBInsertEntry {
         this.havingMealsTime=havingMealsTime;
         this.annotation=annotation;
         this.isActive=isActive;
+        this.reminderTimes = null;
+    }
+
+    public PillReminderDBInsertEntry()
+    {
+        this.pillName=null;
+        this.pillCount=null;
+        this.idPillCountType=null;
+        this.startDate=null;
+        this.idCycle=null;
+        this.idHavingMealsType=null;
+        this.havingMealsTime=null;
+        this.annotation=null;
+        this.isActive=null;
+        this.reminderTimes=null;
     }
 
     public String getPillName() {
@@ -44,7 +62,7 @@ public class PillReminderDBInsertEntry {
         return idPillCountType;
     }
 
-    public String getStartDate() {
+    public DateData getStartDate() {
         return startDate;
     }
 
@@ -66,6 +84,50 @@ public class PillReminderDBInsertEntry {
 
     public Integer getIsActive() {
         return isActive;
+    }
+
+    public void setAnnotation(String annotation) {
+        this.annotation = annotation;
+    }
+
+    public void setHavingMealsTime(String havingMealsTime) {
+        this.havingMealsTime = havingMealsTime;
+    }
+
+    public void setIdCycle(Integer idCycle) {
+        this.idCycle = idCycle;
+    }
+
+    public void setIdHavingMealsType(Integer idHavingMealsType) {
+        this.idHavingMealsType = idHavingMealsType;
+    }
+
+    public void setIdPillCountType(Integer idPillCountType) {
+        this.idPillCountType = idPillCountType;
+    }
+
+    public void setIsActive(Integer isActive) {
+        this.isActive = isActive;
+    }
+
+    public void setPillCount(Integer pillCount) {
+        this.pillCount = pillCount;
+    }
+
+    public void setPillName(String pillName) {
+        this.pillName = pillName;
+    }
+
+    public void setStartDate(DateData startDate) {
+        this.startDate = startDate;
+    }
+
+    public String[] getReminderTimes() {
+        return reminderTimes;
+    }
+
+    public void setReminderTimes(String[] reminderTimes) {
+        this.reminderTimes = reminderTimes;
     }
 }
 

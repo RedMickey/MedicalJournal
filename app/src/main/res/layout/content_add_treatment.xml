@@ -168,7 +168,8 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal">
+                            android:orientation="horizontal"
+                            android:id="@+id/once_a_date_layout">
 
                             <TextView
                                 android:layout_width="65dp"
@@ -187,7 +188,7 @@
 
                             <Spinner
                                 android:id="@+id/date_type_di"
-                                android:layout_width="70dp"
+                                android:layout_width="90dp"
                                 android:layout_height="wrap_content"
                                 android:entries="@array/date_type"
                                 android:textSize="17dp" />

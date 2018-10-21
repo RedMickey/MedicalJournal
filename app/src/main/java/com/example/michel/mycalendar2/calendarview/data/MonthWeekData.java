@@ -109,16 +109,26 @@ public class MonthWeekData {
     private void initWeekArray() {
         weekContent = new ArrayList<DayData>();
 
+        int t1= CellConfig.Week2MonthPos;
+        int t2 = CellConfig.Month2WeekPos;
         calendar.set(CellConfig.m2wPointDate.getYear(), CellConfig.m2wPointDate.getMonth() - 1, CellConfig.m2wPointDate.getDay());
+        DateData g = new DateData(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
         if (CellConfig.Week2MonthPos != CellConfig.Month2WeekPos) {
 
             int distance = CellConfig.Month2WeekPos - CellConfig.Week2MonthPos;
 
             calendar.add(Calendar.MONTH, distance);
         }
+        int jj = CellConfig.weekAnchorPointDate.getMonth()-1;
+        //calendar.set(Calendar.MONTH, CellConfig.weekAnchorPointDate.getMonth()-1);
 
-        calendar.set(Calendar.MONTH, CellConfig.weekAnchorPointDate.getMonth()-1);
-        calendar.set(Calendar.DAY_OF_MONTH, getAnchorDayOfMonth(CellConfig.weekAnchorPointDate));
+        DateData u2 = CellConfig.weekAnchorPointDate;
+        DateData g2 = new DateData(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+        //calendar.set(Calendar.DAY_OF_MONTH, getAnchorDayOfMonth(CellConfig.weekAnchorPointDate));
+
+        DateData g3 = new DateData(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+        calendar.set(CellConfig.weekAnchorPointDate.getYear(), CellConfig.weekAnchorPointDate.getMonth()-1,CellConfig.weekAnchorPointDate.getDay());
+
 ///////////////////////////////////////////////////////////////////////////////////////////
 
         if (realPosition == CellConfig.Month2WeekPos) {

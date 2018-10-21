@@ -44,9 +44,11 @@ public class TasksViewCreationTask extends AsyncTask<DateData, Void, List<PillRe
 
         if(pillReminderEntries.size()>0)
         {
-            View pillReminderEntryView = inflater.inflate(R.layout.pill_reminder_entry, null, false);
-            ((TextView) pillReminderEntryView.findViewById(R.id.pill_name_tv)).setText(pillReminderEntries.get(0).getName());
-            tasksLayout.addView(pillReminderEntryView);
+            for (PillReminderEntry pre:pillReminderEntries) {
+                View pillReminderEntryView = inflater.inflate(R.layout.pill_reminder_entry, null, false);
+                ((TextView) pillReminderEntryView.findViewById(R.id.pill_name_tv)).setText(pre.getName());
+                tasksLayout.addView(pillReminderEntryView);
+            }
         }
         else
         {

@@ -1,5 +1,6 @@
 package com.example.michel.mycalendar2.calendarview.adapters;
 
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -94,6 +95,16 @@ public class DayAdapter extends FragmentStatePagerAdapter{
             currentDate = new DateData(currentDate.getYear(), currentDate.getMonth(), currentDate.getDay()-1);
         }
         return fragment;
+    }
+
+    @Override
+    public int getItemPosition(@NonNull Object object) {
+        //return super.getItemPosition(object);
+        return POSITION_NONE;
+    }
+
+    public void cleanI(){
+        i=0;
     }
 
     @Override
