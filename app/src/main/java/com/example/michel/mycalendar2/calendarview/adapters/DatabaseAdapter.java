@@ -12,7 +12,10 @@ import com.example.michel.mycalendar2.calendarview.data.DateData;
 import com.example.michel.mycalendar2.calendarview.utils.DatabaseHelper;
 import com.example.michel.mycalendar2.models.PillReminderEntry;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -129,7 +132,7 @@ public class DatabaseAdapter {
 
     public int insertPillReminder(String pillName, Integer pillCount, Integer idPillCountType,
                                    String startDate, Integer idCycle, @Nullable Integer idHavingMealsType,
-                                   @Nullable String havingMealsTime, String annotation, Integer isActive){
+                                   @Nullable Integer havingMealsTime, String annotation, Integer isActive){
 
         ContentValues pillTableValues = new ContentValues();
         pillTableValues.put("pill_name", pillName);
@@ -181,21 +184,40 @@ public class DatabaseAdapter {
         return (int)cycleId;
     }
 
+    /*public PillReminderEntry(int id, String pillName, int pillCount, int pillCountType,
+                             Date date, int havingMealsType, Date havingMealsTime, int isDone)*/
+
     public List<PillReminderEntry> getPillReminderEntriesByDate(DateData date){
         ArrayList<PillReminderEntry> pillReminderEntries = new ArrayList<>();
-        String rawQuery = "select pre._id_pill_reminder, pre.is_done, pre.reminder_time, pi.pill_name from pill_reminder_entries pre inner join pill_reminders pr on pre._id_pill_reminder=pr._id_pill_reminder" +
-                " inner join pills pi on pi._id_pill=pr._id_pill where pre.reminder_date=?";
+        String rawQuery = "select pre._id_pill_reminder, pre.is_done, pr._id_having_meals_type, pre.reminder_time, pr.having_meals_time, pr.pill_count, pr._id_pill_count_type, pre.reminder_date, pi.pill_name" +
+                " from pill_reminder_entries pre inner join pill_reminders pr on pre._id_pill_reminder=pr._id_pill_reminder inner join pills pi on pi._id_pill=pr._id_pill where pre.reminder_date=?";
         //String rawQuery = "select * from pill_reminder_entries pre inner join pill_reminders pr on pre._id_pill_reminder=pr._id_pill_reminder where reminder_date=?";
         Cursor cursor = database.rawQuery(rawQuery, new String[]{date.getDateString()});
         String g = date.getDateString();
         if(cursor.moveToFirst()){
             do{
                 int id = cursor.getInt(cursor.getColumnIndex("_id_pill_reminder"));
-                //String name = cursor.getString(cursor.getColumnIndex("pill_name"));
-                //String dateStr = cursor.getString(cursor.getColumnIndex("time"));
-                String name = String.valueOf(id);
-                String dateStr = "f";
-                pillReminderEntries.add(new PillReminderEntry(id, name, dateStr));
+                String pillName = cursor.getString(cursor.getColumnIndex("pill_name"));
+                int pillCount = cursor.getInt(cursor.getColumnIndex("pill_count"));
+                int pillCountType = cursor.getInt(cursor.getColumnIndex("_id_pill_count_type"));
+                String dateStr = cursor.getString(cursor.getColumnIndex("reminder_date"));
+                String timeStr = cursor.getString(cursor.getColumnIndex("reminder_time"));
+                int havingMealsType = cursor.getInt(cursor.getColumnIndex("_id_having_meals_type"));
+                int havingMealsTimeStr = cursor.getInt(cursor.getColumnIndex("having_meals_time"));
+                int isDone = cursor.getInt(cursor.getColumnIndex("is_done"));
+
+                Date reminderDate;
+                Date havingMealsTime = new Date();
+                try {
+                    reminderDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(dateStr+" "+timeStr);
+                    havingMealsTime.setTime(reminderDate.getTime()+havingMealsTimeStr*60*1000);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    reminderDate = new Date();
+                }
+                Date f = reminderDate;
+                pillReminderEntries.add(new PillReminderEntry(
+                        id, pillName, pillCount, pillCountType, reminderDate, havingMealsType, havingMealsTime, isDone));
             }
             while (cursor.moveToNext());
         }

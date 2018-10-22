@@ -15,14 +15,14 @@ public class PillReminderDBInsertEntry {
     private DateData startDate;
     private Integer idCycle;
     private Integer idHavingMealsType;
-    private String havingMealsTime;
+    private Integer havingMealsTime;
     private String annotation;
     private Integer isActive;
     private String[] reminderTimes;
 
     public PillReminderDBInsertEntry(String pillName, Integer pillCount, Integer idPillCountType,
                                      DateData startDate, Integer idCycle, @Nullable Integer idHavingMealsType,
-                                     @Nullable String havingMealsTime, String annotation, Integer isActive)
+                                     @Nullable Integer havingMealsTime, String annotation, Integer isActive)
     {
         this.pillName=pillName;
         this.pillCount=pillCount;
@@ -74,7 +74,7 @@ public class PillReminderDBInsertEntry {
         return idHavingMealsType;
     }
 
-    public String getHavingMealsTime() {
+    public Integer getHavingMealsTime() {
         return havingMealsTime;
     }
 
@@ -90,7 +90,7 @@ public class PillReminderDBInsertEntry {
         this.annotation = annotation;
     }
 
-    public void setHavingMealsTime(String havingMealsTime) {
+    public void setHavingMealsTime(Integer havingMealsTime) {
         this.havingMealsTime = havingMealsTime;
     }
 

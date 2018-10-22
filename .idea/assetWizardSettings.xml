@@ -29,23 +29,12 @@
                                           </PersistentState>
                                         </value>
                                       </entry>
-                                      <entry key="clipartAsset">
-                                        <value>
-                                          <PersistentState>
-                                            <option name="values">
-                                              <map>
-                                                <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/navigation/ic_check_black_24dp.xml" />
-                                              </map>
-                                            </option>
-                                          </PersistentState>
-                                        </value>
-                                      </entry>
                                       <entry key="image">
                                         <value>
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="paddingPercent" value="-10" />
+                                                <entry key="paddingPercent" value="-5" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -55,9 +44,11 @@
                                   </option>
                                   <option name="values">
                                     <map>
-                                      <entry key="imageAsset" value="E:\Downloads\icons8-каша-60.png" />
-                                      <entry key="outputName" value="ic_confirm" />
-                                      <entry key="theme" value="HOLO_DARK" />
+                                      <entry key="assetType" value="IMAGE" />
+                                      <entry key="imageAsset" value="C:\Users\User\Downloads\icons8-expired-48.png" />
+                                      <entry key="outputName" value="ic_time_expired" />
+                                      <entry key="theme" value="CUSTOM" />
+                                      <entry key="themeColor" value="f44336" />
                                     </map>
                                   </option>
                                 </PersistentState>

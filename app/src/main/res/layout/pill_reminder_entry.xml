@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:paddingVertical="5dp"
     android:rowCount="1"
-    android:columnCount="5"
+    android:columnCount="6"
     >
 
     <CheckBox
@@ -65,5 +65,14 @@
         android:layout_gravity="center_vertical"
         android:src="@drawable/icons8_50_31"
         android:id="@+id/having_meals_iv"/>
+
+    <ImageView
+        android:layout_width="33dp"
+        android:layout_height="33dp"
+        android:layout_column="5"
+        android:layout_row="0"
+        android:layout_gravity="center_vertical"
+        android:src="@drawable/icons8_50_31"
+        android:id="@+id/late_indication"/>
 
 </GridLayout>

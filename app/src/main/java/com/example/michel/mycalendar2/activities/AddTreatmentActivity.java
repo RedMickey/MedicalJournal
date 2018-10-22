@@ -105,7 +105,7 @@ public class AddTreatmentActivity extends AppCompatActivity {
                     case R.id.before_meals:
                         pillReminderDBInsertEntry.setIdHavingMealsType(1);
                         pillReminderDBInsertEntry.setHavingMealsTime(
-                                ((EditText)findViewById(R.id.count_of_minutes)).getText().toString()
+                                -Integer.parseInt(((EditText)findViewById(R.id.count_of_minutes)).getText().toString())
                         );
                         break;
                     case R.id.with_meals:
@@ -114,7 +114,7 @@ public class AddTreatmentActivity extends AppCompatActivity {
                     case R.id.after_meals:
                         pillReminderDBInsertEntry.setIdHavingMealsType(3);
                         pillReminderDBInsertEntry.setHavingMealsTime(
-                                ((EditText)findViewById(R.id.count_of_minutes)).getText().toString()
+                                Integer.parseInt(((EditText)findViewById(R.id.count_of_minutes)).getText().toString())
                         );
                         break;
                         default:

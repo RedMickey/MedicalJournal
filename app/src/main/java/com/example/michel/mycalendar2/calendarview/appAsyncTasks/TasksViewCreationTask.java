@@ -14,6 +14,7 @@ import com.example.michel.mycalendar2.calendarview.data.DateData;
 import com.example.michel.mycalendar2.models.PillReminderEntry;
 
 import java.lang.ref.WeakReference;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class TasksViewCreationTask extends AsyncTask<DateData, Void, List<PillReminderEntry>>{
@@ -46,7 +47,10 @@ public class TasksViewCreationTask extends AsyncTask<DateData, Void, List<PillRe
         {
             for (PillReminderEntry pre:pillReminderEntries) {
                 View pillReminderEntryView = inflater.inflate(R.layout.pill_reminder_entry, null, false);
-                ((TextView) pillReminderEntryView.findViewById(R.id.pill_name_tv)).setText(pre.getName());
+                ((TextView) pillReminderEntryView.findViewById(R.id.pill_name_tv)).setText(pre.getPillName());
+                ((TextView) pillReminderEntryView.findViewById(R.id.reminder_time_tv))
+                        .setText(new SimpleDateFormat("HH:mm").format(pre.getDate()));
+
                 tasksLayout.addView(pillReminderEntryView);
             }
         }
