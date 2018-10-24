@@ -9,14 +9,12 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.GridLayout;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -24,7 +22,7 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.example.michel.mycalendar2.adapters.TimesOfTakingMedicineAdapter;
-import com.example.michel.mycalendar2.calendarview.appAsyncTasks.RemindersCreationTask;
+import com.example.michel.mycalendar2.calendarview.async_tasks.RemindersCreationTask;
 import com.example.michel.mycalendar2.calendarview.data.DateData;
 import com.example.michel.mycalendar2.calendarview.utils.CalendarUtil;
 import com.example.michel.mycalendar2.expandableLayout.ExpandableRelativeLayout;
@@ -35,7 +33,6 @@ import com.example.michel.mycalendar2.utils.DBStaticEntries;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.ListIterator;
 
 public class AddTreatmentActivity extends AppCompatActivity {
     private ExpandableRelativeLayout mExpandLayout1;

@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_column="2"
         android:layout_row="0"
-        android:layout_columnWeight="0.5"
+        android:layout_columnWeight="0.55"
         android:orientation="vertical">
         <TextView
             android:layout_width="match_parent"
@@ -61,9 +61,9 @@
         android:layout_height="33dp"
         android:layout_column="4"
         android:layout_row="0"
-        android:layout_columnWeight="0.2"
+        android:layout_columnWeight="0.15"
         android:layout_gravity="center_vertical"
-        android:src="@drawable/icons8_50_31"
+        android:background="@android:color/transparent"
         android:id="@+id/having_meals_iv"/>
 
     <ImageView
@@ -72,7 +72,7 @@
         android:layout_column="5"
         android:layout_row="0"
         android:layout_gravity="center_vertical"
-        android:src="@drawable/icons8_50_31"
+        android:background="@android:color/transparent"
         android:id="@+id/late_indication"/>
 
 </GridLayout>

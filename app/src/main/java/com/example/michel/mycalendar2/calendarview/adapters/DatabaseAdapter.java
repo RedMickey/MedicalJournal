@@ -15,6 +15,7 @@ import com.example.michel.mycalendar2.models.PillReminderEntry;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -121,6 +122,13 @@ public class DatabaseAdapter {
         database.insert("reminder_times", null, reminderTimeTableValues);
     }
 */
+    public void updateIsDonePillReminderEntry(int isDone, int pillReminderEntryID){
+        ContentValues pillReminderEntryTableValues = new ContentValues();
+        pillReminderEntryTableValues.put("is_done", isDone);
+        database.update("pill_reminder_entries", pillReminderEntryTableValues,
+                "_id_pill_reminder_entry=" + String.valueOf(pillReminderEntryID), null);
+    }
+
     public void insertPillReminderEntries(String reminder_date, Integer idPillReminder, String reminderTime){
         ContentValues pillReminderEntryTableValues = new ContentValues();
         pillReminderEntryTableValues.put("is_done", 0);
@@ -189,17 +197,17 @@ public class DatabaseAdapter {
 
     public List<PillReminderEntry> getPillReminderEntriesByDate(DateData date){
         ArrayList<PillReminderEntry> pillReminderEntries = new ArrayList<>();
-        String rawQuery = "select pre._id_pill_reminder, pre.is_done, pr._id_having_meals_type, pre.reminder_time, pr.having_meals_time, pr.pill_count, pr._id_pill_count_type, pre.reminder_date, pi.pill_name" +
-                " from pill_reminder_entries pre inner join pill_reminders pr on pre._id_pill_reminder=pr._id_pill_reminder inner join pills pi on pi._id_pill=pr._id_pill where pre.reminder_date=?";
+        String rawQuery = "select pre._id_pill_reminder_entry, pre.is_done, pr._id_having_meals_type, pre.reminder_time, pr.having_meals_time, pr.pill_count, pct.type_name, pre.reminder_date, pi.pill_name" +
+                " from pill_reminder_entries pre inner join pill_reminders pr on pre._id_pill_reminder=pr._id_pill_reminder inner join pills pi on pi._id_pill=pr._id_pill inner join pill_count_types pct on pr._id_pill_count_type=pct._id_pill_count_type where pre.reminder_date=?";
         //String rawQuery = "select * from pill_reminder_entries pre inner join pill_reminders pr on pre._id_pill_reminder=pr._id_pill_reminder where reminder_date=?";
         Cursor cursor = database.rawQuery(rawQuery, new String[]{date.getDateString()});
-        String g = date.getDateString();
+        Calendar calendar = Calendar.getInstance();
         if(cursor.moveToFirst()){
             do{
-                int id = cursor.getInt(cursor.getColumnIndex("_id_pill_reminder"));
+                int id = cursor.getInt(cursor.getColumnIndex("_id_pill_reminder_entry"));
                 String pillName = cursor.getString(cursor.getColumnIndex("pill_name"));
                 int pillCount = cursor.getInt(cursor.getColumnIndex("pill_count"));
-                int pillCountType = cursor.getInt(cursor.getColumnIndex("_id_pill_count_type"));
+                String pillCountType = cursor.getString(cursor.getColumnIndex("type_name"));
                 String dateStr = cursor.getString(cursor.getColumnIndex("reminder_date"));
                 String timeStr = cursor.getString(cursor.getColumnIndex("reminder_time"));
                 int havingMealsType = cursor.getInt(cursor.getColumnIndex("_id_having_meals_type"));
@@ -216,8 +224,12 @@ public class DatabaseAdapter {
                     reminderDate = new Date();
                 }
                 Date f = reminderDate;
+                boolean isLate = false;
+                if (isDone==0)
+                    isLate = calendar.getTime().compareTo(reminderDate)>0?true:false;
+
                 pillReminderEntries.add(new PillReminderEntry(
-                        id, pillName, pillCount, pillCountType, reminderDate, havingMealsType, havingMealsTime, isDone));
+                        id, pillName, pillCount, pillCountType, reminderDate, havingMealsType, havingMealsTime, isDone, isLate));
             }
             while (cursor.moveToNext());
         }

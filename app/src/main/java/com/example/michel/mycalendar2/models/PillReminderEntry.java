@@ -1,5 +1,6 @@
 package com.example.michel.mycalendar2.models;
 
+import java.util.Calendar;
 import java.util.Date;
 
 public class PillReminderEntry {
@@ -8,13 +9,13 @@ public class PillReminderEntry {
     private int isDone;
     private Date date;
     private int pillCount;
-    private int pillCountType;
+    private String pillCountType;
     private int havingMealsType;
     private Date havingMealsTime;
     private boolean isLate;
 
-    public PillReminderEntry(int id, String pillName, int pillCount, int pillCountType,
-                             Date date, int havingMealsType, Date havingMealsTime, int isDone)
+    public PillReminderEntry(int id, String pillName, int pillCount, String pillCountType,
+                             Date date, int havingMealsType, Date havingMealsTime, int isDone, boolean isLate)
     {
         this.id = id;
         this.pillName = pillName;
@@ -24,6 +25,13 @@ public class PillReminderEntry {
         this.havingMealsType = havingMealsType;
         this.havingMealsTime = havingMealsTime;
         this.isDone = isDone;
+        this.isLate=isLate;
+    }
+
+    public boolean isLateCheck(){
+        Calendar calendar = Calendar.getInstance();
+        isLate =  calendar.getTime().compareTo(date)>0?true:false;
+        return isLate;
     }
 
     public int getId() {
@@ -58,7 +66,7 @@ public class PillReminderEntry {
         return pillCount;
     }
 
-    public int getPillCountType() {
+    public String getPillCountType() {
         return pillCountType;
     }
 

@@ -9,9 +9,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.michel.mycalendar2.activities.R;
-import com.example.michel.mycalendar2.calendarview.appAsyncTasks.TasksViewCreationTask;
+import com.example.michel.mycalendar2.calendarview.async_tasks.TasksViewCreationTask;
 import com.example.michel.mycalendar2.calendarview.data.DateData;
-import com.example.michel.mycalendar2.calendarview.data.DayData;
 import com.example.michel.mycalendar2.calendarview.utils.CalendarUtil;
 
 public class DayFragment extends Fragment{

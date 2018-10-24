@@ -1,16 +1,9 @@
 package com.example.michel.mycalendar2.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.ViewPager;
-import android.util.Log;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -19,34 +12,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.michel.mycalendar2.calendarview.CellConfig;
-import com.example.michel.mycalendar2.calendarview.adapters.CalendarViewExpAdapter;
 import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
-import com.example.michel.mycalendar2.calendarview.adapters.DayAdapter;
-import com.example.michel.mycalendar2.calendarview.appAsyncTasks.TasksViewCreationTask;
-import com.example.michel.mycalendar2.calendarview.data.DateData;
-import com.example.michel.mycalendar2.calendarview.data.DayDifference;
-import com.example.michel.mycalendar2.calendarview.listeners.OnDateClickListener;
-import com.example.michel.mycalendar2.calendarview.listeners.OnExpDateClickListener;
-import com.example.michel.mycalendar2.calendarview.listeners.OnMonthScrollListener;
-import com.example.michel.mycalendar2.calendarview.utils.CalendarUtil;
 import com.example.michel.mycalendar2.calendarview.utils.DatabaseHelper;
-import com.example.michel.mycalendar2.calendarview.views.ExpCalendarView;
-import com.example.michel.mycalendar2.calendarview.views.MonthExpFragment;
-import com.example.michel.mycalendar2.calendarview.views.WeekDayViewPager;
-import com.example.michel.mycalendar2.models.PillReminderEntry;
 import com.example.michel.mycalendar2.utils.DBStaticEntries;
-import com.sothree.slidinguppanel.SlidingUpPanelLayout;
-
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -170,29 +139,15 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
         Fragment newFragment;
         //Intent intent;
-        /*
-        if (id == R.id.nav_medicines) {
-            fragmentClass = AddTreatmentFragment.class;
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
-        }*/
 
         switch(id) {
             case R.id.nav_medicines:
                 //intent = new Intent(this, AddTreatmentActivity.class);
-                newFragment=ReminderListFragment.newInstance();
+                newFragment= ReminderFragment.newInstance();
                 break;
             default:
                 //intent = new Intent(this, AddTreatmentActivity.class);
-                newFragment=ReminderListFragment.newInstance();
+                newFragment= ReminderFragment.newInstance();
         }
 
 
