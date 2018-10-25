@@ -22,7 +22,7 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.example.michel.mycalendar2.adapters.TimesOfTakingMedicineAdapter;
-import com.example.michel.mycalendar2.calendarview.async_tasks.RemindersCreationTask;
+import com.example.michel.mycalendar2.app_async_tasks.RemindersCreationTask;
 import com.example.michel.mycalendar2.calendarview.data.DateData;
 import com.example.michel.mycalendar2.calendarview.utils.CalendarUtil;
 import com.example.michel.mycalendar2.expandableLayout.ExpandableRelativeLayout;

@@ -18,12 +18,12 @@
                                 <PersistentState>
                                   <option name="children">
                                     <map>
-                                      <entry key="clipArt">
+                                      <entry key="clipartAsset">
                                         <value>
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="paddingPercent" value="-5" />
+                                                <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/av/ic_fiber_manual_record_black_24dp.xml" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -44,11 +44,10 @@
                                   </option>
                                   <option name="values">
                                     <map>
-                                      <entry key="assetType" value="IMAGE" />
                                       <entry key="imageAsset" value="C:\Users\User\Downloads\icons8-expired-48.png" />
-                                      <entry key="outputName" value="ic_time_expired" />
+                                      <entry key="outputName" value="ic_grey_circle" />
                                       <entry key="theme" value="CUSTOM" />
-                                      <entry key="themeColor" value="f44336" />
+                                      <entry key="themeColor" value="bdbdbd" />
                                     </map>
                                   </option>
                                 </PersistentState>

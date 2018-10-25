@@ -1,4 +1,4 @@
-package com.example.michel.mycalendar2.calendarview.async_tasks;
+package com.example.michel.mycalendar2.app_async_tasks;
 
 import android.os.AsyncTask;
 
@@ -32,7 +32,7 @@ public class RemindersCreationTask extends AsyncTask<CycleAndPillComby, Void, Vo
                 pillReminderDBInsertEntry.getIdPillCountType(), pillReminderDBInsertEntry.getStartDate().getDateString(),
                 pillReminderDBInsertEntry.getIdCycle(), pillReminderDBInsertEntry.getIdHavingMealsType(),
                 pillReminderDBInsertEntry.getHavingMealsTime(), pillReminderDBInsertEntry.getAnnotation(),
-                pillReminderDBInsertEntry.getIsActive()
+                pillReminderDBInsertEntry.getIsActive(), pillReminderDBInsertEntry.getReminderTimes().length
         );
 
         Calendar cal = Calendar.getInstance();

@@ -7,8 +7,11 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import com.example.michel.mycalendar2.activities.R;
+import com.example.michel.mycalendar2.app_async_tasks.ReminderMedicineItemsCreationTask;
 
 public class ReminderListFragment extends Fragment {
     private int fragmentType = 0;
@@ -22,6 +25,8 @@ public class ReminderListFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = getView();
         view=inflater.inflate(R.layout.reminder_list, container, false);
+        ReminderMedicineItemsCreationTask rmict = new ReminderMedicineItemsCreationTask(view);
+        rmict.execute();
 
         return view;
     }

@@ -10,6 +10,7 @@ import android.util.Log;
 
 import com.example.michel.mycalendar2.calendarview.data.DateData;
 import com.example.michel.mycalendar2.calendarview.utils.DatabaseHelper;
+import com.example.michel.mycalendar2.models.PillReminder;
 import com.example.michel.mycalendar2.models.PillReminderEntry;
 
 import java.text.ParseException;
@@ -140,7 +141,7 @@ public class DatabaseAdapter {
 
     public int insertPillReminder(String pillName, Integer pillCount, Integer idPillCountType,
                                    String startDate, Integer idCycle, @Nullable Integer idHavingMealsType,
-                                   @Nullable Integer havingMealsTime, String annotation, Integer isActive){
+                                   @Nullable Integer havingMealsTime, String annotation, Integer isActive, Integer times_aDay){
 
         ContentValues pillTableValues = new ContentValues();
         pillTableValues.put("pill_name", pillName);
@@ -157,6 +158,7 @@ public class DatabaseAdapter {
         pillReminderTableValues.put("having_meals_time", havingMealsTime);
         pillReminderTableValues.put("annotation", annotation);
         pillReminderTableValues.put("IsActive", isActive);
+        pillReminderTableValues.put("times_a_day", times_aDay);
         long pillReminderId = database.insert("pill_reminders", null, pillReminderTableValues);
 
         //Log.i("pill_new_id", String.valueOf(pillId));
@@ -192,14 +194,68 @@ public class DatabaseAdapter {
         return (int)cycleId;
     }
 
-    /*public PillReminderEntry(int id, String pillName, int pillCount, int pillCountType,
-                             Date date, int havingMealsType, Date havingMealsTime, int isDone)*/
+    public List<PillReminder> getAllPillReminders(){
+        List<PillReminder> pillReminders = new ArrayList<>();
+        String rawQuery = "select pr._id_pill_reminder, pr._id_having_meals_type, pr.pill_count, pct.type_name, pi.pill_name, pr.start_date, pr.IsActive, cl.period, pr.times_a_day, "+
+                "cl.period_DM_type,(select COUNT(*) from pill_reminder_entries pre where pre._id_pill_reminder=pr._id_pill_reminder and pre.is_done=0 ) as count_left "+
+                "from pill_reminders pr inner join pills pi on pi._id_pill=pr._id_pill inner join pill_count_types pct on pr._id_pill_count_type=pct._id_pill_count_type "+
+                "inner join cycles cl on pr._id_cycle=cl._id_cycle";
+        Cursor cursor = database.rawQuery(rawQuery, null);
+        if(cursor.moveToFirst()){
+            do{
+                Calendar calendar = Calendar.getInstance();
+
+                int id = cursor.getInt(cursor.getColumnIndex("_id_pill_reminder"));
+                String pillName = cursor.getString(cursor.getColumnIndex("pill_name"));
+                int pillCount = cursor.getInt(cursor.getColumnIndex("pill_count"));
+                String pillCountType = cursor.getString(cursor.getColumnIndex("type_name"));
+                String startDateStr = cursor.getString(cursor.getColumnIndex("start_date"));
+                int havingMealsType = cursor.getInt(cursor.getColumnIndex("_id_having_meals_type"));
+                int period = cursor.getInt(cursor.getColumnIndex("period"));
+                int isActive = cursor.getInt(cursor.getColumnIndex("IsActive"));
+                int countLeft = cursor.getInt(cursor.getColumnIndex("count_left"));
+                int times_aDay = cursor.getInt(cursor.getColumnIndex("times_a_day"));
+                int periodDM_Type = cursor.getInt(cursor.getColumnIndex("period_DM_type"));
+
+                Date startDate;
+                SimpleDateFormat dateFormatOld = new SimpleDateFormat("yyyy-MM-dd");
+                SimpleDateFormat dateFormatNew = new SimpleDateFormat("dd.MM.yyyy");
+                try {
+                    startDate = dateFormatOld.parse(startDateStr);
+                    startDateStr = dateFormatNew.format(startDate);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    startDate = new Date();
+                }
+                String endDateStr = "0";
+                calendar.setTime(startDate);
+                switch (periodDM_Type){
+                    case 1:
+                        calendar.add(Calendar.DATE, period);
+                        break;
+                    case 2:
+                        calendar.add(Calendar.DATE, period*7);
+                        break;
+                    case 3:
+                        calendar.add(Calendar.DATE, period*30);
+                        break;
+                }
+                endDateStr = dateFormatNew.format(calendar.getTime());
+
+                pillReminders.add(new PillReminder(id, pillName, pillCount, pillCountType,
+                        havingMealsType, isActive, times_aDay, startDateStr, endDateStr, countLeft));
+            }
+            while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        return pillReminders;
+    }
 
     public List<PillReminderEntry> getPillReminderEntriesByDate(DateData date){
         ArrayList<PillReminderEntry> pillReminderEntries = new ArrayList<>();
         String rawQuery = "select pre._id_pill_reminder_entry, pre.is_done, pr._id_having_meals_type, pre.reminder_time, pr.having_meals_time, pr.pill_count, pct.type_name, pre.reminder_date, pi.pill_name" +
                 " from pill_reminder_entries pre inner join pill_reminders pr on pre._id_pill_reminder=pr._id_pill_reminder inner join pills pi on pi._id_pill=pr._id_pill inner join pill_count_types pct on pr._id_pill_count_type=pct._id_pill_count_type where pre.reminder_date=?";
-        //String rawQuery = "select * from pill_reminder_entries pre inner join pill_reminders pr on pre._id_pill_reminder=pr._id_pill_reminder where reminder_date=?";
         Cursor cursor = database.rawQuery(rawQuery, new String[]{date.getDateString()});
         Calendar calendar = Calendar.getInstance();
         if(cursor.moveToFirst()){
@@ -236,7 +292,6 @@ public class DatabaseAdapter {
         cursor.close();
         return  pillReminderEntries;
     }
-
 
     public long getCount(){
         return DatabaseUtils.queryNumEntries(database, DatabaseHelper.TABLE_pill_reminders);
