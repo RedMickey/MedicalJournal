@@ -60,20 +60,20 @@
         android:text="1 шт"
         android:id="@+id/pill_count_tv_rmi"
         />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="17dp"
-        android:textColor="#000"
-        android:layout_marginLeft="30dp"
-        android:text="1 раз в день"
-        android:id="@+id/count_of_taking_medicine"
-        />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="30dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="17dp"
+            android:textColor="#000"
+            android:text="1 раз в день"
+            android:layout_alignParentLeft="true"
+            android:id="@+id/count_of_taking_medicine"
+            />
 
         <TextView
             android:layout_width="wrap_content"
@@ -81,14 +81,14 @@
             android:textSize="17dp"
             android:textColor="#000"
             android:text="с 156456 по 24643248"
-            android:layout_centerVertical="true"
-            android:layout_alignParentLeft="true"
             android:id="@+id/time_period_rmi"
+            android:layout_below="@+id/count_of_taking_medicine"
             />
         <ImageView
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_alignParentRight="true"
+            android:layout_alignBottom="@+id/time_period_rmi"
             android:id="@+id/having_meals_type_rmi"
             />
     </RelativeLayout>

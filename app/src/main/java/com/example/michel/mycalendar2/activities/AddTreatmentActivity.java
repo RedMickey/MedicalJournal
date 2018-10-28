@@ -11,17 +11,20 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.GridLayout;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.example.michel.mycalendar2.adapters.TimesOfTakingMedicineAdapter;
+import com.example.michel.mycalendar2.app_async_tasks.AddTreatmentActivityCreationTask;
 import com.example.michel.mycalendar2.app_async_tasks.RemindersCreationTask;
 import com.example.michel.mycalendar2.calendarview.data.DateData;
 import com.example.michel.mycalendar2.calendarview.utils.CalendarUtil;
@@ -43,9 +46,9 @@ public class AddTreatmentActivity extends AppCompatActivity {
     private Calendar cal;
     private Button pickDateButton;
     private DateData pickDateButtonDateData;
+    private TextView active_ind_tv;
 
     private ArrayList<String> time = new ArrayList();
-    //private ListView timesOfTakingMedicine;
 
     private LinearLayout timesOfTakingMedicine;
 
@@ -60,6 +63,37 @@ public class AddTreatmentActivity extends AppCompatActivity {
 
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        //active_ind_tv = (TextView)findViewById(R.id.active_ind_tv_CaddT); // must be deleted
+
+// Declaration
+
+        pickDateButtonDateData = new DateData();
+
+        active_ind_tv = (TextView)findViewById(R.id.active_ind_tv_CaddT);
+
+        mExpandLayout1 = (ExpandableRelativeLayout) findViewById(R.id.expandableLayout);
+        mExpandLayout2 = (ExpandableRelativeLayout) findViewById(R.id.expandableLayout2);
+
+        radioGroupCycleType = (RadioGroup) findViewById(R.id.cycle_type);
+
+        radioGroupRegardingMeals = (RadioGroup) findViewById(R.id.regarding_meals);
+
+        timesOfTakingMedicine = (LinearLayout) findViewById(R.id.times_of_taking_medicine);
+
+        pickDateButton = (Button) findViewById(R.id.pick_start_date_button);
+
+        timesOfTakingMedicineAdapter = new TimesOfTakingMedicineAdapter(this, R.layout.reminder_time_item, time);
+
+        Bundle arguments = getIntent().getExtras();
+
+// Declaration end
+
+
+
+
+
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -149,29 +183,6 @@ public class AddTreatmentActivity extends AppCompatActivity {
             }
         });
 
-        pickDateButtonDateData = new DateData();
-
-        mExpandLayout1 = (ExpandableRelativeLayout) findViewById(R.id.expandableLayout);
-        mExpandLayout2 = (ExpandableRelativeLayout) findViewById(R.id.expandableLayout2);
-
-        radioGroupCycleType = (RadioGroup) findViewById(R.id.cycle_type);
-
-        radioGroupRegardingMeals = (RadioGroup) findViewById(R.id.regarding_meals);
-
-        timesOfTakingMedicine = (LinearLayout) findViewById(R.id.times_of_taking_medicine);
-        cal = Calendar.getInstance();
-        time.add(String.valueOf(cal.get(Calendar.HOUR_OF_DAY))+":00");
-
-        pickDateButton = (Button) findViewById(R.id.pick_start_date_button);
-        pickDateButton.setText(setDate(cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.MONTH)+1, cal.get(Calendar.YEAR)));
-
-        timesOfTakingMedicineAdapter = new TimesOfTakingMedicineAdapter(this, R.layout.reminder_time_item, time);
-
-        for (int i = 0; i < timesOfTakingMedicineAdapter.getCount(); i++) {
-            View item = timesOfTakingMedicineAdapter.getView(i, null, null);
-            timesOfTakingMedicine.addView(item);
-        }
-
         radioGroupCycleType.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 
             @Override
@@ -221,6 +232,43 @@ public class AddTreatmentActivity extends AppCompatActivity {
                     }
                 }
         );
+
+        ((Switch) findViewById(R.id.switch_active_type)).setOnCheckedChangeListener(
+                new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                        if (b){
+                            active_ind_tv.setText("Активное");
+                        }
+                        else {
+                            active_ind_tv.setText("Завершённое");
+                        }
+                    }
+                }
+        );
+
+
+        if (arguments == null){
+            //active_ind_tv.setText("Empty");
+            ((LinearLayout)findViewById(R.id.active_status_layout)).setVisibility(View.GONE);
+
+            cal = Calendar.getInstance();
+            time.add(String.valueOf(cal.get(Calendar.HOUR_OF_DAY))+":00");
+
+            pickDateButton.setText(setDate(cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.MONTH)+1, cal.get(Calendar.YEAR)));
+
+            for (int i = 0; i < timesOfTakingMedicineAdapter.getCount(); i++) {
+                View item = timesOfTakingMedicineAdapter.getView(i, null, null);
+                timesOfTakingMedicine.addView(item);
+            }
+        }
+        else {
+            int id = arguments.getInt("PillReminderID");
+            AddTreatmentActivityCreationTask addTreatmentActivityCreationTask = new AddTreatmentActivityCreationTask(
+                    this, pickDateButtonDateData, timesOfTakingMedicineAdapter);
+            addTreatmentActivityCreationTask.execute(id);
+        }
+
     }
 
     @Override
@@ -316,11 +364,9 @@ public class AddTreatmentActivity extends AppCompatActivity {
             }
         }
 
-
-
     }
 
-    private String setDate(int day, int month, int year){
+    public String setDate(int day, int month, int year){
         pickDateButtonDateData.setDay(day);
         pickDateButtonDateData.setMonth(month);
         pickDateButtonDateData.setYear(year);
@@ -334,9 +380,6 @@ public class AddTreatmentActivity extends AppCompatActivity {
             @Override
             public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
                 pickDateButton.setText(setDate(i2, i1+1, i));
-                /*pickDateButtonDateData.setDay(i2);
-                pickDateButtonDateData.setMonth(i1+1);
-                pickDateButtonDateData.setYear(i);*/
             }
         }, pickDateButtonDateData.getYear(), pickDateButtonDateData.getMonth()-1, pickDateButtonDateData.getDay());
         datePickerDialog.show();

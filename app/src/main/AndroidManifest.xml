@@ -22,7 +22,9 @@
         <activity
             android:name=".AddTreatmentActivity"
             android:label="@string/title_activity_add_treatment"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar2">
+
+        </activity>
     </application>
 
 </manifest>

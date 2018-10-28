@@ -10,9 +10,13 @@ import android.util.Log;
 
 import com.example.michel.mycalendar2.calendarview.data.DateData;
 import com.example.michel.mycalendar2.calendarview.utils.DatabaseHelper;
+import com.example.michel.mycalendar2.models.CycleAndPillComby;
+import com.example.michel.mycalendar2.models.CycleDBInsertEntry;
 import com.example.michel.mycalendar2.models.PillReminder;
+import com.example.michel.mycalendar2.models.PillReminderDBInsertEntry;
 import com.example.michel.mycalendar2.models.PillReminderEntry;
 
+import java.lang.reflect.Array;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -250,6 +254,97 @@ public class DatabaseAdapter {
 
         cursor.close();
         return pillReminders;
+    }
+
+    private int[] getWeekSchedule(int idWeekSchedule){
+        int[] weekSchedule = new int[7];
+        Cursor cursor = database.query("week_schedules", null, "_id_week_schedule=?", new String[]{String.valueOf(idWeekSchedule)}, null, null, null);
+        if(cursor.moveToFirst()){
+            do{
+                weekSchedule[0] = cursor.getInt(cursor.getColumnIndex("mon"));
+                weekSchedule[1] = cursor.getInt(cursor.getColumnIndex("tue"));
+                weekSchedule[2] = cursor.getInt(cursor.getColumnIndex("wed"));
+                weekSchedule[3] = cursor.getInt(cursor.getColumnIndex("thu"));
+                weekSchedule[4] = cursor.getInt(cursor.getColumnIndex("fri"));
+                weekSchedule[5] = cursor.getInt(cursor.getColumnIndex("sat"));
+                weekSchedule[6] = cursor.getInt(cursor.getColumnIndex("sun"));
+            }
+            while (cursor.moveToNext());
+        }
+        cursor.close();
+        return weekSchedule;
+    }
+
+    private String[] getPillReminderEntriesTime(int idPillReminder, String startDate){
+        List<String> pillReminderEntriesTime = new ArrayList<>();
+        String rawQuery = "select reminder_time from pill_reminder_entries where _id_pill_reminder=? and reminder_date=?";
+        Cursor cursor = database.rawQuery(rawQuery, new String[]{String.valueOf(idPillReminder), startDate});
+        if(cursor.moveToFirst()){
+            do{
+                pillReminderEntriesTime.add((cursor.getString(cursor.getColumnIndex("reminder_time"))).substring(0,5));
+            }
+            while (cursor.moveToNext());
+        }
+        cursor.close();
+        return pillReminderEntriesTime.toArray(new String[pillReminderEntriesTime.size()]);
+    }
+
+    public CycleAndPillComby getCycleAndPillCombyByID(int prID){
+        String rawQuery = "select pr._id_pill_reminder, pi.pill_name, pr.pill_count, pr._id_pill_count_type, pr.start_date, pr._id_having_meals_type, pr.having_meals_time, pr.annotation, pr.IsActive, pr.times_a_day," +
+                " pr._id_cycle, cl.period, cl.period_DM_type, cl.once_a_period, cl.once_a_period_DM_type, cl._id_cycling_type, cl._id_week_schedule" +
+                " from pill_reminders pr inner join pills pi on pi._id_pill=pr._id_pill inner join cycles cl on pr._id_cycle=cl._id_cycle  where pr._id_pill_reminder=?";
+        Cursor cursor = database.rawQuery(rawQuery, new String[]{String.valueOf(prID)});
+        CycleAndPillComby cycleAndPillComby = new CycleAndPillComby();
+        if(cursor.moveToFirst()){
+            do{
+                int idPillReminder = cursor.getInt(cursor.getColumnIndex("_id_pill_reminder"));
+                String pillName = cursor.getString(cursor.getColumnIndex("pill_name"));
+                int pillCount = cursor.getInt(cursor.getColumnIndex("pill_count"));
+                int idPillCountType = cursor.getInt(cursor.getColumnIndex("_id_pill_count_type"));
+                int idCycle = cursor.getInt(cursor.getColumnIndex("_id_cycle"));
+                String startDateStr = cursor.getString(cursor.getColumnIndex("start_date"));
+                int idHavingMealsType = cursor.getInt(cursor.getColumnIndex("_id_having_meals_type"));
+                int havingMealsTime = cursor.getInt(cursor.getColumnIndex("having_meals_time"));
+                String annotation = cursor.getString(cursor.getColumnIndex("annotation"));
+                int isActive = cursor.getInt(cursor.getColumnIndex("IsActive"));
+                int times_aDay = cursor.getInt(cursor.getColumnIndex("times_a_day"));  // may be deleted
+                String[] reminderTimes = getPillReminderEntriesTime(idPillReminder, startDateStr);
+
+                DateData startDate = new DateData();
+                try {
+                    Date bufDate = new SimpleDateFormat("yyyy-MM-dd").parse(startDateStr);
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(bufDate);
+                    startDate.setYear(cal.get(Calendar.YEAR)).setMonth(cal.get(Calendar.MONTH)+1).setDay(cal.get(Calendar.DAY_OF_MONTH));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+                PillReminderDBInsertEntry prdbie = new PillReminderDBInsertEntry(
+                        idPillReminder, pillName, pillCount, idPillCountType, startDate, idCycle,
+                        idHavingMealsType, havingMealsTime, annotation, isActive, reminderTimes
+                );
+
+                int period = cursor.getInt(cursor.getColumnIndex("period"));
+                int periodDMtype = cursor.getInt(cursor.getColumnIndex("period_DM_type"));
+                int once_aPeriod = cursor.getInt(cursor.getColumnIndex("once_a_period"));
+                int once_aPeriodDMtype = cursor.getInt(cursor.getColumnIndex("once_a_period_DM_type"));
+                int idCyclingType = cursor.getInt(cursor.getColumnIndex("_id_cycling_type"));
+                int idWeekSchedule = cursor.getInt(cursor.getColumnIndex("_id_week_schedule"));
+                int[] weekSchedule = getWeekSchedule(idWeekSchedule);
+
+                CycleDBInsertEntry cdbie = new CycleDBInsertEntry(
+                        period, periodDMtype, once_aPeriod, once_aPeriodDMtype, idCyclingType,
+                        weekSchedule, 0
+                );
+                cycleAndPillComby.pillReminderDBInsertEntry=prdbie;
+                cycleAndPillComby.cycleDBInsertEntry=cdbie;
+            }
+            while (cursor.moveToNext());
+        }
+        cursor.close();
+
+        return cycleAndPillComby;
     }
 
     public List<PillReminderEntry> getPillReminderEntriesByDate(DateData date){

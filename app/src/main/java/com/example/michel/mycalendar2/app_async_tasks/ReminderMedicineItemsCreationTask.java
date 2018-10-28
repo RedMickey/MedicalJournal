@@ -1,11 +1,14 @@
 package com.example.michel.mycalendar2.app_async_tasks;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
+import com.example.michel.mycalendar2.activities.AddTreatmentActivity;
 import com.example.michel.mycalendar2.activities.R;
 import com.example.michel.mycalendar2.adapters.ReminderListAdapter;
 import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
@@ -41,7 +44,18 @@ public class ReminderMedicineItemsCreationTask extends AsyncTask<Void, Void, Lis
         if(pillReminders.size()>0){
             ListView listView = (ListView) view.findViewById(R.id.reminder_list_view);
             ReminderListAdapter reminderListAdapter = new ReminderListAdapter(view.getContext(), R.layout.reminder_medicine_item, pillReminders);
+            AdapterView.OnItemClickListener itemClickListener = new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    PillReminder pr = (PillReminder)adapterView.getItemAtPosition(i);
+                    Intent intent = new Intent(view.getContext(), AddTreatmentActivity.class);
+                    intent.putExtra("PillReminderID", pr.getId());
+                    view.getContext().startActivity(intent);
+                }
+            };
+
             listView.setAdapter(reminderListAdapter);
+            listView.setOnItemClickListener(itemClickListener);
         }
     }
 }

@@ -19,10 +19,12 @@ public class PillReminderDBInsertEntry {
     private String annotation;
     private Integer isActive;
     private String[] reminderTimes;
+    private Integer idPillReminder;
 
-    public PillReminderDBInsertEntry(String pillName, Integer pillCount, Integer idPillCountType,
+    public PillReminderDBInsertEntry(Integer idPillReminder, String pillName, Integer pillCount, Integer idPillCountType,
                                      DateData startDate, Integer idCycle, @Nullable Integer idHavingMealsType,
-                                     @Nullable Integer havingMealsTime, String annotation, Integer isActive)
+                                     @Nullable Integer havingMealsTime, String annotation, Integer isActive,
+                                     String[] reminderTimes)
     {
         this.pillName=pillName;
         this.pillCount=pillCount;
@@ -33,7 +35,8 @@ public class PillReminderDBInsertEntry {
         this.havingMealsTime=havingMealsTime;
         this.annotation=annotation;
         this.isActive=isActive;
-        this.reminderTimes = null;
+        this.reminderTimes = reminderTimes;
+        this.idPillReminder = idPillReminder;
     }
 
     public PillReminderDBInsertEntry()
@@ -48,6 +51,7 @@ public class PillReminderDBInsertEntry {
         this.annotation=null;
         this.isActive=null;
         this.reminderTimes=null;
+        this.idPillReminder=null;
     }
 
     public String getPillName() {
@@ -128,6 +132,14 @@ public class PillReminderDBInsertEntry {
 
     public void setReminderTimes(String[] reminderTimes) {
         this.reminderTimes = reminderTimes;
+    }
+
+    public Integer getIdPillReminder() {
+        return idPillReminder;
+    }
+
+    public void setIdPillReminder(Integer idPillReminder) {
+        this.idPillReminder = idPillReminder;
     }
 }
 

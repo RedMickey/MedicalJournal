@@ -9,4 +9,9 @@ public class CycleAndPillComby {
         this.cycleDBInsertEntry=cycleDBInsertEntry;
         this.pillReminderDBInsertEntry=pillReminderDBInsertEntry;
     }
+
+    public CycleAndPillComby(){
+        this.cycleDBInsertEntry=null;
+        this.pillReminderDBInsertEntry=null;
+    }
 }

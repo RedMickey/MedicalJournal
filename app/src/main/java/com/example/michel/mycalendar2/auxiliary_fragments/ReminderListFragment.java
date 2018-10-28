@@ -16,8 +16,10 @@ import com.example.michel.mycalendar2.app_async_tasks.ReminderMedicineItemsCreat
 public class ReminderListFragment extends Fragment {
     private int fragmentType = 0;
 
-    public static ReminderListFragment newInstance() {
-        return new ReminderListFragment();
+    public static ReminderListFragment newInstance(int fragmentType) {
+        ReminderListFragment rlf = new ReminderListFragment();
+        rlf.setFragmentType(fragmentType);
+        return rlf;
     }
 
     @Nullable
@@ -25,8 +27,10 @@ public class ReminderListFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = getView();
         view=inflater.inflate(R.layout.reminder_list, container, false);
-        ReminderMedicineItemsCreationTask rmict = new ReminderMedicineItemsCreationTask(view);
-        rmict.execute();
+        if (fragmentType==0){
+            ReminderMedicineItemsCreationTask rmict = new ReminderMedicineItemsCreationTask(view);
+            rmict.execute();
+        }
 
         return view;
     }
