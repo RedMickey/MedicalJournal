@@ -4,12 +4,16 @@ import android.os.AsyncTask;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.GridLayout;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.example.michel.mycalendar2.activities.AddTreatmentActivity;
 import com.example.michel.mycalendar2.activities.R;
@@ -56,6 +60,7 @@ public class AddTreatmentActivityCreationTask extends AsyncTask<Integer, Void, C
         ((TextView)view.findViewById(R.id.active_ind_tv_CaddT)).setText((prdbie.getIsActive()==1?"Активное":"Завершённое"));
         ((Switch)view.findViewById(R.id.switch_active_type)).setChecked((prdbie.getIsActive()==1?true:false));
         ((TextView)view.findViewById(R.id.edit_text_medicine_name)).setText(prdbie.getPillName());
+        view.setOldPillName(prdbie.getPillName());
         ((TextView)view.findViewById(R.id.edit_text_dose)).setText(String.valueOf(prdbie.getPillCount()));
         //((Spinner)view.findViewById(R.id.dose_type)).setSelection();
         String mapDoseTypesValue = DBStaticEntries.getKeyByValue2(DBStaticEntries.doseTypes, prdbie.getIdPillCountType());
@@ -68,12 +73,37 @@ public class AddTreatmentActivityCreationTask extends AsyncTask<Integer, Void, C
         switch(mapCycleTypesValue){
             case "every_day":
                 ((RadioButton)radioGroupCycleType.getChildAt(0)).setChecked(true);
+                LinearLayout everyDayPeriodLayout = (LinearLayout) view.findViewById(R.id.every_day_period);
+
+                setCycleParams(cdbie,everyDayPeriodLayout, 0);
                 break;
             case "specific_days":
                 ((RadioButton)radioGroupCycleType.getChildAt(1)).setChecked(true);
+                GridLayout gridLayout = (GridLayout) view.findViewById(R.id.specific_days_layout_id);
+                for (int i=7; i< 14; i++){
+                    ((CheckBox) gridLayout.getChildAt(i)).setChecked(cdbie.getWeekSchedule()[i-7]==1?true:false);
+                }
                 break;
             case "day_interval":
                 ((RadioButton)radioGroupCycleType.getChildAt(2)).setChecked(true);
+                LinearLayout once_aDateLayout = (LinearLayout) view.findViewById(R.id.once_a_date_layout);
+                setCycleParams(cdbie, once_aDateLayout, 1);
+                setCycleParams(cdbie, (LinearLayout) view.findViewById(R.id.day_interval_period), 0);
+                break;
+        }
+
+        RadioGroup radioGroupRegardingMeals = (RadioGroup) view.findViewById(R.id.regarding_meals);
+        switch (prdbie.getIdHavingMealsType()){
+            case 1:
+                radioGroupRegardingMeals.check(R.id.before_meals);
+                ((EditText)view.findViewById(R.id.count_of_minutes)).setText(String.valueOf(prdbie.getHavingMealsTime()));
+                break;
+            case 2:
+                radioGroupRegardingMeals.check(R.id.with_meals);
+                break;
+            case 3:
+                radioGroupRegardingMeals.check(R.id.after_meals);
+                ((EditText)view.findViewById(R.id.count_of_minutes)).setText(String.valueOf(prdbie.getHavingMealsTime()));
                 break;
         }
 
@@ -95,5 +125,24 @@ public class AddTreatmentActivityCreationTask extends AsyncTask<Integer, Void, C
 
         return String.valueOf(day)+" "+ CalendarUtil.getRusMonthName(month, 0)
                 +" "+String.valueOf(year)+" г.";
+    }
+
+    private void setCycleParams(CycleDBInsertEntry cycleDBInsertEntry, LinearLayout linearLayout, int type){
+        if(type==0){
+            String periodDMType = DBStaticEntries.getKeyByValue2(DBStaticEntries.dateTypes, cycleDBInsertEntry.getPeriodDMType());
+            ((EditText)linearLayout.getChildAt(1)).setText(String.valueOf(cycleDBInsertEntry.getPeriod()));
+
+            Spinner spinnerType = (Spinner)linearLayout.getChildAt(2);
+            int spinnerPosition = ((ArrayAdapter) spinnerType.getAdapter()).getPosition(periodDMType);
+            spinnerType.setSelection(spinnerPosition);
+        }
+        else {
+            String once_aPeriodDMType = DBStaticEntries.getKeyByValue2(DBStaticEntries.dateTypes, cycleDBInsertEntry.getOnce_aPeriodDMType());
+            ((EditText)linearLayout.getChildAt(1)).setText(String.valueOf(cycleDBInsertEntry.getOnce_aPeriod()));
+
+            Spinner spinnerType = (Spinner)linearLayout.getChildAt(2);
+            int spinnerPosition = ((ArrayAdapter) spinnerType.getAdapter()).getPosition(once_aPeriodDMType);
+            spinnerType.setSelection(spinnerPosition);
+        }
     }
 }

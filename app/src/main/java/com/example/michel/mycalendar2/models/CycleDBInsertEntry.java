@@ -12,6 +12,8 @@ public class CycleDBInsertEntry {
     private int[] weekSchedule;
     private int dayCount;
     private int dayInterval;
+    private int idCycle;
+    private int idWeekSchedule;
 
     public CycleDBInsertEntry(Integer period, Integer periodDMType, @Nullable Integer once_aPeriod,
                               @Nullable Integer once_aPeriodDMType, Integer idCyclingType,
@@ -25,6 +27,7 @@ public class CycleDBInsertEntry {
         this.weekSchedule=weekSchedule;
         this.dayCount=dayCount;
         this.dayInterval=0;
+        this.idCycle=0;
     }
 
     public CycleDBInsertEntry()
@@ -101,5 +104,13 @@ public class CycleDBInsertEntry {
 
     public void setDayInterval(int dayInterval) {
         this.dayInterval = dayInterval;
+    }
+
+    public int getIdCycle() {
+        return idCycle;
+    }
+
+    public void setIdCycle(int idCycle) {
+        this.idCycle = idCycle;
     }
 }

@@ -46,6 +46,7 @@ public class AddTreatmentActivity extends AppCompatActivity {
     private Calendar cal;
     private Button pickDateButton;
     private DateData pickDateButtonDateData;
+    private String oldPillName = "";
     private TextView active_ind_tv;
 
     private ArrayList<String> time = new ArrayList();
@@ -383,5 +384,9 @@ public class AddTreatmentActivity extends AppCompatActivity {
             }
         }, pickDateButtonDateData.getYear(), pickDateButtonDateData.getMonth()-1, pickDateButtonDateData.getDay());
         datePickerDialog.show();
+    }
+
+    public void setOldPillName(String oldPillName) {
+        this.oldPillName = oldPillName;
     }
 }
