@@ -15,6 +15,7 @@ import com.example.michel.mycalendar2.models.CycleDBInsertEntry;
 import com.example.michel.mycalendar2.models.PillReminder;
 import com.example.michel.mycalendar2.models.PillReminderDBInsertEntry;
 import com.example.michel.mycalendar2.models.PillReminderEntry;
+import com.example.michel.mycalendar2.models.ReminderTime;
 
 import java.lang.reflect.Array;
 import java.text.ParseException;
@@ -127,11 +128,31 @@ public class DatabaseAdapter {
         database.insert("reminder_times", null, reminderTimeTableValues);
     }
 */
-    public void updateIsDonePillReminderEntry(int isDone, int pillReminderEntryID){
+    public void updateIsDonePillReminderEntry(int isDone, int pillReminderEntryID, String newTime){
         ContentValues pillReminderEntryTableValues = new ContentValues();
         pillReminderEntryTableValues.put("is_done", isDone);
+        if (!newTime.equals(""))
+            pillReminderEntryTableValues.put("reminder_time", newTime);
         database.update("pill_reminder_entries", pillReminderEntryTableValues,
                 "_id_pill_reminder_entry=" + String.valueOf(pillReminderEntryID), null);
+    }
+
+    public void deletePillReminderEntriesAfterDate(int idPillReminder, String date){
+        database.delete("pill_reminder_entries", "reminder_date >= ? and _id_pill_reminder = ? and is_done = 0",
+                new String[]{date, String.valueOf(idPillReminder)});
+    }
+
+    public void deleteReminderTime(int idPillReminder){
+        /*String idPillReminderStr = String.valueOf(idPillReminder);
+
+        database.delete("reminder_time",
+                "_id_reminder_time in (" +
+                        " select rt._id_reminder_time from reminder_time rt inner join pill_reminders pr on rt._id_pill_reminder=pr._id_pill_reminder" +
+                        " where rt._id_pill_reminder = ? and pr.start_date=? and" +
+                        " (select count(*) from pill_reminder_entries pre2 where pre2._id_pill_reminder=? and pre2.is_done=1 and pre2._id_reminder_time=rt._id_reminder_time)=0)",
+                new String[]{idPillReminderStr, date, idPillReminderStr}
+                );*/
+        database.delete("reminder_time", "_id_pill_reminder = ?", new String[]{String.valueOf(idPillReminder)});
     }
 
     public void insertPillReminderEntries(String reminder_date, Integer idPillReminder, String reminderTime){
@@ -141,6 +162,23 @@ public class DatabaseAdapter {
         pillReminderEntryTableValues.put("_id_pill_reminder", idPillReminder);
         pillReminderEntryTableValues.put("reminder_time", reminderTime);
         database.insert("pill_reminder_entries", null, pillReminderEntryTableValues);
+    }
+
+    public int insertReminderTime(String reminderTime, Integer reminderId, Integer reminderType){
+        int reminderTimeId = 0;
+        ContentValues reminderTimeValues = new ContentValues();
+        reminderTimeValues.put("reminder_time", reminderTime);
+        switch (reminderType){
+            case 0:
+                reminderTimeValues.put("_id_pill_reminder", reminderId);
+                break;
+            case 1:
+                reminderTimeValues.put("_id_measurement_reminder", reminderId);
+                break;
+        }
+        reminderTimeId = (int)database.insert("reminder_time", null, reminderTimeValues);
+
+        return reminderTimeId;
     }
 
     public int insertPillReminder(String pillName, Integer pillCount, Integer idPillCountType,
@@ -193,7 +231,8 @@ public class DatabaseAdapter {
         pillReminderTableValues.put("annotation", annotation);
         pillReminderTableValues.put("IsActive", isActive);
         pillReminderTableValues.put("times_a_day", times_aDay);
-        long pillReminderId = database.insert("pill_reminders", null, pillReminderTableValues);
+        long pillReminderId = database.update("pill_reminders", pillReminderTableValues,
+                "_id_pill_reminder = ?", new String[]{String.valueOf(idPillReminder)});
 
         //Log.i("pill_new_id", String.valueOf(pillId));
         return (int)pillReminderId;
@@ -241,8 +280,12 @@ public class DatabaseAdapter {
             weekScheduleTableValues.put("fri", weekSchedule[4]);
             weekScheduleTableValues.put("sat", weekSchedule[5]);
             weekScheduleTableValues.put("sun", weekSchedule[6]);
-            weekScheduleID = (int)database.update("week_schedules", weekScheduleTableValues,
-                    "_id_week_schedule = ?", new String[]{String.valueOf(weekScheduleID)});
+            if (weekScheduleID!=0) {
+                weekScheduleID = (int) database.update("week_schedules", weekScheduleTableValues,
+                        "_id_week_schedule = ?", new String[]{String.valueOf(weekScheduleID)});
+            }
+            else
+                weekScheduleID = (int)database.insert("week_schedules", null, weekScheduleTableValues);
         }
 
         ContentValues cycleTableValues = new ContentValues();
@@ -335,18 +378,31 @@ public class DatabaseAdapter {
         return weekSchedule;
     }
 
-    private String[] getPillReminderEntriesTime(int idPillReminder, String startDate){
-        List<String> pillReminderEntriesTime = new ArrayList<>();
-        String rawQuery = "select reminder_time from pill_reminder_entries where _id_pill_reminder=? and reminder_date=?";
-        Cursor cursor = database.rawQuery(rawQuery, new String[]{String.valueOf(idPillReminder), startDate});
+    private ReminderTime[] getPillReminderEntriesTime(int idPillReminder, String startDate){
+        List<ReminderTime> pillReminderEntriesTime = new ArrayList<>();
+        String rawQuery = "select rt._id_reminder_time, rt.reminder_time from reminder_time rt where rt._id_pill_reminder=?";
+        Cursor cursor = database.rawQuery(rawQuery, new String[]{String.valueOf(idPillReminder)});
+        /*String idStr = String.valueOf(idPillReminder);
+        String rawQuery = "select rt._id_reminder_time, rt.reminder_time," +
+                " (select count(*) from pill_reminder_entries pre2 where pre2._id_pill_reminder=? and pre2.is_done=1 and pre2._id_reminder_time=rt._id_reminder_time) as is_used" +
+                " from reminder_time rt where rt._id_pill_reminder=?";
+        Cursor cursor = database.rawQuery(rawQuery, new String[]{idStr, idStr});*/
+
         if(cursor.moveToFirst()){
             do{
-                pillReminderEntriesTime.add((cursor.getString(cursor.getColumnIndex("reminder_time"))).substring(0,5));
+                pillReminderEntriesTime.add(
+                        new ReminderTime(
+                                cursor.getInt(cursor.getColumnIndex("_id_reminder_time")),
+                                (cursor.getString(cursor.getColumnIndex("reminder_time"))).substring(0,5)
+                                )
+                                //cursor.getInt(cursor.getColumnIndex("is_used"))>0?true:false)
+                );
+                //pillReminderEntriesTime.add((cursor.getString(cursor.getColumnIndex("reminder_time"))).substring(0,5));
             }
             while (cursor.moveToNext());
         }
         cursor.close();
-        return pillReminderEntriesTime.toArray(new String[pillReminderEntriesTime.size()]);
+        return pillReminderEntriesTime.toArray(new ReminderTime[pillReminderEntriesTime.size()]);
     }
 
     public CycleAndPillComby getCycleAndPillCombyByID(int prID){
@@ -368,7 +424,7 @@ public class DatabaseAdapter {
                 String annotation = cursor.getString(cursor.getColumnIndex("annotation"));
                 int isActive = cursor.getInt(cursor.getColumnIndex("IsActive"));
                 int times_aDay = cursor.getInt(cursor.getColumnIndex("times_a_day"));  // may be deleted
-                String[] reminderTimes = getPillReminderEntriesTime(idPillReminder, startDateStr);
+                ReminderTime[] reminderTimes = getPillReminderEntriesTime(idPillReminder, startDateStr);
 
                 DateData startDate = new DateData();
                 try {
@@ -398,6 +454,7 @@ public class DatabaseAdapter {
                         weekSchedule, 0
                 );
                 cdbie.setIdCycle(idCycle);
+                cdbie.setIdWeekSchedule(idWeekSchedule);
                 cycleAndPillComby.pillReminderDBInsertEntry=prdbie;
                 cycleAndPillComby.cycleDBInsertEntry=cdbie;
             }
@@ -412,7 +469,7 @@ public class DatabaseAdapter {
         ArrayList<PillReminderEntry> pillReminderEntries = new ArrayList<>();
         String rawQuery = "select pre._id_pill_reminder_entry, pre.is_done, pr._id_having_meals_type, pre.reminder_time, pr.having_meals_time, pr.pill_count, pct.type_name, pre.reminder_date, pi.pill_name" +
                 " from pill_reminder_entries pre inner join pill_reminders pr on pre._id_pill_reminder=pr._id_pill_reminder inner join pills pi on pi._id_pill=pr._id_pill inner join pill_count_types pct on" +
-                " pr._id_pill_count_type=pct._id_pill_count_type where pre.reminder_date=? ORDER BY pre.is_done DESC";
+                " pr._id_pill_count_type=pct._id_pill_count_type where pre.reminder_date=? and (pr.IsActive=1 or pre.is_done=1) ORDER BY pre.is_done";
         Cursor cursor = database.rawQuery(rawQuery, new String[]{date.getDateString()});
         Calendar calendar = Calendar.getInstance();
         if(cursor.moveToFirst()){

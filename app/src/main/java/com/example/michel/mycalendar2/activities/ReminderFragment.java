@@ -37,4 +37,12 @@ public class ReminderFragment extends Fragment {
 
         return view;
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (!(viewPager.getAdapter() == null)) {
+            viewPager.getAdapter().notifyDataSetChanged();
+        }
+    }
 }

@@ -1,6 +1,7 @@
 package com.example.michel.mycalendar2.calendarview.async_tasks;
 
 import android.os.AsyncTask;
+import android.text.format.DateUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import com.example.michel.mycalendar2.calendarview.data.DateData;
 import com.example.michel.mycalendar2.models.PillReminderEntry;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 
 public class TasksViewCreationTask extends AsyncTask<DateData, Void, List<PillReminderEntry>>{
@@ -46,11 +48,12 @@ public class TasksViewCreationTask extends AsyncTask<DateData, Void, List<PillRe
 
         if(pillReminderEntries.size()>0)
         {
+            boolean isToday = DateUtils.isToday(pillReminderEntries.get(0).getDate().getTime());
             for (final PillReminderEntry pre:pillReminderEntries) {
                 View pillReminderEntryView = inflater.inflate(R.layout.pill_reminder_entry, null, false);
                 ((TextView) pillReminderEntryView.findViewById(R.id.pill_name_tv)).setText(pre.getPillName());
-                ((TextView) pillReminderEntryView.findViewById(R.id.reminder_time_tv))
-                        .setText(new SimpleDateFormat("HH:mm").format(pre.getDate()));
+                final TextView reminderTimeTv = (TextView) pillReminderEntryView.findViewById(R.id.reminder_time_tv);
+                reminderTimeTv.setText(new SimpleDateFormat("HH:mm").format(pre.getDate()));
                 ((TextView) pillReminderEntryView.findViewById(R.id.pill_count_type_tv))
                         .setText(String.valueOf(pre.getPillCount())+" "+pre.getPillCountType());
                 switch (pre.getHavingMealsType()){
@@ -68,6 +71,8 @@ public class TasksViewCreationTask extends AsyncTask<DateData, Void, List<PillRe
                 if(pre.isLate())
                     imageTimeExpired.setImageResource(R.drawable.ic_time_expired);
                 CheckBox isDoneChb = (CheckBox) pillReminderEntryView.findViewById(R.id.is_done_chb);
+                if (!isToday)
+                    isDoneChb.setEnabled(false);
                 if(pre.getIsDone()==1)
                     isDoneChb.setChecked(true);
                 isDoneChb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -76,12 +81,16 @@ public class TasksViewCreationTask extends AsyncTask<DateData, Void, List<PillRe
                         DatabaseAdapter databaseAdapter = new DatabaseAdapter();
                         databaseAdapter.open();
                         if (b){
-                            databaseAdapter.updateIsDonePillReminderEntry(1, pre.getId());
+                            Calendar cal = Calendar.getInstance();
+                            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+                            String curTime = sdf.format(cal.getTime());
+                            reminderTimeTv.setText(curTime);
+                            databaseAdapter.updateIsDonePillReminderEntry(1, pre.getId(), curTime+":00");
                             if (pre.isLate())
                                 imageTimeExpired.setImageResource(android.R.color.transparent);
                         }
                         else {
-                            databaseAdapter.updateIsDonePillReminderEntry( 0, pre.getId());
+                            databaseAdapter.updateIsDonePillReminderEntry( 0, pre.getId(), "");
                             if (pre.isLateCheck())
                                 imageTimeExpired.setImageResource(R.drawable.ic_time_expired);
                         }

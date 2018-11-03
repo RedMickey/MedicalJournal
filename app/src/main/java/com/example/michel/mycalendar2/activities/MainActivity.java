@@ -157,7 +157,7 @@ public class MainActivity extends AppCompatActivity
         //fragmentManager.beginTransaction().replace(R.id.flContent, fragment).addToBackStack(null).commit();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.frame_container, newFragment);
-        transaction.addToBackStack(null);
+        //transaction.addToBackStack(null);
         transaction.commit();
         // Выделение существующего элемента выполнено с помощью
         // NavigationView

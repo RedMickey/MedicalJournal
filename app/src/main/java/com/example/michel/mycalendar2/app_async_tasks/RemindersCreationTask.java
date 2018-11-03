@@ -35,6 +35,10 @@ public class RemindersCreationTask extends AsyncTask<CycleAndPillComby, Void, Vo
                 pillReminderDBInsertEntry.getIsActive(), pillReminderDBInsertEntry.getReminderTimes().length
         );
 
+        for (int i=0; i<pillReminderDBInsertEntry.getReminderTimes().length; i++){
+            dbAdapter.insertReminderTime(pillReminderDBInsertEntry.getReminderTimes()[i].getReminderTimeStr(), pillReminderId, 0);
+        }
+
         Calendar cal = Calendar.getInstance();
         cal.set(pillReminderDBInsertEntry.getStartDate().getYear(),
                 pillReminderDBInsertEntry.getStartDate().getMonth()-1,
@@ -47,7 +51,7 @@ public class RemindersCreationTask extends AsyncTask<CycleAndPillComby, Void, Vo
                         dbAdapter.insertPillReminderEntries(
                                 sdf.format(new Date(cal.getTimeInMillis())),
                                 pillReminderId,
-                                pillReminderDBInsertEntry.getReminderTimes()[j]
+                                pillReminderDBInsertEntry.getReminderTimes()[j].getReminderTimeStr()
                                 );
                     }
                     cal.add(Calendar.DATE, 1);
@@ -58,9 +62,9 @@ public class RemindersCreationTask extends AsyncTask<CycleAndPillComby, Void, Vo
                     if(cycleDBInsertEntry.getWeekSchedule()[cal.get(Calendar.DAY_OF_WEEK)-1]==1){
                         for (int j=0; j<pillReminderDBInsertEntry.getReminderTimes().length; j++){
                             dbAdapter.insertPillReminderEntries(
-                                    sdf.format(new Date(cal.getTimeInMillis())),
+                                    sdf.format(cal.getTime()),
                                     pillReminderId,
-                                    pillReminderDBInsertEntry.getReminderTimes()[j]
+                                    pillReminderDBInsertEntry.getReminderTimes()[j].getReminderTimeStr()
                             );
                         }
                     }
@@ -73,7 +77,7 @@ public class RemindersCreationTask extends AsyncTask<CycleAndPillComby, Void, Vo
                         dbAdapter.insertPillReminderEntries(
                                 sdf.format(new Date(cal.getTimeInMillis())),
                                 pillReminderId,
-                                pillReminderDBInsertEntry.getReminderTimes()[j]
+                                pillReminderDBInsertEntry.getReminderTimes()[j].getReminderTimeStr()
                         );
                     }
                     cal.add(Calendar.DATE, cycleDBInsertEntry.getDayInterval());

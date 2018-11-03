@@ -60,9 +60,9 @@ public class AddTreatmentActivityCreationTask extends AsyncTask<Integer, Void, C
         ((TextView)view.findViewById(R.id.active_ind_tv_CaddT)).setText((prdbie.getIsActive()==1?"Активное":"Завершённое"));
         ((Switch)view.findViewById(R.id.switch_active_type)).setChecked((prdbie.getIsActive()==1?true:false));
         ((TextView)view.findViewById(R.id.edit_text_medicine_name)).setText(prdbie.getPillName());
-        view.setOldPillName(prdbie.getPillName());
+        view.setOldPillReminder(prdbie);
+        view.setIdWeekSchedule(cdbie.getIdWeekSchedule());
         ((TextView)view.findViewById(R.id.edit_text_dose)).setText(String.valueOf(prdbie.getPillCount()));
-        //((Spinner)view.findViewById(R.id.dose_type)).setSelection();
         String mapDoseTypesValue = DBStaticEntries.getKeyByValue2(DBStaticEntries.doseTypes, prdbie.getIdPillCountType());
         Spinner spinnerDoseType = (Spinner)view.findViewById(R.id.dose_type);
         int spinnerPosition = ((ArrayAdapter) spinnerDoseType.getAdapter()).getPosition(mapDoseTypesValue);
@@ -109,7 +109,7 @@ public class AddTreatmentActivityCreationTask extends AsyncTask<Integer, Void, C
 
         LinearLayout timesOfTakingMedicine = (LinearLayout) view.findViewById(R.id.times_of_taking_medicine);
         for(int i=0; i<prdbie.getReminderTimes().length;i++){
-            timesOfTakingMedicineAdapter.add(prdbie.getReminderTimes()[i]);
+            timesOfTakingMedicineAdapter.add(prdbie.getReminderTimes()[i].getReminderTimeStr());
             timesOfTakingMedicineAdapter.notifyDataSetChanged();
             View item = timesOfTakingMedicineAdapter.getView(timesOfTakingMedicineAdapter.getCount()-1, null, null);
             timesOfTakingMedicine.addView(item);
