@@ -45,10 +45,13 @@ public class TasksViewCreationTask extends AsyncTask<DateData, Void, List<PillRe
         LinearLayout tasksLayout = (LinearLayout)view.findViewById(R.id.pill_reminder_entries_layout);
 
         LayoutInflater inflater = LayoutInflater.from(view.getContext());
+        Calendar calendar1 = Calendar.getInstance();
+        Calendar calendar2 = Calendar.getInstance();
 
         if(pillReminderEntries.size()>0)
         {
-            boolean isToday = DateUtils.isToday(pillReminderEntries.get(0).getDate().getTime());
+            calendar2.setTime(pillReminderEntries.get(0).getDate());
+            boolean isToday = calendar2.get(Calendar.DAY_OF_YEAR)<=calendar1.get(Calendar.DAY_OF_YEAR);
             for (final PillReminderEntry pre:pillReminderEntries) {
                 View pillReminderEntryView = inflater.inflate(R.layout.pill_reminder_entry, null, false);
                 ((TextView) pillReminderEntryView.findViewById(R.id.pill_name_tv)).setText(pre.getPillName());

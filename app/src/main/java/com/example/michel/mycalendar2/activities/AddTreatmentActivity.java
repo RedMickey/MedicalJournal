@@ -1,12 +1,15 @@
 package com.example.michel.mycalendar2.activities;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -27,6 +30,7 @@ import com.example.michel.mycalendar2.adapters.TimesOfTakingMedicineAdapter;
 import com.example.michel.mycalendar2.app_async_tasks.AddTreatmentActivityCreationTask;
 import com.example.michel.mycalendar2.app_async_tasks.RemindersCreationTask;
 import com.example.michel.mycalendar2.app_async_tasks.RemindersUpdateTask;
+import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
 import com.example.michel.mycalendar2.calendarview.data.DateData;
 import com.example.michel.mycalendar2.calendarview.utils.CalendarUtil;
 import com.example.michel.mycalendar2.expandableLayout.ExpandableRelativeLayout;
@@ -105,8 +109,13 @@ public class AddTreatmentActivity extends AppCompatActivity {
                     case R.id.every_day:
                         cycleDBInsertEntry.setIdCyclingType(DBStaticEntries.cycleTypes.get("every_day"));
                         LinearLayout everyDayPeriodLayout = (LinearLayout) findViewById(R.id.every_day_period);
-
-                        setDateParams(cycleDBInsertEntry,everyDayPeriodLayout, 0);
+                        try {
+                            setDateParams(cycleDBInsertEntry, everyDayPeriodLayout, 0);
+                        }
+                        catch (NumberFormatException ex){
+                            Toast.makeText(view.getContext(),"Введите период",Toast.LENGTH_LONG).show();
+                            return;
+                        }
                         break;
                     case R.id.specific_days:
                         cycleDBInsertEntry.setIdCyclingType(DBStaticEntries.cycleTypes.get("specific_days"));
@@ -118,14 +127,25 @@ public class AddTreatmentActivity extends AppCompatActivity {
                         }
                         weekSchedule[0]=((CheckBox) gridLayout.getChildAt(13)).isChecked() ? 1 : 0;
                         cycleDBInsertEntry.setWeekSchedule(weekSchedule);
-                        setDateParams(cycleDBInsertEntry,(LinearLayout)gridLayout.getChildAt(14), 0);
+                        try {
+                            setDateParams(cycleDBInsertEntry, (LinearLayout) gridLayout.getChildAt(14), 0);
+                        }
+                        catch (NumberFormatException ex){
+                            Toast.makeText(view.getContext(),"Введите период",Toast.LENGTH_LONG).show();
+                            return;
+                        }
                         break;
                     case R.id.day_interval:
                         cycleDBInsertEntry.setIdCyclingType(DBStaticEntries.cycleTypes.get("day_interval"));
                         LinearLayout once_aDateLayout = (LinearLayout) findViewById(R.id.once_a_date_layout);
-
-                        setDateParams(cycleDBInsertEntry, once_aDateLayout, 1);
-                        setDateParams(cycleDBInsertEntry, (LinearLayout) findViewById(R.id.day_interval_period), 0);
+                        try {
+                            setDateParams(cycleDBInsertEntry, once_aDateLayout, 1);
+                            setDateParams(cycleDBInsertEntry, (LinearLayout) findViewById(R.id.day_interval_period), 0);
+                        }
+                        catch (NumberFormatException ex){
+                            Toast.makeText(view.getContext(),"Введите значения",Toast.LENGTH_LONG).show();
+                            return;
+                        }
                         break;
                 }
 
@@ -134,18 +154,30 @@ public class AddTreatmentActivity extends AppCompatActivity {
                 switch (radioGroupRegardingMeals.getCheckedRadioButtonId()){
                     case R.id.before_meals:
                         pillReminderDBInsertEntry.setIdHavingMealsType(1);
-                        pillReminderDBInsertEntry.setHavingMealsTime(
-                                -Integer.parseInt(((EditText)findViewById(R.id.count_of_minutes)).getText().toString())
-                        );
+                        try {
+                            pillReminderDBInsertEntry.setHavingMealsTime(
+                                    -Integer.parseInt(((EditText) findViewById(R.id.count_of_minutes)).getText().toString())
+                            );
+                        }
+                        catch (NumberFormatException ex){
+                            Toast.makeText(view.getContext(),"Введите количество минут",Toast.LENGTH_LONG).show();
+                            return;
+                        }
                         break;
                     case R.id.with_meals:
                         pillReminderDBInsertEntry.setIdHavingMealsType(2);
                         break;
                     case R.id.after_meals:
                         pillReminderDBInsertEntry.setIdHavingMealsType(3);
-                        pillReminderDBInsertEntry.setHavingMealsTime(
-                                Integer.parseInt(((EditText)findViewById(R.id.count_of_minutes)).getText().toString())
-                        );
+                        try {
+                            pillReminderDBInsertEntry.setHavingMealsTime(
+                                    Integer.parseInt(((EditText) findViewById(R.id.count_of_minutes)).getText().toString())
+                            );
+                        }
+                        catch (NumberFormatException ex){
+                            Toast.makeText(view.getContext(),"Введите количество минут",Toast.LENGTH_LONG).show();
+                            return;
+                        }
                         break;
                         default:
                             Log.e("MEALS", "Incorrect ID");
@@ -154,9 +186,19 @@ public class AddTreatmentActivity extends AppCompatActivity {
                 pillReminderDBInsertEntry.setPillName(
                         ((EditText)findViewById(R.id.edit_text_medicine_name)).getText().toString()
                 );
+                if (pillReminderDBInsertEntry.getPillName().equals("")){
+                    Toast.makeText(view.getContext(),"Введите название препарата",Toast.LENGTH_LONG).show();
+                    return;
+                }
+                try {
                 pillReminderDBInsertEntry.setPillCount(
                         Integer.parseInt(((EditText)findViewById(R.id.edit_text_dose)).getText().toString())
                 );
+                }
+                catch (NumberFormatException ex){
+                    Toast.makeText(view.getContext(),"Введите дозу",Toast.LENGTH_LONG).show();
+                    return;
+                }
                 pillReminderDBInsertEntry.setIdPillCountType(
                         DBStaticEntries.doseTypes.get(
                                 ((Spinner)findViewById(R.id.dose_type)).getSelectedItem().toString()
@@ -286,10 +328,49 @@ public class AddTreatmentActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_add_treatment_activity, menu);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
+                return true;
+            case R.id.action_delete_ATA:
+                if (getIntent().getExtras() != null){
+                    AlertDialog.Builder builder = new AlertDialog.Builder(AddTreatmentActivity.this);
+                    builder.setTitle("Удалить данные")
+                            .setMessage(R.string.delete_message)
+                            .setPositiveButton(R.string.d_agree, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    DatabaseAdapter dbAdapter = new DatabaseAdapter();
+                                    dbAdapter.open();
+                                    dbAdapter.deletePillReminderEntriesByPillReminderId(oldPillReminder.getIdPillReminder());
+                                    dbAdapter.deleteReminderTimeByPillReminderId(oldPillReminder.getIdPillReminder());
+                                    if (idWeekSchedule!=0)
+                                        dbAdapter.deleteWeekScheduleByIdCascade(idWeekSchedule);
+                                    dbAdapter.deleteCycleByIdCascade(oldPillReminder.getIdCycle());
+                                    dbAdapter.close();
+                                    onBackPressed();
+                                }
+                            })
+                            .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.cancel();
+                                }
+                            });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                }
+                else {
+                    Toast.makeText(AddTreatmentActivity.this,"Действие невозможно",Toast.LENGTH_LONG).show();
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -339,7 +420,7 @@ public class AddTreatmentActivity extends AppCompatActivity {
         }
     }
 
-    private void setDateParams(CycleDBInsertEntry cycleDBInsertEntry, LinearLayout linearLayout, int type){
+    private void setDateParams(CycleDBInsertEntry cycleDBInsertEntry, LinearLayout linearLayout, int type) throws NumberFormatException{
         Integer period = Integer.parseInt(((EditText)linearLayout.getChildAt(1)).getText().toString());
         String periodDMType = ((Spinner)linearLayout.getChildAt(2)).getSelectedItem().toString();
         if (type==0)

@@ -12,6 +12,13 @@
     <string name="rb_specific_days">По определённыйм дням</string>
     <string name="rb_day_interval">Дневной интервал</string>
 
+    <string name="delete_data">Удалить данные...</string>
+    <string name="delete_message">Вместе с удалением этой информации также будут удалены
+    все данные о запланированных и уже принятых в соответствии с данным раписанием препаратом.
+    Вы уверены, что хотите удалить эти данные?</string>
+    <string name="d_agree">ОК</string>
+    <string name="cancel">ОТМЕНА</string>
+    
     <string-array name="dose_type">
         <item id="1">шт</item>
         <item>мл</item>

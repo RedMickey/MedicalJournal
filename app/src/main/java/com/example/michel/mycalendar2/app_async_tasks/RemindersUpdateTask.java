@@ -49,7 +49,7 @@ public class RemindersUpdateTask extends AsyncTask<CycleAndPillComby, Void, Void
         dbAdapter.deletePillReminderEntriesAfterDate(pillReminderDBInsertEntry.getIdPillReminder(), curDate);
         // need check for change start date
 
-        dbAdapter.deleteReminderTime(pillReminderDBInsertEntry.getIdPillReminder());
+        dbAdapter.deleteReminderTimeByPillReminderId(pillReminderDBInsertEntry.getIdPillReminder());
 
         for (int i=0; i<pillReminderDBInsertEntry.getReminderTimes().length; i++){
             dbAdapter.insertReminderTime(pillReminderDBInsertEntry.getReminderTimes()[i].getReminderTimeStr(), pillReminderDBInsertEntry.getIdPillReminder(), 0);

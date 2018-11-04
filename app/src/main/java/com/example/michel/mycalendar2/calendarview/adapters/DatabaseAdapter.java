@@ -142,7 +142,41 @@ public class DatabaseAdapter {
                 new String[]{date, String.valueOf(idPillReminder)});
     }
 
-    public void deleteReminderTime(int idPillReminder){
+    public void deletePillReminderEntriesByPillReminderId(int idPillReminder){
+        database.delete("pill_reminder_entries", "_id_pill_reminder = ?",
+                new String[]{String.valueOf(idPillReminder)});
+    }
+
+    public void deletePillReminderById(int idPillReminder){
+        database.delete("pill_reminders", "_id_pill_reminder = ?",
+                new String[]{String.valueOf(idPillReminder)});
+    }
+/*
+    public void ttt(int idPillReminder){
+        Cursor cursor = database.rawQuery("select * from cycles where _id_cycle = ?", new String[]{String.valueOf(idPillReminder)});
+        if(cursor.moveToFirst()){
+            do {
+
+                int id = cursor.getInt(cursor.getColumnIndex("period"));
+                int id2 = cursor.getInt(cursor.getColumnIndex("period"));
+            }
+            while (cursor.moveToNext());
+        }
+
+        cursor.close();
+    }
+*/
+    public void deleteWeekScheduleByIdCascade(int idWeekSchedule){
+        database.delete("week_schedules", "_id_week_schedule = ?",
+                new String[]{String.valueOf(idWeekSchedule)});
+    }
+
+    public void deleteCycleByIdCascade(int idCycle){
+        database.delete("cycles", "_id_cycle = ?",
+                new String[]{String.valueOf(idCycle)});
+    }
+
+    public void deleteReminderTimeByPillReminderId(int idPillReminder){
         /*String idPillReminderStr = String.valueOf(idPillReminder);
 
         database.delete("reminder_time",
@@ -245,13 +279,13 @@ public class DatabaseAdapter {
         if (weekSchedule!=null)
         {
             ContentValues weekScheduleTableValues = new ContentValues();
-            weekScheduleTableValues.put("mon", weekSchedule[0]);
-            weekScheduleTableValues.put("tue", weekSchedule[1]);
-            weekScheduleTableValues.put("wed", weekSchedule[2]);
-            weekScheduleTableValues.put("thu", weekSchedule[3]);
-            weekScheduleTableValues.put("fri", weekSchedule[4]);
-            weekScheduleTableValues.put("sat", weekSchedule[5]);
-            weekScheduleTableValues.put("sun", weekSchedule[6]);
+            weekScheduleTableValues.put("mon", weekSchedule[1]);
+            weekScheduleTableValues.put("tue", weekSchedule[2]);
+            weekScheduleTableValues.put("wed", weekSchedule[3]);
+            weekScheduleTableValues.put("thu", weekSchedule[4]);
+            weekScheduleTableValues.put("fri", weekSchedule[5]);
+            weekScheduleTableValues.put("sat", weekSchedule[6]);
+            weekScheduleTableValues.put("sun", weekSchedule[0]);
             weekScheduleID = database.insert("week_schedules", null, weekScheduleTableValues);
         }
 
@@ -273,15 +307,15 @@ public class DatabaseAdapter {
         if (weekSchedule!=null)
         {
             ContentValues weekScheduleTableValues = new ContentValues();
-            weekScheduleTableValues.put("mon", weekSchedule[0]);
-            weekScheduleTableValues.put("tue", weekSchedule[1]);
-            weekScheduleTableValues.put("wed", weekSchedule[2]);
-            weekScheduleTableValues.put("thu", weekSchedule[3]);
-            weekScheduleTableValues.put("fri", weekSchedule[4]);
-            weekScheduleTableValues.put("sat", weekSchedule[5]);
-            weekScheduleTableValues.put("sun", weekSchedule[6]);
+            weekScheduleTableValues.put("mon", weekSchedule[1]);
+            weekScheduleTableValues.put("tue", weekSchedule[2]);
+            weekScheduleTableValues.put("wed", weekSchedule[3]);
+            weekScheduleTableValues.put("thu", weekSchedule[4]);
+            weekScheduleTableValues.put("fri", weekSchedule[5]);
+            weekScheduleTableValues.put("sat", weekSchedule[6]);
+            weekScheduleTableValues.put("sun", weekSchedule[0]);
             if (weekScheduleID!=0) {
-                weekScheduleID = (int) database.update("week_schedules", weekScheduleTableValues,
+                database.update("week_schedules", weekScheduleTableValues,
                         "_id_week_schedule = ?", new String[]{String.valueOf(weekScheduleID)});
             }
             else
