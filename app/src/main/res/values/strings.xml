@@ -18,7 +18,7 @@
     Вы уверены, что хотите удалить эти данные?</string>
     <string name="d_agree">ОК</string>
     <string name="cancel">ОТМЕНА</string>
-    
+
     <string-array name="dose_type">
         <item id="1">шт</item>
         <item>мл</item>

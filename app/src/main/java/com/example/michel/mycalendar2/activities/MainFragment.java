@@ -1,5 +1,7 @@
 package com.example.michel.mycalendar2.activities;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -30,9 +32,12 @@ import com.example.michel.mycalendar2.calendarview.utils.DatabaseHelper;
 import com.example.michel.mycalendar2.calendarview.views.ExpCalendarView;
 import com.example.michel.mycalendar2.calendarview.views.MonthExpFragment;
 import com.example.michel.mycalendar2.calendarview.views.WeekDayViewPager;
+import com.example.michel.mycalendar2.utils.AlarmReceiver;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.util.Calendar;
+
+import static android.content.Context.ALARM_SERVICE;
 
 public class MainFragment extends Fragment{
 
@@ -63,11 +68,32 @@ public class MainFragment extends Fragment{
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /*Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();*/
-                Intent intent = new Intent(getActivity(), AddTreatmentActivity.class);
-                startActivity(intent);
-            }
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_SHORT)
+                        .setAction("Action", null).show();
+                /*Intent intent = new Intent(getActivity(), AddTreatmentActivity.class);
+                startActivity(intent);*/
+                Calendar calendar = Calendar.getInstance();
+                // set selected time from timepicker to calendar
+                calendar.add(Calendar.SECOND, 30);
+                Intent myIntent = new Intent(getActivity(), AlarmReceiver.class);
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                        getActivity(), 0, myIntent, 0);
+                // set alarm time
+
+                AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(ALARM_SERVICE);
+                alarmManager.set(AlarmManager.RTC_WAKEUP,
+                        calendar.getTimeInMillis(), pendingIntent);
+                }
+
+                /*else {
+                    // Cancel alarm
+                    alarmManager.cancel(pendingIntent);
+                    Toast.makeText(getApplicationContext(), "Alarm Off",
+                            Toast.LENGTH_SHORT).show();
+                    setAlarmText("");
+
+                }*/
+
         });
 
         calendar = Calendar.getInstance();

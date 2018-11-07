@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.michel.mycalendar2.activities">
 
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -22,9 +24,14 @@
         <activity
             android:name=".AddTreatmentActivity"
             android:label="@string/title_activity_add_treatment"
-            android:theme="@style/AppTheme.NoActionBar2">
+            android:theme="@style/AppTheme.NoActionBar2"></activity>
+        <activity android:name=".AlarmActivity"></activity>
 
-        </activity>
+        <service
+            android:name="com.example.michel.mycalendar2.services.AlarmService"
+            android:enabled="true" />
+
+        <receiver android:name="com.example.michel.mycalendar2.utils.AlarmReceiver" />
     </application>
 
 </manifest>
