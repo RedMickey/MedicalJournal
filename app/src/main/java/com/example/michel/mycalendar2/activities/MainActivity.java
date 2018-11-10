@@ -1,5 +1,6 @@
 package com.example.michel.mycalendar2.activities;
 
+import android.app.Notification;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -13,6 +14,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.michel.mycalendar2.app_async_tasks.NotificationsCreationTask;
 import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
 import com.example.michel.mycalendar2.calendarview.utils.DatabaseHelper;
 import com.example.michel.mycalendar2.utils.DBStaticEntries;
@@ -46,24 +48,30 @@ public class MainActivity extends AppCompatActivity
         d.close();*/
         //TasksViewCreationTask t = new TasksViewCreationTask();
         //t.execute(selectedDate);
-        databaseHelper = new DatabaseHelper(getApplicationContext());
-        // создаем базу данных
-        databaseHelper.create_db();
-        DatabaseAdapter.AppContext = getApplicationContext();
-
-        DatabaseAdapter databaseAdapter = new DatabaseAdapter();
-        databaseAdapter.open();
-
-        DBStaticEntries.cycleTypes = databaseAdapter.getCycleTypes();
-        DBStaticEntries.dateTypes = databaseAdapter.getDateTypes();
-        DBStaticEntries.doseTypes = databaseAdapter.getDoseTypes();
-
-        /*databaseAdapter.insertPillReminder("pill1", 0,0, null, 0, 0,
-                null, null, 0);*/
-        databaseAdapter.close();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        if ( savedInstanceState == null )   // приложение запущено впервые
+        {
+            databaseHelper = new DatabaseHelper(getApplicationContext());
+            // создаем базу данных
+            databaseHelper.create_db();
+            DatabaseAdapter.AppContext = getApplicationContext();
+
+            DatabaseAdapter databaseAdapter = new DatabaseAdapter();
+            databaseAdapter.open();
+
+            DBStaticEntries.cycleTypes = databaseAdapter.getCycleTypes();
+            DBStaticEntries.dateTypes = databaseAdapter.getDateTypes();
+            DBStaticEntries.doseTypes = databaseAdapter.getDoseTypes();
+
+            databaseAdapter.close();
+
+            NotificationsCreationTask nct = new NotificationsCreationTask();
+            nct.execute(getApplicationContext());
+        }
+
     }
 
 /*
@@ -89,6 +97,7 @@ public class MainActivity extends AppCompatActivity
         });
     }
 */
+
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

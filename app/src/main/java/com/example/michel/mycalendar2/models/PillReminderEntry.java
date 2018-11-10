@@ -1,9 +1,12 @@
 package com.example.michel.mycalendar2.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.Calendar;
 import java.util.Date;
 
-public class PillReminderEntry extends PillModel {
+public class PillReminderEntry extends PillModel implements Parcelable {
     private int isDone;
     private Date date;
     private Date havingMealsTime;
@@ -52,4 +55,41 @@ public class PillReminderEntry extends PillModel {
     public void setLate(boolean late) {
         isLate = late;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeInt(id);
+        parcel.writeString(pillName);
+        parcel.writeInt(pillCount);
+        parcel.writeString(pillCountType);
+        parcel.writeInt(havingMealsType);
+        parcel.writeLong(date.getTime());
+        parcel.writeLong(havingMealsTime.getTime());
+        parcel.writeInt(isDone);
+    }
+
+    public PillReminderEntry(Parcel in){
+        super(in.readInt(), in.readString(), in.readInt(), in.readString(), in.readInt());
+        this.date = new Date(in.readLong());
+        this.havingMealsTime= new Date(in.readLong());
+        this.isDone = in.readInt();
+        this.isLate=false;
+    }
+
+    public static final Parcelable.Creator<PillReminderEntry> CREATOR = new Parcelable.Creator<PillReminderEntry>(){
+        @Override
+        public PillReminderEntry createFromParcel(Parcel parcel) {
+            return new PillReminderEntry(parcel);
+        }
+
+        @Override
+        public PillReminderEntry[] newArray(int i) {
+            return new PillReminderEntry[i];
+        }
+    };
 }

@@ -5,4 +5,5 @@
     <color name="colorAccent">#FF4081</color>
     <color name="add_timeBT_BG">#ECEFF1</color>
     <color name="line_BG">#dedede</color>
+    <color name="green_accept">#00FF00</color>
 </resources>

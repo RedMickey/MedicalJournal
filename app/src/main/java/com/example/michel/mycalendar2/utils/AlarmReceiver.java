@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.PowerManager;
 
 import com.example.michel.mycalendar2.activities.AlarmActivity;
@@ -19,19 +20,27 @@ public class AlarmReceiver extends BroadcastReceiver {
         //Intent intent2 = new Intent(context,  AlarmActivity.class);
 
         //context.startActivity(intent2);
+        Bundle extras= intent.getExtras();
+
+        Intent i = new Intent(context.getApplicationContext(), AlarmActivity.class);
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(i);
+
+
 
         PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
         PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "");
         wl.acquire();
 
-        Uri alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+        /*Uri alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
 
         if (alarmUri == null) {
             alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         }
 
         Ringtone ringtone = RingtoneManager.getRingtone(context, alarmUri);
-        ringtone.play();
+        ringtone.play();*/
+
         setResultCode(Activity.RESULT_OK);
         wl.release();
     }

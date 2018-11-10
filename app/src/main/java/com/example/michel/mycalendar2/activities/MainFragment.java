@@ -74,8 +74,9 @@ public class MainFragment extends Fragment{
                 startActivity(intent);*/
                 Calendar calendar = Calendar.getInstance();
                 // set selected time from timepicker to calendar
-                calendar.add(Calendar.SECOND, 30);
+                calendar.add(Calendar.SECOND, 2);
                 Intent myIntent = new Intent(getActivity(), AlarmReceiver.class);
+                myIntent.putExtra("number", 25);
                 PendingIntent pendingIntent = PendingIntent.getBroadcast(
                         getActivity(), 0, myIntent, 0);
                 // set alarm time

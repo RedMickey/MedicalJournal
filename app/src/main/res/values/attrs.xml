@@ -25,4 +25,8 @@
         </attr>
     </declare-styleable>
 
+    <declare-styleable name="swipeButton">
+        <attr name="android:layout_width"/>
+    </declare-styleable>
+
 </resources>
