@@ -20,6 +20,18 @@ import static android.content.ContentValues.TAG;
 import static android.content.Context.ALARM_SERVICE;
 
 public class NotificationsCreationTask extends AsyncTask<Context, Void, Void> {
+    private int type;
+
+    public NotificationsCreationTask(int type){
+        super();
+        this.type = type;
+    }
+
+    public NotificationsCreationTask(){
+        super();
+        this.type = 0;
+    }
+
     @Override
     protected Void doInBackground(Context... Contexts) {
         AlarmManager alarmManager = (AlarmManager) Contexts[0].getSystemService(ALARM_SERVICE);
@@ -30,21 +42,40 @@ public class NotificationsCreationTask extends AsyncTask<Context, Void, Void> {
         List<PillReminderEntry> todayPillReminderEntries = databaseAdapter.getPillReminderEntriesByDate(new DateData(
                 cal.get(Calendar.YEAR), cal.get(Calendar.MONTH)+1, cal.get(Calendar.DAY_OF_MONTH)
         ));
-        cancelAlarms(Contexts[0], todayPillReminderEntries, alarmManager);
-        setupAlarms(Contexts[0], todayPillReminderEntries, alarmManager);
+
 
         cal.add(Calendar.DAY_OF_MONTH, -1);
         List<PillReminderEntry> yesterdayPillReminderEntries = databaseAdapter.getPillReminderEntriesByDate(new DateData(
                 cal.get(Calendar.YEAR), cal.get(Calendar.MONTH)+1, cal.get(Calendar.DAY_OF_MONTH)
         ));
-        cancelAlarms(Contexts[0], yesterdayPillReminderEntries, alarmManager);
+
 
         cal.add(Calendar.DAY_OF_MONTH,2);
         List<PillReminderEntry> tomorrowPillReminderEntries = databaseAdapter.getPillReminderEntriesByDate(new DateData(
                 cal.get(Calendar.YEAR), cal.get(Calendar.MONTH)+1, cal.get(Calendar.DAY_OF_MONTH)
         ));
-        cancelAlarms(Contexts[0], tomorrowPillReminderEntries, alarmManager);
-        setupAlarms(Contexts[0], tomorrowPillReminderEntries, alarmManager);
+
+
+        switch (type){
+            case 0:
+                cancelAlarms(Contexts[0], todayPillReminderEntries, alarmManager);
+                setupAlarms(Contexts[0], todayPillReminderEntries, alarmManager);
+
+                cancelAlarms(Contexts[0], yesterdayPillReminderEntries, alarmManager);
+
+                cancelAlarms(Contexts[0], tomorrowPillReminderEntries, alarmManager);
+                setupAlarms(Contexts[0], tomorrowPillReminderEntries, alarmManager);
+                break;
+            case 1:
+                cancelAlarms(Contexts[0], todayPillReminderEntries, alarmManager);
+                cancelAlarms(Contexts[0], yesterdayPillReminderEntries, alarmManager);
+                cancelAlarms(Contexts[0], tomorrowPillReminderEntries, alarmManager);
+                break;
+            case 2:
+                setupAlarms(Contexts[0], todayPillReminderEntries, alarmManager);
+                setupAlarms(Contexts[0], tomorrowPillReminderEntries, alarmManager);
+                break;
+        }
 
         databaseAdapter.close();
         return null;
@@ -52,7 +83,7 @@ public class NotificationsCreationTask extends AsyncTask<Context, Void, Void> {
 
     private void setupAlarms(Context context, List<PillReminderEntry> pillReminderEntries, AlarmManager alarmManager){
         for (PillReminderEntry pre: pillReminderEntries) {
-            if (pre.getIsDone()==0){
+            if (pre.getIsDone()==0&&!pre.isLate()){
                 Intent myIntent = new Intent(context, AlarmReceiver.class);
                 SimpleDateFormat simpleDate = new SimpleDateFormat("HH:mm");
                 myIntent.putExtra("time", simpleDate.format(pre.getDate()));
@@ -68,7 +99,7 @@ public class NotificationsCreationTask extends AsyncTask<Context, Void, Void> {
 
     private void cancelAlarms(Context context, List<PillReminderEntry> pillReminderEntries, AlarmManager alarmManager){
         for (PillReminderEntry pre: pillReminderEntries) {
-            if (pre.getIsDone()==0){
+            if (pre.getIsDone()==0&&!pre.isLate()){
                 Intent myIntent = new Intent(context, AlarmReceiver.class);
                 PendingIntent pendingIntent = PendingIntent.getBroadcast(
                         context, pre.getId(), myIntent, 0);

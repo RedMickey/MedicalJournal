@@ -1,5 +1,6 @@
 package com.example.michel.mycalendar2.app_async_tasks;
 
+import android.content.Context;
 import android.os.AsyncTask;
 
 import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
@@ -12,6 +13,12 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class RemindersCreationTask extends AsyncTask<CycleAndPillComby, Void, Void> {
+    private Context appContext;
+
+    public RemindersCreationTask(Context context){
+        appContext = context;
+    }
+
     @Override
     protected Void doInBackground(CycleAndPillComby... cycleAndPillCombies) {
         PillReminderDBInsertEntry pillReminderDBInsertEntry = cycleAndPillCombies[0].pillReminderDBInsertEntry;
@@ -86,8 +93,12 @@ public class RemindersCreationTask extends AsyncTask<CycleAndPillComby, Void, Vo
         }
 
         dbAdapter.close();
-
         return null;
     }
 
+    @Override
+    protected void onPostExecute(Void aVoid) {
+        NotificationsCreationTask nct = new NotificationsCreationTask();
+        nct.execute(appContext);
+    }
 }

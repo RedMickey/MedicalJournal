@@ -32,6 +32,7 @@ public class SwipeButton extends RelativeLayout{
     private float initialX;
     private int state;
     private TextView centerText;
+    private RelativeLayout background;
     private OnStateChangeListener onStateChangeListener;
     private OnActiveListener onActiveListener;
 
@@ -61,7 +62,7 @@ public class SwipeButton extends RelativeLayout{
         init(context, attrs, defStyleAttr, defStyleRes);
     }
     private void init(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        RelativeLayout background = new RelativeLayout(context);
+        background = new RelativeLayout(context);
 
         LayoutParams layoutParamsView = new LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
@@ -129,11 +130,8 @@ public class SwipeButton extends RelativeLayout{
         swipeButton.setBackground(ContextCompat.getDrawable(context, R.drawable.shape_button));
         swipeButton.setImageDrawable(disabledDrawable);
         addView(swipeButton, layoutParamsButton);
-        //initialCenterX = getWidth()/2- swipeButton.getWidth()/2;
         setOnTouchListener(getButtonTouchListener());
     }
-
-
 
     private OnTouchListener getButtonTouchListener() {
         return new OnTouchListener() {
@@ -164,15 +162,16 @@ public class SwipeButton extends RelativeLayout{
 
                         return true;
                     case MotionEvent.ACTION_UP:
-                        if(slidingButton.getX()<getWidth()*0.25){
-                            expandButton(0);
+                        if (state==0) {
+                            if (slidingButton.getX() < getWidth() * 0.25) {
+                                expandButton(0);
 
-                        } else if (slidingButton.getX() + slidingButton.getWidth() > getWidth() * 0.75){
-                            expandButton(1);
-                        } else {
-                            moveButtonBack();
+                            } else if (slidingButton.getX() + slidingButton.getWidth() > getWidth() * 0.75) {
+                                expandButton(1);
+                            } else {
+                                moveButtonBack();
+                            }
                         }
-
                         return true;
                 }
 
@@ -229,8 +228,10 @@ public class SwipeButton extends RelativeLayout{
 
                 if (direction==0)
                     state=1;
-                else
+                else{
                     state=2;
+                    background.setBackground(getResources().getDrawable(R.drawable.shape_rounded_acc));
+                }
                 if (onStateChangeListener != null) {
                     onStateChangeListener.onStateChange(state);
                 }
@@ -258,14 +259,15 @@ public class SwipeButton extends RelativeLayout{
                 slidingButton.setX(x);
             }
         });
-
+/*
         ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(
                 centerText, "alpha", 1);
-
+*/
         positionAnimator.setDuration(200);
 
         AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.playTogether(objectAnimator, positionAnimator);
+        //animatorSet.playTogether(objectAnimator, positionAnimator);
+        animatorSet.play(positionAnimator);
         animatorSet.start();
     }
 

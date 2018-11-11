@@ -6,15 +6,8 @@
     android:layout_height="match_parent"
     tools:context="com.example.michel.mycalendar2.activities.AlarmActivity"
     android:background="#C5CAE9"
-    android:paddingHorizontal="20dp">
-
-    <!--
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="AlarmActivity!!!"
-        android:textSize="30dp"/>
-        -->
+    android:paddingHorizontal="20dp"
+    android:id="@+id/layout_alarm">
 
     <com.example.michel.mycalendar2.additional_views.swipe_button.SwipeButton
         android:id="@+id/swipe_btn"
@@ -24,6 +17,17 @@
         android:layout_alignParentBottom="true">
     </com.example.michel.mycalendar2.additional_views.swipe_button.SwipeButton>
 
+    <TextView
+        android:id="@+id/alarm_result"
+        android:layout_marginBottom="30dp"
+        android:layout_above="@+id/swipe_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#EEEEEE"
+        android:textSize="28pt"
+        android:textAlignment="center"
+        />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -31,6 +35,7 @@
         android:layout_marginTop="60dp"
         android:orientation="vertical">
         <TextView
+            android:id="@+id/reminder_time_alarm"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="13:55"
@@ -39,6 +44,7 @@
             android:textAlignment="center"/>
 
         <TextView
+            android:id="@+id/pill_name_alarm"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Таблетка1"
@@ -47,13 +53,13 @@
             android:textAlignment="center"
             android:layout_marginTop="20dp"/>
         <TextView
+            android:id="@+id/pill_count_and_type_alarm"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="1 шт"
             android:textColor="#EEEEEE"
             android:textSize="16pt"
             android:textAlignment="center" />
-
     </LinearLayout>
 
 </RelativeLayout>

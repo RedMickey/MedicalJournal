@@ -74,30 +74,6 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-/*
-    private void imageInit() {
-        final ImageView expandIV = (ImageView) findViewById(R.id.main_expandIV);
-        expandIV.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (ifExpand) {
-                    CellConfig.Month2WeekPos = CellConfig.middlePosition;
-                    CellConfig.ifMonth = false;
-                    expandIV.setImageResource(R.mipmap.icon_arrow_down);
-                    CellConfig.weekAnchorPointDate = selectedDate;
-                    calendarView.expand();
-                } else {
-                    CellConfig.Week2MonthPos = CellConfig.middlePosition;
-                    CellConfig.ifMonth = true;
-                    expandIV.setImageResource(R.mipmap.icon_arrow_up);
-                    calendarView.expand();
-                }
-                ifExpand = !ifExpand;
-            }
-        });
-    }
-*/
-
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.os.PowerManager;
 
 import com.example.michel.mycalendar2.activities.AlarmActivity;
+import com.example.michel.mycalendar2.models.PillReminder;
+import com.example.michel.mycalendar2.models.PillReminderEntry;
 
 public class AlarmReceiver extends BroadcastReceiver {
     @Override
@@ -22,24 +24,14 @@ public class AlarmReceiver extends BroadcastReceiver {
         //context.startActivity(intent2);
         Bundle extras= intent.getExtras();
 
-        Intent i = new Intent(context.getApplicationContext(), AlarmActivity.class);
-        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(i);
-
-
+        Intent intAlarm = new Intent(context.getApplicationContext(), AlarmActivity.class);
+        intAlarm.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intAlarm.putExtra("pre", intent.getParcelableExtra("pre"));
+        context.startActivity(intAlarm);
 
         PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
         PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "");
         wl.acquire();
-
-        /*Uri alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
-
-        if (alarmUri == null) {
-            alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        }
-
-        Ringtone ringtone = RingtoneManager.getRingtone(context, alarmUri);
-        ringtone.play();*/
 
         setResultCode(Activity.RESULT_OK);
         wl.release();

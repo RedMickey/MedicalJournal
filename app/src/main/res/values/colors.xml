@@ -6,4 +6,7 @@
     <color name="add_timeBT_BG">#ECEFF1</color>
     <color name="line_BG">#dedede</color>
     <color name="green_accept">#00FF00</color>
+    <color name="alarm_act_bg">#C5CAE9</color>
+    <color name="alarm_act_bg_acc">#00E676</color>
+    <color name="alarm_act_bg_rej">#F00</color>
 </resources>
