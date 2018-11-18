@@ -454,7 +454,7 @@ public class DatabaseAdapter {
                 int idCycle = cursor.getInt(cursor.getColumnIndex("_id_cycle"));
                 String startDateStr = cursor.getString(cursor.getColumnIndex("start_date"));
                 int idHavingMealsType = cursor.getInt(cursor.getColumnIndex("_id_having_meals_type"));
-                int havingMealsTime = cursor.getInt(cursor.getColumnIndex("having_meals_time"));
+                int havingMealsTime = Math.abs(cursor.getInt(cursor.getColumnIndex("having_meals_time")));
                 String annotation = cursor.getString(cursor.getColumnIndex("annotation"));
                 int isActive = cursor.getInt(cursor.getColumnIndex("IsActive"));
                 int times_aDay = cursor.getInt(cursor.getColumnIndex("times_a_day"));  // may be deleted

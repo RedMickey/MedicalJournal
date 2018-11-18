@@ -1,6 +1,7 @@
 package com.example.michel.mycalendar2.activities;
 
 import android.app.Notification;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -18,6 +19,10 @@ import com.example.michel.mycalendar2.app_async_tasks.NotificationsCreationTask;
 import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
 import com.example.michel.mycalendar2.calendarview.utils.DatabaseHelper;
 import com.example.michel.mycalendar2.utils.DBStaticEntries;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.logging.SimpleFormatter;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -68,8 +73,20 @@ public class MainActivity extends AppCompatActivity
 
             databaseAdapter.close();
 
-            NotificationsCreationTask nct = new NotificationsCreationTask();
-            nct.execute(getApplicationContext());
+            SharedPreferences settings = getSharedPreferences("MedicalJournalSettings", MODE_PRIVATE);
+            String curDate = settings.getString("cur_date", "0000-00-00");
+            Calendar cal = Calendar.getInstance();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            if (!curDate.equals(sdf.format(cal.getTime())))
+            {
+                SharedPreferences.Editor editor = settings.edit();
+                editor.remove("cur_date");
+                editor.putString("cur_date",sdf.format(cal.getTime()));
+                editor.apply();
+
+                NotificationsCreationTask nct = new NotificationsCreationTask();
+                nct.execute(getApplicationContext());
+            }
         }
 
     }

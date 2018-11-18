@@ -32,5 +32,6 @@
         <item>нед.</item>
         <item>мес.</item>
     </string-array>
+    <string name="title_activity_add_measurement">AddMeasurementActivity</string>
 
 </resources>

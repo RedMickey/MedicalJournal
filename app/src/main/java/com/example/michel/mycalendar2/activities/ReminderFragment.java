@@ -35,11 +35,12 @@ public class ReminderFragment extends Fragment {
             public void onClick(View view) {
                 switch (viewPager.getCurrentItem()){
                     case 0:
-                        Intent intent = new Intent(getActivity(), AddTreatmentActivity.class);
-                        startActivity(intent);
+                        Intent intent1 = new Intent(getActivity(), AddTreatmentActivity.class);
+                        startActivity(intent1);
                         break;
                     case 1:
-
+                        Intent intent2 = new Intent(getActivity(), AddMeasurementActivity.class);
+                        startActivity(intent2);
                         break;
                 }
             }

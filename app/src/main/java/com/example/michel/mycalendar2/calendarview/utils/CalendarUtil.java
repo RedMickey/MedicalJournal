@@ -2,9 +2,11 @@ package com.example.michel.mycalendar2.calendarview.utils;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import com.example.michel.mycalendar2.calendarview.data.DateData;
 import com.example.michel.mycalendar2.calendarview.data.DayDifference;
+import com.example.michel.mycalendar2.models.PillReminderEntry;
 
 public class CalendarUtil {
     public static DateData date = CurrentCalendar.getCurrentDateData();
@@ -270,5 +272,32 @@ public class CalendarUtil {
 
         int difference = (int)((firstDate.getTimeInMillis() - secondDate.getTimeInMillis())/(24 * 60 * 60 * 1000));
         return new DayDifference(Math.abs(difference), difference<0?true:false);
+    }
+
+    //method for testing
+    public static int[] calculateRemainingReminders(List<PillReminderEntry> pillReminderEntries, int fullCount){
+        int[] countOfRemainingReminders = new int[]{0,0,0,0};
+        //countOfRemainingReminders[0] - count of morning taking
+        //countOfRemainingReminders[1] - count of day taking
+        //countOfRemainingReminders[2] - count of evening taking
+        //countOfRemainingReminders[3] - count of Remaining Reminders
+        Calendar calendar = Calendar.getInstance();
+        for (PillReminderEntry pre:pillReminderEntries) {
+            calendar.setTime(pre.getDate());
+            int curHour = calendar.get(Calendar.HOUR_OF_DAY);
+
+            if(curHour>=4&&curHour<12){
+                countOfRemainingReminders[0]++;
+            }
+            if(curHour>=12&&curHour<18){
+                countOfRemainingReminders[1]++;
+            }
+            if((curHour>=18&&curHour<=23)||(curHour>=0&&curHour<4)){
+                countOfRemainingReminders[2]++;
+            }
+            countOfRemainingReminders[3]++;
+        }
+        countOfRemainingReminders[3]=fullCount-countOfRemainingReminders[3];
+        return countOfRemainingReminders;
     }
 }
