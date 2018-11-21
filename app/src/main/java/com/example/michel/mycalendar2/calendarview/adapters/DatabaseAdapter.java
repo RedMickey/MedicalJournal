@@ -12,6 +12,7 @@ import com.example.michel.mycalendar2.calendarview.data.DateData;
 import com.example.michel.mycalendar2.calendarview.utils.DatabaseHelper;
 import com.example.michel.mycalendar2.models.CycleAndPillComby;
 import com.example.michel.mycalendar2.models.CycleDBInsertEntry;
+import com.example.michel.mycalendar2.models.MeasurementReminder;
 import com.example.michel.mycalendar2.models.PillReminder;
 import com.example.michel.mycalendar2.models.PillReminderDBInsertEntry;
 import com.example.michel.mycalendar2.models.PillReminderEntry;
@@ -54,13 +55,8 @@ public class DatabaseAdapter {
     public void close(){
         dbHelper.close();
     }
-/*
-    private Cursor getAllEntries(){
-        String[] columns = new String[] {"_id_pill", "pill_name", "time_of_drug_usage"};
-        return  database.query("pills", columns, null, null, null, null, null);
-    }
-*/
 
+//***********************************get static data************************************************************
     public Map<String, Integer> getDoseTypes(){
         Map<String, Integer> doseTypes = new HashMap<String, Integer>();
         Cursor cursor = database.rawQuery("select * from pill_count_types", null);
@@ -105,6 +101,7 @@ public class DatabaseAdapter {
         cursor.close();
         return cycleTypes;
     }
+//***********************************end************************************************************
 
     public void getAllTables(){
         Cursor c = database.rawQuery("SELECT name FROM sqlite_master WHERE type='table'", null);
@@ -189,6 +186,7 @@ public class DatabaseAdapter {
         database.delete("reminder_time", "_id_pill_reminder = ?", new String[]{String.valueOf(idPillReminder)});
     }
 
+    //***********************************work with PillReminder************************************************************
     public void insertPillReminderEntries(String reminder_date, Integer idPillReminder, String reminderTime){
         ContentValues pillReminderEntryTableValues = new ContentValues();
         pillReminderEntryTableValues.put("is_done", 0);
@@ -272,69 +270,6 @@ public class DatabaseAdapter {
         return (int)pillReminderId;
     }
 
-    public int insertCycle(Integer period, Integer periodDMType, @Nullable Integer once_aPeriod,
-                            @Nullable Integer once_aPeriodDMType, Integer idCyclingType,
-                            @Nullable int[] weekSchedule){
-        long weekScheduleID = -1;
-        if (weekSchedule!=null)
-        {
-            ContentValues weekScheduleTableValues = new ContentValues();
-            weekScheduleTableValues.put("mon", weekSchedule[1]);
-            weekScheduleTableValues.put("tue", weekSchedule[2]);
-            weekScheduleTableValues.put("wed", weekSchedule[3]);
-            weekScheduleTableValues.put("thu", weekSchedule[4]);
-            weekScheduleTableValues.put("fri", weekSchedule[5]);
-            weekScheduleTableValues.put("sat", weekSchedule[6]);
-            weekScheduleTableValues.put("sun", weekSchedule[0]);
-            weekScheduleID = database.insert("week_schedules", null, weekScheduleTableValues);
-        }
-
-        ContentValues cycleTableValues = new ContentValues();
-        cycleTableValues.put("period", period);
-        cycleTableValues.put("period_DM_type", periodDMType);
-        cycleTableValues.put("once_a_period", once_aPeriod);
-        cycleTableValues.put("once_a_period_DM_type", once_aPeriodDMType);
-        cycleTableValues.put("_id_week_schedule", weekScheduleID==-1?null:weekScheduleID);
-        cycleTableValues.put("_id_cycling_type", idCyclingType);
-        long cycleId = database.insert("cycles", null, cycleTableValues);
-
-        return (int)cycleId;
-    }
-
-    public int updateCycle(Integer inCycleId, Integer weekScheduleID, Integer period, Integer periodDMType, @Nullable Integer once_aPeriod,
-                           @Nullable Integer once_aPeriodDMType, Integer idCyclingType,
-                           @Nullable int[] weekSchedule){
-        if (weekSchedule!=null)
-        {
-            ContentValues weekScheduleTableValues = new ContentValues();
-            weekScheduleTableValues.put("mon", weekSchedule[1]);
-            weekScheduleTableValues.put("tue", weekSchedule[2]);
-            weekScheduleTableValues.put("wed", weekSchedule[3]);
-            weekScheduleTableValues.put("thu", weekSchedule[4]);
-            weekScheduleTableValues.put("fri", weekSchedule[5]);
-            weekScheduleTableValues.put("sat", weekSchedule[6]);
-            weekScheduleTableValues.put("sun", weekSchedule[0]);
-            if (weekScheduleID!=0) {
-                database.update("week_schedules", weekScheduleTableValues,
-                        "_id_week_schedule = ?", new String[]{String.valueOf(weekScheduleID)});
-            }
-            else
-                weekScheduleID = (int)database.insert("week_schedules", null, weekScheduleTableValues);
-        }
-
-        ContentValues cycleTableValues = new ContentValues();
-        cycleTableValues.put("period", period);
-        cycleTableValues.put("period_DM_type", periodDMType);
-        cycleTableValues.put("once_a_period", once_aPeriod);
-        cycleTableValues.put("once_a_period_DM_type", once_aPeriodDMType);
-        cycleTableValues.put("_id_week_schedule", weekScheduleID==0?null:weekScheduleID);
-        cycleTableValues.put("_id_cycling_type", idCyclingType);
-        long cycleId = database.update("cycles", cycleTableValues,
-                "_id_cycle = ?", new String[]{String.valueOf(inCycleId)});
-
-        return (int)cycleId;
-    }
-
     public List<PillReminder> getAllPillReminders(){
         List<PillReminder> pillReminders = new ArrayList<>();
         String rawQuery = "select pr._id_pill_reminder, pr._id_having_meals_type, pr.pill_count, pct.type_name, pi.pill_name, pr.start_date, pr.IsActive, cl.period, pr.times_a_day, "+
@@ -393,25 +328,6 @@ public class DatabaseAdapter {
         return pillReminders;
     }
 
-    private int[] getWeekSchedule(int idWeekSchedule){
-        int[] weekSchedule = new int[7];
-        Cursor cursor = database.query("week_schedules", null, "_id_week_schedule=?", new String[]{String.valueOf(idWeekSchedule)}, null, null, null);
-        if(cursor.moveToFirst()){
-            do{
-                weekSchedule[0] = cursor.getInt(cursor.getColumnIndex("mon"));
-                weekSchedule[1] = cursor.getInt(cursor.getColumnIndex("tue"));
-                weekSchedule[2] = cursor.getInt(cursor.getColumnIndex("wed"));
-                weekSchedule[3] = cursor.getInt(cursor.getColumnIndex("thu"));
-                weekSchedule[4] = cursor.getInt(cursor.getColumnIndex("fri"));
-                weekSchedule[5] = cursor.getInt(cursor.getColumnIndex("sat"));
-                weekSchedule[6] = cursor.getInt(cursor.getColumnIndex("sun"));
-            }
-            while (cursor.moveToNext());
-        }
-        cursor.close();
-        return weekSchedule;
-    }
-
     private ReminderTime[] getPillReminderEntriesTime(int idPillReminder, String startDate){
         List<ReminderTime> pillReminderEntriesTime = new ArrayList<>();
         String rawQuery = "select rt._id_reminder_time, rt.reminder_time from reminder_time rt where rt._id_pill_reminder=?";
@@ -429,9 +345,7 @@ public class DatabaseAdapter {
                                 cursor.getInt(cursor.getColumnIndex("_id_reminder_time")),
                                 (cursor.getString(cursor.getColumnIndex("reminder_time"))).substring(0,5)
                                 )
-                                //cursor.getInt(cursor.getColumnIndex("is_used"))>0?true:false)
                 );
-                //pillReminderEntriesTime.add((cursor.getString(cursor.getColumnIndex("reminder_time"))).substring(0,5));
             }
             while (cursor.moveToNext());
         }
@@ -540,6 +454,172 @@ public class DatabaseAdapter {
         cursor.close();
         return  pillReminderEntries;
     }
+    //***********************************end************************************************************
+
+    //***********************************work with Cycle************************************************************
+    private int[] getWeekSchedule(int idWeekSchedule){
+        int[] weekSchedule = new int[7];
+        Cursor cursor = database.query("week_schedules", null, "_id_week_schedule=?", new String[]{String.valueOf(idWeekSchedule)}, null, null, null);
+        if(cursor.moveToFirst()){
+            do{
+                weekSchedule[0] = cursor.getInt(cursor.getColumnIndex("mon"));
+                weekSchedule[1] = cursor.getInt(cursor.getColumnIndex("tue"));
+                weekSchedule[2] = cursor.getInt(cursor.getColumnIndex("wed"));
+                weekSchedule[3] = cursor.getInt(cursor.getColumnIndex("thu"));
+                weekSchedule[4] = cursor.getInt(cursor.getColumnIndex("fri"));
+                weekSchedule[5] = cursor.getInt(cursor.getColumnIndex("sat"));
+                weekSchedule[6] = cursor.getInt(cursor.getColumnIndex("sun"));
+            }
+            while (cursor.moveToNext());
+        }
+        cursor.close();
+        return weekSchedule;
+    }
+
+    public int insertCycle(Integer period, Integer periodDMType, @Nullable Integer once_aPeriod,
+                           @Nullable Integer once_aPeriodDMType, Integer idCyclingType,
+                           @Nullable int[] weekSchedule){
+        long weekScheduleID = -1;
+        if (weekSchedule!=null)
+        {
+            ContentValues weekScheduleTableValues = new ContentValues();
+            weekScheduleTableValues.put("mon", weekSchedule[1]);
+            weekScheduleTableValues.put("tue", weekSchedule[2]);
+            weekScheduleTableValues.put("wed", weekSchedule[3]);
+            weekScheduleTableValues.put("thu", weekSchedule[4]);
+            weekScheduleTableValues.put("fri", weekSchedule[5]);
+            weekScheduleTableValues.put("sat", weekSchedule[6]);
+            weekScheduleTableValues.put("sun", weekSchedule[0]);
+            weekScheduleID = database.insert("week_schedules", null, weekScheduleTableValues);
+        }
+
+        ContentValues cycleTableValues = new ContentValues();
+        cycleTableValues.put("period", period);
+        cycleTableValues.put("period_DM_type", periodDMType);
+        cycleTableValues.put("once_a_period", once_aPeriod);
+        cycleTableValues.put("once_a_period_DM_type", once_aPeriodDMType);
+        cycleTableValues.put("_id_week_schedule", weekScheduleID==-1?null:weekScheduleID);
+        cycleTableValues.put("_id_cycling_type", idCyclingType);
+        long cycleId = database.insert("cycles", null, cycleTableValues);
+
+        return (int)cycleId;
+    }
+
+    public int updateCycle(Integer inCycleId, Integer weekScheduleID, Integer period, Integer periodDMType, @Nullable Integer once_aPeriod,
+                           @Nullable Integer once_aPeriodDMType, Integer idCyclingType,
+                           @Nullable int[] weekSchedule){
+        if (weekSchedule!=null)
+        {
+            ContentValues weekScheduleTableValues = new ContentValues();
+            weekScheduleTableValues.put("mon", weekSchedule[1]);
+            weekScheduleTableValues.put("tue", weekSchedule[2]);
+            weekScheduleTableValues.put("wed", weekSchedule[3]);
+            weekScheduleTableValues.put("thu", weekSchedule[4]);
+            weekScheduleTableValues.put("fri", weekSchedule[5]);
+            weekScheduleTableValues.put("sat", weekSchedule[6]);
+            weekScheduleTableValues.put("sun", weekSchedule[0]);
+            if (weekScheduleID!=0) {
+                database.update("week_schedules", weekScheduleTableValues,
+                        "_id_week_schedule = ?", new String[]{String.valueOf(weekScheduleID)});
+            }
+            else
+                weekScheduleID = (int)database.insert("week_schedules", null, weekScheduleTableValues);
+        }
+
+        ContentValues cycleTableValues = new ContentValues();
+        cycleTableValues.put("period", period);
+        cycleTableValues.put("period_DM_type", periodDMType);
+        cycleTableValues.put("once_a_period", once_aPeriod);
+        cycleTableValues.put("once_a_period_DM_type", once_aPeriodDMType);
+        cycleTableValues.put("_id_week_schedule", weekScheduleID==0?null:weekScheduleID);
+        cycleTableValues.put("_id_cycling_type", idCyclingType);
+        long cycleId = database.update("cycles", cycleTableValues,
+                "_id_cycle = ?", new String[]{String.valueOf(inCycleId)});
+
+        return (int)cycleId;
+    }
+    //***********************************end************************************************************
+
+    //***********************************work with measurement reminder************************************************************
+    public int insertMeasurementReminder(int idMeasurementType,
+                                  String startDate, Integer idCycle, @Nullable Integer idHavingMealsType,
+                                  @Nullable Integer havingMealsTime, String annotation, Integer isActive, Integer times_aDay){
+
+        ContentValues pillReminderTableValues = new ContentValues();
+        pillReminderTableValues.put("_id_measurement_type", idMeasurementType);
+        pillReminderTableValues.put("start_date", startDate);
+        pillReminderTableValues.put("_id_cycle", idCycle);
+        pillReminderTableValues.put("_id_having_meals_type", idHavingMealsType);
+        pillReminderTableValues.put("having_meals_time", havingMealsTime);
+        pillReminderTableValues.put("annotation", annotation);
+        pillReminderTableValues.put("IsActive", isActive);
+        pillReminderTableValues.put("times_a_day", times_aDay);
+        long measurementReminderId = database.insert("measurement_reminders", null, pillReminderTableValues);
+
+        //Log.i("measurementReminder_new_id", String.valueOf(measurementReminderId));
+        return (int)measurementReminderId;
+    }
+
+    public List<MeasurementReminder> getAllMeasurementReminders(){
+        List<MeasurementReminder> measurementReminders = new ArrayList<>();
+        String rawQuery = "select  mr.start_date, mr.isActive, cl.period, mr.times_a_day, mr._id_measurement_type, mr._id_having_meals_type, cl.period_DM_type, " +
+                "      CASE mr._id_measurement_type  " +
+                "         WHEN 1 THEN (select COUNT(*) from temperature_measurements tm where tm._id_measurement_reminder=mr._id_measurement_reminder and tm.is_done=0 ) " +
+                "         WHEN 2 THEN (select COUNT(*) from blood_pressure_measurements bpm where bpm._id_measurement_reminder=mr._id_measurement_reminder and bpm.is_done=0 ) " +
+                "      END as count_left, mr._id_measurement_reminder " +
+                "    from measurement_reminders mr inner join cycles cl on mr._id_cycle=cl._id_cycle ORDER BY mr.IsActive";
+        Cursor cursor = database.rawQuery(rawQuery, null);
+        if(cursor.moveToFirst()){
+            do{
+                Calendar calendar = Calendar.getInstance();
+
+                int id = cursor.getInt(cursor.getColumnIndex("_id_measurement_reminder"));
+                String startDateStr = cursor.getString(cursor.getColumnIndex("start_date"));
+                int havingMealsType = cursor.getInt(cursor.getColumnIndex("_id_having_meals_type"));
+                int period = cursor.getInt(cursor.getColumnIndex("period"));
+                int isActive = cursor.getInt(cursor.getColumnIndex("isActive"));
+                int countLeft = cursor.getInt(cursor.getColumnIndex("count_left"));
+                int times_aDay = cursor.getInt(cursor.getColumnIndex("times_a_day"));
+                int periodDM_Type = cursor.getInt(cursor.getColumnIndex("period_DM_type"));
+                int idMeasurementType = cursor.getInt(cursor.getColumnIndex("_id_measurement_type"));
+
+                Date startDate;
+                SimpleDateFormat dateFormatOld = new SimpleDateFormat("yyyy-MM-dd");
+                SimpleDateFormat dateFormatNew = new SimpleDateFormat("dd.MM.yyyy");
+                try {
+                    startDate = dateFormatOld.parse(startDateStr);
+                    startDateStr = dateFormatNew.format(startDate);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    startDate = new Date();
+                }
+                String endDateStr = "0";
+                calendar.setTime(startDate);
+                switch (periodDM_Type){
+                    case 1:
+                        calendar.add(Calendar.DATE, period);
+                        break;
+                    case 2:
+                        calendar.add(Calendar.DATE, period*7);
+                        break;
+                    case 3:
+                        calendar.add(Calendar.DATE, period*30);
+                        break;
+                }
+                endDateStr = dateFormatNew.format(calendar.getTime());
+
+                measurementReminders.add(new MeasurementReminder(id, idMeasurementType, havingMealsType,
+                        isActive, times_aDay, startDateStr, endDateStr, countLeft));
+
+            }
+            while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        return measurementReminders;
+    }
+
+    //***********************************end************************************************************
 
     public long getCount(){
         return DatabaseUtils.queryNumEntries(database, DatabaseHelper.TABLE_pill_reminders);

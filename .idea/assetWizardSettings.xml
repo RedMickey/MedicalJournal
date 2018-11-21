@@ -44,9 +44,9 @@
                                   </option>
                                   <option name="values">
                                     <map>
-                                      <entry key="imageAsset" value="C:\Users\User\Downloads\icons8-expired-48.png" />
-                                      <entry key="outputName" value="ic_grey_circle" />
-                                      <entry key="theme" value="CUSTOM" />
+                                      <entry key="assetType" value="IMAGE" />
+                                      <entry key="imageAsset" value="E:\Downloads\icons8-thermometer-48.png" />
+                                      <entry key="outputName" value="ic_thermometer" />
                                       <entry key="themeColor" value="bdbdbd" />
                                     </map>
                                   </option>

@@ -7,47 +7,49 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.example.michel.mycalendar2.activities.AddMeasurementActivity;
 import com.example.michel.mycalendar2.activities.AddTreatmentActivity;
 import com.example.michel.mycalendar2.activities.R;
+import com.example.michel.mycalendar2.adapters.MeasurementReminderListAdapter;
 import com.example.michel.mycalendar2.adapters.PillReminderListAdapter;
 import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
+import com.example.michel.mycalendar2.models.MeasurementReminder;
 import com.example.michel.mycalendar2.models.PillReminder;
 
 import java.util.List;
 
-public class ReminderMedicineItemsCreationTask extends AsyncTask<Void, Void, List<PillReminder>> {
+public class ReminderMeasurementItemsCreationTask extends AsyncTask<Void, Void, List<MeasurementReminder>> {
     private View view;
 
-    public ReminderMedicineItemsCreationTask(View view){
+    public ReminderMeasurementItemsCreationTask(View view){
         super();
         this.view = view;
     }
 
     @Override
-    protected List<PillReminder> doInBackground(Void... voids) {
+    protected List<MeasurementReminder> doInBackground(Void... voids) {
         DatabaseAdapter databaseAdapter = new DatabaseAdapter();
         databaseAdapter.open();
-        List<PillReminder> pillReminders = databaseAdapter.getAllPillReminders();
+        List<MeasurementReminder> measurementReminders = databaseAdapter.getAllMeasurementReminders();
 
         databaseAdapter.close();
 
-        return pillReminders;
+        return measurementReminders;
     }
 
     @Override
-    protected void onPostExecute(List<PillReminder> pillReminders) {
-
+    protected void onPostExecute(List<MeasurementReminder> measurementReminders) {
         LayoutInflater inflater = LayoutInflater.from(view.getContext());
 
-        if(pillReminders.size()>0){
+        if(measurementReminders.size()>0){
             ListView listView = (ListView) view.findViewById(R.id.reminder_list_view);
-            PillReminderListAdapter reminderListAdapter = new PillReminderListAdapter(view.getContext(), R.layout.reminder_medicine_item, pillReminders);
+            MeasurementReminderListAdapter reminderListAdapter = new MeasurementReminderListAdapter(view.getContext(), R.layout.reminder_measurement_item, measurementReminders);
             AdapterView.OnItemClickListener itemClickListener = new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                     PillReminder pr = (PillReminder)adapterView.getItemAtPosition(i);
-                    Intent intent = new Intent(view.getContext(), AddTreatmentActivity.class);
-                    intent.putExtra("PillReminderID", pr.getId());
+                    Intent intent = new Intent(view.getContext(), AddMeasurementActivity.class);
+                    intent.putExtra("MeasurementReminderID", pr.getId());
                     view.getContext().startActivity(intent);
                 }
             };

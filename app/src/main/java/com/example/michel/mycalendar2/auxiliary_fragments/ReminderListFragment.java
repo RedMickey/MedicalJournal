@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.example.michel.mycalendar2.activities.R;
+import com.example.michel.mycalendar2.app_async_tasks.ReminderMeasurementItemsCreationTask;
 import com.example.michel.mycalendar2.app_async_tasks.ReminderMedicineItemsCreationTask;
 
 public class ReminderListFragment extends Fragment {
@@ -30,6 +31,10 @@ public class ReminderListFragment extends Fragment {
         if (fragmentType==0){
             ReminderMedicineItemsCreationTask rmict = new ReminderMedicineItemsCreationTask(view);
             rmict.execute();
+        }
+        else {
+            ReminderMeasurementItemsCreationTask rmeict = new ReminderMeasurementItemsCreationTask(view);
+            rmeict.execute();
         }
 
         return view;

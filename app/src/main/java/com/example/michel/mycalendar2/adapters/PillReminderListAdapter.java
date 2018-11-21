@@ -15,12 +15,12 @@ import com.example.michel.mycalendar2.models.PillReminder;
 
 import java.util.List;
 
-public class ReminderListAdapter extends ArrayAdapter<PillReminder>{
+public class PillReminderListAdapter extends ArrayAdapter<PillReminder>{
     private LayoutInflater inflater;
     private int layout;
     private List<PillReminder> pillReminder;
 
-    public ReminderListAdapter(Context context, int resource, List<PillReminder> pillReminder) {
+    public PillReminderListAdapter(Context context, int resource, List<PillReminder> pillReminder) {
         super(context, resource, pillReminder);
         this.pillReminder = pillReminder;
         this.layout = resource;
@@ -48,8 +48,6 @@ public class ReminderListAdapter extends ArrayAdapter<PillReminder>{
             if (checkLastDigitOn234(pr.getCountOfTakingMedicine()))
                 ending=" раза в день";
         }
-        ((TextView)view.findViewById(R.id.count_of_taking_medicine))
-                .setText(String.valueOf(pr.getCountOfTakingMedicine())+ending);
         ((TextView)view.findViewById(R.id.count_of_taking_medicine))
                 .setText(String.valueOf(pr.getCountOfTakingMedicine())+ending);
         ((TextView)view.findViewById(R.id.time_period_rmi))
