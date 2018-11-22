@@ -13,7 +13,6 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.ToggleButton;
 
 import com.example.michel.mycalendar2.activities.AddTreatmentActivity;
 import com.example.michel.mycalendar2.activities.R;
@@ -23,11 +22,8 @@ import com.example.michel.mycalendar2.calendarview.data.DateData;
 import com.example.michel.mycalendar2.calendarview.utils.CalendarUtil;
 import com.example.michel.mycalendar2.models.CycleAndPillComby;
 import com.example.michel.mycalendar2.models.CycleDBInsertEntry;
-import com.example.michel.mycalendar2.models.PillReminder;
-import com.example.michel.mycalendar2.models.PillReminderDBInsertEntry;
+import com.example.michel.mycalendar2.models.pill.PillReminderDBInsertEntry;
 import com.example.michel.mycalendar2.utils.DBStaticEntries;
-
-import java.util.List;
 
 public class AddTreatmentActivityCreationTask extends AsyncTask<Integer, Void, CycleAndPillComby> {
     private AddTreatmentActivity view;

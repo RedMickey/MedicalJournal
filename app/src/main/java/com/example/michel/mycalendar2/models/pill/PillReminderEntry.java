@@ -1,7 +1,9 @@
-package com.example.michel.mycalendar2.models;
+package com.example.michel.mycalendar2.models.pill;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import com.example.michel.mycalendar2.models.PillModel;
 
 import java.util.Calendar;
 import java.util.Date;

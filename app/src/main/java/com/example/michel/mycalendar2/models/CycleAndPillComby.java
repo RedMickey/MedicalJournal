@@ -1,5 +1,7 @@
 package com.example.michel.mycalendar2.models;
 
+import com.example.michel.mycalendar2.models.pill.PillReminderDBInsertEntry;
+
 public class CycleAndPillComby {
     public CycleDBInsertEntry cycleDBInsertEntry;
     public PillReminderDBInsertEntry pillReminderDBInsertEntry;

@@ -1,4 +1,4 @@
-package com.example.michel.mycalendar2.models;
+package com.example.michel.mycalendar2.models.pill;
 
 /*public void insertPillReminder(String pillName, int pillCount, int idPillCountType,
         String startDate, int idCycle, @Nullable int idHavingMealsType,
@@ -7,6 +7,8 @@ package com.example.michel.mycalendar2.models;
 import android.support.annotation.Nullable;
 
 import com.example.michel.mycalendar2.calendarview.data.DateData;
+import com.example.michel.mycalendar2.models.ReminderDBEntry;
+import com.example.michel.mycalendar2.models.ReminderTime;
 
 public class PillReminderDBInsertEntry extends ReminderDBEntry {
     private String pillName;

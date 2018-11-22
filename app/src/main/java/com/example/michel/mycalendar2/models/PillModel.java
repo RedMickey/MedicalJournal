@@ -8,11 +8,9 @@ public class PillModel extends ReminderModel {
     public PillModel(int id, String pillName, int pillCount, String pillCountType,
                         int havingMealsType){
         super(id, havingMealsType);
-        this.id = id;
         this.pillName = pillName;
         this.pillCount = pillCount;
         this.pillCountType = pillCountType;
-        this.havingMealsType = havingMealsType;
     }
 
     public String getPillName() {

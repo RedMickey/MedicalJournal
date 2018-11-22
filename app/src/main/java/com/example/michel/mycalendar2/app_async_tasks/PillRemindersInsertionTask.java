@@ -6,16 +6,16 @@ import android.os.AsyncTask;
 import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
 import com.example.michel.mycalendar2.models.CycleAndPillComby;
 import com.example.michel.mycalendar2.models.CycleDBInsertEntry;
-import com.example.michel.mycalendar2.models.PillReminderDBInsertEntry;
+import com.example.michel.mycalendar2.models.pill.PillReminderDBInsertEntry;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-public class RemindersCreationTask extends AsyncTask<CycleAndPillComby, Void, Void> {
+public class PillRemindersInsertionTask extends AsyncTask<CycleAndPillComby, Void, Void> {
     private Context appContext;
 
-    public RemindersCreationTask(Context context){
+    public PillRemindersInsertionTask(Context context){
         appContext = context;
     }
 

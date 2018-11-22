@@ -1,12 +1,11 @@
 package com.example.michel.mycalendar2;
 
 import com.example.michel.mycalendar2.calendarview.utils.CalendarUtil;
-import com.example.michel.mycalendar2.models.PillReminderEntry;
+import com.example.michel.mycalendar2.models.pill.PillReminderEntry;
 
 import org.junit.Test;
 import org.junit.Assert;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;

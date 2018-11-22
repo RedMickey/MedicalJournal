@@ -1,5 +1,8 @@
 package com.example.michel.mycalendar2.utils;
 
+import com.example.michel.mycalendar2.utils.utilModels.MeasurementType;
+
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -10,6 +13,8 @@ public class DBStaticEntries {
     public static Map<String, Integer> dateTypes;
 
     public static Map<String, Integer> cycleTypes;
+
+    public static List<MeasurementType> measurementTypes;
 
     public static <T, E> T getKeyByValue(Map<T, E> map, E value) {
         for (Map.Entry<T, E> entry : map.entrySet()) {

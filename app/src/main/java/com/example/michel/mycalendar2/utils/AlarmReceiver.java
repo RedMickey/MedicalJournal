@@ -4,15 +4,10 @@ import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.PowerManager;
 
 import com.example.michel.mycalendar2.activities.AlarmActivity;
-import com.example.michel.mycalendar2.models.PillReminder;
-import com.example.michel.mycalendar2.models.PillReminderEntry;
 
 public class AlarmReceiver extends BroadcastReceiver {
     @Override

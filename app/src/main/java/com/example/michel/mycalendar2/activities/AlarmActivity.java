@@ -9,18 +9,15 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.format.DateUtils;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.michel.mycalendar2.additional_views.swipe_button.OnStateChangeListener;
 import com.example.michel.mycalendar2.additional_views.swipe_button.SwipeButton;
 import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
-import com.example.michel.mycalendar2.models.PillReminderEntry;
+import com.example.michel.mycalendar2.models.pill.PillReminderEntry;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 
 public class AlarmActivity extends AppCompatActivity {
 private int pillReminderEntryID;

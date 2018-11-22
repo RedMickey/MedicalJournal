@@ -29,24 +29,13 @@
                                           </PersistentState>
                                         </value>
                                       </entry>
-                                      <entry key="image">
-                                        <value>
-                                          <PersistentState>
-                                            <option name="values">
-                                              <map>
-                                                <entry key="paddingPercent" value="-5" />
-                                              </map>
-                                            </option>
-                                          </PersistentState>
-                                        </value>
-                                      </entry>
                                     </map>
                                   </option>
                                   <option name="values">
                                     <map>
                                       <entry key="assetType" value="IMAGE" />
-                                      <entry key="imageAsset" value="E:\Downloads\icons8-thermometer-48.png" />
-                                      <entry key="outputName" value="ic_thermometer" />
+                                      <entry key="imageAsset" value="E:\Downloads\tonometer (1).png" />
+                                      <entry key="outputName" value="ic_tonometer" />
                                       <entry key="themeColor" value="bdbdbd" />
                                     </map>
                                   </option>

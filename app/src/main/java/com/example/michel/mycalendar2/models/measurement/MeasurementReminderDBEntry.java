@@ -1,10 +1,12 @@
-package com.example.michel.mycalendar2.models;
+package com.example.michel.mycalendar2.models.measurement;
 
 import android.support.annotation.Nullable;
 
 import com.example.michel.mycalendar2.calendarview.data.DateData;
+import com.example.michel.mycalendar2.models.ReminderDBEntry;
+import com.example.michel.mycalendar2.models.ReminderTime;
 
-public class MeasurementReminderDBEntry extends ReminderDBEntry{
+public class MeasurementReminderDBEntry extends ReminderDBEntry {
     private int idMeasurementType;
     private Integer idMeasurementReminder;
 

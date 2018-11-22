@@ -12,9 +12,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ListView;
 
+import com.example.michel.mycalendar2.adapters.MeasurementTypesListAdapter;
 import com.example.michel.mycalendar2.adapters.TreatmentListAdapter;
 import com.example.michel.mycalendar2.auxiliary_fragments.ReminderListFragment;
+import com.example.michel.mycalendar2.utils.DBStaticEntries;
+import com.example.michel.mycalendar2.utils.utilModels.MeasurementType;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 public class ReminderFragment extends Fragment {
     public static ReminderFragment newInstance() {
@@ -22,12 +27,15 @@ public class ReminderFragment extends Fragment {
     }
     private TabLayout tabLayout;
     private ViewPager viewPager;
+    private SlidingUpPanelLayout slidingUpPanelLayout;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = getView();
         view=inflater.inflate(R.layout.reminder_fragment, container, false);
+        slidingUpPanelLayout = (SlidingUpPanelLayout) view.findViewById(R.id.sliding_layout_add_reminder);
+        slidingUpPanelLayout.setAnchorPoint(0.7f);
 
         FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab_add_reminder);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -39,8 +47,9 @@ public class ReminderFragment extends Fragment {
                         startActivity(intent1);
                         break;
                     case 1:
-                        Intent intent2 = new Intent(getActivity(), AddMeasurementActivity.class);
-                        startActivity(intent2);
+                        //Intent intent2 = new Intent(getActivity(), AddMeasurementActivity.class);
+                        //startActivity(intent2);
+                        slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.ANCHORED);
                         break;
                 }
             }
@@ -53,6 +62,24 @@ public class ReminderFragment extends Fragment {
         adapter.addFragment(ReminderListFragment.newInstance(1));
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);
+
+        ListView listView = (ListView) view.findViewById(R.id.measurement_types_lv);
+        /*ArrayList<MeasurementType> mts = new ArrayList<>();
+        mts.add(new MeasurementType(1, "Температура"));
+        mts.add(new MeasurementType(2, "Давление"));*/
+        MeasurementTypesListAdapter mtla = new MeasurementTypesListAdapter(view.getContext(), R.layout.measurement_type_list_item, DBStaticEntries.measurementTypes);
+        AdapterView.OnItemClickListener itemClickListener = new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                MeasurementType mt = (MeasurementType) adapterView.getItemAtPosition(i);
+                Intent intent = new Intent(view.getContext(), AddMeasurementActivity.class);
+                intent.putExtra("MeasurementTypeID", mt.getIndex());
+                intent.putExtra("MeasurementName", mt.getName());
+                view.getContext().startActivity(intent);
+            }
+        };
+        listView.setAdapter(mtla);
+        listView.setOnItemClickListener(itemClickListener);
 
         return view;
     }

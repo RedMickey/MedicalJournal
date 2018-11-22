@@ -9,7 +9,7 @@ import android.util.Log;
 
 import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
 import com.example.michel.mycalendar2.calendarview.data.DateData;
-import com.example.michel.mycalendar2.models.PillReminderEntry;
+import com.example.michel.mycalendar2.models.pill.PillReminderEntry;
 import com.example.michel.mycalendar2.utils.AlarmReceiver;
 
 import java.text.SimpleDateFormat;

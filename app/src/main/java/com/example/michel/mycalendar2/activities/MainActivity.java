@@ -70,6 +70,7 @@ public class MainActivity extends AppCompatActivity
             DBStaticEntries.cycleTypes = databaseAdapter.getCycleTypes();
             DBStaticEntries.dateTypes = databaseAdapter.getDateTypes();
             DBStaticEntries.doseTypes = databaseAdapter.getDoseTypes();
+            DBStaticEntries.measurementTypes = databaseAdapter.getMeasurementTypes();
 
             databaseAdapter.close();
 

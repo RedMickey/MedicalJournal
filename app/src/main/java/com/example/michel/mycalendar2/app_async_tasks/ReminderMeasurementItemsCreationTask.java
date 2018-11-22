@@ -8,13 +8,11 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.example.michel.mycalendar2.activities.AddMeasurementActivity;
-import com.example.michel.mycalendar2.activities.AddTreatmentActivity;
 import com.example.michel.mycalendar2.activities.R;
 import com.example.michel.mycalendar2.adapters.MeasurementReminderListAdapter;
-import com.example.michel.mycalendar2.adapters.PillReminderListAdapter;
 import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
-import com.example.michel.mycalendar2.models.MeasurementReminder;
-import com.example.michel.mycalendar2.models.PillReminder;
+import com.example.michel.mycalendar2.models.measurement.MeasurementReminder;
+import com.example.michel.mycalendar2.models.pill.PillReminder;
 
 import java.util.List;
 

@@ -1,4 +1,6 @@
-package com.example.michel.mycalendar2.models;
+package com.example.michel.mycalendar2.models.measurement;
+
+import com.example.michel.mycalendar2.models.ReminderModel;
 
 public class MeasurementReminder extends ReminderModel {
     private int isActive;
@@ -7,10 +9,11 @@ public class MeasurementReminder extends ReminderModel {
     private String endDate;
     private int countOfTakingMeasurementLeft;
     private int idMeasurementType;
+    private int idMeasurementValueType;
 
     public MeasurementReminder(int id, int idMeasurementType, int havingMealsType,
                                int isActive, int countOfTakingMeasurement, String startDate,
-                               String endDate, int countOfTakingMeasurementLeft)
+                               String endDate, int countOfTakingMeasurementLeft, int idMeasurementValueType)
     {
         super(id, havingMealsType);
         this.isActive = isActive;
@@ -19,6 +22,7 @@ public class MeasurementReminder extends ReminderModel {
         this.endDate = endDate;
         this.countOfTakingMeasurementLeft = countOfTakingMeasurementLeft;
         this.idMeasurementType=idMeasurementType;
+        this.idMeasurementValueType = idMeasurementValueType;
     }
 
     public int getIsActive() {
@@ -67,5 +71,13 @@ public class MeasurementReminder extends ReminderModel {
 
     public void setIdMeasurementType(int idMeasurementType) {
         this.idMeasurementType = idMeasurementType;
+    }
+
+    public int getIdMeasurementValueType() {
+        return idMeasurementValueType;
+    }
+
+    public void setIdMeasurementValueType(int idMeasurementValueType) {
+        this.idMeasurementValueType = idMeasurementValueType;
     }
 }

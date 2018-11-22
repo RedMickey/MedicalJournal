@@ -6,11 +6,9 @@ import android.os.AsyncTask;
 import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
 import com.example.michel.mycalendar2.models.CycleAndPillComby;
 import com.example.michel.mycalendar2.models.CycleDBInsertEntry;
-import com.example.michel.mycalendar2.models.PillReminderDBInsertEntry;
+import com.example.michel.mycalendar2.models.pill.PillReminderDBInsertEntry;
 
-import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 

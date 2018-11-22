@@ -29,7 +29,7 @@ import android.widget.ToggleButton;
 import com.example.michel.mycalendar2.adapters.TimesOfTakingMedicineAdapter;
 import com.example.michel.mycalendar2.app_async_tasks.AddTreatmentActivityCreationTask;
 import com.example.michel.mycalendar2.app_async_tasks.NotificationsCreationTask;
-import com.example.michel.mycalendar2.app_async_tasks.RemindersCreationTask;
+import com.example.michel.mycalendar2.app_async_tasks.PillRemindersInsertionTask;
 import com.example.michel.mycalendar2.app_async_tasks.RemindersUpdateTask;
 import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
 import com.example.michel.mycalendar2.calendarview.data.DateData;
@@ -37,12 +37,11 @@ import com.example.michel.mycalendar2.calendarview.utils.CalendarUtil;
 import com.example.michel.mycalendar2.expandableLayout.ExpandableRelativeLayout;
 import com.example.michel.mycalendar2.models.CycleAndPillComby;
 import com.example.michel.mycalendar2.models.CycleDBInsertEntry;
-import com.example.michel.mycalendar2.models.PillReminderDBInsertEntry;
+import com.example.michel.mycalendar2.models.pill.PillReminderDBInsertEntry;
 import com.example.michel.mycalendar2.models.ReminderTime;
 import com.example.michel.mycalendar2.utils.DBStaticEntries;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.concurrent.ExecutionException;
 
@@ -223,7 +222,7 @@ public class AddTreatmentActivity extends AppCompatActivity {
                     pillReminderDBInsertEntry.setIsActive(1);
                     Snackbar.make(view, "ReadyInsert", Snackbar.LENGTH_SHORT)
                             .setAction("Action", null).show();
-                    RemindersCreationTask rct = new RemindersCreationTask(getApplicationContext());
+                    PillRemindersInsertionTask rct = new PillRemindersInsertionTask(getApplicationContext());
                     rct.execute(new CycleAndPillComby(cycleDBInsertEntry, pillReminderDBInsertEntry));
                 }
                 else {

@@ -1,4 +1,6 @@
-package com.example.michel.mycalendar2.models;
+package com.example.michel.mycalendar2.models.pill;
+
+import com.example.michel.mycalendar2.models.PillModel;
 
 public class PillReminder extends PillModel {
     private int isActive;

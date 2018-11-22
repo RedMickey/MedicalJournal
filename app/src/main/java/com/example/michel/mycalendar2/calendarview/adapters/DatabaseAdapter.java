@@ -12,13 +12,13 @@ import com.example.michel.mycalendar2.calendarview.data.DateData;
 import com.example.michel.mycalendar2.calendarview.utils.DatabaseHelper;
 import com.example.michel.mycalendar2.models.CycleAndPillComby;
 import com.example.michel.mycalendar2.models.CycleDBInsertEntry;
-import com.example.michel.mycalendar2.models.MeasurementReminder;
-import com.example.michel.mycalendar2.models.PillReminder;
-import com.example.michel.mycalendar2.models.PillReminderDBInsertEntry;
-import com.example.michel.mycalendar2.models.PillReminderEntry;
+import com.example.michel.mycalendar2.models.measurement.MeasurementReminder;
+import com.example.michel.mycalendar2.models.pill.PillReminder;
+import com.example.michel.mycalendar2.models.pill.PillReminderDBInsertEntry;
+import com.example.michel.mycalendar2.models.pill.PillReminderEntry;
 import com.example.michel.mycalendar2.models.ReminderTime;
+import com.example.michel.mycalendar2.utils.utilModels.MeasurementType;
 
-import java.lang.reflect.Array;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -100,6 +100,21 @@ public class DatabaseAdapter {
         }
         cursor.close();
         return cycleTypes;
+    }
+
+    public List<MeasurementType> getMeasurementTypes(){
+        List<MeasurementType> measurementTypes = new ArrayList<>();
+        Cursor cursor = database.rawQuery("select * from measurement_types", null);
+        if(cursor.moveToFirst()){
+            do{
+                int id = cursor.getInt(cursor.getColumnIndex("_id_measurement_type"));
+                String typeName = cursor.getString(cursor.getColumnIndex("type_name"));
+                measurementTypes.add(new MeasurementType(id, typeName));
+            }
+            while (cursor.moveToNext());
+        }
+        cursor.close();
+        return measurementTypes;
     }
 //***********************************end************************************************************
 
@@ -562,11 +577,15 @@ public class DatabaseAdapter {
 
     public List<MeasurementReminder> getAllMeasurementReminders(){
         List<MeasurementReminder> measurementReminders = new ArrayList<>();
-        String rawQuery = "select  mr.start_date, mr.isActive, cl.period, mr.times_a_day, mr._id_measurement_type, mr._id_having_meals_type, cl.period_DM_type, " +
+        /*String rawQuery = "select  mr.start_date, mr.isActive, cl.period, mr.times_a_day, mr._id_measurement_type, mr._id_having_meals_type, cl.period_DM_type, " +
                 "      CASE mr._id_measurement_type  " +
                 "         WHEN 1 THEN (select COUNT(*) from temperature_measurements tm where tm._id_measurement_reminder=mr._id_measurement_reminder and tm.is_done=0 ) " +
                 "         WHEN 2 THEN (select COUNT(*) from blood_pressure_measurements bpm where bpm._id_measurement_reminder=mr._id_measurement_reminder and bpm.is_done=0 ) " +
                 "      END as count_left, mr._id_measurement_reminder " +
+                "    from measurement_reminders mr inner join cycles cl on mr._id_cycle=cl._id_cycle ORDER BY mr.IsActive";*/
+        String rawQuery = "select  mr.start_date, mr.isActive, cl.period, mr.times_a_day, mr._id_measurement_type, mr._id_having_meals_type, cl.period_DM_type, " +
+                "(select COUNT(*) from measurement_reminder_entries mre where mre._id_measurement_reminder=mr._id_measurement_reminder and mre.is_done=0 ) " +
+                "as count_left, mr._id_measurement_reminder, mr._id_measur_value_type " +
                 "    from measurement_reminders mr inner join cycles cl on mr._id_cycle=cl._id_cycle ORDER BY mr.IsActive";
         Cursor cursor = database.rawQuery(rawQuery, null);
         if(cursor.moveToFirst()){
@@ -582,6 +601,7 @@ public class DatabaseAdapter {
                 int times_aDay = cursor.getInt(cursor.getColumnIndex("times_a_day"));
                 int periodDM_Type = cursor.getInt(cursor.getColumnIndex("period_DM_type"));
                 int idMeasurementType = cursor.getInt(cursor.getColumnIndex("_id_measurement_type"));
+                int idMeasurementValueType = cursor.getInt(cursor.getColumnIndex("_id_measur_value_type"));
 
                 Date startDate;
                 SimpleDateFormat dateFormatOld = new SimpleDateFormat("yyyy-MM-dd");
@@ -609,7 +629,7 @@ public class DatabaseAdapter {
                 endDateStr = dateFormatNew.format(calendar.getTime());
 
                 measurementReminders.add(new MeasurementReminder(id, idMeasurementType, havingMealsType,
-                        isActive, times_aDay, startDateStr, endDateStr, countLeft));
+                        isActive, times_aDay, startDateStr, endDateStr, countLeft, idMeasurementValueType));
 
             }
             while (cursor.moveToNext());

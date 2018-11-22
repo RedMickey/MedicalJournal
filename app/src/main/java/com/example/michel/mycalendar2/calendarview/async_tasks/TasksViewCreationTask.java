@@ -1,7 +1,6 @@
 package com.example.michel.mycalendar2.calendarview.async_tasks;
 
 import android.os.AsyncTask;
-import android.text.format.DateUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +13,7 @@ import android.widget.TextView;
 import com.example.michel.mycalendar2.activities.R;
 import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
 import com.example.michel.mycalendar2.calendarview.data.DateData;
-import com.example.michel.mycalendar2.models.PillReminderEntry;
+import com.example.michel.mycalendar2.models.pill.PillReminderEntry;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -59,6 +58,8 @@ public class TasksViewCreationTask extends AsyncTask<DateData, Void, List<PillRe
                 reminderTimeTv.setText(new SimpleDateFormat("HH:mm").format(pre.getDate()));
                 ((TextView) pillReminderEntryView.findViewById(R.id.pill_count_type_tv))
                         .setText(String.valueOf(pre.getPillCount())+" "+pre.getPillCountType());
+                /*((TextView) pillReminderEntryView.findViewById(R.id.pill_count_type_tv))
+                        .setText("dfgdfg  1gfd df df2df5 dfgd r 4 ttds");*/
                 switch (pre.getHavingMealsType()){
                     case 1:
                         ((ImageView) pillReminderEntryView.findViewById(R.id.having_meals_iv)).setImageResource(R.drawable.icons8_50_21);

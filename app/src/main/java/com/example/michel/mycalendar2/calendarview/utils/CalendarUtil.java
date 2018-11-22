@@ -1,12 +1,11 @@
 package com.example.michel.mycalendar2.calendarview.utils;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import com.example.michel.mycalendar2.calendarview.data.DateData;
 import com.example.michel.mycalendar2.calendarview.data.DayDifference;
-import com.example.michel.mycalendar2.models.PillReminderEntry;
+import com.example.michel.mycalendar2.models.pill.PillReminderEntry;
 
 public class CalendarUtil {
     public static DateData date = CurrentCalendar.getCurrentDateData();

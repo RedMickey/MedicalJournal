@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.michel.mycalendar2.activities.R;
-import com.example.michel.mycalendar2.models.PillReminder;
+import com.example.michel.mycalendar2.models.pill.PillReminder;
 
 import java.util.List;
 
