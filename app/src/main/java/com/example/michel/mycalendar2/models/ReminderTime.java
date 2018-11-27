@@ -29,4 +29,11 @@ public class ReminderTime {
     public void setIdReminderTime(int idReminderTime) {
         this.idReminderTime = idReminderTime;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj==this) return true;
+        if (obj==null || obj.getClass()!=this.getClass()) return false;
+        return (this.idReminderTime==((ReminderTime) obj).getIdReminderTime()&&this.reminderTimeStr.equals(((ReminderTime) obj).getReminderTimeStr()));
+    }
 }

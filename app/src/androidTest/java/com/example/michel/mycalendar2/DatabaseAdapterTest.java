@@ -1,15 +1,18 @@
 package com.example.michel.mycalendar2;
 
+import android.content.Context;
+import android.support.test.InstrumentationRegistry;
+
 import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
 import com.example.michel.mycalendar2.calendarview.utils.DatabaseHelper;
 import com.example.michel.mycalendar2.models.CycleAndPillComby;
 import com.example.michel.mycalendar2.models.ReminderTime;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
-public class DatabaseAdapterTest {
-
+public class DatabaseAdapterTest{
 
     ReminderTime[] reminderTimesReference = new ReminderTime[]{
         new ReminderTime(2, "16:45"),
@@ -18,12 +21,16 @@ public class DatabaseAdapterTest {
             new ReminderTime(9, "20:15")
     };
 
-    @Test
-    public void test_getCycleAndPillCombyByID_method(){
-        DatabaseHelper databaseHelper = new DatabaseHelper(getApplicationContext());
+    @Before
+    public void setUp(){
+        DatabaseHelper databaseHelper = new DatabaseHelper(InstrumentationRegistry.getTargetContext());
         // создаем базу данных
         databaseHelper.create_db();
-        DatabaseAdapter.AppContext = getApplicationContext();
+        DatabaseAdapter.AppContext = InstrumentationRegistry.getTargetContext();
+    }
+
+    @Test
+    public void test_getCycleAndPillCombyByID_method1(){
 
         DatabaseAdapter databaseAdapter = new DatabaseAdapter();
         databaseAdapter.open();
@@ -31,7 +38,18 @@ public class DatabaseAdapterTest {
 
         databaseAdapter.close();
 
-        Assert.assertArrayEquals(reminderTimesReference, cycleAndPillComby.pillReminderDBInsertEntry.getReminderTimes());
+        Assert.assertArrayEquals( reminderTimesReference, cycleAndPillComby.pillReminderDBInsertEntry.getReminderTimes());
+    }
+
+    @Test
+    public void test_getCycleAndPillCombyByID_method2(){
+        DatabaseAdapter databaseAdapter = new DatabaseAdapter();
+        databaseAdapter.open();
+        CycleAndPillComby cycleAndPillComby = databaseAdapter.getCycleAndPillCombyByID(112);
+
+        databaseAdapter.close();
+
+        Assert.assertNull( cycleAndPillComby.pillReminderDBInsertEntry);
     }
 
 }
