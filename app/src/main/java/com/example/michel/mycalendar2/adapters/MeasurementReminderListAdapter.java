@@ -44,13 +44,13 @@ public class MeasurementReminderListAdapter extends ArrayAdapter<MeasurementRemi
         }
 
         String ending = " раз в день";
-        if (mr.getCountOfTakingMeasurement()<11||mr.getCountOfTakingMeasurement()>20){
-            if (checkLastDigitOn234(mr.getCountOfTakingMeasurement()))
+        if (mr.getNumberOfDoingAction()<11||mr.getNumberOfDoingAction()>20){
+            if (checkLastDigitOn234(mr.getNumberOfDoingAction()))
                 ending=" раза в день";
         }
 
         ((TextView)view.findViewById(R.id.count_of_taking_measurements))
-                .setText(String.valueOf(mr.getCountOfTakingMeasurement())+ending);
+                .setText(String.valueOf(mr.getNumberOfDoingAction())+ending);
         ((TextView)view.findViewById(R.id.time_period_rmi))
                 .setText("с "+mr.getStartDate()+" по "+mr.getEndDate());
         ImageView havingMealsType = (ImageView)view.findViewById(R.id.having_meals_type_rmi);
@@ -66,7 +66,7 @@ public class MeasurementReminderListAdapter extends ArrayAdapter<MeasurementRemi
                 break;
         }
         ((TextView)view.findViewById(R.id.count_of_taking_measurements_left))
-                .setText(String.valueOf(mr.getCountOfTakingMeasurementLeft()));
+                .setText(String.valueOf(mr.getNumberOfDoingActionLeft()));
 
         return view;
     }

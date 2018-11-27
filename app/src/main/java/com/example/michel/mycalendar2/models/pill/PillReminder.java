@@ -1,62 +1,43 @@
 package com.example.michel.mycalendar2.models.pill;
 
-import com.example.michel.mycalendar2.models.PillModel;
+import com.example.michel.mycalendar2.models.ItemReminderModel;
 
-public class PillReminder extends PillModel {
-    private int isActive;
-    private int countOfTakingMedicine;
-    private String startDate;
-    private String endDate;
-    private int countOfTakingMedicineLeft;
+public class PillReminder extends ItemReminderModel {
+    private String pillName;
+    private int pillCount;
+    private String pillCountType;
 
     public PillReminder(int id, String pillName, int pillCount, String pillCountType,
-                        int havingMealsType, int isActive, int countOfTakingMedicine,
-                        String startDate, String endDate, int countOfTakingMedicineLeft){
-        super(id, pillName, pillCount, pillCountType, havingMealsType);
-        this.isActive = isActive;
-        this.countOfTakingMedicine = countOfTakingMedicine;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.countOfTakingMedicineLeft = countOfTakingMedicineLeft;
+                        int havingMealsType, int isActive, int numberOfDoingAction,
+                        String startDate, String endDate, int numberOfDoingActionLeft)
+    {
+        super(id, havingMealsType, isActive, numberOfDoingAction, startDate, endDate, numberOfDoingActionLeft);
+        this.pillName = pillName;
+        this.pillCount = pillCount;
+        this.pillCountType = pillCountType;
     }
 
-    public int getIsActive() {
-        return isActive;
+    public String getPillName() {
+        return pillName;
     }
 
-    public void setIsActive(int isActive) {
-        this.isActive = isActive;
+    public void setPillName(String pillName) {
+        this.pillName = pillName;
     }
 
-    public int getCountOfTakingMedicine() {
-        return countOfTakingMedicine;
+    public int getPillCount() {
+        return pillCount;
     }
 
-    public void setCountOfTakingMedicine(int countOfTakingMedicine) {
-        this.countOfTakingMedicine = countOfTakingMedicine;
+    public void setPillCount(int pillCount) {
+        this.pillCount = pillCount;
     }
 
-    public String getStartDate() {
-        return startDate;
+    public String getPillCountType() {
+        return pillCountType;
     }
 
-    public void setStartDate(String startDate) {
-        this.startDate = startDate;
-    }
-
-    public String getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(String endDate) {
-        this.endDate = endDate;
-    }
-
-    public int getCountOfTakingMedicineLeft() {
-        return countOfTakingMedicineLeft;
-    }
-
-    public void setCountOfTakingMedicineLeft(int countOfTakingMedicineLeft) {
-        this.countOfTakingMedicineLeft = countOfTakingMedicineLeft;
+    public void setPillCountType(String pillCountType) {
+        this.pillCountType = pillCountType;
     }
 }

@@ -85,8 +85,8 @@ public class NotificationsCreationTask extends AsyncTask<Context, Void, Void> {
         for (PillReminderEntry pre: pillReminderEntries) {
             if (pre.getIsDone()==0&&!pre.isLate()){
                 Intent myIntent = new Intent(context, AlarmReceiver.class);
-                SimpleDateFormat simpleDate = new SimpleDateFormat("HH:mm");
-                myIntent.putExtra("time", simpleDate.format(pre.getDate()));
+                //SimpleDateFormat simpleDate = new SimpleDateFormat("HH:mm");
+                //myIntent.putExtra("time", simpleDate.format(pre.getDate()));
                 myIntent.putExtra("pre", pre);
                 PendingIntent pendingIntent = PendingIntent.getBroadcast(
                         context, pre.getId(), myIntent, PendingIntent.FLAG_UPDATE_CURRENT);

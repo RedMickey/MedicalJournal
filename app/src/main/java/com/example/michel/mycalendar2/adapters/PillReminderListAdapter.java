@@ -44,12 +44,12 @@ public class PillReminderListAdapter extends ArrayAdapter<PillReminder>{
         ((TextView)view.findViewById(R.id.pill_count_tv_rmi))
                 .setText(String.valueOf(pr.getPillCount())+" "+pr.getPillCountType());
         String ending = " раз в день";
-        if (pr.getCountOfTakingMedicine()<11||pr.getCountOfTakingMedicine()>20){
-            if (checkLastDigitOn234(pr.getCountOfTakingMedicine()))
+        if (pr.getNumberOfDoingAction()<11||pr.getNumberOfDoingAction()>20){
+            if (checkLastDigitOn234(pr.getNumberOfDoingAction()))
                 ending=" раза в день";
         }
         ((TextView)view.findViewById(R.id.count_of_taking_medicine))
-                .setText(String.valueOf(pr.getCountOfTakingMedicine())+ending);
+                .setText(String.valueOf(pr.getNumberOfDoingAction())+ending);
         ((TextView)view.findViewById(R.id.time_period_rmi))
                 .setText("с "+pr.getStartDate()+" по "+pr.getEndDate());
         ImageView havingMealsType = (ImageView)view.findViewById(R.id.having_meals_type_rmi);
@@ -65,7 +65,7 @@ public class PillReminderListAdapter extends ArrayAdapter<PillReminder>{
                 break;
         }
         ((TextView)view.findViewById(R.id.count_of_taking_medicine_left))
-                .setText(String.valueOf(pr.getCountOfTakingMedicineLeft()));
+                .setText(String.valueOf(pr.getNumberOfDoingActionLeft()));
 
         return view;
     }

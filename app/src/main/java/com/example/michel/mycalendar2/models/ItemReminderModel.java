@@ -1,11 +1,11 @@
 package com.example.michel.mycalendar2.models;
 
 public class ItemReminderModel extends ReminderModel {
-    private int isActive;
-    private int numberOfDoingAction;
-    private String startDate;
-    private String endDate;
-    private int numberOfDoingActionLeft;
+    protected int isActive;
+    protected int numberOfDoingAction;
+    protected String startDate;
+    protected String endDate;
+    protected int numberOfDoingActionLeft;
 
     public ItemReminderModel(int id, int havingMealsType, int isActive,
                              int numberOfDoingAction, String startDate,
