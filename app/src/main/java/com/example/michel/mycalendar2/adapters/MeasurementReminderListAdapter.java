@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.example.michel.mycalendar2.activities.R;
 import com.example.michel.mycalendar2.models.measurement.MeasurementReminder;
+import com.example.michel.mycalendar2.utils.DBStaticEntries;
 
 import java.util.List;
 
@@ -47,6 +48,19 @@ public class MeasurementReminderListAdapter extends ArrayAdapter<MeasurementRemi
         if (mr.getNumberOfDoingAction()<11||mr.getNumberOfDoingAction()>20){
             if (checkLastDigitOn234(mr.getNumberOfDoingAction()))
                 ending=" раза в день";
+        }
+
+        TextView measurementNameTV = (TextView)view.findViewById(R.id.measurement_name_tv_rmi);
+        ImageView measurementTypeIV = (ImageView)view.findViewById(R.id.measurement_iv_rmi);
+        switch (mr.getIdMeasurementType()){
+            case 1:
+                measurementNameTV.setText(DBStaticEntries.getMeasurementTypeById(1).getName());
+                measurementTypeIV.setImageResource(R.drawable.ic_thermometer);
+                break;
+            case 2:
+                measurementNameTV.setText(DBStaticEntries.getMeasurementTypeById(2).getName());
+                measurementTypeIV.setImageResource(R.drawable.ic_tonometer);
+                break;
         }
 
         ((TextView)view.findViewById(R.id.count_of_taking_measurements))

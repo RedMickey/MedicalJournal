@@ -33,4 +33,12 @@ public class DBStaticEntries {
         }
         return null;
     }
+
+    public static MeasurementType getMeasurementTypeById(int id){
+        for(MeasurementType mt : measurementTypes){
+            if (mt.getIndex()==id)
+                return mt;
+        }
+        return null;
+    }
 }

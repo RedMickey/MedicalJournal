@@ -9,22 +9,25 @@ import com.example.michel.mycalendar2.models.ReminderTime;
 public class MeasurementReminderDBEntry extends ReminderDBEntry {
     private int idMeasurementType;
     private Integer idMeasurementReminder;
+    private int idMeasurementValueType;
 
     public MeasurementReminderDBEntry(int idMeasurementType, Integer idMeasurementReminder,
                                     DateData startDate, Integer idCycle, @Nullable Integer idHavingMealsType,
                                     @Nullable Integer havingMealsTime, String annotation, Integer isActive,
-                                    ReminderTime[] reminderTimes)
+                                    ReminderTime[] reminderTimes, int idMeasurementValueType)
     {
         super(startDate, idCycle, idHavingMealsType, havingMealsTime, annotation,
                 isActive, reminderTimes);
         this.idMeasurementType = idMeasurementType;
         this.idMeasurementReminder = idMeasurementReminder;
+        this.idMeasurementValueType = idMeasurementValueType;
     }
 
     public MeasurementReminderDBEntry()
     {
         this.idMeasurementType=0;
         this.idMeasurementReminder = null;
+        this.idMeasurementValueType = 0;
     }
 
     public int getIdMeasurementType() {
@@ -41,5 +44,13 @@ public class MeasurementReminderDBEntry extends ReminderDBEntry {
 
     public void setIdMeasurementReminder(Integer idMeasurementReminder) {
         this.idMeasurementReminder = idMeasurementReminder;
+    }
+
+    public int getIdMeasurementValueType() {
+        return idMeasurementValueType;
+    }
+
+    public void setIdMeasurementValueType(int idMeasurementValueType) {
+        this.idMeasurementValueType = idMeasurementValueType;
     }
 }

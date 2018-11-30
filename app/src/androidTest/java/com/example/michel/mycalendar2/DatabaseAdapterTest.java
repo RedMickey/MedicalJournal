@@ -12,6 +12,11 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.spy;
+
 public class DatabaseAdapterTest{
 
     ReminderTime[] reminderTimesReference = new ReminderTime[]{
@@ -52,4 +57,20 @@ public class DatabaseAdapterTest{
         Assert.assertNull( cycleAndPillComby.pillReminderDBInsertEntry);
     }
 
+    @Test
+    public void test_getCycleAndPillCombyByID_method3(){
+
+        DatabaseAdapter dba = spy(DatabaseAdapter.class);
+        doReturn(reminderTimesReference).when(dba).getPillReminderEntriesTime(anyInt(), anyString());
+
+        DatabaseHelper databaseHelper = new DatabaseHelper(InstrumentationRegistry.getTargetContext());
+        dba.setDatabaseHelper(databaseHelper);
+
+        dba.open();
+        CycleAndPillComby cycleAndPillComby = dba.getCycleAndPillCombyByID(1);
+        //ReminderTime[] rr = dba.getPillReminderEntriesTime(1,"0000-00-00");
+        dba.close();
+
+        Assert.assertArrayEquals( reminderTimesReference, cycleAndPillComby.pillReminderDBInsertEntry.getReminderTimes());
+    }
 }

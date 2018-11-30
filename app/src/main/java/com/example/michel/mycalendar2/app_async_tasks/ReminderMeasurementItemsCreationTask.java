@@ -13,6 +13,7 @@ import com.example.michel.mycalendar2.adapters.MeasurementReminderListAdapter;
 import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
 import com.example.michel.mycalendar2.models.measurement.MeasurementReminder;
 import com.example.michel.mycalendar2.models.pill.PillReminder;
+import com.example.michel.mycalendar2.utils.DBStaticEntries;
 
 import java.util.List;
 
@@ -45,9 +46,11 @@ public class ReminderMeasurementItemsCreationTask extends AsyncTask<Void, Void, 
             AdapterView.OnItemClickListener itemClickListener = new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    PillReminder pr = (PillReminder)adapterView.getItemAtPosition(i);
+                    MeasurementReminder mr = (MeasurementReminder)adapterView.getItemAtPosition(i);
                     Intent intent = new Intent(view.getContext(), AddMeasurementActivity.class);
-                    intent.putExtra("MeasurementReminderID", pr.getId());
+                    intent.putExtra("MeasurementReminderID", mr.getId());
+                    intent.putExtra("MeasurementTypeID", mr.getIdMeasurementType());
+                    intent.putExtra("MeasurementName", DBStaticEntries.getMeasurementTypeById(mr.getIdMeasurementType()).getName());
                     view.getContext().startActivity(intent);
                 }
             };

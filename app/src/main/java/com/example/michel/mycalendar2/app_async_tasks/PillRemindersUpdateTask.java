@@ -12,11 +12,11 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-public class RemindersUpdateTask extends AsyncTask<CycleAndPillComby, Void, Void> {
+public class PillRemindersUpdateTask extends AsyncTask<CycleAndPillComby, Void, Void> {
     private boolean needUpdatePill;
     private Context appContext;
 
-    public RemindersUpdateTask(boolean needUpdatePill, Context context){
+    public PillRemindersUpdateTask(boolean needUpdatePill, Context context){
         super();
         this.needUpdatePill = needUpdatePill;
         appContext = context;
@@ -50,7 +50,7 @@ public class RemindersUpdateTask extends AsyncTask<CycleAndPillComby, Void, Void
         dbAdapter.deletePillReminderEntriesAfterDate(pillReminderDBInsertEntry.getIdPillReminder(), curDate);
         // need check for change start date
 
-        dbAdapter.deleteReminderTimeByPillReminderId(pillReminderDBInsertEntry.getIdPillReminder());
+        dbAdapter.deleteReminderTimeByReminderId(pillReminderDBInsertEntry.getIdPillReminder(),0);
 
         for (int i=0; i<pillReminderDBInsertEntry.getReminderTimes().length; i++){
             dbAdapter.insertReminderTime(pillReminderDBInsertEntry.getReminderTimes()[i].getReminderTimeStr(), pillReminderDBInsertEntry.getIdPillReminder(), 0);

@@ -30,7 +30,7 @@ import com.example.michel.mycalendar2.adapters.TimesOfTakingMedicineAdapter;
 import com.example.michel.mycalendar2.app_async_tasks.AddTreatmentActivityCreationTask;
 import com.example.michel.mycalendar2.app_async_tasks.NotificationsCreationTask;
 import com.example.michel.mycalendar2.app_async_tasks.PillRemindersInsertionTask;
-import com.example.michel.mycalendar2.app_async_tasks.RemindersUpdateTask;
+import com.example.michel.mycalendar2.app_async_tasks.PillRemindersUpdateTask;
 import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
 import com.example.michel.mycalendar2.calendarview.data.DateData;
 import com.example.michel.mycalendar2.calendarview.utils.CalendarUtil;
@@ -233,7 +233,7 @@ public class AddTreatmentActivity extends AppCompatActivity {
                     pillReminderDBInsertEntry.setIdPillReminder(oldPillReminder.getIdPillReminder());
                     Snackbar.make(view, "ReadyUpdate", Snackbar.LENGTH_SHORT)
                             .setAction("Action", null).show();
-                    RemindersUpdateTask rut = new RemindersUpdateTask(
+                    PillRemindersUpdateTask rut = new PillRemindersUpdateTask(
                             !pillReminderDBInsertEntry.getPillName().equals(oldPillReminder.getPillName()),
                             getApplicationContext());
                     rut.execute(new CycleAndPillComby(cycleDBInsertEntry, pillReminderDBInsertEntry));
@@ -346,7 +346,7 @@ public class AddTreatmentActivity extends AppCompatActivity {
                 if (getIntent().getExtras() != null){
                     AlertDialog.Builder builder = new AlertDialog.Builder(AddTreatmentActivity.this);
                     builder.setTitle("Удалить данные")
-                            .setMessage(R.string.delete_message)
+                            .setMessage(R.string.delete_pill_message)
                             .setPositiveButton(R.string.d_agree, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
@@ -365,7 +365,7 @@ public class AddTreatmentActivity extends AppCompatActivity {
                                     DatabaseAdapter dbAdapter = new DatabaseAdapter();
                                     dbAdapter.open();
                                     dbAdapter.deletePillReminderEntriesByPillReminderId(oldPillReminder.getIdPillReminder());
-                                    dbAdapter.deleteReminderTimeByPillReminderId(oldPillReminder.getIdPillReminder());
+                                    dbAdapter.deleteReminderTimeByReminderId(oldPillReminder.getIdPillReminder(), 0);
                                     if (idWeekSchedule!=0)
                                         dbAdapter.deleteWeekScheduleByIdCascade(idWeekSchedule);
                                     dbAdapter.deleteCycleByIdCascade(oldPillReminder.getIdCycle());

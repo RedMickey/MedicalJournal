@@ -11,8 +11,12 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.LayoutAnimationController;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.michel.mycalendar2.adapters.MeasurementTypesListAdapter;
 import com.example.michel.mycalendar2.adapters.TreatmentListAdapter;
@@ -27,15 +31,38 @@ public class ReminderFragment extends Fragment {
     }
     private TabLayout tabLayout;
     private ViewPager viewPager;
+    private MeasurementType selectedMT = null;
     private SlidingUpPanelLayout slidingUpPanelLayout;
+    private View view;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = getView();
+        view = getView();
         view=inflater.inflate(R.layout.reminder_fragment, container, false);
         slidingUpPanelLayout = (SlidingUpPanelLayout) view.findViewById(R.id.sliding_layout_add_reminder);
         slidingUpPanelLayout.setAnchorPoint(0.7f);
+        //slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+
+        slidingUpPanelLayout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
+            @Override
+            public void onPanelSlide(View panel, float slideOffset) {
+
+            }
+
+            @Override
+            public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
+                if (newState == SlidingUpPanelLayout.PanelState.COLLAPSED&&selectedMT!=null){
+                    Intent intent = new Intent(view.getContext(), AddMeasurementActivity.class);
+                    intent.putExtra("MeasurementTypeID", selectedMT.getIndex());
+                    intent.putExtra("MeasurementName", selectedMT.getName());
+                    selectedMT = null;
+                    view.getContext().startActivity(intent);
+                }
+            }
+        });
+
+        //slidingLinearLayout = (LinearLayout) view.findViewById(R.id.sliding_linear_layout);
 
         FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab_add_reminder);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -71,11 +98,15 @@ public class ReminderFragment extends Fragment {
         AdapterView.OnItemClickListener itemClickListener = new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                MeasurementType mt = (MeasurementType) adapterView.getItemAtPosition(i);
+                //slidingLinearLayout.setVisibility(View.GONE);
+                selectedMT = (MeasurementType) adapterView.getItemAtPosition(i);
+                //slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+                slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+                /*MeasurementType mt = (MeasurementType) adapterView.getItemAtPosition(i);
                 Intent intent = new Intent(view.getContext(), AddMeasurementActivity.class);
                 intent.putExtra("MeasurementTypeID", mt.getIndex());
                 intent.putExtra("MeasurementName", mt.getName());
-                view.getContext().startActivity(intent);
+                view.getContext().startActivity(intent);*/
             }
         };
         listView.setAdapter(mtla);
@@ -90,5 +121,12 @@ public class ReminderFragment extends Fragment {
         if (!(viewPager.getAdapter() == null)) {
             viewPager.getAdapter().notifyDataSetChanged();
         }
+        //slidingLinearLayout.setVisibility(View.VISIBLE);
+        //slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
     }
 }
