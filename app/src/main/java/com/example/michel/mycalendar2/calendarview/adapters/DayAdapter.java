@@ -11,9 +11,12 @@ import com.example.michel.mycalendar2.calendarview.data.DateData;
 import com.example.michel.mycalendar2.calendarview.utils.CalendarUtil;
 import com.example.michel.mycalendar2.calendarview.views.DayFragment;
 
+import java.util.Calendar;
+
 public class DayAdapter extends FragmentStatePagerAdapter{
     public DayAdapter(FragmentManager fm) {
         super(fm);
+        calendar = Calendar.getInstance();
     }
 
     private DateData currentDate;
@@ -21,6 +24,7 @@ public class DayAdapter extends FragmentStatePagerAdapter{
     private int i=0;
     private boolean isDayClicked = false;
     private DateData dayClickedDate;
+    private Calendar calendar;
 
     public void setDayClicked(boolean dayClicked) {
         isDayClicked = dayClicked;
@@ -73,23 +77,26 @@ public class DayAdapter extends FragmentStatePagerAdapter{
 
     @Override
     public Fragment getItem(int position) {
-        int dayDelta = currentDate.getDay() -preDate.getDay();
         switch (i){
             case 0:
                 currentDate = new DateData(currentDate.getYear(), currentDate.getMonth(), currentDate.getDay());
                 i++;
                 break;
             case 1:
-                currentDate = new DateData(currentDate.getYear(), currentDate.getMonth(), currentDate.getDay()-1);
+                calendar.set(currentDate.getYear(), currentDate.getMonth()-1, currentDate.getDay());
+                calendar.add(Calendar.DAY_OF_MONTH, -1);
+                currentDate = new DateData(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH)+1, calendar.get(Calendar.DAY_OF_MONTH));
                 i++;
                 break;
             case 2:
-                currentDate = new DateData(currentDate.getYear(), currentDate.getMonth(), currentDate.getDay()+2);
+                calendar.set(currentDate.getYear(), currentDate.getMonth()-1, currentDate.getDay());
+                calendar.add(Calendar.DAY_OF_MONTH, 2);
+                currentDate = new DateData(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH)+1, calendar.get(Calendar.DAY_OF_MONTH));
                 i++;
                 break;
 
         }
-        DayFragment fragment = DayFragment.newInstance(currentDate, dayDelta);
+        DayFragment fragment = DayFragment.newInstance(currentDate);
         preDate = currentDate;
         if (i==3){
             currentDate = new DateData(currentDate.getYear(), currentDate.getMonth(), currentDate.getDay()-1);

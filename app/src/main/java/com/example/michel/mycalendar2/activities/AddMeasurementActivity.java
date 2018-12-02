@@ -28,9 +28,10 @@ import android.widget.ToggleButton;
 
 import com.example.michel.mycalendar2.adapters.TimesOfTakingMedicineAdapter;
 import com.example.michel.mycalendar2.app_async_tasks.AddMeasurementActivityCreationTask;
+import com.example.michel.mycalendar2.app_async_tasks.MeasurementNotificationsCreationTask;
 import com.example.michel.mycalendar2.app_async_tasks.MeasurementRemindersInsertionTask;
 import com.example.michel.mycalendar2.app_async_tasks.MeasurementRemindersUpdateTask;
-import com.example.michel.mycalendar2.app_async_tasks.NotificationsCreationTask;
+import com.example.michel.mycalendar2.app_async_tasks.PillNotificationsCreationTask;
 import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
 import com.example.michel.mycalendar2.calendarview.data.DateData;
 import com.example.michel.mycalendar2.calendarview.utils.CalendarUtil;
@@ -38,7 +39,6 @@ import com.example.michel.mycalendar2.expandableLayout.ExpandableRelativeLayout;
 import com.example.michel.mycalendar2.models.CycleAndMeasurementComby;
 import com.example.michel.mycalendar2.models.CycleDBInsertEntry;
 import com.example.michel.mycalendar2.models.measurement.MeasurementReminderDBEntry;
-import com.example.michel.mycalendar2.models.pill.PillReminderDBInsertEntry;
 import com.example.michel.mycalendar2.models.ReminderTime;
 import com.example.michel.mycalendar2.utils.DBStaticEntries;
 
@@ -325,7 +325,7 @@ public class AddMeasurementActivity extends AppCompatActivity {
                             .setPositiveButton(R.string.d_agree, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                    NotificationsCreationTask nctOld = new NotificationsCreationTask(1);
+                                    MeasurementNotificationsCreationTask nctOld = new MeasurementNotificationsCreationTask(1);
                                     try {
                                         nctOld.execute(getApplicationContext()).get();
                                     } catch (ExecutionException ee){
@@ -345,8 +345,8 @@ public class AddMeasurementActivity extends AppCompatActivity {
                                         dbAdapter.deleteWeekScheduleByIdCascade(idWeekSchedule);
                                     dbAdapter.deleteCycleByIdCascade(oldMeasurementReminder.getIdCycle());
                                     dbAdapter.close();
-                                    /*NotificationsCreationTask nctNew = new NotificationsCreationTask(2);
-                                    nctNew.execute(getApplicationContext());*/
+                                    MeasurementNotificationsCreationTask nctNew = new MeasurementNotificationsCreationTask(2);
+                                    nctNew.execute(getApplicationContext());
                                     onBackPressed();
                                 }
                             })

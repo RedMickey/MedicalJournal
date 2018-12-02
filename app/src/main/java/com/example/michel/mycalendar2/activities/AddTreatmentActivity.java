@@ -28,7 +28,7 @@ import android.widget.ToggleButton;
 
 import com.example.michel.mycalendar2.adapters.TimesOfTakingMedicineAdapter;
 import com.example.michel.mycalendar2.app_async_tasks.AddTreatmentActivityCreationTask;
-import com.example.michel.mycalendar2.app_async_tasks.NotificationsCreationTask;
+import com.example.michel.mycalendar2.app_async_tasks.PillNotificationsCreationTask;
 import com.example.michel.mycalendar2.app_async_tasks.PillRemindersInsertionTask;
 import com.example.michel.mycalendar2.app_async_tasks.PillRemindersUpdateTask;
 import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
@@ -350,7 +350,7 @@ public class AddTreatmentActivity extends AppCompatActivity {
                             .setPositiveButton(R.string.d_agree, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                    NotificationsCreationTask nctOld = new NotificationsCreationTask(1);
+                                    PillNotificationsCreationTask nctOld = new PillNotificationsCreationTask(1);
                                     try {
                                         nctOld.execute(getApplicationContext()).get();
                                     } catch (ExecutionException ee){
@@ -370,7 +370,7 @@ public class AddTreatmentActivity extends AppCompatActivity {
                                         dbAdapter.deleteWeekScheduleByIdCascade(idWeekSchedule);
                                     dbAdapter.deleteCycleByIdCascade(oldPillReminder.getIdCycle());
                                     dbAdapter.close();
-                                    NotificationsCreationTask nctNew = new NotificationsCreationTask(2);
+                                    PillNotificationsCreationTask nctNew = new PillNotificationsCreationTask(2);
                                     nctNew.execute(getApplicationContext());
                                     onBackPressed();
                                 }

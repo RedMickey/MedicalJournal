@@ -1,6 +1,5 @@
 package com.example.michel.mycalendar2.activities;
 
-import android.app.Notification;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -15,14 +14,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.example.michel.mycalendar2.app_async_tasks.NotificationsCreationTask;
+import com.example.michel.mycalendar2.app_async_tasks.MeasurementNotificationsCreationTask;
+import com.example.michel.mycalendar2.app_async_tasks.PillNotificationsCreationTask;
 import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
 import com.example.michel.mycalendar2.calendarview.utils.DatabaseHelper;
 import com.example.michel.mycalendar2.utils.DBStaticEntries;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.logging.SimpleFormatter;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -85,8 +84,11 @@ public class MainActivity extends AppCompatActivity
                 editor.putString("cur_date",sdf.format(cal.getTime()));
                 editor.apply();
 
-                NotificationsCreationTask nct = new NotificationsCreationTask();
-                nct.execute(getApplicationContext());
+                PillNotificationsCreationTask pnct = new PillNotificationsCreationTask();
+                pnct.execute(getApplicationContext());
+
+                MeasurementNotificationsCreationTask mnct = new MeasurementNotificationsCreationTask();
+                mnct.execute(getApplicationContext());
             }
         }
 

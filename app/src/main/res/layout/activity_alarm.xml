@@ -44,7 +44,7 @@
             android:textAlignment="center"/>
 
         <TextView
-            android:id="@+id/pill_name_alarm"
+            android:id="@+id/reminder_name_alarm"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Таблетка1"
@@ -56,7 +56,7 @@
             android:id="@+id/pill_count_and_type_alarm"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="1 шт"
+            android:text=""
             android:textColor="#EEEEEE"
             android:textSize="16pt"
             android:textAlignment="center" />

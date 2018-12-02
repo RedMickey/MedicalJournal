@@ -9,4 +9,5 @@
     <color name="alarm_act_bg">#C5CAE9</color>
     <color name="alarm_act_bg_acc">#00E676</color>
     <color name="alarm_act_bg_rej">#F00</color>
+    <color name="meas_remind_ent_bg">#CCECD7</color>
 </resources>

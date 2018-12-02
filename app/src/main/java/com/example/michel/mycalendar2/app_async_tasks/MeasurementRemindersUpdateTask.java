@@ -101,4 +101,10 @@ public class MeasurementRemindersUpdateTask extends AsyncTask<CycleAndMeasuremen
 
         return null;
     }
+
+    @Override
+    protected void onPostExecute(Void aVoid) {
+        MeasurementNotificationsCreationTask mnct = new MeasurementNotificationsCreationTask();
+        mnct.execute(appContext);
+    }
 }

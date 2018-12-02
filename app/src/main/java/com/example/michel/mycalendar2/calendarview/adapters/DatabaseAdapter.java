@@ -15,6 +15,7 @@ import com.example.michel.mycalendar2.models.CycleAndPillComby;
 import com.example.michel.mycalendar2.models.CycleDBInsertEntry;
 import com.example.michel.mycalendar2.models.measurement.MeasurementReminder;
 import com.example.michel.mycalendar2.models.measurement.MeasurementReminderDBEntry;
+import com.example.michel.mycalendar2.models.measurement.MeasurementReminderEntry;
 import com.example.michel.mycalendar2.models.pill.PillReminder;
 import com.example.michel.mycalendar2.models.pill.PillReminderDBInsertEntry;
 import com.example.michel.mycalendar2.models.pill.PillReminderEntry;
@@ -110,6 +111,21 @@ public class DatabaseAdapter {
 
     public List<MeasurementType> getMeasurementTypes(){
         List<MeasurementType> measurementTypes = new ArrayList<>();
+        /*
+        Cursor cursor = database.rawQuery("select mt._id_measurement_type, mt.type_name, mt._id_measur_value_type, mvt.type_value_name from measurement_types mt " +
+                        " inner join measurement_value_types mvt on mt._id_measur_value_type=mvt._id_measur_value_type", null);
+        if(cursor.moveToFirst()){
+            do{
+                int id = cursor.getInt(cursor.getColumnIndex("_id_measurement_type"));
+                String typeName = cursor.getString(cursor.getColumnIndex("type_name"));
+                int idMeasurementValueType = cursor.getInt(cursor.getColumnIndex("_id_measur_value_type"));
+                String typeValueName = cursor.getString(cursor.getColumnIndex("type_value_name"));
+                measurementTypes.add(new MeasurementType(id, typeName, idMeasurementValueType, typeValueName));
+            }
+            while (cursor.moveToNext());
+        }
+         */
+
         Cursor cursor = database.rawQuery("select * from measurement_types", null);
         if(cursor.moveToFirst()){
             do{
@@ -658,8 +674,8 @@ public class DatabaseAdapter {
     public void insertMeasurementReminderEntries(String reminder_date, Integer idMeasurementReminder, String reminderTime){
         ContentValues measurementReminderEntryTableValues = new ContentValues();
         measurementReminderEntryTableValues.put("is_done", 0);
-        measurementReminderEntryTableValues.put("value1", 0);
-        measurementReminderEntryTableValues.put("value2", 0);
+        measurementReminderEntryTableValues.put("value1", -10000);
+        measurementReminderEntryTableValues.put("value2", -10000);
         measurementReminderEntryTableValues.put("reminder_date", reminder_date);
         measurementReminderEntryTableValues.put("_id_measurement_reminder", idMeasurementReminder);
         measurementReminderEntryTableValues.put("reminder_time", reminderTime);
@@ -755,6 +771,64 @@ public class DatabaseAdapter {
     public void deleteMeasurementReminderEntriesAfterDate(int idMeasurementReminder, String date){
         database.delete("measurement_reminder_entries", "reminder_date >= ? and _id_measurement_reminder = ? and is_done = 0",
                 new String[]{date, String.valueOf(idMeasurementReminder)});
+    }
+
+    public List<MeasurementReminderEntry> getMeasurementReminderEntriesByDate(DateData date){
+        ArrayList<MeasurementReminderEntry> measurementReminderEntry = new ArrayList<>();
+        String rawQuery = "select mre._id_measur_remind_entry, mr._id_measurement_type, mvt.type_value_name, mt.type_name, mre.value1, mre.value2, mre.is_done, mr._id_having_meals_type, mre.reminder_time, mr.having_meals_time, mre.reminder_date " +
+                " from measurement_reminder_entries mre inner join measurement_reminders mr on mre._id_measurement_reminder=mr._id_measurement_reminder inner join measurement_types mt on mr._id_measurement_type=mt._id_measurement_type " +
+                " inner join measurement_value_types mvt on mt._id_measur_value_type=mvt._id_measur_value_type where mre.reminder_date=? and (mr.IsActive=1 or mre.is_done=1) ORDER BY mre.is_done";
+        Cursor cursor = database.rawQuery(rawQuery, new String[]{date.getDateString()});
+        Calendar calendar = Calendar.getInstance();
+        if(cursor.moveToFirst()){
+            do{
+                int id = cursor.getInt(cursor.getColumnIndex("_id_measur_remind_entry"));
+                int idMeasurementType = cursor.getInt(cursor.getColumnIndex("_id_measurement_type"));
+                String measurementValueTypeName = cursor.getString(cursor.getColumnIndex("type_value_name"));
+                double value1 = cursor.getDouble(cursor.getColumnIndex("value1"));
+                double value2 = cursor.getDouble(cursor.getColumnIndex("value2"));
+                String dateStr = cursor.getString(cursor.getColumnIndex("reminder_date"));
+                String timeStr = cursor.getString(cursor.getColumnIndex("reminder_time"));
+                int havingMealsType = cursor.getInt(cursor.getColumnIndex("_id_having_meals_type"));
+                int havingMealsTimeStr = cursor.getInt(cursor.getColumnIndex("having_meals_time"));
+                int isDone = cursor.getInt(cursor.getColumnIndex("is_done"));
+                String measurementTypeName = cursor.getString(cursor.getColumnIndex("type_name"));
+
+                Date reminderDate;
+                Date havingMealsTime = new Date();
+                try {
+                    reminderDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(dateStr+" "+timeStr);
+                    havingMealsTime.setTime(reminderDate.getTime()+havingMealsTimeStr*60*1000);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    reminderDate = new Date();
+                }
+                Date f = reminderDate;
+                boolean isLate = false;
+                if (isDone==0)
+                    isLate = calendar.getTime().compareTo(reminderDate)>0?true:false;
+
+                measurementReminderEntry.add(new MeasurementReminderEntry(
+                        id, havingMealsType, idMeasurementType, measurementValueTypeName,
+                        reminderDate, havingMealsTime, isDone, isLate, value1, value2, measurementTypeName));
+            }
+            while (cursor.moveToNext());
+        }
+        cursor.close();
+        return measurementReminderEntry;
+    }
+
+    public void updateIsDoneMeasurementReminderEntry(int isDone, int measurementReminderEntryID, String newTime, double value1, double value2, int type){
+        ContentValues measurementReminderEntryTableValues = new ContentValues();
+        measurementReminderEntryTableValues.put("is_done", isDone);
+        if (!newTime.equals(""))
+            measurementReminderEntryTableValues.put("reminder_time", newTime);
+        if (type==0){
+            measurementReminderEntryTableValues.put("value1", value1);
+            measurementReminderEntryTableValues.put("value2", value2);
+        }
+        database.update("measurement_reminder_entries", measurementReminderEntryTableValues,
+                "_id_measur_remind_entry=" + String.valueOf(measurementReminderEntryID), null);
     }
 
     //***********************************end************************************************************

@@ -22,7 +22,7 @@ public class DayFragment extends Fragment{
         this.currentData = currentDate;
     }
 
-    public static DayFragment newInstance(DateData currentData, int dayDelta) {
+    public static DayFragment newInstance(DateData currentData) {
         DayFragment dayFragment = new DayFragment();
         /*if (dayDelta>0)
             dayFragment.currentData = new DateData(currentData.getYear(), currentData.getMonth(), currentData.getDay()+dayDelta);

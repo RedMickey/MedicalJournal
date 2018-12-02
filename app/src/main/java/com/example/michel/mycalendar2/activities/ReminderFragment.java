@@ -100,8 +100,8 @@ public class ReminderFragment extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 //slidingLinearLayout.setVisibility(View.GONE);
                 selectedMT = (MeasurementType) adapterView.getItemAtPosition(i);
-                //slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-                slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+                slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+                //slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
                 /*MeasurementType mt = (MeasurementType) adapterView.getItemAtPosition(i);
                 Intent intent = new Intent(view.getContext(), AddMeasurementActivity.class);
                 intent.putExtra("MeasurementTypeID", mt.getIndex());
@@ -121,12 +121,12 @@ public class ReminderFragment extends Fragment {
         if (!(viewPager.getAdapter() == null)) {
             viewPager.getAdapter().notifyDataSetChanged();
         }
-        //slidingLinearLayout.setVisibility(View.VISIBLE);
-        //slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
     }
 
     @Override
     public void onPause() {
         super.onPause();
+        if (slidingUpPanelLayout.getPanelState()!= SlidingUpPanelLayout.PanelState.COLLAPSED)
+            slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
     }
 }

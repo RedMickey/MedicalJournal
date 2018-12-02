@@ -21,7 +21,9 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         Intent intAlarm = new Intent(context.getApplicationContext(), AlarmActivity.class);
         intAlarm.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
         intAlarm.putExtra("pre", intent.getParcelableExtra("pre"));
+        intAlarm.putExtra("mre", intent.getParcelableExtra("mre"));
         context.startActivity(intAlarm);
 
         PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);

@@ -19,15 +19,15 @@ import java.util.List;
 import static android.content.ContentValues.TAG;
 import static android.content.Context.ALARM_SERVICE;
 
-public class NotificationsCreationTask extends AsyncTask<Context, Void, Void> {
+public class PillNotificationsCreationTask extends AsyncTask<Context, Void, Void> {
     private int type;
 
-    public NotificationsCreationTask(int type){
+    public PillNotificationsCreationTask(int type){
         super();
         this.type = type;
     }
 
-    public NotificationsCreationTask(){
+    public PillNotificationsCreationTask(){
         super();
         this.type = 0;
     }

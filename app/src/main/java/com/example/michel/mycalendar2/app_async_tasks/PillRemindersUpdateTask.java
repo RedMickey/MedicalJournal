@@ -111,7 +111,7 @@ public class PillRemindersUpdateTask extends AsyncTask<CycleAndPillComby, Void, 
 
     @Override
     protected void onPostExecute(Void aVoid) {
-        NotificationsCreationTask nct = new NotificationsCreationTask();
+        PillNotificationsCreationTask nct = new PillNotificationsCreationTask();
         nct.execute(appContext);
     }
 }
