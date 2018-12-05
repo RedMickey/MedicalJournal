@@ -196,7 +196,7 @@ public class TasksViewCreationTask extends AsyncTask<DateData, Void, PillAndMeas
                             }
 
                             builder.setView(dialogView)
-                                    .setTitle("Давление")
+                                    .setTitle(mre.getMeasurementTypeName())
                                     .setCancelable(false)
                                     .setPositiveButton("Добавить",
                                             new DialogInterface.OnClickListener() {
@@ -234,6 +234,8 @@ public class TasksViewCreationTask extends AsyncTask<DateData, Void, PillAndMeas
                                                     databaseAdapter.updateIsDoneMeasurementReminderEntry(1, mre.getId(), curTime+":00",
                                                             mre.getValue1(), mre.getValue2(), 0);
                                                     databaseAdapter.close();
+                                                    if (mre.isLate())
+                                                        imageTimeExpired.setImageResource(android.R.color.transparent);
                                                 }
                                             })
                                     .setNegativeButton("Отмена",
@@ -247,9 +249,6 @@ public class TasksViewCreationTask extends AsyncTask<DateData, Void, PillAndMeas
 
                             AlertDialog dialog = builder.create();
                             dialog.show();
-                            if (mre.isLate())
-                                imageTimeExpired.setImageResource(android.R.color.transparent);
-
                         }
                         else{
                             if (!isCanceledDialog) {

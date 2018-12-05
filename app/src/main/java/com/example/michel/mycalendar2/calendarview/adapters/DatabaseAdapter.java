@@ -618,7 +618,7 @@ public class DatabaseAdapter {
         String rawQuery = "select  mr.start_date, mr.isActive, cl.period, mr.times_a_day, mr._id_measurement_type, mr._id_having_meals_type, cl.period_DM_type, " +
                 "(select COUNT(*) from measurement_reminder_entries mre where mre._id_measurement_reminder=mr._id_measurement_reminder and mre.is_done=0 ) " +
                 "as count_left, mr._id_measurement_reminder, mt._id_measur_value_type " +
-                "from measurement_reminders mr inner join cycles cl on mr._id_cycle=cl._id_cycle inner join measurement_types mt on mr._id_measurement_type=mt._id_measurement_type ORDER BY mr.IsActive";
+                "from measurement_reminders mr inner join cycles cl on mr._id_cycle=cl._id_cycle inner join measurement_types mt on mr._id_measurement_type=mt._id_measurement_type ORDER BY mr.isActive DESC";
         Cursor cursor = database.rawQuery(rawQuery, null);
         if(cursor.moveToFirst()){
             do{
