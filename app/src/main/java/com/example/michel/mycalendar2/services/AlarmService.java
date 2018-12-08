@@ -1,10 +1,16 @@
 package com.example.michel.mycalendar2.services;
 
+import android.app.NotificationManager;
 import android.app.Service;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.widget.Toast;
 
+import com.example.michel.mycalendar2.activities.AddTreatmentActivity;
+import com.example.michel.mycalendar2.activities.MainActivity;
+import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
 import com.example.michel.mycalendar2.utils.AlarmReceiver;
 
 public class AlarmService extends Service {
@@ -18,6 +24,38 @@ public class AlarmService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        return super.onStartCommand(intent, flags, startId);
+        int isCancel = intent.getIntExtra("isCancel",1);
+        int notifId = intent.getIntExtra("notifId",0);
+
+        int pillReminderEntryID = intent.getIntExtra("pillReminderEntryID", -1);
+        int measurementReminderEntryID =  intent.getIntExtra("measurementReminderEntryID", -1);
+
+        NotificationManager notificationManager =
+                (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
+        notificationManager.cancel(notifId);
+
+        if (isCancel==0){
+
+            //Toast.makeText(this,"isCancel==0", Toast.LENGTH_SHORT).show();
+
+            if (pillReminderEntryID!=-1){
+                DatabaseAdapter databaseAdapter = new DatabaseAdapter();
+                databaseAdapter.open();
+                databaseAdapter.updateIsDonePillReminderEntry( 1, pillReminderEntryID, "");
+                databaseAdapter.close();
+            }
+
+            if (measurementReminderEntryID!=-1){
+                Intent i = new Intent(Intent.ACTION_MAIN);
+                i.setComponent(new ComponentName(this, MainActivity.class));
+                i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP |
+                        Intent.FLAG_ACTIVITY_NEW_TASK |
+                        Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+                startActivity(i);
+            }
+
+        }
+        return START_STICKY;
     }
 }

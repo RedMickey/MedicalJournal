@@ -1,5 +1,6 @@
 package com.example.michel.mycalendar2.activities;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.example.michel.mycalendar2.app_async_tasks.MeasurementNotificationsCreationTask;
 import com.example.michel.mycalendar2.app_async_tasks.PillNotificationsCreationTask;
@@ -172,5 +174,20 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         //startActivity(intent);
         return true;
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        //Toast.makeText(this,"newIntent", Toast.LENGTH_SHORT).show();
+        Fragment mainFragment = (MainFragment)getSupportFragmentManager().findFragmentByTag("MAIN_FRAGMENT");
+        if (mainFragment == null || !mainFragment.isVisible()) {
+            MainFragment mainFragmentNew = MainFragment.newInstance();
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.frame_container, mainFragmentNew, "MAIN_FRAGMENT")
+                    .commit();
+            //Toast.makeText(this,"here",Toast.LENGTH_SHORT).show();
+        }
     }
 }

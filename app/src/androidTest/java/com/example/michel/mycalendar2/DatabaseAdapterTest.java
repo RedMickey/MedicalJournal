@@ -14,6 +14,7 @@ import org.junit.Test;
 
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
 
@@ -61,7 +62,7 @@ public class DatabaseAdapterTest{
     public void test_getCycleAndPillCombyByID_method3(){
 
         DatabaseAdapter dba = spy(DatabaseAdapter.class);
-        doReturn(reminderTimesReference).when(dba).getPillReminderEntriesTime(anyInt(), anyString());
+        doReturn(reminderTimesReference).when(dba).getReminderEntriesTime(anyInt(), anyString(),eq(0));
 
         DatabaseHelper databaseHelper = new DatabaseHelper(InstrumentationRegistry.getTargetContext());
         dba.setDatabaseHelper(databaseHelper);

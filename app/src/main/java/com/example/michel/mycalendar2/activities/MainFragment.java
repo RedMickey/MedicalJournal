@@ -1,6 +1,8 @@
 package com.example.michel.mycalendar2.activities;
 
 import android.app.AlarmManager;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,6 +33,7 @@ import com.example.michel.mycalendar2.calendarview.views.ExpCalendarView;
 import com.example.michel.mycalendar2.calendarview.views.MonthExpFragment;
 import com.example.michel.mycalendar2.calendarview.views.WeekDayViewPager;
 import com.example.michel.mycalendar2.models.pill.PillReminderEntry;
+import com.example.michel.mycalendar2.services.AlarmService;
 import com.example.michel.mycalendar2.utils.AlarmReceiver;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
@@ -69,33 +73,53 @@ public class MainFragment extends Fragment{
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_SHORT)
                         .setAction("Action", null).show();
-                /*Intent intent = new Intent(getActivity(), AddTreatmentActivity.class);
-                startActivity(intent);*/
-                Calendar calendar = Calendar.getInstance();
-                PillReminderEntry pre = new PillReminderEntry(
-                        1, "tabl1", 2, "st", new Date(), 1, new Date(), 1, false
-                );
-                // set selected time from timepicker to calendar
-                calendar.add(Calendar.SECOND, 2);
-                Intent myIntent = new Intent(getActivity(), AlarmReceiver.class);
-                myIntent.putExtra("pre", pre);
-                PendingIntent pendingIntent = PendingIntent.getBroadcast(
-                        getActivity(), 0, myIntent, 0);
-                // set alarm time
+                /*Intent intent = new Intent(new Intent(getContext(), AlarmService.class));
+                intent.putExtra("isActual", 1);
+                getActivity().startService(intent);*/
 
-                AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(ALARM_SERVICE);
-                alarmManager.set(AlarmManager.RTC_WAKEUP,
-                        calendar.getTimeInMillis(), pendingIntent);
+                //Intent deleteIntent = new Intent(this, MyService.class);
+                //deleteIntent.setAction("ru.startandroid.notifications.action_delete");
+                //PendingIntent deletePendingIntent = PendingIntent.getService(this, 0, deleteIntent, 0);
+
+                Intent notificationIntent2 = new Intent(getContext(), AlarmService.class);
+                notificationIntent2.putExtra("isActual", 1);
+                notificationIntent2.putExtra("notifId", 0);
+                int isActual = notificationIntent2.getIntExtra("isActual",0);
+                PendingIntent pendingIntent = PendingIntent.getService(getContext(), 0, notificationIntent2, PendingIntent.FLAG_CANCEL_CURRENT);
+
+                Intent notificationIntent = new Intent(getContext(), AddTreatmentActivity.class);
+                PendingIntent contentIntent = PendingIntent.getActivity(getContext(),
+                        0, notificationIntent,
+                        PendingIntent.FLAG_CANCEL_CURRENT);
+
+                Notification builder = new Notification.Builder(getContext())
+                        .setContentIntent(contentIntent)
+                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setContentTitle("Title")
+                        .setContentText("Notification text")
+                        .addAction(android.R.drawable.ic_delete, "Reject", pendingIntent)
+                        .addAction(android.R.drawable.ic_input_add, "Accept", pendingIntent)
+                        .build();
+
+                /*NotificationCompat.Builder builder =
+                        new NotificationCompat.Builder(getContext())
+                                .setContentIntent(contentIntent)
+                                .setSmallIcon(R.mipmap.ic_launcher)
+                                .setContentTitle("Title")
+                                .setContentText("Notification text")
+                                .setAutoCancel(true)
+
+                                .addAction(android.R.drawable.ic_delete, "Delete", contentIntent);*/
+
+                builder.flags|= Notification.FLAG_AUTO_CANCEL;
+
+                NotificationManager notificationManager =
+                        (NotificationManager) getContext().getSystemService(getContext().NOTIFICATION_SERVICE);
+                // Альтернативный вариант
+                // NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+
+                notificationManager.notify(0, builder);
                 }
-
-                /*else {
-                    // Cancel alarm
-                    alarmManager.cancel(pendingIntent);
-                    Toast.makeText(getApplicationContext(), "Alarm Off",
-                            Toast.LENGTH_SHORT).show();
-                    setAlarmText("");
-
-                }*/
 
         });
 
