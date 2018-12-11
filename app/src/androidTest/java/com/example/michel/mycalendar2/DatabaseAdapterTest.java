@@ -4,13 +4,21 @@ import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 
 import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
+import com.example.michel.mycalendar2.calendarview.data.DateData;
 import com.example.michel.mycalendar2.calendarview.utils.DatabaseHelper;
 import com.example.michel.mycalendar2.models.CycleAndPillComby;
 import com.example.michel.mycalendar2.models.ReminderTime;
+import com.example.michel.mycalendar2.models.pill.PillReminderEntry;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
 
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
@@ -69,9 +77,49 @@ public class DatabaseAdapterTest{
 
         dba.open();
         CycleAndPillComby cycleAndPillComby = dba.getCycleAndPillCombyByID(1);
-        //ReminderTime[] rr = dba.getPillReminderEntriesTime(1,"0000-00-00");
         dba.close();
 
         Assert.assertArrayEquals( reminderTimesReference, cycleAndPillComby.pillReminderDBInsertEntry.getReminderTimes());
+    }
+
+    @Test
+    public void test_getPillReminderEntriesByDate_method1(){
+        PillReminderEntry[] pillReminderEntriesRef = new PillReminderEntry[2];
+        Calendar cal = Calendar.getInstance();
+        cal.clear();
+        cal.set(2018, 11, 1, 11, 0, 0);
+        Date date = cal.getTime();
+        cal.set(2018, 11, 1, 11, 13, 0);
+        Date havingMealsTime = cal.getTime();
+        pillReminderEntriesRef[0] = new PillReminderEntry(
+           3, "птабл3", 2, "шт",
+                date, 1, havingMealsTime, 0, true
+        );
+        cal.set(2018, 11, 1, 11, 25, 0);
+        Date date2 = cal.getTime();
+        cal.set(2018, 11, 1, 11, 41, 0);
+        Date havingMealsTime2 = cal.getTime();
+        pillReminderEntriesRef[1] = new PillReminderEntry(
+                10, "таблетка1", 1, "капли",
+                date2, 3, havingMealsTime2, 0, true
+        );
+
+        DatabaseAdapter dba = new DatabaseAdapter();
+        dba.open();
+        List<PillReminderEntry> pillReminderEntries = dba.getPillReminderEntriesByDate(new DateData(2018,12,1));
+        PillReminderEntry[] pres = pillReminderEntries.toArray(new PillReminderEntry[pillReminderEntries.size()]);
+        dba.close();
+
+        Assert.assertArrayEquals(pillReminderEntriesRef, pres);
+    }
+
+    @Test
+    public void test_getPillReminderEntriesByDate_method2(){
+        DatabaseAdapter dba = new DatabaseAdapter();
+        dba.open();
+        List<PillReminderEntry> pillReminderEntries = dba.getPillReminderEntriesByDate(new DateData(2018,12,2));
+        dba.close();
+
+        Assert.assertEquals(0, pillReminderEntries.size());
     }
 }

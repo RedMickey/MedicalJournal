@@ -3,6 +3,7 @@ package com.example.michel.mycalendar2.models.pill;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.example.michel.mycalendar2.models.CycleDBInsertEntry;
 import com.example.michel.mycalendar2.models.ReminderEntryModel;
 
 import java.util.Date;
@@ -81,4 +82,20 @@ public class PillReminderEntry extends ReminderEntryModel implements Parcelable 
             return new PillReminderEntry[i];
         }
     };
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj==this) return true;
+        if (obj==null || obj.getClass()!=this.getClass()) return false;
+        return (this.id==((PillReminderEntry) obj).getId()&&
+                this.pillName.equals(((PillReminderEntry) obj).getPillName())&&
+                this.pillCount==((PillReminderEntry) obj).pillCount&&
+                this.pillCountType.equals(((PillReminderEntry) obj).getPillCountType())&&
+                this.date.compareTo(((PillReminderEntry) obj).getDate())==0&&
+                this.havingMealsType==((PillReminderEntry) obj).getHavingMealsType()&&
+                this.havingMealsTime.compareTo(((PillReminderEntry) obj).getHavingMealsTime())==0&&
+                this.isDone==((PillReminderEntry) obj).getIsDone()&&
+                this.isLate==((PillReminderEntry) obj).isLate
+        );
+    }
 }

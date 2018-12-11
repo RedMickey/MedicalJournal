@@ -124,4 +124,19 @@ public class CycleDBInsertEntry {
     public void setIdWeekSchedule(int idWeekSchedule) {
         this.idWeekSchedule = idWeekSchedule;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj==this) return true;
+        if (obj==null || obj.getClass()!=this.getClass()) return false;
+        return (this.period==((CycleDBInsertEntry) obj).getPeriod()&&
+                this.periodDMType==((CycleDBInsertEntry) obj).getPeriodDMType()&&
+                this.once_aPeriod==((CycleDBInsertEntry) obj).getOnce_aPeriod()&&
+                this.once_aPeriodDMType==((CycleDBInsertEntry) obj).getOnce_aPeriodDMType()&&
+                this.idCyclingType==((CycleDBInsertEntry) obj).getIdCyclingType()&&
+                this.dayCount==((CycleDBInsertEntry) obj).getDayCount()&&
+                this.dayInterval==((CycleDBInsertEntry) obj).getDayInterval()&&
+                this.idCycle==((CycleDBInsertEntry) obj).getIdCycle()&&
+                this.idWeekSchedule==((CycleDBInsertEntry) obj).getIdWeekSchedule());
+    }
 }

@@ -205,6 +205,13 @@ public class DatabaseAdapter {
 
     }
 
+    public int getCountOfPillReminderEntries(int idPillReminder){
+        long count = DatabaseUtils.queryNumEntries(database, "pill_reminder_entries", "_id_pill_reminder = ?",
+                new String[]{String.valueOf(idPillReminder)});
+
+        return (int)count;
+    }
+
     //***********************************work with PillReminder************************************************************
     public void insertPillReminderEntries(String reminder_date, Integer idPillReminder, String reminderTime){
         ContentValues pillReminderEntryTableValues = new ContentValues();

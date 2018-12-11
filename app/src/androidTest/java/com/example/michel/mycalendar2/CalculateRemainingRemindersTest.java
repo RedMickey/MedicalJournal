@@ -12,7 +12,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class calculateRemainingRemindersTest {
+public class CalculateRemainingRemindersTest {
     Calendar cal= Calendar.getInstance();
 
     List<PillReminderEntry> remainingReminders = new ArrayList<>(
