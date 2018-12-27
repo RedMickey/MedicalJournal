@@ -9,12 +9,15 @@ import android.support.v4.app.FragmentPagerAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TreatmentListAdapter extends FragmentPagerAdapter {
+public class TabListAdapter extends FragmentPagerAdapter {
     private final List<Fragment> fragmentList = new ArrayList<>();
-    private final String[] fragmentTitleArr = new String[] { "Медикаменты", "Измерения" };
+    //private final String[] fragmentTitleArr = new String[] { "Медикаменты", "Измерения" };
+    private final String[] fragmentTitleArr;
 
-    public TreatmentListAdapter(FragmentManager fm) {
+    public TabListAdapter(FragmentManager fm, final String[] fragmentTitleArr) {
+
         super(fm);
+        this.fragmentTitleArr = fragmentTitleArr;
     }
 
     @Override

@@ -485,6 +485,59 @@ public class DatabaseAdapter {
         return  pillReminderEntries;
     }
 
+    public List<PillReminderEntry> getPillReminderEntriesBetweenDates(DateData date1, DateData date2, int param){
+        ArrayList<PillReminderEntry> pillReminderEntries = new ArrayList<>();
+        Cursor cursor;
+        if (param==0){
+            String rawQuery = "select pre._id_pill_reminder_entry, pre.is_done, pr._id_having_meals_type, pre.reminder_time, pr.having_meals_time, pr.pill_count, pct.type_name, pre.reminder_date, pi.pill_name" +
+                    " from pill_reminder_entries pre inner join pill_reminders pr on pre._id_pill_reminder=pr._id_pill_reminder inner join pills pi on pi._id_pill=pr._id_pill inner join pill_count_types pct on" +
+                    " pr._id_pill_count_type=pct._id_pill_count_type where pre.reminder_date between ? and ? and (pr.IsActive=1 or pre.is_done=1) ORDER BY pre.reminder_date DESC, pre.reminder_time DESC";
+            cursor = database.rawQuery(rawQuery, new String[]{date1.getDateString(), date2.getDateString()});
+        }
+        else {
+            String rawQuery = "select pre._id_pill_reminder_entry, pre.is_done, pr._id_having_meals_type, pre.reminder_time, pr.having_meals_time, pr.pill_count, pct.type_name, pre.reminder_date, pi.pill_name" +
+                    " from pill_reminder_entries pre inner join pill_reminders pr on pre._id_pill_reminder=pr._id_pill_reminder inner join pills pi on pi._id_pill=pr._id_pill inner join pill_count_types pct on" +
+                    " pr._id_pill_count_type=pct._id_pill_count_type where pre.reminder_date <= ? and (pr.IsActive=1 or pre.is_done=1) ORDER BY pre.reminder_date DESC, pre.reminder_time DESC";
+            cursor = database.rawQuery(rawQuery, new String[]{date2.getDateString()});
+        }
+
+        Calendar calendar = Calendar.getInstance();
+
+        if(cursor.moveToFirst()){
+            do{
+                int id = cursor.getInt(cursor.getColumnIndex("_id_pill_reminder_entry"));
+                String pillName = cursor.getString(cursor.getColumnIndex("pill_name"));
+                int pillCount = cursor.getInt(cursor.getColumnIndex("pill_count"));
+                String pillCountType = cursor.getString(cursor.getColumnIndex("type_name"));
+                String dateStr = cursor.getString(cursor.getColumnIndex("reminder_date"));
+                String timeStr = cursor.getString(cursor.getColumnIndex("reminder_time"));
+                int havingMealsType = cursor.getInt(cursor.getColumnIndex("_id_having_meals_type"));
+                int havingMealsTimeStr = cursor.getInt(cursor.getColumnIndex("having_meals_time"));
+                int isDone = cursor.getInt(cursor.getColumnIndex("is_done"));
+
+                Date reminderDate;
+                Date havingMealsTime = new Date();
+                try {
+                    reminderDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(dateStr+" "+timeStr);
+                    havingMealsTime.setTime(reminderDate.getTime()+havingMealsTimeStr*60*1000);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    reminderDate = new Date();
+                }
+                Date f = reminderDate;
+                boolean isLate = false;
+                if (isDone==0)
+                    isLate = calendar.getTime().compareTo(reminderDate)>0?true:false;
+
+                pillReminderEntries.add(new PillReminderEntry(
+                        id, pillName, pillCount, pillCountType, reminderDate, havingMealsType, havingMealsTime, isDone, isLate));
+            }
+            while (cursor.moveToNext());
+        }
+        cursor.close();
+        return  pillReminderEntries;
+    }
+
     public void updateIsDonePillReminderEntry(int isDone, int pillReminderEntryID, String newTime){
         ContentValues pillReminderEntryTableValues = new ContentValues();
         pillReminderEntryTableValues.put("is_done", isDone);
@@ -787,6 +840,62 @@ public class DatabaseAdapter {
                 " inner join measurement_value_types mvt on mt._id_measur_value_type=mvt._id_measur_value_type where mre.reminder_date=? and (mr.IsActive=1 or mre.is_done=1) ORDER BY mre.is_done";
         Cursor cursor = database.rawQuery(rawQuery, new String[]{date.getDateString()});
         Calendar calendar = Calendar.getInstance();
+        if(cursor.moveToFirst()){
+            do{
+                int id = cursor.getInt(cursor.getColumnIndex("_id_measur_remind_entry"));
+                int idMeasurementType = cursor.getInt(cursor.getColumnIndex("_id_measurement_type"));
+                String measurementValueTypeName = cursor.getString(cursor.getColumnIndex("type_value_name"));
+                double value1 = cursor.getDouble(cursor.getColumnIndex("value1"));
+                double value2 = cursor.getDouble(cursor.getColumnIndex("value2"));
+                String dateStr = cursor.getString(cursor.getColumnIndex("reminder_date"));
+                String timeStr = cursor.getString(cursor.getColumnIndex("reminder_time"));
+                int havingMealsType = cursor.getInt(cursor.getColumnIndex("_id_having_meals_type"));
+                int havingMealsTimeStr = cursor.getInt(cursor.getColumnIndex("having_meals_time"));
+                int isDone = cursor.getInt(cursor.getColumnIndex("is_done"));
+                String measurementTypeName = cursor.getString(cursor.getColumnIndex("type_name"));
+
+                Date reminderDate;
+                Date havingMealsTime = new Date();
+                try {
+                    reminderDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(dateStr+" "+timeStr);
+                    havingMealsTime.setTime(reminderDate.getTime()+havingMealsTimeStr*60*1000);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    reminderDate = new Date();
+                }
+                Date f = reminderDate;
+                boolean isLate = false;
+                if (isDone==0)
+                    isLate = calendar.getTime().compareTo(reminderDate)>0?true:false;
+
+                measurementReminderEntry.add(new MeasurementReminderEntry(
+                        id, havingMealsType, idMeasurementType, measurementValueTypeName,
+                        reminderDate, havingMealsTime, isDone, isLate, value1, value2, measurementTypeName));
+            }
+            while (cursor.moveToNext());
+        }
+        cursor.close();
+        return measurementReminderEntry;
+    }
+
+    public List<MeasurementReminderEntry> getMeasurementReminderEntriesBetweenDates(DateData date1, DateData date2, int param){
+        ArrayList<MeasurementReminderEntry> measurementReminderEntry = new ArrayList<>();
+        Cursor cursor;
+        if (param==0){
+            String rawQuery = "select mre._id_measur_remind_entry, mr._id_measurement_type, mvt.type_value_name, mt.type_name, mre.value1, mre.value2, mre.is_done, mr._id_having_meals_type, mre.reminder_time, mr.having_meals_time, mre.reminder_date" +
+                    " from measurement_reminder_entries mre inner join measurement_reminders mr on mre._id_measurement_reminder=mr._id_measurement_reminder inner join measurement_types mt on mr._id_measurement_type=mt._id_measurement_type" +
+                    " inner join measurement_value_types mvt on mt._id_measur_value_type=mvt._id_measur_value_type where mre.reminder_date between ? and ? and (mr.IsActive=1 or mre.is_done=1) ORDER BY mre.reminder_date DESC, mre.reminder_time DESC";
+            cursor = database.rawQuery(rawQuery, new String[]{date1.getDateString(), date2.getDateString()});
+        }
+        else {
+            String rawQuery = "select mre._id_measur_remind_entry, mr._id_measurement_type, mvt.type_value_name, mt.type_name, mre.value1, mre.value2, mre.is_done, mr._id_having_meals_type, mre.reminder_time, mr.having_meals_time, mre.reminder_date" +
+                    " from measurement_reminder_entries mre inner join measurement_reminders mr on mre._id_measurement_reminder=mr._id_measurement_reminder inner join measurement_types mt on mr._id_measurement_type=mt._id_measurement_type" +
+                    " inner join measurement_value_types mvt on mt._id_measur_value_type=mvt._id_measur_value_type where mre.reminder_date <= ? and (mr.IsActive=1 or mre.is_done=1) ORDER BY mre.reminder_date DESC, mre.reminder_time DESC";
+            cursor = database.rawQuery(rawQuery, new String[]{date2.getDateString()});
+        }
+
+        Calendar calendar = Calendar.getInstance();
+
         if(cursor.moveToFirst()){
             do{
                 int id = cursor.getInt(cursor.getColumnIndex("_id_measur_remind_entry"));

@@ -37,4 +37,11 @@
     </string-array>
     <string name="title_activity_add_measurement">AddMeasurementActivity</string>
 
+    <string-array name="time_intervals">
+        <item id="0">Последние 7 дней</item>
+        <item>Последние 30 дней</item>
+        <item>Последние 90 дней</item>
+        <item>Весь период</item>
+    </string-array>
+
 </resources>

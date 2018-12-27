@@ -1,4 +1,4 @@
-package com.example.michel.mycalendar2.activities;
+package com.example.michel.mycalendar2.main_fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,15 +11,14 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.LayoutAnimationController;
 import android.widget.AdapterView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.Toast;
 
+import com.example.michel.mycalendar2.activities.AddMeasurementActivity;
+import com.example.michel.mycalendar2.activities.AddTreatmentActivity;
+import com.example.michel.mycalendar2.activities.R;
 import com.example.michel.mycalendar2.adapters.MeasurementTypesListAdapter;
-import com.example.michel.mycalendar2.adapters.TreatmentListAdapter;
+import com.example.michel.mycalendar2.adapters.TabListAdapter;
 import com.example.michel.mycalendar2.auxiliary_fragments.ReminderListFragment;
 import com.example.michel.mycalendar2.utils.DBStaticEntries;
 import com.example.michel.mycalendar2.utils.utilModels.MeasurementType;
@@ -84,7 +83,8 @@ public class ReminderFragment extends Fragment {
 
         viewPager = (ViewPager) view.findViewById(R.id.medicines_measurements_viewpager);
         tabLayout = (TabLayout) view.findViewById(R.id.medicines_measurements_tabs);
-        TreatmentListAdapter adapter = new TreatmentListAdapter(getChildFragmentManager());
+        TabListAdapter adapter = new TabListAdapter(getChildFragmentManager(),
+                new String[] { "Медикаменты", "Измерения" });
         adapter.addFragment(ReminderListFragment.newInstance(0));
         adapter.addFragment(ReminderListFragment.newInstance(1));
         viewPager.setAdapter(adapter);

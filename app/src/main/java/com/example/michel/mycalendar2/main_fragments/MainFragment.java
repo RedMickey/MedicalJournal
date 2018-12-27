@@ -1,6 +1,5 @@
-package com.example.michel.mycalendar2.activities;
+package com.example.michel.mycalendar2.main_fragments;
 
-import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -10,7 +9,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,6 +18,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.example.michel.mycalendar2.activities.AddTreatmentActivity;
+import com.example.michel.mycalendar2.activities.R;
 import com.example.michel.mycalendar2.calendarview.CellConfig;
 import com.example.michel.mycalendar2.calendarview.adapters.CalendarViewExpAdapter;
 import com.example.michel.mycalendar2.calendarview.adapters.DayAdapter;
@@ -32,15 +32,10 @@ import com.example.michel.mycalendar2.calendarview.utils.CalendarUtil;
 import com.example.michel.mycalendar2.calendarview.views.ExpCalendarView;
 import com.example.michel.mycalendar2.calendarview.views.MonthExpFragment;
 import com.example.michel.mycalendar2.calendarview.views.WeekDayViewPager;
-import com.example.michel.mycalendar2.models.pill.PillReminderEntry;
 import com.example.michel.mycalendar2.services.AlarmService;
-import com.example.michel.mycalendar2.utils.AlarmReceiver;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.util.Calendar;
-import java.util.Date;
-
-import static android.content.Context.ALARM_SERVICE;
 
 public class MainFragment extends Fragment{
 
