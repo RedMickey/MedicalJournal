@@ -93,7 +93,7 @@
             android:layout_height="wrap_content"
             android:textSize="17dp"
             android:textColor="#000"
-            android:text="Осталось приёмов: "
+            android:text="Осталось измерений: "
             />
 
         <TextView
@@ -106,6 +106,5 @@
             />
 
     </LinearLayout>
-
 
 </LinearLayout>

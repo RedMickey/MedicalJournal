@@ -16,10 +16,12 @@ import com.example.michel.mycalendar2.models.CycleDBInsertEntry;
 import com.example.michel.mycalendar2.models.measurement.MeasurementReminder;
 import com.example.michel.mycalendar2.models.measurement.MeasurementReminderDBEntry;
 import com.example.michel.mycalendar2.models.measurement.MeasurementReminderEntry;
+import com.example.michel.mycalendar2.models.measurement.MeasurementStatEntry;
 import com.example.michel.mycalendar2.models.pill.PillReminder;
 import com.example.michel.mycalendar2.models.pill.PillReminderDBInsertEntry;
 import com.example.michel.mycalendar2.models.pill.PillReminderEntry;
 import com.example.michel.mycalendar2.models.ReminderTime;
+import com.example.michel.mycalendar2.utils.DBStaticEntries;
 import com.example.michel.mycalendar2.utils.utilModels.MeasurementType;
 
 import java.text.ParseException;
@@ -111,31 +113,39 @@ public class DatabaseAdapter {
 
     public List<MeasurementType> getMeasurementTypes(){
         List<MeasurementType> measurementTypes = new ArrayList<>();
-        /*
-        Cursor cursor = database.rawQuery("select mt._id_measurement_type, mt.type_name, mt._id_measur_value_type, mvt.type_value_name from measurement_types mt " +
-                        " inner join measurement_value_types mvt on mt._id_measur_value_type=mvt._id_measur_value_type", null);
+
+        Cursor cursor = database.rawQuery("select mt._id_measurement_type, mt.type_name, mt._id_measur_value_type, mvt.type_value_name, mt.standard_min_value, " +
+                        " mt.standard_max_value " +
+                        " from measurement_types mt inner join measurement_value_types mvt on mt._id_measur_value_type=mvt._id_measur_value_type", null);
         if(cursor.moveToFirst()){
             do{
+                double[] standardValues = new double[2];
                 int id = cursor.getInt(cursor.getColumnIndex("_id_measurement_type"));
                 String typeName = cursor.getString(cursor.getColumnIndex("type_name"));
                 int idMeasurementValueType = cursor.getInt(cursor.getColumnIndex("_id_measur_value_type"));
                 String typeValueName = cursor.getString(cursor.getColumnIndex("type_value_name"));
-                measurementTypes.add(new MeasurementType(id, typeName, idMeasurementValueType, typeValueName));
+                standardValues[0] = cursor.getDouble(cursor.getColumnIndex("standard_min_value"));
+                standardValues[1] = cursor.getDouble(cursor.getColumnIndex("standard_max_value"));
+                measurementTypes.add(new MeasurementType(id, typeName, idMeasurementValueType, typeValueName, standardValues));
             }
             while (cursor.moveToNext());
         }
-         */
 
-        Cursor cursor = database.rawQuery("select * from measurement_types", null);
+        /*Cursor cursor = database.rawQuery("select * from measurement_types", null);
         if(cursor.moveToFirst()){
             do{
+                double[] standardValues = new double[4];
                 int id = cursor.getInt(cursor.getColumnIndex("_id_measurement_type"));
                 String typeName = cursor.getString(cursor.getColumnIndex("type_name"));
                 int idMeasurementValueType = cursor.getInt(cursor.getColumnIndex("_id_measur_value_type"));
-                measurementTypes.add(new MeasurementType(id, typeName, idMeasurementValueType));
+                standardValues[0] = cursor.getDouble(cursor.getColumnIndex("standard_min_value1"));
+                standardValues[1] = cursor.getDouble(cursor.getColumnIndex("standard_max_value1"));
+                standardValues[2] = cursor.getDouble(cursor.getColumnIndex("standard_min_value2"));
+                standardValues[3] = cursor.getDouble(cursor.getColumnIndex("standard_max_value2"));
+                measurementTypes.add(new MeasurementType(id, typeName, idMeasurementValueType, standardValues));
             }
             while (cursor.moveToNext());
-        }
+        }*/
         cursor.close();
         return measurementTypes;
     }
@@ -729,6 +739,110 @@ public class DatabaseAdapter {
 
         cursor.close();
         return measurementReminders;
+    }
+
+    public List<MeasurementStatEntry> getAllMeasurementStatEntries(int limit){
+        List<MeasurementStatEntry> measurementStatEntries = new ArrayList<MeasurementStatEntry>();
+        Cursor cursor;
+        if (limit!=-1) {
+            String rawQuery = "select mr.start_date, mr.isActive, cl.period, mr.times_a_day, mr._id_measurement_type, mr._id_having_meals_type, cl.period_DM_type, mr._id_measurement_reminder, mt._id_measur_value_type," +
+                    " COUNT(sub.id) as count_done, SUM(sub.value1) as sum_value1, SUM(sub.value2) as sum_value2" +
+                    " from measurement_reminders mr inner join cycles cl on mr._id_cycle=cl._id_cycle inner join measurement_types mt on mr._id_measurement_type=mt._id_measurement_type" +
+                    " join (" +
+                    "    select" +
+                    "        mre._id_measurement_reminder as id," +
+                    "        mre.value1," +
+                    "        mre.value2" +
+                    "    from measurement_reminder_entries mre where mre.is_done=1" +
+                    " ) sub on sub.id=mr._id_measurement_reminder GROUP BY mr._id_measurement_reminder ORDER BY mr.start_date DESC LIMIT ?";
+            cursor = database.rawQuery(rawQuery, new String[]{String.valueOf(limit)});
+        }
+        else {
+            String rawQuery = "select mr.start_date, mr.isActive, cl.period, mr.times_a_day, mr._id_measurement_type, mr._id_having_meals_type, cl.period_DM_type, mr._id_measurement_reminder, mt._id_measur_value_type," +
+                    " COUNT(sub.id) as count_done, SUM(sub.value1) as sum_value1, SUM(sub.value2) as sum_value2" +
+                    " from measurement_reminders mr inner join cycles cl on mr._id_cycle=cl._id_cycle inner join measurement_types mt on mr._id_measurement_type=mt._id_measurement_type" +
+                    " join (" +
+                    "    select" +
+                    "        mre._id_measurement_reminder as id," +
+                    "        mre.value1," +
+                    "        mre.value2" +
+                    "    from measurement_reminder_entries mre where mre.is_done=1" +
+                    " ) sub on sub.id=mr._id_measurement_reminder GROUP BY mr._id_measurement_reminder ORDER BY mr.start_date DESC";
+            cursor = database.rawQuery(rawQuery, null);
+        }
+        if(cursor.moveToFirst()){
+            do{
+                Calendar calendar = Calendar.getInstance();
+
+                String startDateStr = cursor.getString(0);
+                int isActive = cursor.getInt(1);
+                int period = cursor.getInt(2);
+                int times_aDay = cursor.getInt(3);
+                int idMeasurementType = cursor.getInt(4);
+                int havingMealsType = cursor.getInt(5);
+                int periodDM_Type = cursor.getInt(6);
+                int id = cursor.getInt(7);
+                int idMeasurementValueType = cursor.getInt(8);
+                int countDone = cursor.getInt(9);
+                double sumValue1 = cursor.getDouble(10);
+                double sumValue2 = cursor.getDouble(11);
+
+                /*int id = cursor.getInt(cursor.getColumnIndex("_id_measurement_reminder"));
+                String startDateStr = cursor.getString(cursor.getColumnIndex("start_date"));
+                int havingMealsType = cursor.getInt(cursor.getColumnIndex("_id_having_meals_type"));
+                int period = cursor.getInt(cursor.getColumnIndex("period"));
+                int isActive = cursor.getInt(cursor.getColumnIndex("isActive"));
+                int countDone = cursor.getInt(cursor.getColumnIndex("count_done"));
+                int times_aDay = cursor.getInt(cursor.getColumnIndex("times_a_day"));
+                int periodDM_Type = cursor.getInt(cursor.getColumnIndex("period_DM_type"));
+                int idMeasurementType = cursor.getInt(cursor.getColumnIndex("_id_measurement_type"));
+                int idMeasurementValueType = cursor.getInt(cursor.getColumnIndex("_id_measur_value_type"));
+                double sumValue1 = cursor.getDouble(cursor.getColumnIndex("sum_value1"));
+                double sumValue2 = cursor.getDouble(cursor.getColumnIndex("sum_value2"));*/
+
+                double[] averageCurValues = new double[2];
+                averageCurValues[0] = sumValue1>-10000?(double)(sumValue1/countDone):-10000;
+                averageCurValues[1] = sumValue2>-10000?(double)(sumValue2/countDone):-10000;
+
+                Date startDate;
+                SimpleDateFormat dateFormatOld = new SimpleDateFormat("yyyy-MM-dd");
+                SimpleDateFormat dateFormatNew = new SimpleDateFormat("dd.MM.yyyy");
+                try {
+                    startDate = dateFormatOld.parse(startDateStr);
+                    startDateStr = dateFormatNew.format(startDate);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    startDate = new Date();
+                }
+                String endDateStr = "0";
+                calendar.setTime(startDate);
+                switch (periodDM_Type){
+                    case 1:
+                        calendar.add(Calendar.DATE, period);
+                        break;
+                    case 2:
+                        calendar.add(Calendar.DATE, period*7);
+                        break;
+                    case 3:
+                        calendar.add(Calendar.DATE, period*30);
+                        break;
+                }
+                endDateStr = dateFormatNew.format(calendar.getTime());
+
+                MeasurementType measurementType = DBStaticEntries.getMeasurementTypeById(idMeasurementType);
+                double[] standardValues = measurementType.getStandardValues();
+                String measurementValueTypeStr = measurementType.getMeasurementValueTypeName();
+
+                measurementStatEntries.add(new MeasurementStatEntry(id, idMeasurementType, havingMealsType,
+                        isActive, times_aDay, startDateStr, endDateStr, countDone, idMeasurementValueType,
+                        averageCurValues, standardValues, measurementValueTypeStr));
+
+            }
+            while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        return measurementStatEntries;
     }
 
     public void insertMeasurementReminderEntries(String reminder_date, Integer idMeasurementReminder, String reminderTime){

@@ -23,8 +23,6 @@ public class HistoryFragment extends Fragment {
     public static HistoryFragment newInstance() {
         return new HistoryFragment();
     }
-    private TabLayout tabLayout;
-    private ViewPager viewPager;
     private View mView;
     private Spinner toolbarSpinner;
 
@@ -33,7 +31,7 @@ public class HistoryFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mView = getView();
         mView=inflater.inflate(R.layout.history_fragment, container, false);
-        toolbarSpinner = (Spinner)getActivity().findViewById(R.id.toolbar_spinner);
+        toolbarSpinner = (Spinner)getActivity().findViewById(R.id.toolbar_time_intervals_spinner);
         toolbarSpinner.setSelection(0);
         Calendar cal = Calendar.getInstance();
 

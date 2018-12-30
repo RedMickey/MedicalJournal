@@ -9,9 +9,9 @@
             android:icon="@drawable/ic_pill_100"
             android:title="Медикаменты" />
         <item
-            android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="Gallery" />
+            android:id="@+id/nav_statistic"
+            android:icon="@drawable/ic_chart"
+            android:title="Статистика измерений" />
         <item
             android:id="@+id/nav_history"
             android:icon="@drawable/ic_history"

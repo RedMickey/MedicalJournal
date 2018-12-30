@@ -23,7 +23,18 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/action/ic_history_black_24dp.xml" />
+                                                <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/image/ic_tune_black_24dp.xml" />
+                                              </map>
+                                            </option>
+                                          </PersistentState>
+                                        </value>
+                                      </entry>
+                                      <entry key="image">
+                                        <value>
+                                          <PersistentState>
+                                            <option name="values">
+                                              <map>
+                                                <entry key="paddingPercent" value="-10" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -33,8 +44,9 @@
                                   </option>
                                   <option name="values">
                                     <map>
-                                      <entry key="outputName" value="ic_history_light" />
-                                      <entry key="theme" value="CUSTOM" />
+                                      <entry key="imageAsset" value="E:\Downloads\icon_chart_48.png" />
+                                      <entry key="outputName" value="ic_tune" />
+                                      <entry key="theme" value="HOLO_DARK" />
                                       <entry key="themeColor" value="ffffff" />
                                     </map>
                                   </option>

@@ -28,6 +28,7 @@ import com.example.michel.mycalendar2.calendarview.utils.DatabaseHelper;
 import com.example.michel.mycalendar2.main_fragments.HistoryFragment;
 import com.example.michel.mycalendar2.main_fragments.MainFragment;
 import com.example.michel.mycalendar2.main_fragments.ReminderFragment;
+import com.example.michel.mycalendar2.main_fragments.StatisticListFragment;
 import com.example.michel.mycalendar2.utils.DBStaticEntries;
 
 import java.text.SimpleDateFormat;
@@ -36,8 +37,8 @@ import java.util.Calendar;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private AppBarLayout appBarLayout;
-    private Spinner toolbarSpinner;
-    private LinearLayout toolbarLinearLayout;
+    private LinearLayout toolbarLinearLayout1;
+    private LinearLayout toolbarLinearLayout2;
     private int preFragmentId = -1;
 
     private DatabaseHelper databaseHelper;
@@ -60,8 +61,8 @@ public class MainActivity extends AppCompatActivity
                 .add(R.id.frame_container, mainFragment, "MAIN_FRAGMENT")
                 .commit();
 
-        toolbarSpinner = (Spinner)findViewById(R.id.toolbar_spinner);
-        toolbarLinearLayout = (LinearLayout)findViewById(R.id.toolbar_linear_layout);
+        toolbarLinearLayout1 = (LinearLayout)findViewById(R.id.toolbar_linear_layout1);
+        toolbarLinearLayout2 = (LinearLayout)findViewById(R.id.toolbar_linear_layout2);
         appBarLayout = findViewById(R.id.app_bar);
         appBarLayout.setExpanded(false);
 
@@ -127,7 +128,7 @@ public class MainActivity extends AppCompatActivity
             Fragment mainFragment = (MainFragment)getSupportFragmentManager().findFragmentByTag("MAIN_FRAGMENT");
             if (mainFragment == null || !mainFragment.isVisible()) {
                 preFragmentId = -1;
-                checkToolBarLinearLayoutVisibility();
+                checkToolBarLinearLayoutVisibility(0);
                 MainFragment mainFragmentNew = MainFragment.newInstance();
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 fragmentManager.beginTransaction()
@@ -174,20 +175,19 @@ public class MainActivity extends AppCompatActivity
             switch (id) {
                 case R.id.nav_medicines:
                     newFragment = ReminderFragment.newInstance();
-                    checkToolBarLinearLayoutVisibility();
+                    checkToolBarLinearLayoutVisibility(0);
                     break;
                 case R.id.nav_history:
                     newFragment = HistoryFragment.newInstance();
-                    CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
-                    AppBarLayout.Behavior appBarLayoutBehaviour = new AppBarLayout.Behavior();
-                    appBarLayoutBehaviour.setDragCallback(new AppBarLayout.Behavior.DragCallback() {
-                        @Override
-                        public boolean canDrag(@NonNull AppBarLayout appBarLayout) {
-                            return true;
-                        }
-                    });
-                    layoutParams.setBehavior(appBarLayoutBehaviour);
-                    toolbarLinearLayout.setVisibility(View.VISIBLE);
+                    activeAppBarLayoutDragCallback();
+                    checkToolBarLinearLayoutVisibility(1);
+                    toolbarLinearLayout1.setVisibility(View.VISIBLE);
+                    break;
+                case R.id.nav_statistic:
+                    newFragment = StatisticListFragment.newInstance();
+                    activeAppBarLayoutDragCallback();
+                    checkToolBarLinearLayoutVisibility(1);
+                    toolbarLinearLayout2.setVisibility(View.VISIBLE);
                     break;
                 default:
                     //intent = new Intent(this, AddTreatmentActivity.class);
@@ -213,19 +213,44 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    private void checkToolBarLinearLayoutVisibility(){
-        if (toolbarLinearLayout.getVisibility()!=View.GONE){
-            appBarLayout.setExpanded(false);
-            CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
-            AppBarLayout.Behavior appBarLayoutBehaviour = new AppBarLayout.Behavior();
-            appBarLayoutBehaviour.setDragCallback(new AppBarLayout.Behavior.DragCallback() {
-                @Override
-                public boolean canDrag(@NonNull AppBarLayout appBarLayout) {
-                    return false;
+    private void activeAppBarLayoutDragCallback(){
+        CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
+        AppBarLayout.Behavior appBarLayoutBehaviour = new AppBarLayout.Behavior();
+        appBarLayoutBehaviour.setDragCallback(new AppBarLayout.Behavior.DragCallback() {
+            @Override
+            public boolean canDrag(@NonNull AppBarLayout appBarLayout) {
+                return true;
+            }
+        });
+        layoutParams.setBehavior(appBarLayoutBehaviour);
+    }
+
+    private void checkToolBarLinearLayoutVisibility(int param){
+        switch (param){
+            case 0:
+                if (toolbarLinearLayout1.getVisibility()!=View.GONE||toolbarLinearLayout2.getVisibility()!=View.GONE){
+                    appBarLayout.setExpanded(false);
+                    CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
+                    AppBarLayout.Behavior appBarLayoutBehaviour = new AppBarLayout.Behavior();
+                    appBarLayoutBehaviour.setDragCallback(new AppBarLayout.Behavior.DragCallback() {
+                        @Override
+                        public boolean canDrag(@NonNull AppBarLayout appBarLayout) {
+                            return false;
+                        }
+                    });
+                    layoutParams.setBehavior(appBarLayoutBehaviour);
+                    toolbarLinearLayout1.setVisibility(View.GONE);
+                    toolbarLinearLayout2.setVisibility(View.GONE);
                 }
-            });
-            layoutParams.setBehavior(appBarLayoutBehaviour);
-            toolbarLinearLayout.setVisibility(View.GONE);
+                break;
+            case 1:
+                if (toolbarLinearLayout1.getVisibility()!=View.GONE){
+                    toolbarLinearLayout1.setVisibility(View.GONE);
+                }
+                if (toolbarLinearLayout2.getVisibility()!=View.GONE){
+                    toolbarLinearLayout2.setVisibility(View.GONE);
+                }
+                break;
         }
     }
 

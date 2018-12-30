@@ -60,7 +60,8 @@ public class TasksViewCreationTask extends AsyncTask<DateData, Void, PillAndMeas
         if(pillReminderEntries.size()>0)
         {
             calendar2.setTime(pillReminderEntries.get(0).getDate());
-            boolean isToday = calendar2.get(Calendar.DAY_OF_YEAR)<=calendar1.get(Calendar.DAY_OF_YEAR);
+            boolean isToday = calendar2.get(Calendar.DAY_OF_YEAR)<=calendar1.get(Calendar.DAY_OF_YEAR)&&
+                                            calendar2.get(Calendar.YEAR)<=calendar1.get(Calendar.YEAR);
             for (final PillReminderEntry pre:pillReminderEntries) {
                 View pillReminderEntryView = inflater.inflate(R.layout.pill_reminder_entry, null, false);
                 ((TextView) pillReminderEntryView.findViewById(R.id.reminder_name_tv)).setText(pre.getPillName());
@@ -117,7 +118,8 @@ public class TasksViewCreationTask extends AsyncTask<DateData, Void, PillAndMeas
         if(measurementReminderEntries.size()>0)
         {
             calendar2.setTime(measurementReminderEntries.get(0).getDate());
-            boolean isToday = calendar2.get(Calendar.DAY_OF_YEAR)<=calendar1.get(Calendar.DAY_OF_YEAR);
+            boolean isToday = calendar2.get(Calendar.DAY_OF_YEAR)<=calendar1.get(Calendar.DAY_OF_YEAR)&&
+                                            calendar2.get(Calendar.YEAR)<=calendar1.get(Calendar.YEAR);
             for (final MeasurementReminderEntry mre:measurementReminderEntries) {
                 View measurementReminderEntryView = inflater.inflate(R.layout.pill_reminder_entry, null, false);
                 measurementReminderEntryView.setBackgroundColor(mView.getResources().getColor(R.color.meas_remind_ent_bg));

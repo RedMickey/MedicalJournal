@@ -4,13 +4,15 @@ public class MeasurementType {
     private int index;
     private String name;
     private int idMeasurementValueType;
-    //private String measurementValueTypeName;
+    private double[] standardValues;
+    private String measurementValueTypeName;
 
-    public MeasurementType(int index, String name, int idMeasurementValueType){
+    public MeasurementType(int index, String name, int idMeasurementValueType, String measurementValueTypeName, double[] standardValues){
         this.index = index;
         this.name = name;
         this.idMeasurementValueType = idMeasurementValueType;
-        //this.measurementValueTypeName = measurementValueTypeName;
+        this.standardValues = standardValues;
+        this.measurementValueTypeName = measurementValueTypeName;
     }
 
     public int getIndex() {
@@ -36,7 +38,15 @@ public class MeasurementType {
     public void setIdMeasurementValueType(int idMeasurementValueType) {
         this.idMeasurementValueType = idMeasurementValueType;
     }
-    /*
+
+    public double[] getStandardValues() {
+        return standardValues;
+    }
+
+    public void setStandardValues(double[] standardValues) {
+        this.standardValues = standardValues;
+    }
+
     public String getMeasurementValueTypeName() {
         return measurementValueTypeName;
     }
@@ -44,5 +54,4 @@ public class MeasurementType {
     public void setMeasurementValueTypeName(String measurementValueTypeName) {
         this.measurementValueTypeName = measurementValueTypeName;
     }
-    */
 }

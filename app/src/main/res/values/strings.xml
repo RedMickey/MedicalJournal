@@ -44,4 +44,11 @@
         <item>Весь период</item>
     </string-array>
 
+    <string-array name="quantity_intervals">
+        <item id="0">10 записей</item>
+        <item>30 записей</item>
+        <item>90 записей</item>
+        <item>Все записи</item>
+    </string-array>
+
 </resources>

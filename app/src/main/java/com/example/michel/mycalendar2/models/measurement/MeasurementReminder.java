@@ -4,8 +4,8 @@ import com.example.michel.mycalendar2.models.ItemReminderModel;
 import com.example.michel.mycalendar2.models.ReminderModel;
 
 public class MeasurementReminder extends ItemReminderModel {
-    private int idMeasurementType;
-    private int idMeasurementValueType;
+    protected int idMeasurementType;
+    protected int idMeasurementValueType;
 
     public MeasurementReminder(int id, int idMeasurementType, int havingMealsType,
                                int isActive, int numberOfDoingAction, String startDate,

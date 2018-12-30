@@ -7,13 +7,14 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     android:id="@+id/history_nested_scroll_view">
 
-    <LinearLayout
+    <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="6dp"
         android:orientation="vertical"
-        android:id="@+id/history_linear_layout">
+        android:scrollbars="none"
+        android:id="@+id/statistic_recycle_view"
+        android:background="#ECEFF1">
 
-    </LinearLayout>
+    </android.support.v7.widget.RecyclerView>
 
 </android.support.v4.widget.NestedScrollView>
