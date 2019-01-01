@@ -27,9 +27,9 @@
             android:label="@string/title_activity_add_treatment"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar2" />
-        <activity android:name=".AlarmActivity"
-            android:screenOrientation="portrait"
-            />
+        <activity
+            android:name=".AlarmActivity"
+            android:screenOrientation="portrait" />
 
         <service
             android:name="com.example.michel.mycalendar2.services.AlarmService"
@@ -37,9 +37,9 @@
 
         <receiver android:name="com.example.michel.mycalendar2.utils.AlarmReceiver">
             android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
-
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>
@@ -48,7 +48,11 @@
             android:name=".AddMeasurementActivity"
             android:label="@string/title_activity_add_measurement"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar2"></activity>
+            android:theme="@style/AppTheme.NoActionBar2" />
+        <activity
+            android:name=".MeasurementChartActivity"
+            android:screenOrientation="portrait"
+             />
     </application>
 
 </manifest>

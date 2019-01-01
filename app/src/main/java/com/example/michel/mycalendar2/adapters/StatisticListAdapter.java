@@ -1,6 +1,7 @@
 package com.example.michel.mycalendar2.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
@@ -11,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.michel.mycalendar2.activities.MeasurementChartActivity;
 import com.example.michel.mycalendar2.activities.R;
 import com.example.michel.mycalendar2.auxiliary_fragments.StatisticListItemViewHolder;
 import com.example.michel.mycalendar2.models.measurement.MeasurementReminder;
@@ -37,7 +39,7 @@ public class StatisticListAdapter extends RecyclerView.Adapter<StatisticListItem
 
     @Override
     public void onBindViewHolder(@NonNull StatisticListItemViewHolder holder, int position) {
-        MeasurementStatEntry mse = measurementStatEntries.get(position);
+        final MeasurementStatEntry mse = measurementStatEntries.get(position);
 
         if (mse.getIsActive()==1){
             holder.activeIndTv.setText("Активен");
@@ -102,6 +104,17 @@ public class StatisticListAdapter extends RecyclerView.Adapter<StatisticListItem
 
         holder.standardValueTv.setText(standardValueStr);
         holder.currentValueTv.setText(curValueStr);
+
+        holder.moreInfoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, MeasurementChartActivity.class);
+                intent.putExtra("id", mse.getId());
+                intent.putExtra("startDateStr", mse.getStartDate());
+                intent.putExtra("endDateStr", mse.getEndDate());
+                context.startActivity(intent);
+            }
+        });
 
         if (position+1 == measurementStatEntries.size()){
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
