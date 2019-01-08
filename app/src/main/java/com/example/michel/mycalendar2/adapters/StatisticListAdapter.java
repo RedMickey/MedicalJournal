@@ -3,19 +3,15 @@ package com.example.michel.mycalendar2.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.example.michel.mycalendar2.activities.MeasurementChartActivity;
 import com.example.michel.mycalendar2.activities.R;
 import com.example.michel.mycalendar2.auxiliary_fragments.StatisticListItemViewHolder;
-import com.example.michel.mycalendar2.models.measurement.MeasurementReminder;
 import com.example.michel.mycalendar2.models.measurement.MeasurementStatEntry;
 import com.example.michel.mycalendar2.utils.DBStaticEntries;
 
@@ -72,17 +68,17 @@ public class StatisticListAdapter extends RecyclerView.Adapter<StatisticListItem
                 holder.measurementIvRmi.setImageResource(R.drawable.ic_tonometer);
 
                 if (mse.getAverageCurValues()[0]!=-10000){
-                    curValueStr+="Нижнее: " + String.valueOf(mse.getAverageCurValues()[0]) + " " + mse.getMeasurementValueTypeStr();
+                    curValueStr+="Нижнее: " + String.format("%.1f", mse.getAverageCurValues()[0]) + " " + mse.getMeasurementValueTypeStr();
                 }
                 if (mse.getAverageCurValues()[1]!=-10000){
-                    curValueStr+="\n Верхнее: " + String.valueOf(mse.getAverageCurValues()[1]) + " " + mse.getMeasurementValueTypeStr();
+                    curValueStr+="\n Верхнее: " + String.format("%.1f", mse.getAverageCurValues()[1]) + " " + mse.getMeasurementValueTypeStr();
                 }
 
                 if (mse.getStandardValues()[0]!=-10000){
-                    standardValueStr+="Нижнее: " + String.valueOf(mse.getStandardValues()[0]) + " " + mse.getMeasurementValueTypeStr();
+                    standardValueStr+="Нижнее: " + String.format("%.1f", mse.getStandardValues()[0]) + " " + mse.getMeasurementValueTypeStr();
                 }
                 if (mse.getStandardValues()[1]!=-10000){
-                    standardValueStr+="\n Верхнее: " + String.valueOf(mse.getStandardValues()[1]) + " " + mse.getMeasurementValueTypeStr();
+                    standardValueStr+="\n Верхнее: " + String.format("%.1f", mse.getStandardValues()[1]) + " " + mse.getMeasurementValueTypeStr();
                 }
                 break;
         }
@@ -109,9 +105,12 @@ public class StatisticListAdapter extends RecyclerView.Adapter<StatisticListItem
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, MeasurementChartActivity.class);
-                intent.putExtra("id", mse.getId());
+                /*intent.putExtra("id", mse.getId());
                 intent.putExtra("startDateStr", mse.getStartDate());
                 intent.putExtra("endDateStr", mse.getEndDate());
+                intent.putExtra("averageCurValues", mse.getAverageCurValues());
+                intent.putExtra("standardValues", mse.getStandardValues());*/
+                intent.putExtra("mse", mse);
                 context.startActivity(intent);
             }
         });
@@ -138,17 +137,17 @@ public class StatisticListAdapter extends RecyclerView.Adapter<StatisticListItem
         String[] curValueAndStandardValueStrs = new String[]{"", ""};
 
         if (mse.getAverageCurValues()[0]!=-10000){
-            curValueAndStandardValueStrs[0]+=String.valueOf(mse.getAverageCurValues()[0]) + " " + mse.getMeasurementValueTypeStr();
+            curValueAndStandardValueStrs[0]+=String.format("%.1f", mse.getAverageCurValues()[0]) + " " + mse.getMeasurementValueTypeStr();
         }
         if (mse.getAverageCurValues()[1]!=-10000){
-            curValueAndStandardValueStrs[0]+=" - " + String.valueOf(mse.getAverageCurValues()[1]) + " " + mse.getMeasurementValueTypeStr();
+            curValueAndStandardValueStrs[0]+=" - " + String.format("%.1f", mse.getAverageCurValues()[1]) + " " + mse.getMeasurementValueTypeStr();
         }
 
         if (mse.getStandardValues()[0]!=-10000){
-            curValueAndStandardValueStrs[1]+=String.valueOf(mse.getStandardValues()[0]) + " " + mse.getMeasurementValueTypeStr();
+            curValueAndStandardValueStrs[1]+=String.format("%.1f", mse.getStandardValues()[0]) + " " + mse.getMeasurementValueTypeStr();
         }
         if (mse.getStandardValues()[1]!=-10000){
-            curValueAndStandardValueStrs[1]+=" - " + String.valueOf(mse.getStandardValues()[1]) + " " + mse.getMeasurementValueTypeStr();
+            curValueAndStandardValueStrs[1]+=" - " + String.format("%.1f", mse.getStandardValues()[1]) + " " + mse.getMeasurementValueTypeStr();
         }
         return curValueAndStandardValueStrs;
     }

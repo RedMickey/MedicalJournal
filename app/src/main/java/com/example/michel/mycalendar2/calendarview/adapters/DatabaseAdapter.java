@@ -741,13 +741,14 @@ public class DatabaseAdapter {
         return measurementReminders;
     }
 
-    public List<float[]> getMeasurementReminderEntriesPerMonth(int idMeasurementReminder, String dateStr){
+    public List<float[]> getMeasurementReminderEntriesPerMonth(int idMeasurementReminder, int dateMonth){
         List<float[]> measurementReminderEntryValues = new ArrayList<float[]>();
         String rawQuery = "select mre._id_measur_remind_entry, mre.value1, mre.value2, mre.is_done, mre.reminder_time, mre.reminder_date" +
                 " from measurement_reminder_entries mre inner join measurement_reminders mr on mre._id_measurement_reminder=mr._id_measurement_reminder" +
                 " where mre._id_measurement_reminder = ? and mre.is_done = 1 and strftime('%m', mre.reminder_date) = ?";
 
-        String monthNumberStr = dateStr.split("\\.")[1];
+        //String monthNumberStr = dateStr.split("\\.")[1];
+        String monthNumberStr = String.valueOf(dateMonth);
         Cursor cursor = database.rawQuery(rawQuery, new String[]{String.valueOf(idMeasurementReminder), monthNumberStr});
         if(cursor.moveToFirst()){
             do{
@@ -756,7 +757,7 @@ public class DatabaseAdapter {
                 float value2 = cursor.getFloat(cursor.getColumnIndex("value2"));
                 String reminderDateStr = cursor.getString(cursor.getColumnIndex("reminder_date"));
 
-                float dayOfMonth = Float.valueOf(reminderDateStr.split("-")[1]);
+                float dayOfMonth = Float.valueOf(reminderDateStr.split("-")[2]);
                 float[] curMeasurementReminderEntryValuesArr = new float[]{
                         idMeasurRemindEntry, value1, value2, dayOfMonth
                 };

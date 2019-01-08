@@ -1,115 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:fitsSystemWindows="true"
+    android:id="@+id/activity_measurement_chart_layout"
     tools:context="com.example.michel.mycalendar2.activities.MeasurementChartActivity">
 
-    <ScrollView
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
+        app:expanded="false"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-        <LinearLayout
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/toolbar_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingVertical="5dp"
-            android:paddingHorizontal="10dp"
-            android:orientation="vertical">
+            android:layout_height="131dp"
+            android:fitsSystemWindows="true"
+            app:contentScrim="?attr/colorPrimary"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:titleEnabled="false"
+            app:toolbarId="@+id/toolbar">
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <ImageButton
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_gravity="bottom"
+                app:layout_collapseMode="parallax"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="5dp"
+                android:id="@+id/toolbar_linear_layout2"
+                >
+                <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_navigate_before"
-                    android:paddingHorizontal="0dp"
-                    android:layout_alignParentLeft="true"
-                    android:id="@+id/button_month_before"
-                    android:onClick="onButtonBeforeClick"/>
-                <ImageButton
-                    android:layout_width="wrap_content"
+                    android:src="@drawable/ic_tune"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="15dp"/>
+
+                <Spinner
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_navigate_next"
-                    android:paddingHorizontal="0dp"
-                    android:layout_alignParentRight="true"
-                    android:id="@+id/button_month_next"
-                    android:onClick="onButtonNextClick"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true"
-                    android:id="@+id/text_current_date"
-                    android:text="date date"
-                    android:textSize="18dp"
-                    android:textColor="#000"/>
-            </RelativeLayout>
-            <com.github.mikephil.charting.charts.LineChart
-                android:id="@+id/measurement_chart"
-                android:layout_width="match_parent"
-                android:layout_height="300dp" />
+                    android:id="@+id/toolbar_reminder_time_spinner"
+                    android:entries="@array/periods_of_day"
+                    style="@style/Base.Widget.AppCompat.Spinner.Underlined">
+                </Spinner>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@drawable/line_separator"
-                android:layout_marginVertical="3dp"
-                android:layout_marginHorizontal="10dp"
-                />
+            </LinearLayout>
 
-            <TextView
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Текущее среднее значение"
-                android:inputType="textMultiLine"
-                android:textSize="17dp"
-                android:textColor="#000"
-                android:background="?android:colorBackground"
-                android:textAlignment="center"
-                />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="ваыва"
-                android:inputType="textMultiLine"
-                android:textSize="17dp"
-                android:textColor="#000"
-                android:background="?android:colorBackground"
-                android:textAlignment="center"
-                android:id="@+id/current_value_tv"
-                />
+                android:layout_height="?attr/actionBarSize"
+                android:layout_gravity="top"
+                app:layout_collapseMode="pin"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@drawable/line_separator"
-                android:layout_marginVertical="3dp"
-                android:layout_marginHorizontal="10dp"
-                />
+        </android.support.design.widget.CollapsingToolbarLayout>
+    </android.support.design.widget.AppBarLayout>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Нормативное значение"
-                android:textSize="17dp"
-                android:textColor="#000"
-                android:background="?android:colorBackground"
-                android:textAlignment="center"
-                />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="dgdgd"
-                android:textSize="17dp"
-                android:textColor="#000"
-                android:background="?android:colorBackground"
-                android:id="@+id/standard_value_tv"
-                android:textAlignment="center"
-                />
-        </LinearLayout>
-    </ScrollView>
+    <include layout="@layout/content_measurement_chart"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
-</LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

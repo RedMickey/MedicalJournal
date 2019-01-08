@@ -1,6 +1,9 @@
 package com.example.michel.mycalendar2.models.measurement;
 
-public class MeasurementStatEntry extends MeasurementReminder {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class MeasurementStatEntry extends MeasurementReminder implements Parcelable {
     private double[] averageCurValues;
     private double[] standardValues;
     private String measurementValueTypeStr;
@@ -38,4 +41,44 @@ public class MeasurementStatEntry extends MeasurementReminder {
     public void setMeasurementValueTypeStr(String measurementValueTypeStr) {
         this.measurementValueTypeStr = measurementValueTypeStr;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeInt(id);
+        parcel.writeInt(idMeasurementType);
+        parcel.writeInt(havingMealsType);
+        parcel.writeInt(isActive);
+        parcel.writeInt(numberOfDoingAction);
+        parcel.writeString(startDate);
+        parcel.writeString(endDate);
+        parcel.writeInt(numberOfDoingActionLeft);
+        parcel.writeInt(idMeasurementValueType);
+        parcel.writeDoubleArray(averageCurValues);
+        parcel.writeDoubleArray(standardValues);
+        parcel.writeString(measurementValueTypeStr);
+    }
+
+    public MeasurementStatEntry(Parcel in) {
+        super(in.readInt(), in.readInt(), in.readInt(), in.readInt(), in.readInt(), in.readString(), in.readString(), in.readInt(), in.readInt());
+        averageCurValues = in.createDoubleArray();
+        standardValues = in.createDoubleArray();
+        measurementValueTypeStr = in.readString();
+    }
+
+    public static final Creator<MeasurementStatEntry> CREATOR = new Creator<MeasurementStatEntry>() {
+        @Override
+        public MeasurementStatEntry createFromParcel(Parcel in) {
+            return new MeasurementStatEntry(in);
+        }
+
+        @Override
+        public MeasurementStatEntry[] newArray(int size) {
+            return new MeasurementStatEntry[size];
+        }
+    };
 }

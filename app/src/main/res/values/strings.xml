@@ -50,5 +50,14 @@
         <item>90 записей</item>
         <item>Все записи</item>
     </string-array>
+    <string name="title_activity_measurement_chart">MeasurementChartActivity</string>
+
+    <string-array name="periods_of_day">
+        <item id="0">Утро</item>
+        <item>День</item>
+        <item>Вечер</item>
+        <item>Ночь</item>
+        <item>За весь день</item>
+    </string-array>
 
 </resources>

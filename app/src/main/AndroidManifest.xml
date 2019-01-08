@@ -52,7 +52,8 @@
         <activity
             android:name=".MeasurementChartActivity"
             android:screenOrientation="portrait"
-             />
+            android:label="@string/title_activity_measurement_chart"
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>
