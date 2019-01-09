@@ -23,6 +23,10 @@ public class MarkedDates extends Observable {
         return staticInstance;
     }
 
+    public static void destroyMarkedDates(){
+        staticInstance = null;
+    }
+
     public MarkStyle check(DateData date){
         int index = data.indexOf(date);
         if (index == -1) {

@@ -741,25 +741,41 @@ public class DatabaseAdapter {
         return measurementReminders;
     }
 
-    public List<float[]> getMeasurementReminderEntriesPerMonth(int idMeasurementReminder, int dateMonth){
+    public List<float[]> getMeasurementReminderEntriesPerMonth(int idMeasurementReminder, int month, int year, int type,
+                                                               String timeStr1, String timeStr2){
         List<float[]> measurementReminderEntryValues = new ArrayList<float[]>();
-        String rawQuery = "select mre._id_measur_remind_entry, mre.value1, mre.value2, mre.is_done, mre.reminder_time, mre.reminder_date" +
-                " from measurement_reminder_entries mre inner join measurement_reminders mr on mre._id_measurement_reminder=mr._id_measurement_reminder" +
-                " where mre._id_measurement_reminder = ? and mre.is_done = 1 and strftime('%m', mre.reminder_date) = ?";
-
-        //String monthNumberStr = dateStr.split("\\.")[1];
-        String monthNumberStr = String.valueOf(dateMonth);
-        Cursor cursor = database.rawQuery(rawQuery, new String[]{String.valueOf(idMeasurementReminder), monthNumberStr});
+        Cursor cursor;
+        if (type == 0){
+            String rawQuery = "select AVG(mre.value1) as avg_value1, AVG(mre.value2) as avg_value2, mre.reminder_date" +
+                    " from measurement_reminder_entries mre inner join measurement_reminders mr on mre._id_measurement_reminder=mr._id_measurement_reminder" +
+                    " where mre._id_measurement_reminder = ? and mre.is_done = 1 and strftime('%m', mre.reminder_date) = ? and strftime('%Y', mre.reminder_date) = ?" +
+                    " and mre.reminder_time between ? and ? GROUP BY mre.reminder_date";
+            cursor = database.rawQuery(rawQuery, new String[]{String.valueOf(idMeasurementReminder), String.valueOf(month), String.valueOf(year),
+                                        timeStr1, timeStr2});
+        }
+        else if (type == 1){
+            String rawQuery = "select AVG(mre.value1) as avg_value1, AVG(mre.value2) as avg_value2, mre.reminder_date" +
+                    " from measurement_reminder_entries mre inner join measurement_reminders mr on mre._id_measurement_reminder=mr._id_measurement_reminder" +
+                    " where mre._id_measurement_reminder = ? and mre.is_done = 1 and strftime('%m', mre.reminder_date) = ? and strftime('%Y', mre.reminder_date) = ?" +
+                    " GROUP BY mre.reminder_date";
+            cursor = database.rawQuery(rawQuery, new String[]{String.valueOf(idMeasurementReminder), String.valueOf(month), String.valueOf(year)});
+        }
+        else {
+            String rawQuery = "select AVG(mre.value1) as avg_value1, AVG(mre.value2) as avg_value2, mre.reminder_date" +
+                    " from measurement_reminder_entries mre inner join measurement_reminders mr on mre._id_measurement_reminder=mr._id_measurement_reminder" +
+                    " where mre._id_measurement_reminder = ? and mre.is_done = 1 and strftime('%m', mre.reminder_date) = ? and strftime('%Y', mre.reminder_date) = ?" +
+                    " and (mre.reminder_time between ? and '00:00:00' or mre.reminder_time between '00:00:00' and ?) GROUP BY mre.reminder_date";
+            cursor = database.rawQuery(rawQuery, new String[]{String.valueOf(idMeasurementReminder), String.valueOf(month), String.valueOf(year)});
+        }
         if(cursor.moveToFirst()){
             do{
-                float idMeasurRemindEntry = cursor.getInt(cursor.getColumnIndex("_id_measur_remind_entry"));
-                float value1 = cursor.getFloat(cursor.getColumnIndex("value1"));
-                float value2 = cursor.getFloat(cursor.getColumnIndex("value2"));
+                float avgValue1 = cursor.getFloat(cursor.getColumnIndex("avg_value1"));
+                float avgValue2 = cursor.getFloat(cursor.getColumnIndex("avg_value2"));
                 String reminderDateStr = cursor.getString(cursor.getColumnIndex("reminder_date"));
 
                 float dayOfMonth = Float.valueOf(reminderDateStr.split("-")[2]);
                 float[] curMeasurementReminderEntryValuesArr = new float[]{
-                        idMeasurRemindEntry, value1, value2, dayOfMonth
+                        avgValue1, avgValue2, dayOfMonth
                 };
                 measurementReminderEntryValues.add(curMeasurementReminderEntryValuesArr);
             }

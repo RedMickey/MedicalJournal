@@ -57,8 +57,8 @@ public class DayAdapter extends FragmentStatePagerAdapter{
                 newMonth = 1;
                 newYear = dateBuff.getYear()+1;
             }
-            else {
-                newMonth = dateBuff.getMonth() + 1;
+            else {wMonth = dateBuff
+                ne.getMonth() + 1;
                 newYear = dateBuff.getYear();
             }
         */

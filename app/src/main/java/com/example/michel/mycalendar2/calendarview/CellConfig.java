@@ -37,7 +37,9 @@ public class CellConfig {
         m2wPointDate =null;
 
         weekAnchorPointDate =null;
+        selectedDate = null;
 
         MarkedDates.getInstance().removeAdd();
+        MarkedDates.destroyMarkedDates();
     }
 }

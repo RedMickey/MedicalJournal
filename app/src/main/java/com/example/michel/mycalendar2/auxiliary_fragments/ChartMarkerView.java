@@ -18,12 +18,14 @@ public class ChartMarkerView extends MarkerView {
     private String measurementValueTypeStr;
     private RelativeLayout chartMarkerLayout;
     private boolean isDisplayed = true;
+    private float zeroY;
 
-    public ChartMarkerView(Context context, int layoutResource, String measurementValueTypeStr) {
+    public ChartMarkerView(Context context, int layoutResource, String measurementValueTypeStr, float zeroY) {
         super(context, layoutResource);
         tvContent = (TextView) findViewById(R.id.tvContent);
         chartMarkerLayout = (RelativeLayout) findViewById(R.id.chart_marker_layout);
         this.measurementValueTypeStr = measurementValueTypeStr;
+        this.zeroY = zeroY;
     }
     @Override
     public void refreshContent(Entry e, Highlight highlight) {
@@ -32,10 +34,10 @@ public class ChartMarkerView extends MarkerView {
 
             CandleEntry ce = (CandleEntry) e;
 
-            tvContent.setText(Utils.formatNumber(ce.getHigh(), 0, true));
+            tvContent.setText(Utils.formatNumber(ce.getHigh(), 1, true));
         } else {
-            if (e.getY()!=30){
-                tvContent.setText(Utils.formatNumber(e.getY(), 0, true) +
+            if (e.getY()!=zeroY){
+                tvContent.setText(Utils.formatNumber(e.getY(), 1, true) +
                         " " + measurementValueTypeStr);
                 if (!isDisplayed){
                     chartMarkerLayout.setVisibility(VISIBLE);

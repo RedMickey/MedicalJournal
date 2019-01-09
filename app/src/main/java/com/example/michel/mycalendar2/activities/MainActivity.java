@@ -169,6 +169,7 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         Class fragmentClass;
         int id = item.getItemId();
+        int isMainFrame = 0;
 
         if (id!=preFragmentId) {
             Fragment newFragment;
@@ -189,6 +190,20 @@ public class MainActivity extends AppCompatActivity
                     checkToolBarLinearLayoutVisibility(1);
                     toolbarLinearLayout2.setVisibility(View.VISIBLE);
                     break;
+                case R.id.nav_main:
+                    newFragment = null;
+                    isMainFrame = 1;
+                    Fragment mainFragment = (MainFragment)getSupportFragmentManager().findFragmentByTag("MAIN_FRAGMENT");
+                    if (mainFragment == null || !mainFragment.isVisible()) {
+                        preFragmentId = -1;
+                        checkToolBarLinearLayoutVisibility(0);
+                        MainFragment mainFragmentNew = MainFragment.newInstance();
+                        FragmentManager fragmentManager = getSupportFragmentManager();
+                        fragmentManager.beginTransaction()
+                                .add(R.id.frame_container, mainFragmentNew, "MAIN_FRAGMENT")
+                                .commit();
+                    }
+                    break;
                 default:
                     //intent = new Intent(this, AddTreatmentActivity.class);
                     newFragment = ReminderFragment.newInstance();
@@ -197,10 +212,13 @@ public class MainActivity extends AppCompatActivity
             // Вставить фрагмент, заменяя любой существующий
             //FragmentManager fragmentManager = getSupportFragmentManager();
             //fragmentManager.beginTransaction().replace(R.id.flContent, fragment).addToBackStack(null).commit();
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.frame_container, newFragment);
-            //transaction.addToBackStack(null);
-            transaction.commit();
+            if (isMainFrame!=1){
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.frame_container, newFragment);
+                //transaction.addToBackStack(null);
+                transaction.commit();
+            }
+
             // Выделение существующего элемента выполнено с помощью
             // NavigationView
             item.setChecked(true);

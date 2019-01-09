@@ -25,6 +25,7 @@ import com.example.michel.mycalendar2.calendarview.adapters.CalendarViewExpAdapt
 import com.example.michel.mycalendar2.calendarview.adapters.DayAdapter;
 import com.example.michel.mycalendar2.calendarview.data.DateData;
 import com.example.michel.mycalendar2.calendarview.data.DayDifference;
+import com.example.michel.mycalendar2.calendarview.data.MarkedDates;
 import com.example.michel.mycalendar2.calendarview.listeners.OnDateClickListener;
 import com.example.michel.mycalendar2.calendarview.listeners.OnExpDateClickListener;
 import com.example.michel.mycalendar2.calendarview.listeners.OnMonthScrollListener;
@@ -76,7 +77,7 @@ public class MainFragment extends Fragment{
                 //deleteIntent.setAction("ru.startandroid.notifications.action_delete");
                 //PendingIntent deletePendingIntent = PendingIntent.getService(this, 0, deleteIntent, 0);
 
-                Intent notificationIntent2 = new Intent(getContext(), AlarmService.class);
+                /*Intent notificationIntent2 = new Intent(getContext(), AlarmService.class);
                 notificationIntent2.putExtra("isActual", 1);
                 notificationIntent2.putExtra("notifId", 0);
                 int isActual = notificationIntent2.getIntExtra("isActual",0);
@@ -96,16 +97,6 @@ public class MainFragment extends Fragment{
                         .addAction(android.R.drawable.ic_input_add, "Accept", pendingIntent)
                         .build();
 
-                /*NotificationCompat.Builder builder =
-                        new NotificationCompat.Builder(getContext())
-                                .setContentIntent(contentIntent)
-                                .setSmallIcon(R.mipmap.ic_launcher)
-                                .setContentTitle("Title")
-                                .setContentText("Notification text")
-                                .setAutoCancel(true)
-
-                                .addAction(android.R.drawable.ic_delete, "Delete", contentIntent);*/
-
                 builder.flags|= Notification.FLAG_AUTO_CANCEL;
 
                 NotificationManager notificationManager =
@@ -113,7 +104,7 @@ public class MainFragment extends Fragment{
                 // Альтернативный вариант
                 // NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
 
-                notificationManager.notify(0, builder);
+                notificationManager.notify(0, builder);*/
                 }
 
         });
