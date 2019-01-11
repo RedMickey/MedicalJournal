@@ -4,12 +4,16 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.content.res.AppCompatResources;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,6 +38,9 @@ import com.example.michel.mycalendar2.calendarview.views.ExpCalendarView;
 import com.example.michel.mycalendar2.calendarview.views.MonthExpFragment;
 import com.example.michel.mycalendar2.calendarview.views.WeekDayViewPager;
 import com.example.michel.mycalendar2.services.AlarmService;
+import com.leinardi.android.speeddial.FabWithLabelView;
+import com.leinardi.android.speeddial.SpeedDialActionItem;
+import com.leinardi.android.speeddial.SpeedDialView;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.util.Calendar;
@@ -55,6 +62,9 @@ public class MainFragment extends Fragment{
 
     private WeekDayViewPager weekDayViewPager;
 
+    SpeedDialView mSpeedDialView;
+    private static final int ADD_ACTION_POSITION = 4;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -62,52 +72,6 @@ public class MainFragment extends Fragment{
                              @Nullable Bundle savedInstanceState) {
 
         this.view = inflater.inflate(R.layout.main_calendar_view, container, false);
-
-        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_SHORT)
-                        .setAction("Action", null).show();
-                /*Intent intent = new Intent(new Intent(getContext(), AlarmService.class));
-                intent.putExtra("isActual", 1);
-                getActivity().startService(intent);*/
-
-                //Intent deleteIntent = new Intent(this, MyService.class);
-                //deleteIntent.setAction("ru.startandroid.notifications.action_delete");
-                //PendingIntent deletePendingIntent = PendingIntent.getService(this, 0, deleteIntent, 0);
-
-                /*Intent notificationIntent2 = new Intent(getContext(), AlarmService.class);
-                notificationIntent2.putExtra("isActual", 1);
-                notificationIntent2.putExtra("notifId", 0);
-                int isActual = notificationIntent2.getIntExtra("isActual",0);
-                PendingIntent pendingIntent = PendingIntent.getService(getContext(), 0, notificationIntent2, PendingIntent.FLAG_CANCEL_CURRENT);
-
-                Intent notificationIntent = new Intent(getContext(), AddTreatmentActivity.class);
-                PendingIntent contentIntent = PendingIntent.getActivity(getContext(),
-                        0, notificationIntent,
-                        PendingIntent.FLAG_CANCEL_CURRENT);
-
-                Notification builder = new Notification.Builder(getContext())
-                        .setContentIntent(contentIntent)
-                        .setSmallIcon(R.mipmap.ic_launcher)
-                        .setContentTitle("Title")
-                        .setContentText("Notification text")
-                        .addAction(android.R.drawable.ic_delete, "Reject", pendingIntent)
-                        .addAction(android.R.drawable.ic_input_add, "Accept", pendingIntent)
-                        .build();
-
-                builder.flags|= Notification.FLAG_AUTO_CANCEL;
-
-                NotificationManager notificationManager =
-                        (NotificationManager) getContext().getSystemService(getContext().NOTIFICATION_SERVICE);
-                // Альтернативный вариант
-                // NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-
-                notificationManager.notify(0, builder);*/
-                }
-
-        });
 
         calendar = Calendar.getInstance();
 
@@ -117,6 +81,9 @@ public class MainFragment extends Fragment{
         calendarLayout = (LinearLayout) view.findViewById(R.id.calendar_layout);
 
         weekDayViewPager = (WeekDayViewPager) view.findViewById((R.id.day_view));
+
+        mSpeedDialView = view.findViewById(R.id.speedDial);
+        initSpeedDial();
 
         //      Get instance.
         calendarView = ((ExpCalendarView) view.findViewById(R.id.calendar_view));
@@ -305,6 +272,109 @@ public class MainFragment extends Fragment{
         });
         //calendarView.setCurrentItem(500);
         return view;
+    }
+
+    private void initSpeedDial() {
+        FabWithLabelView fabWithLabelView;
+        Drawable drawable;
+
+        drawable = AppCompatResources.getDrawable(view.getContext(), R.drawable.ic_schedule);
+        fabWithLabelView = mSpeedDialView.addActionItem(new SpeedDialActionItem.Builder(R.id
+                .fab_pill_schedule, drawable)
+                .setFabImageTintColor(ResourcesCompat.getColor(getResources(), R.color.material_white_1000, getActivity().getTheme()))
+                .setLabel("График приёмов")
+                .create());
+        /*if (fabWithLabelView != null) {
+            fabWithLabelView.setSpeedDialActionItem(fabWithLabelView.getSpeedDialActionItemBuilder()
+                    .setFabBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.material_white_1000,
+                            getActivity().getTheme()))
+                    .create());
+        }*/
+
+        drawable = AppCompatResources.getDrawable(view.getContext(), R.drawable.ic_pill_100_light);
+        fabWithLabelView = mSpeedDialView.addActionItem(new SpeedDialActionItem.Builder(R.id
+                .fab_pill_taking, drawable)
+                .setFabImageTintColor(ResourcesCompat.getColor(getResources(), R.color.material_white_1000, getActivity().getTheme()))
+                .setLabel("Одиночный приём")
+                .create());
+        if (fabWithLabelView != null) {
+            fabWithLabelView.setSpeedDialActionItem(fabWithLabelView.getSpeedDialActionItemBuilder()
+                    .setFabBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.material_indigo_300,
+                            getActivity().getTheme()))
+                    .create());
+        }
+
+        drawable = AppCompatResources.getDrawable(view.getContext(), R.drawable.ic_schedule);
+        fabWithLabelView = mSpeedDialView.addActionItem(new SpeedDialActionItem.Builder(R.id
+                .fab_measurement_schedule, drawable)
+                .setFabImageTintColor(ResourcesCompat.getColor(getResources(), R.color.material_white_1000, getActivity().getTheme()))
+                .setLabel("График измерений")
+                .create());
+        if (fabWithLabelView != null) {
+            fabWithLabelView.setSpeedDialActionItem(fabWithLabelView.getSpeedDialActionItemBuilder()
+                    .setFabBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.material_test1,
+                            getActivity().getTheme()))
+                    .create());
+        }
+
+        drawable = AppCompatResources.getDrawable(view.getContext(), R.drawable.ic_ruler1);
+        fabWithLabelView = mSpeedDialView.addActionItem(new SpeedDialActionItem.Builder(R.id
+                .fab_measurement_taking, drawable)
+                .setFabImageTintColor(ResourcesCompat.getColor(getResources(), R.color.material_white_1000, getActivity().getTheme()))
+                .setLabel("Измерение")
+                .create());
+        if (fabWithLabelView != null) {
+            fabWithLabelView.setSpeedDialActionItem(fabWithLabelView.getSpeedDialActionItemBuilder()
+                    .setFabBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.material_test2,
+                            getActivity().getTheme()))
+                    .create());
+        }
+
+        //Set main action clicklistener.
+        mSpeedDialView.setOnChangeListener(new SpeedDialView.OnChangeListener() {
+            @Override
+            public boolean onMainActionSelected() {
+                //showToast("Main action clicked!");
+                Log.d("DS", "onMainActionSelected");
+                return false; // True to keep the Speed Dial open
+            }
+
+            @Override
+            public void onToggleChanged(boolean isOpen) {
+                Log.d("DS", "Speed dial toggle state changed. Open = " + isOpen);
+                //mSpeedDialView.close();
+                return;
+            }
+        });
+
+        //mSpeedDialView.liste
+
+        //Set option fabs clicklisteners.
+        mSpeedDialView.setOnActionSelectedListener(new SpeedDialView.OnActionSelectedListener() {
+            @Override
+            public boolean onActionSelected(SpeedDialActionItem actionItem) {
+                switch (actionItem.getId()) {
+                    case R.id.fab_pill_schedule:
+                        //showToast("No label action clicked!\nClosing with animation");
+                        mSpeedDialView.close(); // To close the Speed Dial with animation
+                        return true; // false will close it without animation
+                    case R.id.fab_pill_taking:
+                        //showSnackbar(actionItem.getLabel(Main2Activity.this) + " clicked!");
+                        mSpeedDialView.close(); // To close the Speed Dial with animation
+                        return true; // false will close it without animation
+                    case R.id.fab_measurement_schedule:
+                        //showToast(actionItem.getLabel(Main2Activity.this) + " clicked!\nClosing without animation.");
+                        mSpeedDialView.close();
+                        return true; // closes without animation (same as mSpeedDialView.close(false); return false;)
+                    case R.id.fab_measurement_taking:
+                        //showToast(actionItem.getLabel(Main2Activity.this) + " clicked!\nClosing without animation.");
+                        mSpeedDialView.close();
+                        return true; // closes without animation (same as mSpeedDialView.close(false); return false;)
+                }
+                return true; // To keep the Speed Dial open
+            }
+        });
+
     }
 /*
     @Override

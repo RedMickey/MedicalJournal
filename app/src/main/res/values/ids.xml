@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <item type="id" name="calendarViewPager"/>
+
+    <item name="fab_pill_schedule" type="id" />
+    <item name="fab_pill_taking" type="id" />
+    <item name="fab_measurement_schedule" type="id" />
+    <item name="fab_measurement_taking" type="id" />
 </resources>
