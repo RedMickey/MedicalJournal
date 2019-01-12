@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -18,12 +19,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.example.michel.mycalendar2.activities.AddMeasurementActivity;
+import com.example.michel.mycalendar2.activities.AddOneTimeMeasurementActivity;
+import com.example.michel.mycalendar2.activities.AddOneTimeTreatmentActivity;
 import com.example.michel.mycalendar2.activities.AddTreatmentActivity;
 import com.example.michel.mycalendar2.activities.R;
+import com.example.michel.mycalendar2.adapters.MeasurementTypesListAdapter;
 import com.example.michel.mycalendar2.calendarview.CellConfig;
 import com.example.michel.mycalendar2.calendarview.adapters.CalendarViewExpAdapter;
 import com.example.michel.mycalendar2.calendarview.adapters.DayAdapter;
@@ -38,6 +45,8 @@ import com.example.michel.mycalendar2.calendarview.views.ExpCalendarView;
 import com.example.michel.mycalendar2.calendarview.views.MonthExpFragment;
 import com.example.michel.mycalendar2.calendarview.views.WeekDayViewPager;
 import com.example.michel.mycalendar2.services.AlarmService;
+import com.example.michel.mycalendar2.utils.DBStaticEntries;
+import com.example.michel.mycalendar2.utils.utilModels.MeasurementType;
 import com.leinardi.android.speeddial.FabWithLabelView;
 import com.leinardi.android.speeddial.SpeedDialActionItem;
 import com.leinardi.android.speeddial.SpeedDialView;
@@ -51,7 +60,7 @@ public class MainFragment extends Fragment{
         return new MainFragment();
     }
 
-    private View view;
+    private View mView;
     private TextView YearMonthTv;
     private ExpCalendarView calendarView;
     private DateData selectedDate;
@@ -71,22 +80,22 @@ public class MainFragment extends Fragment{
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        this.view = inflater.inflate(R.layout.main_calendar_view, container, false);
+        mView = inflater.inflate(R.layout.main_calendar_view, container, false);
 
         calendar = Calendar.getInstance();
 
         // Get slidingUpPanelLayout
-        slidingUpPanelLayout = (SlidingUpPanelLayout) view.findViewById(R.id.sliding_layout);
+        slidingUpPanelLayout = (SlidingUpPanelLayout) mView.findViewById(R.id.sliding_layout);
 
-        calendarLayout = (LinearLayout) view.findViewById(R.id.calendar_layout);
+        calendarLayout = (LinearLayout) mView.findViewById(R.id.calendar_layout);
 
-        weekDayViewPager = (WeekDayViewPager) view.findViewById((R.id.day_view));
+        weekDayViewPager = (WeekDayViewPager) mView.findViewById((R.id.day_view));
 
-        mSpeedDialView = view.findViewById(R.id.speedDial);
+        mSpeedDialView = mView.findViewById(R.id.speedDial);
         initSpeedDial();
 
         //      Get instance.
-        calendarView = ((ExpCalendarView) view.findViewById(R.id.calendar_view));
+        calendarView = ((ExpCalendarView) mView.findViewById(R.id.calendar_view));
 
 
       /*  new Handler().post(new Runnable() {
@@ -97,7 +106,7 @@ public class MainFragment extends Fragment{
         });
 */
         //calendarView.setCurrentItem(500);
-        YearMonthTv = (TextView) view.findViewById(R.id.YYMM_Tv);
+        YearMonthTv = (TextView) mView.findViewById(R.id.YYMM_Tv);
         YearMonthTv.setText(CalendarUtil.getDateString(Calendar.getInstance().get(Calendar.YEAR),(Calendar.getInstance().get(Calendar.MONTH) + 1)));
 
 //      Set up listeners.
@@ -224,7 +233,7 @@ public class MainFragment extends Fragment{
                 if (!((DayAdapter)weekDayViewPager.getAdapter()).isDayClicked()) {
                     DateData date = calendarView.getMarkedDates().getAll().get(0);
                     calendar.set(date.getYear(), date.getMonth()-1, date.getDay());
-                    boolean y = ((DayAdapter)weekDayViewPager.getAdapter()).isDayClicked();
+                    //boolean y = ((DayAdapter)weekDayViewPager.getAdapter()).isDayClicked();
 
                     if (position > weekDayViewPager.LastPage) {
                         calendarView.getMarkedDates().removeAdd();
@@ -271,14 +280,14 @@ public class MainFragment extends Fragment{
             }
         });
         //calendarView.setCurrentItem(500);
-        return view;
+        return mView;
     }
 
     private void initSpeedDial() {
         FabWithLabelView fabWithLabelView;
         Drawable drawable;
 
-        drawable = AppCompatResources.getDrawable(view.getContext(), R.drawable.ic_schedule);
+        drawable = AppCompatResources.getDrawable(mView.getContext(), R.drawable.ic_schedule);
         fabWithLabelView = mSpeedDialView.addActionItem(new SpeedDialActionItem.Builder(R.id
                 .fab_pill_schedule, drawable)
                 .setFabImageTintColor(ResourcesCompat.getColor(getResources(), R.color.material_white_1000, getActivity().getTheme()))
@@ -291,7 +300,7 @@ public class MainFragment extends Fragment{
                     .create());
         }*/
 
-        drawable = AppCompatResources.getDrawable(view.getContext(), R.drawable.ic_pill_100_light);
+        drawable = AppCompatResources.getDrawable(mView.getContext(), R.drawable.ic_pill_100_light);
         fabWithLabelView = mSpeedDialView.addActionItem(new SpeedDialActionItem.Builder(R.id
                 .fab_pill_taking, drawable)
                 .setFabImageTintColor(ResourcesCompat.getColor(getResources(), R.color.material_white_1000, getActivity().getTheme()))
@@ -304,7 +313,7 @@ public class MainFragment extends Fragment{
                     .create());
         }
 
-        drawable = AppCompatResources.getDrawable(view.getContext(), R.drawable.ic_schedule);
+        drawable = AppCompatResources.getDrawable(mView.getContext(), R.drawable.ic_schedule);
         fabWithLabelView = mSpeedDialView.addActionItem(new SpeedDialActionItem.Builder(R.id
                 .fab_measurement_schedule, drawable)
                 .setFabImageTintColor(ResourcesCompat.getColor(getResources(), R.color.material_white_1000, getActivity().getTheme()))
@@ -317,7 +326,7 @@ public class MainFragment extends Fragment{
                     .create());
         }
 
-        drawable = AppCompatResources.getDrawable(view.getContext(), R.drawable.ic_ruler1);
+        drawable = AppCompatResources.getDrawable(mView.getContext(), R.drawable.ic_ruler1);
         fabWithLabelView = mSpeedDialView.addActionItem(new SpeedDialActionItem.Builder(R.id
                 .fab_measurement_taking, drawable)
                 .setFabImageTintColor(ResourcesCompat.getColor(getResources(), R.color.material_white_1000, getActivity().getTheme()))
@@ -355,21 +364,61 @@ public class MainFragment extends Fragment{
             public boolean onActionSelected(SpeedDialActionItem actionItem) {
                 switch (actionItem.getId()) {
                     case R.id.fab_pill_schedule:
-                        //showToast("No label action clicked!\nClosing with animation");
-                        mSpeedDialView.close(); // To close the Speed Dial with animation
-                        return true; // false will close it without animation
+                        Intent intent1 = new Intent(getActivity(), AddTreatmentActivity.class);
+                        startActivity(intent1);
+                        mSpeedDialView.close();
+                        return true;
                     case R.id.fab_pill_taking:
-                        //showSnackbar(actionItem.getLabel(Main2Activity.this) + " clicked!");
-                        mSpeedDialView.close(); // To close the Speed Dial with animation
-                        return true; // false will close it without animation
+                        Intent intent2 = new Intent(getActivity(), AddOneTimeTreatmentActivity.class);
+                        startActivity(intent2);
+                        mSpeedDialView.close();
+                        return true;
                     case R.id.fab_measurement_schedule:
-                        //showToast(actionItem.getLabel(Main2Activity.this) + " clicked!\nClosing without animation.");
+                        LayoutInflater inflater = LayoutInflater.from(mView.getContext());
+                        final BottomSheetDialog choosingMeasurementTypeDialog = new BottomSheetDialog(mView.getContext());
+                        View bottomSheetView = inflater.inflate(R.layout.choosing_measurement_type_dialog_layout, null, false);
+                        ListView listView = (ListView) bottomSheetView.findViewById(R.id.measurement_types_lv);
+                        MeasurementTypesListAdapter mtla = new MeasurementTypesListAdapter(mView.getContext(), R.layout.measurement_type_list_item, DBStaticEntries.measurementTypes);
+                        AdapterView.OnItemClickListener itemClickListener = new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                MeasurementType selectedMT = (MeasurementType) adapterView.getItemAtPosition(i);
+                                Intent intent = new Intent(mView.getContext(), AddMeasurementActivity.class);
+                                intent.putExtra("MeasurementTypeID", selectedMT.getIndex());
+                                intent.putExtra("MeasurementName", selectedMT.getName());
+                                mView.getContext().startActivity(intent);
+                                choosingMeasurementTypeDialog.dismiss();
+                            }
+                        };
+                        listView.setAdapter(mtla);
+                        listView.setOnItemClickListener(itemClickListener);
+                        choosingMeasurementTypeDialog.setContentView(bottomSheetView);
+                        choosingMeasurementTypeDialog.show();
                         mSpeedDialView.close();
-                        return true; // closes without animation (same as mSpeedDialView.close(false); return false;)
+                        return true;
                     case R.id.fab_measurement_taking:
-                        //showToast(actionItem.getLabel(Main2Activity.this) + " clicked!\nClosing without animation.");
+                        LayoutInflater inflater3 = LayoutInflater.from(mView.getContext());
+                        final BottomSheetDialog choosingMeasurementTypeDialog2 = new BottomSheetDialog(mView.getContext());
+                        View bottomSheetView2 = inflater3.inflate(R.layout.choosing_measurement_type_dialog_layout, null, false);
+                        ListView listView2 = (ListView) bottomSheetView2.findViewById(R.id.measurement_types_lv);
+                        MeasurementTypesListAdapter mtla2 = new MeasurementTypesListAdapter(mView.getContext(), R.layout.measurement_type_list_item, DBStaticEntries.measurementTypes);
+                        AdapterView.OnItemClickListener itemClickListener2 = new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                MeasurementType selectedMT = (MeasurementType) adapterView.getItemAtPosition(i);
+                                Intent intent = new Intent(mView.getContext(), AddOneTimeMeasurementActivity.class);
+                                intent.putExtra("MeasurementTypeID", selectedMT.getIndex());
+                                intent.putExtra("MeasurementName", selectedMT.getName());
+                                mView.getContext().startActivity(intent);
+                                choosingMeasurementTypeDialog2.dismiss();
+                            }
+                        };
+                        listView2.setAdapter(mtla2);
+                        listView2.setOnItemClickListener(itemClickListener2);
+                        choosingMeasurementTypeDialog2.setContentView(bottomSheetView2);
+                        choosingMeasurementTypeDialog2.show();
                         mSpeedDialView.close();
-                        return true; // closes without animation (same as mSpeedDialView.close(false); return false;)
+                        return true;
                 }
                 return true; // To keep the Speed Dial open
             }
@@ -408,6 +457,7 @@ public class MainFragment extends Fragment{
     public void onPause() {
         super.onPause();
         ((DayAdapter)weekDayViewPager.getAdapter()).cleanI();
+        ((DayAdapter)weekDayViewPager.getAdapter()).setCurrentDate(MarkedDates.getInstance().getAll().get(0));
     }
 
     @Override

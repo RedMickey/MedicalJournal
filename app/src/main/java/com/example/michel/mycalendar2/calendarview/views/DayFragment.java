@@ -49,7 +49,5 @@ public class DayFragment extends Fragment{
         ((TextView) view.findViewById(R.id.text_day_of_week)).setText(CalendarUtil.getDayOfWeekRusName(currentData));
         TasksViewCreationTask tv = new TasksViewCreationTask(view);
         tv.execute(currentData);
-        //mText = (TextView) view.findViewById(R.id.text);
-        //mText.setText(currentData.getDayString());
     }
 }

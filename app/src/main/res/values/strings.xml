@@ -59,5 +59,7 @@
         <item>Ночь</item>
         <item>За весь день</item>
     </string-array>
+    <string name="title_activity_add_one_time_treatment">AddOneTimeTreatmentActivity</string>
+    <string name="title_activity_add_one_time_measurement">AddOneTimeMeasurementActivity</string>
 
 </resources>

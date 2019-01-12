@@ -96,7 +96,7 @@ public class DayAdapter extends FragmentStatePagerAdapter{
 
         }
         DayFragment fragment = DayFragment.newInstance(currentDate);
-        preDate = currentDate;
+        //preDate = currentDate;
         if (i==3){
             currentDate = new DateData(currentDate.getYear(), currentDate.getMonth(), currentDate.getDay()-1);
         }

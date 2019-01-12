@@ -51,9 +51,19 @@
             android:theme="@style/AppTheme.NoActionBar2" />
         <activity
             android:name=".MeasurementChartActivity"
-            android:screenOrientation="portrait"
             android:label="@string/title_activity_measurement_chart"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".AddOneTimeTreatmentActivity"
+            android:label="@string/title_activity_add_one_time_treatment"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar2" />
+        <activity
+            android:name=".AddOneTimeMeasurementActivity"
+            android:label="@string/title_activity_add_one_time_measurement"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar2"></activity>
     </application>
 
 </manifest>
