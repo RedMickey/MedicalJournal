@@ -223,9 +223,12 @@ public class DatabaseAdapter {
     }
 
     //***********************************work with PillReminder************************************************************
-    public void insertPillReminderEntries(String reminder_date, Integer idPillReminder, String reminderTime){
+    public void insertPillReminderEntry(String reminder_date, Integer idPillReminder, String reminderTime, Integer isOneTime){
         ContentValues pillReminderEntryTableValues = new ContentValues();
-        pillReminderEntryTableValues.put("is_done", 0);
+        if (isOneTime == 1)
+            pillReminderEntryTableValues.put("is_done", 1);
+        else
+            pillReminderEntryTableValues.put("is_done", 0);
         pillReminderEntryTableValues.put("reminder_date", reminder_date);
         pillReminderEntryTableValues.put("_id_pill_reminder", idPillReminder);
         pillReminderEntryTableValues.put("reminder_time", reminderTime);
@@ -250,8 +253,9 @@ public class DatabaseAdapter {
     }
 
     public int insertPillReminder(String pillName, Integer pillCount, Integer idPillCountType,
-                                   String startDate, Integer idCycle, @Nullable Integer idHavingMealsType,
-                                   @Nullable Integer havingMealsTime, String annotation, Integer isActive, Integer times_aDay){
+                                   String startDate, @Nullable Integer idCycle, @Nullable Integer idHavingMealsType,
+                                   @Nullable Integer havingMealsTime, String annotation, Integer isActive, Integer times_aDay,
+                                   Integer isOneTime){
 
         ContentValues pillTableValues = new ContentValues();
         pillTableValues.put("pill_name", pillName);
@@ -269,6 +273,8 @@ public class DatabaseAdapter {
         pillReminderTableValues.put("annotation", annotation);
         pillReminderTableValues.put("IsActive", isActive);
         pillReminderTableValues.put("times_a_day", times_aDay);
+        if (isOneTime==1)
+            pillReminderTableValues.put("is_one_time", isOneTime);
         long pillReminderId = database.insert("pill_reminders", null, pillReminderTableValues);
 
         //Log.i("pill_new_id", String.valueOf(pillId));
@@ -391,6 +397,48 @@ public class DatabaseAdapter {
         }
         cursor.close();
         return pillReminderEntriesTime.toArray(new ReminderTime[pillReminderEntriesTime.size()]);
+    }
+
+    public PillReminderDBInsertEntry getPillReminderDBInsertEntryByID(int prID){
+        PillReminderDBInsertEntry prdbie = null;
+        String rawQuery = "select pr._id_pill_reminder, pi.pill_name, pr.pill_count, pr._id_pill_count_type, pr.start_date, pr._id_having_meals_type, pr.having_meals_time," +
+                " pr._id_cycle, pr.IsActive, pr.times_a_day, pr.annotation" +
+                " from pill_reminders pr inner join pills pi on pi._id_pill=pr._id_pill where pr._id_pill_reminder=?";
+        Cursor cursor = database.rawQuery(rawQuery, new String[]{String.valueOf(prID)});
+        if(cursor.moveToFirst()){
+            do{
+                int idPillReminder = cursor.getInt(cursor.getColumnIndex("_id_pill_reminder"));
+                String pillName = cursor.getString(cursor.getColumnIndex("pill_name"));
+                int pillCount = cursor.getInt(cursor.getColumnIndex("pill_count"));
+                int idPillCountType = cursor.getInt(cursor.getColumnIndex("_id_pill_count_type"));
+                int idCycle = cursor.getInt(cursor.getColumnIndex("_id_cycle"));
+                String startDateStr = cursor.getString(cursor.getColumnIndex("start_date"));
+                int idHavingMealsType = cursor.getInt(cursor.getColumnIndex("_id_having_meals_type"));
+                int havingMealsTime = Math.abs(cursor.getInt(cursor.getColumnIndex("having_meals_time")));
+                String annotation = cursor.getString(cursor.getColumnIndex("annotation"));
+                int isActive = cursor.getInt(cursor.getColumnIndex("IsActive"));
+                int times_aDay = cursor.getInt(cursor.getColumnIndex("times_a_day"));  // may be deleted
+                //ReminderTime[] reminderTimes = getReminderEntriesTime(idPillReminder, startDateStr,0);
+
+                DateData startDate = new DateData();
+                try {
+                    Date bufDate = new SimpleDateFormat("yyyy-MM-dd").parse(startDateStr);
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(bufDate);
+                    startDate.setYear(cal.get(Calendar.YEAR)).setMonth(cal.get(Calendar.MONTH)+1).setDay(cal.get(Calendar.DAY_OF_MONTH));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+                prdbie = new PillReminderDBInsertEntry(
+                        idPillReminder, pillName, pillCount, idPillCountType, startDate, idCycle,
+                        idHavingMealsType, havingMealsTime, annotation, isActive, null
+                );
+            }
+            while (cursor.moveToNext());
+        }
+        cursor.close();
+        return prdbie;
     }
 
     public CycleAndPillComby getCycleAndPillCombyByID(int prID){
@@ -659,8 +707,9 @@ public class DatabaseAdapter {
 
     //***********************************work with measurement reminder************************************************************
     public int insertMeasurementReminder(int idMeasurementType,
-                                         String startDate, Integer idCycle, @Nullable Integer idHavingMealsType,
-                                         @Nullable Integer havingMealsTime, String annotation, Integer isActive, Integer times_aDay){
+                                         String startDate, @Nullable Integer idCycle, @Nullable Integer idHavingMealsType,
+                                         @Nullable Integer havingMealsTime, String annotation, Integer isActive, Integer times_aDay,
+                                         Integer isOneTime){
 
         ContentValues measurementReminderTableValues = new ContentValues();
         measurementReminderTableValues.put("_id_measurement_type", idMeasurementType);
@@ -671,6 +720,8 @@ public class DatabaseAdapter {
         measurementReminderTableValues.put("annotation", annotation);
         measurementReminderTableValues.put("IsActive", isActive);
         measurementReminderTableValues.put("times_a_day", times_aDay);
+        if (isOneTime==1)
+            measurementReminderTableValues.put("is_one_time", isOneTime);
         long measurementReminderId = database.insert("measurement_reminders", null, measurementReminderTableValues);
 
         //Log.i("pill_new_id", String.valueOf(pillId));
@@ -750,7 +801,7 @@ public class DatabaseAdapter {
                     " from measurement_reminder_entries mre inner join measurement_reminders mr on mre._id_measurement_reminder=mr._id_measurement_reminder" +
                     " where mre._id_measurement_reminder = ? and mre.is_done = 1 and strftime('%m', mre.reminder_date) = ? and strftime('%Y', mre.reminder_date) = ?" +
                     " and mre.reminder_time between ? and ? GROUP BY mre.reminder_date";
-            cursor = database.rawQuery(rawQuery, new String[]{String.valueOf(idMeasurementReminder), String.valueOf(month), String.valueOf(year),
+            cursor = database.rawQuery(rawQuery, new String[]{String.valueOf(idMeasurementReminder), String.format("%02d",month), String.valueOf(year),
                                         timeStr1, timeStr2});
         }
         else if (type == 1){
@@ -758,7 +809,7 @@ public class DatabaseAdapter {
                     " from measurement_reminder_entries mre inner join measurement_reminders mr on mre._id_measurement_reminder=mr._id_measurement_reminder" +
                     " where mre._id_measurement_reminder = ? and mre.is_done = 1 and strftime('%m', mre.reminder_date) = ? and strftime('%Y', mre.reminder_date) = ?" +
                     " GROUP BY mre.reminder_date";
-            cursor = database.rawQuery(rawQuery, new String[]{String.valueOf(idMeasurementReminder), String.valueOf(month), String.valueOf(year)});
+            cursor = database.rawQuery(rawQuery, new String[]{String.valueOf(idMeasurementReminder), String.format("%02d",month), String.valueOf(year)});
         }
         else {
             String rawQuery = "select AVG(mre.value1) as avg_value1, AVG(mre.value2) as avg_value2, mre.reminder_date" +
@@ -890,11 +941,22 @@ public class DatabaseAdapter {
         return measurementStatEntries;
     }
 
-    public void insertMeasurementReminderEntries(String reminder_date, Integer idMeasurementReminder, String reminderTime){
+    public void insertMeasurementReminderEntry(String reminder_date, Integer idMeasurementReminder, String reminderTime){
         ContentValues measurementReminderEntryTableValues = new ContentValues();
         measurementReminderEntryTableValues.put("is_done", 0);
         measurementReminderEntryTableValues.put("value1", -10000);
         measurementReminderEntryTableValues.put("value2", -10000);
+        measurementReminderEntryTableValues.put("reminder_date", reminder_date);
+        measurementReminderEntryTableValues.put("_id_measurement_reminder", idMeasurementReminder);
+        measurementReminderEntryTableValues.put("reminder_time", reminderTime);
+        database.insert("measurement_reminder_entries", null, measurementReminderEntryTableValues);
+    }
+
+    public void insertMeasurementReminderEntry(String reminder_date, Integer idMeasurementReminder, String reminderTime, double value1, double value2){
+        ContentValues measurementReminderEntryTableValues = new ContentValues();
+        measurementReminderEntryTableValues.put("is_done", 1);
+        measurementReminderEntryTableValues.put("value1", value1);
+        measurementReminderEntryTableValues.put("value2", value2);
         measurementReminderEntryTableValues.put("reminder_date", reminder_date);
         measurementReminderEntryTableValues.put("_id_measurement_reminder", idMeasurementReminder);
         measurementReminderEntryTableValues.put("reminder_time", reminderTime);

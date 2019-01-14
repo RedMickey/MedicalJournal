@@ -180,7 +180,6 @@ public class DailyHistoryItemsCreationTask extends AsyncTask<DateData, Void, Lis
         if(pillReminderEntries.size()>0)
         {
             calendar2.setTime(pillReminderEntries.get(0).getDate());
-            boolean isToday = calendar2.get(Calendar.DAY_OF_YEAR)<=calendar1.get(Calendar.DAY_OF_YEAR);
             for (final PillReminderEntry pre:pillReminderEntries) {
                 View pillReminderEntryView = inflater.inflate(R.layout.pill_reminder_entry, null, false);
                 ((TextView) pillReminderEntryView.findViewById(R.id.reminder_name_tv)).setText(pre.getPillName());
@@ -203,8 +202,6 @@ public class DailyHistoryItemsCreationTask extends AsyncTask<DateData, Void, Lis
                 if(pre.isLate())
                     imageTimeExpired.setImageResource(R.drawable.ic_time_expired);
                 CheckBox isDoneChb = (CheckBox) pillReminderEntryView.findViewById(R.id.is_done_chb);
-                if (!isToday)
-                    isDoneChb.setEnabled(false);
                 if(pre.getIsDone()==1)
                     isDoneChb.setChecked(true);
                 isDoneChb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -237,7 +234,6 @@ public class DailyHistoryItemsCreationTask extends AsyncTask<DateData, Void, Lis
         if(measurementReminderEntries.size()>0)
         {
             calendar2.setTime(measurementReminderEntries.get(0).getDate());
-            boolean isToday = calendar2.get(Calendar.DAY_OF_YEAR)<=calendar1.get(Calendar.DAY_OF_YEAR);
             for (final MeasurementReminderEntry mre:measurementReminderEntries) {
                 View measurementReminderEntryView = inflater.inflate(R.layout.pill_reminder_entry, null, false);
                 measurementReminderEntryView.setBackgroundColor(mView.getResources().getColor(R.color.meas_remind_ent_bg));
@@ -274,8 +270,6 @@ public class DailyHistoryItemsCreationTask extends AsyncTask<DateData, Void, Lis
                 if(mre.isLate())
                     imageTimeExpired.setImageResource(R.drawable.ic_time_expired);
                 final CheckBox isDoneChb = (CheckBox) measurementReminderEntryView.findViewById(R.id.is_done_chb);
-                if (!isToday)
-                    isDoneChb.setEnabled(false);
                 if(mre.getIsDone()==1)
                     isDoneChb.setChecked(true);
 

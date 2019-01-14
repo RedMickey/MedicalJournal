@@ -59,7 +59,7 @@ public class MeasurementRemindersUpdateTask extends AsyncTask<CycleAndMeasuremen
                 case 1:
                     for(int i=0; i<cdbie.getDayCount();i++){
                         for (int j=0; j<mrdbe.getReminderTimes().length; j++){
-                            dbAdapter.insertMeasurementReminderEntries(
+                            dbAdapter.insertMeasurementReminderEntry(
                                     sdf.format(new Date(cal.getTimeInMillis())),
                                     mrdbe.getIdMeasurementReminder(),
                                     mrdbe.getReminderTimes()[j].getReminderTimeStr()
@@ -72,7 +72,7 @@ public class MeasurementRemindersUpdateTask extends AsyncTask<CycleAndMeasuremen
                     for(int i=0; i<cdbie.getDayCount();i++){
                         if(cdbie.getWeekSchedule()[cal.get(Calendar.DAY_OF_WEEK)-1]==1){
                             for (int j=0; j<mrdbe.getReminderTimes().length; j++){
-                                dbAdapter.insertMeasurementReminderEntries(
+                                dbAdapter.insertMeasurementReminderEntry(
                                         sdf.format(cal.getTime()),
                                         mrdbe.getIdMeasurementReminder(),
                                         mrdbe.getReminderTimes()[j].getReminderTimeStr()
@@ -85,7 +85,7 @@ public class MeasurementRemindersUpdateTask extends AsyncTask<CycleAndMeasuremen
                 case 3:
                     for(int i=0; i<cdbie.getDayCount();i+=cdbie.getDayInterval()){
                         for (int j=0; j<mrdbe.getReminderTimes().length; j++){
-                            dbAdapter.insertMeasurementReminderEntries(
+                            dbAdapter.insertMeasurementReminderEntry(
                                     sdf.format(new Date(cal.getTimeInMillis())),
                                     mrdbe.getIdMeasurementReminder(),
                                     mrdbe.getReminderTimes()[j].getReminderTimeStr()

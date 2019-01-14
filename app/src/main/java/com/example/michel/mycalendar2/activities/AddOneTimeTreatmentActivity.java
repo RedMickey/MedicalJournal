@@ -1,5 +1,6 @@
 package com.example.michel.mycalendar2.activities;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -26,6 +28,8 @@ import android.widget.ToggleButton;
 
 import com.example.michel.mycalendar2.adapters.TimesOfTakingMedicineAdapter;
 import com.example.michel.mycalendar2.app_async_tasks.AddTreatmentActivityCreationTask;
+import com.example.michel.mycalendar2.app_async_tasks.OneTimePillReminderInsertionTask;
+import com.example.michel.mycalendar2.app_async_tasks.PillRemListSpinnerCreationTask;
 import com.example.michel.mycalendar2.app_async_tasks.PillRemindersInsertionTask;
 import com.example.michel.mycalendar2.app_async_tasks.PillRemindersUpdateTask;
 import com.example.michel.mycalendar2.calendarview.data.DateData;
@@ -48,14 +52,12 @@ public class AddOneTimeTreatmentActivity extends AppCompatActivity {
     private Button pickDateButton;
     private Button pickTimeButton;
     private DateData pickDateButtonDateData;
-    PillReminderDBInsertEntry oldPillReminder;
-    private int idWeekSchedule = 0;
+    private TextView prescriptionTv;
+    private AddOneTimeTreatmentActivity activity;
 
     private ArrayList<String> time = new ArrayList();
 
     private LinearLayout timesOfTakingMedicine;
-
-    private TimesOfTakingMedicineAdapter timesOfTakingMedicineAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,23 +78,20 @@ public class AddOneTimeTreatmentActivity extends AppCompatActivity {
         radioGroupRegardingMeals = (RadioGroup) findViewById(R.id.regarding_meals);
 
         timesOfTakingMedicine = (LinearLayout) findViewById(R.id.times_of_taking_medicine);
+        prescriptionTv = (TextView) findViewById(R.id.prescription_tv);
 
         pickDateButton = (Button) findViewById(R.id.pick_date_button);
         pickTimeButton = (Button) findViewById(R.id.pick_time_button);
 
-        timesOfTakingMedicineAdapter = new TimesOfTakingMedicineAdapter(this, R.layout.reminder_time_item, time);
-
+        activity = this;
         Bundle arguments = getIntent().getExtras();
 
 // Declaration end
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        /*fab.setOnClickListener(new View.OnClickListener() {
+        fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                CycleDBInsertEntry cycleDBInsertEntry = new CycleDBInsertEntry();
-                int[] weekSchedule = null;
 
                 PillReminderDBInsertEntry pillReminderDBInsertEntry = new PillReminderDBInsertEntry();
 
@@ -150,40 +149,20 @@ public class AddOneTimeTreatmentActivity extends AppCompatActivity {
                         )
                 );
                 pillReminderDBInsertEntry.setStartDate(pickDateButtonDateData);
-                pillReminderDBInsertEntry.setAnnotation(
-                        ((EditText)findViewById(R.id.annotation)).getText().toString()
-                );
+                pillReminderDBInsertEntry.setIsActive(1);
+                pillReminderDBInsertEntry.setAnnotation("");
 
-                ReminderTime[] reminderTimes = new ReminderTime[timesOfTakingMedicine.getChildCount()];
-                for ( int j = 0; j < timesOfTakingMedicine.getChildCount(); j++) {
-                    LinearLayout bView = (LinearLayout) timesOfTakingMedicine.getChildAt(j);
-                    //reminderTimes[j] = ((EditText)bView.findViewById(R.id.reminder_time)).getText().toString()+":00";
-                    reminderTimes[j] = new ReminderTime (((EditText)bView.findViewById(R.id.reminder_time)).getText().toString()+":00");
-                }
+                ReminderTime[] reminderTimes = new ReminderTime[1];
+                reminderTimes[0] = new ReminderTime (pickTimeButton.getText().toString()+":00");
                 pillReminderDBInsertEntry.setReminderTimes(reminderTimes);
 
-                if (getIntent().getExtras() == null) {
-                    pillReminderDBInsertEntry.setIsActive(1);
-                    Snackbar.make(view, "ReadyInsert", Snackbar.LENGTH_SHORT)
-                            .setAction("Action", null).show();
-                    PillRemindersInsertionTask rct = new PillRemindersInsertionTask(getApplicationContext());
-                    rct.execute(new CycleAndPillComby(cycleDBInsertEntry, pillReminderDBInsertEntry));
-                }
-                else {
-                    pillReminderDBInsertEntry.setIsActive(((Switch)findViewById(R.id.switch_active_type)).isChecked()?1:0);
-                    pillReminderDBInsertEntry.setIdCycle(oldPillReminder.getIdCycle());
-                    cycleDBInsertEntry.setIdCycle(oldPillReminder.getIdCycle());
-                    cycleDBInsertEntry.setIdWeekSchedule(idWeekSchedule);
-                    pillReminderDBInsertEntry.setIdPillReminder(oldPillReminder.getIdPillReminder());
-                    Snackbar.make(view, "ReadyUpdate", Snackbar.LENGTH_SHORT)
-                            .setAction("Action", null).show();
-                    PillRemindersUpdateTask rut = new PillRemindersUpdateTask(
-                            !pillReminderDBInsertEntry.getPillName().equals(oldPillReminder.getPillName()),
-                            getApplicationContext());
-                    rut.execute(new CycleAndPillComby(cycleDBInsertEntry, pillReminderDBInsertEntry));
-                }
+                Snackbar.make(view, "ReadyInsert", Snackbar.LENGTH_SHORT)
+                        .setAction("Action", null).show();
+
+                OneTimePillReminderInsertionTask otprit = new OneTimePillReminderInsertionTask();
+                otprit.execute(pillReminderDBInsertEntry);
             }
-        });*/
+        });
 
         radioGroupRegardingMeals.setOnCheckedChangeListener(
                 new RadioGroup.OnCheckedChangeListener() {
@@ -215,29 +194,29 @@ public class AddOneTimeTreatmentActivity extends AppCompatActivity {
                 }
         );
 
+        prescriptionTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+                LayoutInflater inflater = LayoutInflater.from(v.getContext());
+
+                View dialogView = inflater.inflate(R.layout.choosing_pill_reminder_dialog_layout, null, false);
+
+
+                builder.setView(dialogView)
+                    .setCancelable(true);
+                AlertDialog dialog = builder.create();
+                PillRemListSpinnerCreationTask prlsct = new PillRemListSpinnerCreationTask(dialogView, activity, dialog);
+                prlsct.execute();
+
+                dialog.show();
+            }
+        });
+
         cal = Calendar.getInstance();
-        if (arguments == null){
-            pickDateButton.setText(setDate(cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.MONTH)+1, cal.get(Calendar.YEAR)));
-            pickTimeButton.setText(String.format("%02d:%02d", cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE)));
-            /*((LinearLayout)findViewById(R.id.active_status_layout)).setVisibility(View.GONE);
 
-            cal = Calendar.getInstance();
-            time.add(String.valueOf(cal.get(Calendar.HOUR_OF_DAY))+":00");
-
-            pickDateButton.setText(setDate(cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.MONTH)+1, cal.get(Calendar.YEAR)));
-
-            for (int i = 0; i < timesOfTakingMedicineAdapter.getCount(); i++) {
-                View item = timesOfTakingMedicineAdapter.getView(i, null, null);
-                timesOfTakingMedicine.addView(item);
-            }*/
-        }
-        else {
-            int id = arguments.getInt("PillReminderID");
-            /*AddTreatmentActivityCreationTask addTreatmentActivityCreationTask = new AddTreatmentActivityCreationTask(
-                    this, pickDateButtonDateData, timesOfTakingMedicineAdapter);
-            addTreatmentActivityCreationTask.execute(id);*/
-        }
-
+        pickDateButton.setText(setDate(cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.MONTH)+1, cal.get(Calendar.YEAR)));
+        pickTimeButton.setText(String.format("%02d:%02d", cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE)));
     }
 
     @Override
@@ -255,75 +234,6 @@ public class AddOneTimeTreatmentActivity extends AppCompatActivity {
         }
     }
 
-    public void add_reminder_time(View view) {
-        Calendar cal = Calendar.getInstance();
-        timesOfTakingMedicineAdapter.add(String.valueOf(cal.get(Calendar.HOUR_OF_DAY))+":00");
-        //timesOfTakingMedicineAdapter.add(String.valueOf(cal.get(Calendar.HOUR_OF_DAY))+":"+String.valueOf(cal.get(Calendar.SECOND)));
-        timesOfTakingMedicineAdapter.notifyDataSetChanged();
-        View item = timesOfTakingMedicineAdapter.getView(timesOfTakingMedicineAdapter.getCount()-1, null, null);
-        timesOfTakingMedicine.addView(item);
-    }
-
-    public void delete_reminder_time(View view) {
-        int j = 0;
-        if (timesOfTakingMedicine.getChildCount()>1) {
-            for (j = 0; j < timesOfTakingMedicine.getChildCount(); j++) {
-                LinearLayout bView = (LinearLayout) timesOfTakingMedicine.getChildAt(j);
-                if (bView == ((View) view.getParent()))
-                    //Log.i("del",String.valueOf(j));
-                    break;
-            }
-            timesOfTakingMedicineAdapter.remove(time.get(j));
-            timesOfTakingMedicineAdapter.notifyDataSetChanged();
-            timesOfTakingMedicine.removeView((View) view.getParent());
-            /*Log.i("del",String.valueOf(time.size()));
-            for (String s: time) {
-                Log.i("timeStr",s);
-            }*/
-        }
-    }
-
-    private void setDateParams(CycleDBInsertEntry cycleDBInsertEntry, LinearLayout linearLayout, int type) throws NumberFormatException{
-        Integer period = Integer.parseInt(((EditText)linearLayout.getChildAt(1)).getText().toString());
-        String periodDMType = ((Spinner)linearLayout.getChildAt(2)).getSelectedItem().toString();
-        if (type==0)
-        {
-            cycleDBInsertEntry.setPeriod(period); //required verification
-            cycleDBInsertEntry.setPeriodDMType(
-                    DBStaticEntries.dateTypes.get(periodDMType)
-            );
-            switch (periodDMType){
-                case "дн.":
-                    cycleDBInsertEntry.setDayCount(period);
-                    break;
-                case "нед.":
-                    cycleDBInsertEntry.setDayCount(period*7);
-                    break;
-                case "мес.":
-                    cycleDBInsertEntry.setDayCount(period*30);
-                    break;
-            }
-        }
-        else {
-            cycleDBInsertEntry.setOnce_aPeriod(period); //required verification
-            cycleDBInsertEntry.setOnce_aPeriodDMType(
-                    DBStaticEntries.dateTypes.get(periodDMType)
-            );
-            switch (periodDMType){
-                case "дн.":
-                    cycleDBInsertEntry.setDayInterval(period);
-                    break;
-                case "нед.":
-                    cycleDBInsertEntry.setDayInterval(period*7);
-                    break;
-                case "мес.":
-                    cycleDBInsertEntry.setDayInterval(period*30);
-                    break;
-            }
-        }
-
-    }
-
     public String setDate(int day, int month, int year){
         pickDateButtonDateData.setDay(day);
         pickDateButtonDateData.setMonth(month);
@@ -331,28 +241,6 @@ public class AddOneTimeTreatmentActivity extends AppCompatActivity {
 
         return String.valueOf(day)+" "+ CalendarUtil.getRusMonthName(month, 0)
                 +" "+String.valueOf(year)+" г.";
-    }
-
-    public void setOldPillReminder(PillReminderDBInsertEntry oldPillReminder) {
-        this.oldPillReminder = oldPillReminder;
-    }
-
-    public void setIdWeekSchedule(int idWeekSchedule) {
-        this.idWeekSchedule = idWeekSchedule;
-    }
-
-    public int containsTme(ReminderTime[] array, String v) {
-
-        int index = -1;
-
-        for(int i=0; i<array.length; i++){
-            if(array[i].getReminderTimeStr().equals(v)){
-                index = i;
-                break;
-            }
-        }
-
-        return index;
     }
 
     public void onPickTime(View view) {
@@ -375,5 +263,9 @@ public class AddOneTimeTreatmentActivity extends AppCompatActivity {
             }
         }, pickDateButtonDateData.getYear(), pickDateButtonDateData.getMonth()-1, pickDateButtonDateData.getDay());
         datePickerDialog.show();
+    }
+
+    public TextView getPrescriptionTv() {
+        return prescriptionTv;
     }
 }

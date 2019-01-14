@@ -1,9 +1,5 @@
 package com.example.michel.mycalendar2.utils;
 
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.Spinner;
-
 import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
 import com.example.michel.mycalendar2.models.CycleDBInsertEntry;
 import com.example.michel.mycalendar2.models.pill.PillReminderDBInsertEntry;
@@ -75,10 +71,10 @@ public class TUtils {
             case 1:
                 for(int i=0; i<cycleDBInsertEntry.getDayCount();i++){
                     for (int j=0; j<pillReminderDBInsertEntry.getReminderTimes().length; j++){
-                        dbAdapter.insertPillReminderEntries(
+                        dbAdapter.insertPillReminderEntry(
                                 sdf.format(new Date(cal.getTimeInMillis())),
                                 pillReminderId,
-                                pillReminderDBInsertEntry.getReminderTimes()[j].getReminderTimeStr()
+                                pillReminderDBInsertEntry.getReminderTimes()[j].getReminderTimeStr(), 0
                         );
                     }
                     cal.add(Calendar.DATE, 1);
@@ -88,10 +84,10 @@ public class TUtils {
                 for(int i=0; i<cycleDBInsertEntry.getDayCount();i++){
                     if(cycleDBInsertEntry.getWeekSchedule()[cal.get(Calendar.DAY_OF_WEEK)-1]==1){
                         for (int j=0; j<pillReminderDBInsertEntry.getReminderTimes().length; j++){
-                            dbAdapter.insertPillReminderEntries(
+                            dbAdapter.insertPillReminderEntry(
                                     sdf.format(cal.getTime()),
                                     pillReminderId,
-                                    pillReminderDBInsertEntry.getReminderTimes()[j].getReminderTimeStr()
+                                    pillReminderDBInsertEntry.getReminderTimes()[j].getReminderTimeStr(), 0
                             );
                         }
                     }
@@ -101,10 +97,10 @@ public class TUtils {
             case 3:
                 for(int i=0; i<cycleDBInsertEntry.getDayCount();i+=cycleDBInsertEntry.getDayInterval()){
                     for (int j=0; j<pillReminderDBInsertEntry.getReminderTimes().length; j++){
-                        dbAdapter.insertPillReminderEntries(
+                        dbAdapter.insertPillReminderEntry(
                                 sdf.format(new Date(cal.getTimeInMillis())),
                                 pillReminderId,
-                                pillReminderDBInsertEntry.getReminderTimes()[j].getReminderTimeStr()
+                                pillReminderDBInsertEntry.getReminderTimes()[j].getReminderTimeStr(), 0
                         );
                     }
                     cal.add(Calendar.DATE, cycleDBInsertEntry.getDayInterval());

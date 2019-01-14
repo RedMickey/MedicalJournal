@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity
     private LinearLayout toolbarLinearLayout1;
     private LinearLayout toolbarLinearLayout2;
     private int preFragmentId = -1;
+    private NavigationView navigationView;
 
     private DatabaseHelper databaseHelper;
     @Override
@@ -78,7 +79,7 @@ public class MainActivity extends AppCompatActivity
             layoutParams.setBehavior(appBarLayoutBehaviour);
         }
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         if ( savedInstanceState == null )   // приложение запущено впервые
@@ -135,6 +136,7 @@ public class MainActivity extends AppCompatActivity
                         .add(R.id.frame_container, mainFragmentNew, "MAIN_FRAGMENT")
                         .commit();
                 //Toast.makeText(this,"here",Toast.LENGTH_SHORT).show();
+                navigationView.getMenu().getItem(0).setChecked(true);
             }
             else
                 super.onBackPressed();

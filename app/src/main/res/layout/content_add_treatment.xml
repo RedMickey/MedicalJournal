@@ -135,7 +135,8 @@
                     android:layout_gravity="center_vertical"
                     android:textColor="#000"
                     android:textAlignment="textStart"
-                    android:onClick="onPickDate"/>
+                    android:onClick="onPickDate"
+                    style="@style/Base.Widget.AppCompat.Button.Borderless"/>
             </LinearLayout>
 
             <LinearLayout

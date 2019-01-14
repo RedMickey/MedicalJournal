@@ -27,6 +27,13 @@ public class PillReminderListAdapter extends ArrayAdapter<PillReminder>{
         this.inflater = LayoutInflater.from(context);
     }
 
+    public PillReminderListAdapter(Context context, int resource, int textViewResourceId, List<PillReminder> pillReminder){
+        super(context, resource, textViewResourceId, pillReminder);
+        this.pillReminder = pillReminder;
+        this.layout = resource;
+        this.inflater = LayoutInflater.from(context);
+    }
+
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {

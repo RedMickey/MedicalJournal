@@ -38,7 +38,7 @@ public class MeasurementRemindersInsertionTask extends AsyncTask<CycleAndMeasure
                 mrdbe.getStartDate().getDateString(),
                 mrdbe.getIdCycle(), mrdbe.getIdHavingMealsType(),
                 mrdbe.getHavingMealsTime(), mrdbe.getAnnotation(),
-                mrdbe.getIsActive(), mrdbe.getReminderTimes().length
+                mrdbe.getIsActive(), mrdbe.getReminderTimes().length, 0
         );
 
         for (int i=0; i<mrdbe.getReminderTimes().length; i++){
@@ -54,7 +54,7 @@ public class MeasurementRemindersInsertionTask extends AsyncTask<CycleAndMeasure
             case 1:
                 for(int i=0; i<cdbie.getDayCount();i++){
                     for (int j=0; j<mrdbe.getReminderTimes().length; j++){
-                        dbAdapter.insertMeasurementReminderEntries(
+                        dbAdapter.insertMeasurementReminderEntry(
                                 sdf.format(new Date(cal.getTimeInMillis())),
                                 measurementReminderId,
                                 mrdbe.getReminderTimes()[j].getReminderTimeStr()
@@ -67,7 +67,7 @@ public class MeasurementRemindersInsertionTask extends AsyncTask<CycleAndMeasure
                 for(int i=0; i<cdbie.getDayCount();i++){
                     if(cdbie.getWeekSchedule()[cal.get(Calendar.DAY_OF_WEEK)-1]==1){
                         for (int j=0; j<mrdbe.getReminderTimes().length; j++){
-                            dbAdapter.insertMeasurementReminderEntries(
+                            dbAdapter.insertMeasurementReminderEntry(
                                     sdf.format(cal.getTime()),
                                     measurementReminderId,
                                     mrdbe.getReminderTimes()[j].getReminderTimeStr()
@@ -80,7 +80,7 @@ public class MeasurementRemindersInsertionTask extends AsyncTask<CycleAndMeasure
             case 3:
                 for(int i=0; i<cdbie.getDayCount();i+=cdbie.getDayInterval()){
                     for (int j=0; j<mrdbe.getReminderTimes().length; j++){
-                        dbAdapter.insertMeasurementReminderEntries(
+                        dbAdapter.insertMeasurementReminderEntry(
                                 sdf.format(new Date(cal.getTimeInMillis())),
                                 measurementReminderId,
                                 mrdbe.getReminderTimes()[j].getReminderTimeStr()

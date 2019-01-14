@@ -20,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Switch;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -29,6 +30,7 @@ import com.example.michel.mycalendar2.adapters.TimesOfTakingMedicineAdapter;
 import com.example.michel.mycalendar2.app_async_tasks.AddMeasurementActivityCreationTask;
 import com.example.michel.mycalendar2.app_async_tasks.MeasurementRemindersInsertionTask;
 import com.example.michel.mycalendar2.app_async_tasks.MeasurementRemindersUpdateTask;
+import com.example.michel.mycalendar2.app_async_tasks.OneTimeMeasurementReminderInsertionTask;
 import com.example.michel.mycalendar2.calendarview.data.DateData;
 import com.example.michel.mycalendar2.calendarview.utils.CalendarUtil;
 import com.example.michel.mycalendar2.expandableLayout.ExpandableRelativeLayout;
@@ -51,13 +53,12 @@ public class AddOneTimeMeasurementActivity extends AppCompatActivity {
     private Button pickDateButton;
     private Button pickTimeButton;
     private DateData pickDateButtonDateData;
-    private MeasurementReminderDBEntry oldMeasurementReminder;
-    private int idWeekSchedule = 0;
+    private TextView measurementTypeTv;
+    private EditText valueEt1;
+    private EditText valueEt2 = null;
     int measurementTypeId;
 
     private ArrayList<String> time = new ArrayList();
-
-    private TimesOfTakingMedicineAdapter timesOfTakingMedicineAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,52 +74,6 @@ public class AddOneTimeMeasurementActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /*CycleDBInsertEntry cycleDBInsertEntry = new CycleDBInsertEntry();
-                int[] weekSchedule = null;
-                switch (radioGroupCycleType.getCheckedRadioButtonId()){
-                    case R.id.every_day:
-                        cycleDBInsertEntry.setIdCyclingType(DBStaticEntries.cycleTypes.get("every_day"));
-                        LinearLayout everyDayPeriodLayout = (LinearLayout) findViewById(R.id.every_day_period);
-                        try {
-                            setDateParams(cycleDBInsertEntry, everyDayPeriodLayout, 0);
-                        }
-                        catch (NumberFormatException ex){
-                            Toast.makeText(view.getContext(),"Введите период",Toast.LENGTH_LONG).show();
-                            return;
-                        }
-                        break;
-                    case R.id.specific_days:
-                        cycleDBInsertEntry.setIdCyclingType(DBStaticEntries.cycleTypes.get("specific_days"));
-
-                        GridLayout gridLayout = (GridLayout) findViewById(R.id.specific_days_layout_id);
-                        weekSchedule = new int[7];
-                        for (int i=7; i< 13; i++){
-                            weekSchedule[i-6]=((CheckBox) gridLayout.getChildAt(i)).isChecked() ? 1 : 0;
-                        }
-                        weekSchedule[0]=((CheckBox) gridLayout.getChildAt(13)).isChecked() ? 1 : 0;
-                        cycleDBInsertEntry.setWeekSchedule(weekSchedule);
-                        try {
-                            setDateParams(cycleDBInsertEntry, (LinearLayout) gridLayout.getChildAt(14), 0);
-                        }
-                        catch (NumberFormatException ex){
-                            Toast.makeText(view.getContext(),"Введите период",Toast.LENGTH_LONG).show();
-                            return;
-                        }
-                        break;
-                    case R.id.day_interval:
-                        cycleDBInsertEntry.setIdCyclingType(DBStaticEntries.cycleTypes.get("day_interval"));
-                        LinearLayout once_aDateLayout = (LinearLayout) findViewById(R.id.once_a_date_layout);
-                        try {
-                            setDateParams(cycleDBInsertEntry, once_aDateLayout, 1);
-                            setDateParams(cycleDBInsertEntry, (LinearLayout) findViewById(R.id.day_interval_period), 0);
-                        }
-                        catch (NumberFormatException ex){
-                            Toast.makeText(view.getContext(),"Введите значения",Toast.LENGTH_LONG).show();
-                            return;
-                        }
-                        break;
-                }
-                //********************************************************
 
                 MeasurementReminderDBEntry measurementReminderDBEntry = new MeasurementReminderDBEntry();
 
@@ -155,38 +110,21 @@ public class AddOneTimeMeasurementActivity extends AppCompatActivity {
                 }
 
                 measurementReminderDBEntry.setStartDate(pickDateButtonDateData);
-                measurementReminderDBEntry.setAnnotation(
-                        ((EditText)findViewById(R.id.annotation)).getText().toString()
-                );
 
-                ReminderTime[] reminderTimes = new ReminderTime[timesOfTakingMeasurement.getChildCount()];
-                for ( int j = 0; j < timesOfTakingMeasurement.getChildCount(); j++) {
-                    LinearLayout bView = (LinearLayout) timesOfTakingMeasurement.getChildAt(j);
-                    //reminderTimes[j] = ((EditText)bView.findViewById(R.id.reminder_time)).getText().toString()+":00";
-                    reminderTimes[j] = new ReminderTime (((EditText)bView.findViewById(R.id.reminder_time)).getText().toString()+":00");
-                }
+                ReminderTime[] reminderTimes = new ReminderTime[1];
+                reminderTimes[0] = new ReminderTime (pickTimeButton.getText().toString()+":00");
                 measurementReminderDBEntry.setReminderTimes(reminderTimes);
                 measurementReminderDBEntry.setIdMeasurementType(measurementTypeId);
 
-                if (getIntent().getExtras().getInt("MeasurementReminderID") == 0) {
-                    measurementReminderDBEntry.setIsActive(1);
-                    Snackbar.make(view, "ReadyInsert", Snackbar.LENGTH_SHORT)
-                            .setAction("Action", null).show();
-                    MeasurementRemindersInsertionTask mrit = new MeasurementRemindersInsertionTask(getApplicationContext());
-                    mrit.execute(new CycleAndMeasurementComby(cycleDBInsertEntry, measurementReminderDBEntry));
-                }
-                else {
-                    measurementReminderDBEntry.setIsActive(((Switch)findViewById(R.id.switch_active_type)).isChecked()?1:0);
-                    measurementReminderDBEntry.setIdCycle(oldMeasurementReminder.getIdCycle());
-                    cycleDBInsertEntry.setIdCycle(oldMeasurementReminder.getIdCycle());
-                    cycleDBInsertEntry.setIdWeekSchedule(idWeekSchedule);
-                    measurementReminderDBEntry.setIdMeasurementReminder(oldMeasurementReminder.getIdMeasurementReminder());
-                    Snackbar.make(view, "ReadyUpdate", Snackbar.LENGTH_SHORT)
-                            .setAction("Action", null).show();
-                    MeasurementRemindersUpdateTask mrut = new MeasurementRemindersUpdateTask(
-                            getApplicationContext());
-                    mrut.execute(new CycleAndMeasurementComby(cycleDBInsertEntry, measurementReminderDBEntry));
-                }*/
+                measurementReminderDBEntry.setIsActive(1);
+                Snackbar.make(view, "ReadyInsert", Snackbar.LENGTH_SHORT)
+                        .setAction("Action", null).show();
+
+                double value1 = Double.parseDouble(valueEt1.getText().toString());
+                double value2 = valueEt2 == null?-10000:Double.parseDouble(valueEt2.getText().toString());
+
+                OneTimeMeasurementReminderInsertionTask otmrit = new OneTimeMeasurementReminderInsertionTask(value1, value2);
+                otmrit.execute(measurementReminderDBEntry);
             }
         });
 
@@ -244,36 +182,20 @@ public class AddOneTimeMeasurementActivity extends AppCompatActivity {
         cal = Calendar.getInstance();
         switch (measurementTypeId){
             case 1:
-                ((ImageView) findViewById(R.id.measurement_type_iv)).setImageResource(R.drawable.ic_thermometer);
+                ((ImageView) findViewById(R.id.measurement_type_iv1)).setImageResource(R.drawable.ic_thermometer);
+                defineTableRow(0);
+
                 break;
             case 2:
-                ((ImageView) findViewById(R.id.measurement_type_iv)).setImageResource(R.drawable.ic_tonometer);
+                ((ImageView) findViewById(R.id.measurement_type_iv2)).setImageResource(R.drawable.ic_tonometer);
+                defineTableRow(1);
                 break;
         }
 
-        if (id == 0){
+        measurementTypeTv.setText(DBStaticEntries.getMeasurementTypeById(measurementTypeId).getMeasurementValueTypeName());
 
-            pickDateButton.setText(setDate(cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.MONTH)+1, cal.get(Calendar.YEAR)));
-            pickTimeButton.setText(String.format("%02d:%02d", cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE)));
-            /*((LinearLayout)findViewById(R.id.active_status_layout)).setVisibility(View.GONE);
-
-            cal = Calendar.getInstance();
-            time.add(String.valueOf(cal.get(Calendar.HOUR_OF_DAY))+":00");
-
-            pickDateButton.setText(setDate(cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.MONTH)+1, cal.get(Calendar.YEAR)));
-
-            for (int i = 0; i < timesOfTakingMedicineAdapter.getCount(); i++) {
-                View item = timesOfTakingMedicineAdapter.getView(i, null, null);
-                timesOfTakingMeasurement.addView(item);
-            }*/
-        }
-        else {
-            /*AddMeasurementActivityCreationTask addMeasurementActivityCreationTask = new AddMeasurementActivityCreationTask(
-                    this, pickDateButtonDateData, timesOfTakingMedicineAdapter);
-            addMeasurementActivityCreationTask.execute(id);*/
-        }
-
-
+        pickDateButton.setText(setDate(cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.MONTH)+1, cal.get(Calendar.YEAR)));
+        pickTimeButton.setText(String.format("%02d:%02d", cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE)));
     }
 
     public void onToggleTB(View view) {
@@ -283,54 +205,6 @@ public class AddOneTimeMeasurementActivity extends AppCompatActivity {
             mExpandLayout2.collapse();
             ((RadioGroup)view.getParent()).clearCheck();
             Toast.makeText(this,"false",Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    /*public void add_reminder_time(View view) {
-        Calendar cal = Calendar.getInstance();
-        timesOfTakingMedicineAdapter.add(String.valueOf(cal.get(Calendar.HOUR_OF_DAY))+":00");
-        timesOfTakingMedicineAdapter.notifyDataSetChanged();
-        View item = timesOfTakingMedicineAdapter.getView(timesOfTakingMedicineAdapter.getCount()-1, null, null);
-        timesOfTakingMeasurement.addView(item);
-    }*/
-
-    private void setDateParams(CycleDBInsertEntry cycleDBInsertEntry, LinearLayout linearLayout, int type) throws NumberFormatException{
-        Integer period = Integer.parseInt(((EditText)linearLayout.getChildAt(1)).getText().toString());
-        String periodDMType = ((Spinner)linearLayout.getChildAt(2)).getSelectedItem().toString();
-        if (type==0)
-        {
-            cycleDBInsertEntry.setPeriod(period); //required verification
-            cycleDBInsertEntry.setPeriodDMType(
-                    DBStaticEntries.dateTypes.get(periodDMType)
-            );
-            switch (periodDMType){
-                case "дн.":
-                    cycleDBInsertEntry.setDayCount(period);
-                    break;
-                case "нед.":
-                    cycleDBInsertEntry.setDayCount(period*7);
-                    break;
-                case "мес.":
-                    cycleDBInsertEntry.setDayCount(period*30);
-                    break;
-            }
-        }
-        else {
-            cycleDBInsertEntry.setOnce_aPeriod(period); //required verification
-            cycleDBInsertEntry.setOnce_aPeriodDMType(
-                    DBStaticEntries.dateTypes.get(periodDMType)
-            );
-            switch (periodDMType){
-                case "дн.":
-                    cycleDBInsertEntry.setDayInterval(period);
-                    break;
-                case "нед.":
-                    cycleDBInsertEntry.setDayInterval(period*7);
-                    break;
-                case "мес.":
-                    cycleDBInsertEntry.setDayInterval(period*30);
-                    break;
-            }
         }
     }
 
@@ -365,11 +239,18 @@ public class AddOneTimeMeasurementActivity extends AppCompatActivity {
         timePickerDialog.show();
     }
 
-    public void setOldMeasurementReminder(MeasurementReminderDBEntry oldMeasurementReminder) {
-        this.oldMeasurementReminder = oldMeasurementReminder;
+    private void defineTableRow(int type){
+        if (type == 0){
+            measurementTypeTv = (TextView) findViewById(R.id.measurement_type_tv1);
+            valueEt1 = (EditText) findViewById(R.id.value1_et1);
+        }
+        else {
+            measurementTypeTv = (TextView) findViewById(R.id.measurement_type_tv2);
+            ((TableRow) findViewById(R.id.values_tr1)).setVisibility(View.GONE);
+            ((TableRow) findViewById(R.id.values_tr2)).setVisibility(View.VISIBLE);
+            valueEt1 = (EditText) findViewById(R.id.value1_et2);
+            valueEt2 = (EditText) findViewById(R.id.value2_et2);
+        }
     }
 
-    public void setIdWeekSchedule(int idWeekSchedule) {
-        this.idWeekSchedule = idWeekSchedule;
-    }
 }
