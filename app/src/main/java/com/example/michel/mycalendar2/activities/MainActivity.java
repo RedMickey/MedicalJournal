@@ -33,6 +33,7 @@ import com.example.michel.mycalendar2.utils.DBStaticEntries;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -117,7 +118,6 @@ public class MainActivity extends AppCompatActivity
                 mnct.execute(getApplicationContext());
             }
         }
-
     }
 
     @Override
