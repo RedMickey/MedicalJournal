@@ -23,4 +23,6 @@
     <color name="material_test1">#43A047</color>
     <color name="material_test3">#BA68C8</color>
     <color name="material_test2">#66BB6A</color>
+
+    <color name="hint_text_color">#ababab</color>
 </resources>

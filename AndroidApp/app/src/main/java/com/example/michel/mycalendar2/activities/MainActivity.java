@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity
     private LinearLayout toolbarLinearLayout2;
     private int preFragmentId = -1;
     private NavigationView navigationView;
+    private MainActivity mainActivity;
 
     private DatabaseHelper databaseHelper;
     @Override
@@ -82,6 +83,17 @@ public class MainActivity extends AppCompatActivity
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        mainActivity = this;
+
+        ((LinearLayout) navigationView.getHeaderView(0).findViewById(R.id.nav_user_layout)).setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(mainActivity, LoginActivity.class);
+                        mainActivity.startActivity(intent);
+                    }
+                }
+        );
 
         if ( savedInstanceState == null )   // приложение запущено впервые
         {
@@ -97,6 +109,8 @@ public class MainActivity extends AppCompatActivity
             DBStaticEntries.dateTypes = databaseAdapter.getDateTypes();
             DBStaticEntries.doseTypes = databaseAdapter.getDoseTypes();
             DBStaticEntries.measurementTypes = databaseAdapter.getMeasurementTypes();
+
+            databaseAdapter.insertTestTable();
 
             databaseAdapter.close();
 

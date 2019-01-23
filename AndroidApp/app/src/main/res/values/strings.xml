@@ -52,6 +52,12 @@
     </string-array>
     <string name="title_activity_measurement_chart">MeasurementChartActivity</string>
 
+    <string-array name="genders">
+        <item id="0">Пол</item>
+        <item>Мужской</item>
+        <item>Женский</item>
+    </string-array>
+
     <string-array name="periods_of_day">
         <item id="0">Утро</item>
         <item>День</item>
@@ -59,7 +65,24 @@
         <item>Ночь</item>
         <item>За весь день</item>
     </string-array>
+
     <string name="title_activity_add_one_time_treatment">AddOneTimeTreatmentActivity</string>
     <string name="title_activity_add_one_time_measurement">AddOneTimeMeasurementActivity</string>
+    <string name="title_activity_login">Sign in</string>
+
+    <string name="title_activity_registration">Регистрация</string>
+    
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Пароль</string>
+    <string name="action_sign_in">Войти</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">Неверный email адрес</string>
+    <string name="error_invalid_password">Введённый пароль слишком короткий</string>
+    <string name="error_incorrect_password">Неверный пароль</string>
+    <string name="error_field_required">Это поле является обязательным</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
 
 </resources>

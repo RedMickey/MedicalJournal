@@ -24,6 +24,7 @@ import com.example.michel.mycalendar2.models.ReminderTime;
 import com.example.michel.mycalendar2.utils.DBStaticEntries;
 import com.example.michel.mycalendar2.utils.utilModels.MeasurementType;
 
+import java.nio.ByteBuffer;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -32,6 +33,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public class DatabaseAdapter {
     private DatabaseHelper dbHelper;
@@ -63,6 +65,53 @@ public class DatabaseAdapter {
 
     public void close(){
         dbHelper.close();
+    }
+
+    public List<String> getTestEntries(){
+        List<String> testEntries = new ArrayList<String>();
+        Cursor cursor = database.rawQuery("select * from test_table", null);
+        if(cursor.moveToFirst()){
+            do{
+                String id = cursor.getString(cursor.getColumnIndex("_id"));
+                testEntries.add(id);
+            }
+            while (cursor.moveToNext());
+        }
+        cursor.close();
+        return testEntries;
+    }
+
+    //786aedb6-e3f2-4013-b24f-e1c37a912d4e
+
+    public void insertTestTable(){
+        ContentValues pillReminderEntryTableValues = new ContentValues();
+        UUID uuid = UUID.randomUUID();
+
+        byte[] blob = ByteBuffer.allocate(16).putLong(uuid.getMostSignificantBits())
+                .putLong(uuid.getLeastSignificantBits()).array();
+
+        pillReminderEntryTableValues.put("_id", blob);
+
+
+        Long p = database.insert("test_table", null, pillReminderEntryTableValues);
+
+        byte[] selectedBlob = new byte[16];
+        Cursor cursor = database.rawQuery("select * from test_table", null);
+        if(cursor.moveToFirst()){
+            do{
+                selectedBlob = cursor.getBlob(cursor.getColumnIndex("_id"));
+            }
+            while (cursor.moveToNext());
+        }
+        cursor.close();
+
+        ByteBuffer bbr = ByteBuffer.wrap(selectedBlob);
+        long high = bbr.getLong();
+        long low = bbr.getLong();
+
+        UUID resultUUID = new UUID(high, low);
+
+        UUID uuid2 = UUID.randomUUID();
     }
 
 //***********************************get static data************************************************************
