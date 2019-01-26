@@ -1,59 +1,79 @@
 package com.example.michel.mycalendar2.activities;
 
+import android.accounts.Account;
+import android.accounts.AccountAuthenticatorResponse;
+import android.accounts.AccountManager;
+import android.accounts.AccountManagerFuture;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
 import android.os.AsyncTask;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import org.json.JSONObject;
+import com.example.michel.mycalendar2.app_async_tasks.PostSignInTask;
+import com.example.michel.mycalendar2.authentication.AccountGeneralUtils;
+import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
+import com.example.michel.mycalendar2.models.User;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
-import javax.net.ssl.HttpsURLConnection;
+import static com.example.michel.mycalendar2.authentication.AccountGeneralUtils.sServerAuthenticate;
 
 /**
  * A login screen that offers login via email/password.
  */
-public class LoginActivity extends AppCompatActivity{
+public class LoginActivity extends AppCompatActivity {
 
-    /**
-     * A dummy authentication store containing known user names and passwords.
-     * TODO: remove after connecting to a real authentication system.
-     */
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "foo@example.com:hello", "bar@example.com:world"
-    };
-    /**
-     * Keep track of the login task to ensure we can cancel it if requested.
-     */
-    private UserLoginTask mAuthTask = null;
+    public final static String ARG_ACCOUNT_TYPE = "ACCOUNT_TYPE";
+    public final static String ARG_AUTH_TYPE = "AUTH_TYPE";
+    public final static String ARG_ACCOUNT_NAME = "ACCOUNT_NAME";
+    public final static String ARG_IS_ADDING_NEW_ACCOUNT = "IS_ADDING_ACCOUNT";
+
+    public static final String KEY_ERROR_MESSAGE = "ERR_MSG";
+
+    public final static String PARAM_USER_PASS = "USER_PASS";
+
+    private final String TAG = this.getClass().getSimpleName();
+
+    private int requestSignUpCode = 5533;
+
+    private AccountAuthenticatorResponse accountAuthenticatorResponse = null;
+    private Bundle resultBundle = null;
+    private AccountManager mAccountManager;
+    private String mAuthTokenType;
+
+    //private UserLoginTask mAuthTask = null;
 
     // UI references.
-    private EditText mEmailView;
+    private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
-    private Integer i = 0;
+    private LoginActivity loginActivity;
+
+    public final void setAccountAuthenticatorResult(Bundle result) {
+        resultBundle = result;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +83,7 @@ public class LoginActivity extends AppCompatActivity{
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         // Set up the login form.
-        mEmailView = (EditText) findViewById(R.id.email_et);
+        mEmailView = (AutoCompleteTextView) findViewById(R.id.email_actv);
 
         mPasswordView = (EditText) findViewById(R.id.password_et);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -87,6 +107,23 @@ public class LoginActivity extends AppCompatActivity{
 
         //mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+
+        mAccountManager = AccountManager.get(getBaseContext());
+
+        mAuthTokenType = getIntent().getStringExtra(ARG_AUTH_TYPE);
+        if (mAuthTokenType == null)
+            mAuthTokenType = AccountGeneralUtils.AUTHTOKEN_TYPE_USER_ACCESS;
+
+        accountAuthenticatorResponse =
+                getIntent().getParcelableExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE);
+
+        if (accountAuthenticatorResponse != null) {
+            accountAuthenticatorResponse.onRequestContinued();
+        }
+
+        loginActivity = this;
+
+        setUpEmailViewAdapter();
     }
 
     /**
@@ -95,11 +132,6 @@ public class LoginActivity extends AppCompatActivity{
      * errors are presented and no actual login attempt is made.
      */
     private void attemptLogin() {
-        if (mAuthTask != null) {
-            return;
-        }
-
-
         // Reset errors.
         mEmailView.setError(null);
         mPasswordView.setError(null);
@@ -137,15 +169,120 @@ public class LoginActivity extends AppCompatActivity{
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(email, password);
+            Account[] accounts = mAccountManager.getAccountsByType("com.red_mickey.medical_journal");
+
+            /*for (int index = 0; index < accounts.length; index++) {
+                mAccountManager.removeAccount(accounts[index], null, null);
+            }*/
+
+            /*final AccountManagerFuture<Bundle> future = mAccountManager.getAuthToken(accounts[0],  mAuthTokenType, null, this, null, null);
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Bundle bnd = future.getResult();
+
+                        final String authtoken = bnd.getString(AccountManager.KEY_AUTHTOKEN);
+
+                        Log.d("MedicalJournal", "GetToken Bundle is " + bnd);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();*/
+
+
+            submit(email, password);
+            /*mAuthTask = new UserLoginTask(email, password);
             mAuthTask.execute((Void) null);
-            i++;
+            i++;*/
         }
 
         /*showProgress(true);
         mAuthTask = new UserLoginTask("", "");
         mAuthTask.execute((Void) null);*/
 
+    }
+
+    public void submit(final String email, final String password){
+        final String accountType = getIntent().getStringExtra(ARG_ACCOUNT_TYPE)!=null?getIntent().getStringExtra(ARG_ACCOUNT_TYPE)
+                : AccountGeneralUtils.ACCOUNT_TYPE;
+
+        new AsyncTask<Void, Void, Intent>() {
+            @Override
+            protected Intent doInBackground(Void... params) {
+                String authtoken = null;
+                Bundle data = new Bundle();
+                try {
+                    authtoken = sServerAuthenticate.userSignIn(email, password);
+
+                    data.putString(AccountManager.KEY_ACCOUNT_NAME, email);
+                    data.putString(AccountManager.KEY_ACCOUNT_TYPE, accountType);
+                    data.putString(AccountManager.KEY_AUTHTOKEN, authtoken);
+                    data.putString(PARAM_USER_PASS, password);
+                    if (authtoken == null)
+                        data.putString(KEY_ERROR_MESSAGE, "Authentication failed");
+                } catch (Exception e) {
+                    data.putString(KEY_ERROR_MESSAGE, e.getMessage());
+                }
+                final Intent res = new Intent();
+                res.putExtras(data);
+                return res;
+            }
+            @Override
+            protected void onPostExecute(Intent intent) {
+                if (intent.hasExtra(KEY_ERROR_MESSAGE)) {
+                    Toast.makeText(getBaseContext(), intent.getStringExtra(KEY_ERROR_MESSAGE), Toast.LENGTH_SHORT).show();
+                    showProgress(false);
+                } else {
+                    finishLogin(intent);
+                }
+            }
+        }.execute();
+    }
+
+    private void finishLogin(Intent intent) {
+        Log.d("MedicalJournal", TAG + "> finishLogin");
+
+        String accountName = intent.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
+        String accountPassword = intent.getStringExtra(PARAM_USER_PASS);
+        final Account account = new Account(accountName, intent.getStringExtra(AccountManager.KEY_ACCOUNT_TYPE));
+
+        if (getIntent().getBooleanExtra(ARG_IS_ADDING_NEW_ACCOUNT, true)) {
+            Log.d("MedicalJournal", TAG + "> finishLogin > addAccountExplicitly");
+            String authtoken = intent.getStringExtra(AccountManager.KEY_AUTHTOKEN);
+            String authtokenType = mAuthTokenType;
+
+            // Creating the account on the device and setting the auth token we got
+            // (Not setting the auth token will cause another call to the server to authenticate the user)
+            mAccountManager.addAccountExplicitly(account, accountPassword, null);
+            mAccountManager.setAuthToken(account, authtokenType, authtoken);
+
+        } else {
+            Log.d("MedicalJournal", TAG + "> finishLogin > setPassword");
+            mAccountManager.setPassword(account, accountPassword);
+        }
+
+        setAccountAuthenticatorResult(intent.getExtras());
+        setResult(RESULT_OK, intent);
+
+        finish();
+    }
+
+    public void finish() {
+        if (accountAuthenticatorResponse != null) {
+            // send the result bundle back if set, otherwise send an error.
+            if (resultBundle != null) {
+                accountAuthenticatorResponse.onResult(resultBundle);
+            } else {
+                accountAuthenticatorResponse.onError(AccountManager.ERROR_CODE_CANCELED,
+                        "canceled");
+            }
+            accountAuthenticatorResponse = null;
+        }
+        //Account[] accounts = mAccountManager.getAccountsByType("com.red_mickey.medical_journal");
+        super.finish();
     }
 
     private boolean isEmailValid(String email) {
@@ -186,25 +323,54 @@ public class LoginActivity extends AppCompatActivity{
 
     public void onSignUpButtonClick(View view) {
         Intent intent = new Intent(this, RegistrationActivity.class);
-        startActivity(intent);
+        //startActivity(intent);
+        startActivityForResult(intent, requestSignUpCode);
     }
 
-
-    private interface ProfileQuery {
-        String[] PROJECTION = {
-                ContactsContract.CommonDataKinds.Email.ADDRESS,
-                ContactsContract.CommonDataKinds.Email.IS_PRIMARY,
-        };
-
-        int ADDRESS = 0;
-        int IS_PRIMARY = 1;
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == requestSignUpCode) {
+            if (resultCode == RESULT_OK) {
+                String userEmail = data.getStringExtra("user_email");
+                setUpEmailViewAdapter();
+                mEmailView.setText(userEmail);
+            }
+        }
     }
 
-    /**
-     * Represents an asynchronous login/registration task used to authenticate
-     * the user.
-     */
-    public class UserLoginTask extends AsyncTask<Void, Void, String> {
+    private void setUpEmailViewAdapter(){
+        new AsyncTask<Void, Void, List<String>>() {
+            @Override
+            protected List<String> doInBackground(Void... voids) {
+                DatabaseAdapter databaseAdapter = new DatabaseAdapter();
+                databaseAdapter.open();
+                List<User> users = databaseAdapter.getAllUsers();
+
+                databaseAdapter.close();
+
+                List<String> userEmails = new ArrayList<>();
+                for (User user : users) {
+                    if (!user.getEmail().equals(getResources().getString(R.string.def_user_email)))
+                        userEmails.add(user.getEmail());
+                }
+
+                return userEmails;
+            }
+
+            @Override
+            protected void onPostExecute(List<String> userEmails) {
+                if (userEmails.size()>0)
+                {
+                    ArrayAdapter<String> emailViewAdapter = new ArrayAdapter<>(
+                            loginActivity, android.R.layout.simple_dropdown_item_1line, userEmails
+                    );
+                    mEmailView.setAdapter(emailViewAdapter);
+                }
+            }
+        }.execute();
+    }
+
+    /*public class UserLoginTask extends AsyncTask<Void, Void, String> {
 
         private final String mEmail;
         private final String mPassword;
@@ -216,14 +382,6 @@ public class LoginActivity extends AppCompatActivity{
 
         @Override
         protected String doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
-
-            /*try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-
-            }*/
 
             String response = "";
 
@@ -270,16 +428,6 @@ public class LoginActivity extends AppCompatActivity{
                 else {
                     return new String("false : " + responseCode);
                 }
-                    //conn.disconnect();
-
-
-                /*OutputStream os = conn.getOutputStream();
-                BufferedWriter writer = new BufferedWriter(
-                        new OutputStreamWriter(os, "UTF-8"));
-                writer.write(getQuery(params));
-                writer.flush();
-                writer.close();
-                os.close();*/
 
             }
             catch(Exception e){
@@ -287,15 +435,6 @@ public class LoginActivity extends AppCompatActivity{
                 return new String("Exception: " + e.getMessage());
             }
 
-            /*for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
-                }
-            }*/
-
-            // TODO: register the new account here.
             return response;
         }
 
@@ -311,12 +450,6 @@ public class LoginActivity extends AppCompatActivity{
             catch (Exception e){
                 Log.e("JSONObject", e.getMessage());
             }
-            /*if (success) {
-                finish();
-            } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
-            }*/
         }
 
         @Override
@@ -324,6 +457,6 @@ public class LoginActivity extends AppCompatActivity{
             mAuthTask = null;
             showProgress(false);
         }
-    }
+    }*/
 }
 

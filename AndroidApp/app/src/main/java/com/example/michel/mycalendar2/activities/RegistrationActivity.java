@@ -9,6 +9,7 @@ import android.text.method.PasswordTransformationMethod;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -17,6 +18,7 @@ import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.ToggleButton;
 
+import com.example.michel.mycalendar2.app_async_tasks.UserSignUpTask;
 import com.example.michel.mycalendar2.models.User;
 
 import java.util.ArrayList;
@@ -24,9 +26,13 @@ import java.util.Calendar;
 
 public class RegistrationActivity extends AppCompatActivity {
     private Spinner birthdayYearSpinner;
+    private Spinner gendersSpinner;
     private ToggleButton passwordVisibilityButton;
     private EditText passwordEt;
-    private Spinner gendersSpinner;
+    private EditText usernameRegEt;
+    private EditText userSurnameRegEt;
+    private EditText emailEt;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +61,12 @@ public class RegistrationActivity extends AppCompatActivity {
         Button signUpButton = (Button) findViewById(R.id.sign_up_button);
 
         gendersSpinner = (Spinner) findViewById(R.id.genders_spinner);
+
+        usernameRegEt = (EditText) findViewById(R.id.username_reg_et);
+
+        userSurnameRegEt = (EditText) findViewById(R.id.usersurname_reg_et);
+
+        emailEt = (EditText) findViewById(R.id.email_et);
 
         passwordVisibilityButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -97,23 +109,59 @@ public class RegistrationActivity extends AppCompatActivity {
 
     private void createAndSendSignUpRequest(){
         User newUser = new User();
-        validateInputForm(newUser);
+        boolean isCorrect = validateInputForm(newUser);
+        if (isCorrect) {
+            UserSignUpTask userSignUpTask = new UserSignUpTask(this);
+            userSignUpTask.execute(newUser);
+        }
 
     }
 
     private boolean validateInputForm(User newUser){
         boolean isCorrect = true;
+        View focusView = null;
 
-        newUser.setName(((EditText) findViewById(R.id.username_reg_et)).getText().toString());
-        newUser.setSurname(((EditText) findViewById(R.id.usersurname_reg_et)).getText().toString());
+        // Reset errors.
+        passwordEt.setError(null);
+        usernameRegEt.setError(null);
+        userSurnameRegEt.setError(null);
+        emailEt.setError(null);
+
+        newUser.setName(usernameRegEt.getText().toString());
+        newUser.setSurname(userSurnameRegEt.getText().toString());
         newUser.setGenderId(gendersSpinner.getSelectedItemPosition()+1);
         newUser.setBirthdayYear(Integer.parseInt((String) birthdayYearSpinner.getSelectedItem()));
+        newUser.setEmail(emailEt.getText().toString());
+        newUser.setPassword(passwordEt.getText().toString());
 
-        /*if (TextUtils.isEmpty(email)) {
-            mEmailView.setError(getString(R.string.error_field_required));
-            focusView = mEmailView;
-            cancel = true;
-        }*/
+        if (TextUtils.isEmpty(newUser.getName())) {
+            usernameRegEt.setError(getString(R.string.error_field_required));
+            focusView = usernameRegEt;
+            isCorrect = false;
+        }
+        if (TextUtils.isEmpty(newUser.getSurname())) {
+            userSurnameRegEt.setError(getString(R.string.error_field_required));
+            focusView = userSurnameRegEt;
+            isCorrect = false;
+        }
+        if (TextUtils.isEmpty(newUser.getEmail())) {
+            emailEt.setError(getString(R.string.error_field_required));
+            focusView = emailEt;
+            isCorrect = false;
+        } else if (!newUser.getEmail().contains("@")) {
+            emailEt.setError(getString(R.string.error_invalid_email));
+            focusView = emailEt;
+            isCorrect = false;
+        }
+        if (newUser.getPassword().equals("") || newUser.getPassword().length()<4) {
+            passwordEt.setError(getString(R.string.error_invalid_password));
+            focusView = passwordEt;
+            isCorrect = false;
+        }
+
+        if (!isCorrect){
+            focusView.requestFocus();
+        }
 
         return isCorrect;
     }

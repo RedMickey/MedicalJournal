@@ -1,9 +1,11 @@
 package com.example.michel.mycalendar2.activities;
 
+import android.accounts.AccountManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
@@ -19,10 +21,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
 
 import com.example.michel.mycalendar2.app_async_tasks.MeasurementNotificationsCreationTask;
 import com.example.michel.mycalendar2.app_async_tasks.PillNotificationsCreationTask;
+import com.example.michel.mycalendar2.app_async_tasks.PostSignInTask;
+import com.example.michel.mycalendar2.app_async_tasks.SetUpCurrentUserTask;
+import com.example.michel.mycalendar2.authentication.AccountGeneralUtils;
 import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
 import com.example.michel.mycalendar2.calendarview.utils.DatabaseHelper;
 import com.example.michel.mycalendar2.main_fragments.HistoryFragment;
@@ -33,10 +37,12 @@ import com.example.michel.mycalendar2.utils.DBStaticEntries;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private int resultSignInCode = 5531;
+
     private AppBarLayout appBarLayout;
     private LinearLayout toolbarLinearLayout1;
     private LinearLayout toolbarLinearLayout2;
@@ -89,8 +95,26 @@ public class MainActivity extends AppCompatActivity
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(mainActivity, LoginActivity.class);
-                        mainActivity.startActivity(intent);
+                        if (AccountGeneralUtils.curUser == null){
+                            Intent intent = new Intent(mainActivity, LoginActivity.class);
+                            mainActivity.startActivityForResult(intent, resultSignInCode);
+                        }
+                        else {
+
+                        }
+                        /*final AccountManager mAccountManager = AccountManager.get(mainActivity);
+                        final AccountManagerFuture<Bundle> future = mAccountManager.addAccount(AccountGeneralUtils.ACCOUNT_TYPE, AccountGeneralUtils.AUTHTOKEN_TYPE_FULL_ACCESS,
+                                null, null, mainActivity, new AccountManagerCallback<Bundle>() {
+                            @Override
+                            public void run(AccountManagerFuture<Bundle> future) {
+                                try {
+                                    Bundle bnd = future.getResult();
+
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }, null);*/
                     }
                 }
         );
@@ -110,9 +134,12 @@ public class MainActivity extends AppCompatActivity
             DBStaticEntries.doseTypes = databaseAdapter.getDoseTypes();
             DBStaticEntries.measurementTypes = databaseAdapter.getMeasurementTypes();
 
-            databaseAdapter.insertTestTable();
+            //databaseAdapter.insertTestTable();
 
             databaseAdapter.close();
+
+            SetUpCurrentUserTask setUpCurrentUserTask = new SetUpCurrentUserTask(getBaseContext());
+            setUpCurrentUserTask.execute();
 
             SharedPreferences settings = getSharedPreferences("MedicalJournalSettings", MODE_PRIVATE);
             String curDate = settings.getString("cur_date", "0000-00-00");
@@ -301,5 +328,21 @@ public class MainActivity extends AppCompatActivity
                     .commit();
             //Toast.makeText(this,"here",Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == resultSignInCode) {
+            if (resultCode == RESULT_OK) {
+                String accountName = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
+                String authtoken = data.getStringExtra(AccountManager.KEY_AUTHTOKEN);
+                PostSignInTask postSignInTask = new PostSignInTask(mainActivity);
+                postSignInTask.execute(authtoken, accountName);
+            }
+        }
+    }
+
+    public NavigationView getNavigationView() {
+        return navigationView;
     }
 }

@@ -1,5 +1,8 @@
 package com.example.michel.mycalendar2.models;
 
+import java.sql.Timestamp;
+import java.util.Date;
+
 public class User {
 
     private Integer id;
@@ -9,17 +12,23 @@ public class User {
     private Integer birthdayYear;
     private String email;
     private String password;
+    private Timestamp synchronizationTime;
+    private Integer roleId;
+    private Integer isCurrent;
 
     public User(){
         id = 1;
         name = "";
         surname = "";
         genderId = 1;
+        synchronizationTime = new Timestamp(new Date().getTime());
+        roleId = 1;
+        isCurrent = 0;
     }
 
     public User(Integer id, String name, String surname,
                 Integer genderId, Integer birthdayYear, String email,
-                String password){
+                String password, Timestamp synchronizationTime){
         this.id = id;
         this.name = name;
         this.surname = surname;
@@ -27,6 +36,9 @@ public class User {
         this.birthdayYear = birthdayYear;
         this.email = email;
         this.password = password;
+        this.synchronizationTime = synchronizationTime;
+        roleId = 1;
+        this.isCurrent = 0;
     }
 
     public Integer getId() {
@@ -83,5 +95,25 @@ public class User {
 
     public void setBirthdayYear(Integer birthdayYear) {
         this.birthdayYear = birthdayYear;
+    }
+
+    public Timestamp getSynchronizationTime() {
+        return synchronizationTime;
+    }
+
+    public void setSynchronizationTime(Timestamp synchronizationTime) {
+        this.synchronizationTime = synchronizationTime;
+    }
+
+    public Integer getRoleId() {
+        return roleId;
+    }
+
+    public Integer getIsCurrent() {
+        return isCurrent;
+    }
+
+    public void setIsCurrent(Integer isCurrent) {
+        this.isCurrent = isCurrent;
     }
 }
