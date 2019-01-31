@@ -10,7 +10,4 @@ public interface UserRepository extends CrudRepository<User, Integer> {
     User findUserByName(String userName);
 
     User findUserByEmail(String userEmail);
-
-    @Override
-    <S extends User> S save(S s);
 }

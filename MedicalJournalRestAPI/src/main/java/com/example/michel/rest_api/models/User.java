@@ -23,5 +23,9 @@ public class User {
     private String password;
     @Column(name="role_id")
     private Integer roleId;
+    @Column(name="gender_id")
+    private Integer genderId;
+    @Column(name="birthday_year")
+    private Integer birthdayYear;
 
 }

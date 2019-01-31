@@ -49,9 +49,9 @@ public class SecurityTokenConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 // allow all POST requests
                 .antMatchers(HttpMethod.POST, jwtConfig.getUrl()).permitAll()
-                //.antMatchers(HttpMethod.GET, "/user/test2").permitAll()
-                //.antMatchers(HttpMethod.POST, new String[]{"/user/test1"}).permitAll()
-                .antMatchers("/user/test3").hasRole("1")
+                .antMatchers(HttpMethod.POST, "/user/test1").permitAll()
+                .antMatchers(HttpMethod.GET, new String[]{"/user/test2"}).permitAll()
+                .antMatchers("/user/test3").hasRole("2")
                 // any other requests must be authenticated
                 .anyRequest().authenticated();
 
