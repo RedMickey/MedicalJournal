@@ -35,7 +35,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/nav_header_title"
+                android:text="@string/def_username"
                 android:id="@+id/username_tv"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 

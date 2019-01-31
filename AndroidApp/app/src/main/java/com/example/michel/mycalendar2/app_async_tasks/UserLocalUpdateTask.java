@@ -5,10 +5,10 @@ import android.os.AsyncTask;
 import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
 import com.example.michel.mycalendar2.models.User;
 
-public class UserUpdateTask extends AsyncTask<User, Void, Void> {
+public class UserLocalUpdateTask extends AsyncTask<User, Void, Void> {
     private int type;
 
-    public UserUpdateTask(int type){
+    public UserLocalUpdateTask(int type){
         this.type = type;
     }
 

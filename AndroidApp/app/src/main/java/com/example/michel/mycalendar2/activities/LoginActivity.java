@@ -19,6 +19,7 @@ import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
@@ -30,6 +31,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.michel.mycalendar2.app_async_tasks.PostSignInTask;
+import com.example.michel.mycalendar2.app_async_tasks.UserLocalUpdateTask;
 import com.example.michel.mycalendar2.authentication.AccountGeneralUtils;
 import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
 import com.example.michel.mycalendar2.models.User;
@@ -370,93 +372,17 @@ public class LoginActivity extends AppCompatActivity {
         }.execute();
     }
 
-    /*public class UserLoginTask extends AsyncTask<Void, Void, String> {
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
 
-        private final String mEmail;
-        private final String mPassword;
-
-        UserLoginTask(String email, String password) {
-            mEmail = email;
-            mPassword = password;
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-
-        @Override
-        protected String doInBackground(Void... params) {
-
-            String response = "";
-
-            try {
-                URL url = new URL("http://192.168.0.181:8090/user/test1");
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-
-                conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-                conn.setRequestMethod("POST");
-                conn.setReadTimeout(10000);
-                conn.setConnectTimeout(15000);
-                conn.setDoInput(true);
-                conn.setDoOutput(true);
-
-                JSONObject cred = new JSONObject();
-                cred.put("s","test request "+ i.toString());
-                //cred.put("password", "pwd");
-
-                OutputStream os = conn.getOutputStream();
-                os.write(cred.toString().getBytes("UTF-8"));
-                os.close();
-
-                int responseCode=conn.getResponseCode();
-
-                if (responseCode == HttpsURLConnection.HTTP_OK) {
-
-                    BufferedReader in=new BufferedReader(new
-                            InputStreamReader(
-                            conn.getInputStream()));
-
-                    StringBuffer sb = new StringBuffer("");
-                    String line="";
-
-                    while((line = in.readLine()) != null) {
-
-                        sb.append(line);
-                        break;
-                    }
-
-                    in.close();
-                    response = sb.toString();
-
-                }
-                else {
-                    return new String("false : " + responseCode);
-                }
-
-            }
-            catch(Exception e){
-                Log.e("URL", e.getMessage());
-                return new String("Exception: " + e.getMessage());
-            }
-
-            return response;
-        }
-
-        @Override
-        protected void onPostExecute(String response) {
-            mAuthTask = null;
-            showProgress(false);
-
-            try {
-                JSONObject jsonObject = new JSONObject(response);
-                mEmailView.setText(jsonObject.getString("response"));
-            }
-            catch (Exception e){
-                Log.e("JSONObject", e.getMessage());
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-            mAuthTask = null;
-            showProgress(false);
-        }
-    }*/
+    }
 }
 

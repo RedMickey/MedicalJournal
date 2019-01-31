@@ -350,7 +350,7 @@ public class DatabaseAdapter {
             userValues.put("is_current", user.getIsCurrent());
 
         long pillReminderId = database.update("user", userValues,
-                "email = ?", new String[]{String.valueOf(user.getEmail())});
+                "_id_user = ?", new String[]{String.valueOf(String.valueOf(user.getId()))});
     }
 
     public User getCurrentUser(){

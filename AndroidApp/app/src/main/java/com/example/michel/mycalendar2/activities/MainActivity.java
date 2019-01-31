@@ -21,6 +21,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.example.michel.mycalendar2.app_async_tasks.MeasurementNotificationsCreationTask;
 import com.example.michel.mycalendar2.app_async_tasks.PillNotificationsCreationTask;
@@ -42,6 +43,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private int resultSignInCode = 5531;
+    private int resultUserConfigCode = 5532;
 
     private AppBarLayout appBarLayout;
     private LinearLayout toolbarLinearLayout1;
@@ -100,8 +102,11 @@ public class MainActivity extends AppCompatActivity
                             mainActivity.startActivityForResult(intent, resultSignInCode);
                         }
                         else {
-
+                            Intent intent = new Intent(mainActivity, UserActivity.class);
+                            mainActivity.startActivityForResult(intent, resultUserConfigCode);
                         }
+                        //Intent intent = new Intent(mainActivity, UserActivity.class);
+                        //mainActivity.startActivity(intent);
                         /*final AccountManager mAccountManager = AccountManager.get(mainActivity);
                         final AccountManagerFuture<Bundle> future = mAccountManager.addAccount(AccountGeneralUtils.ACCOUNT_TYPE, AccountGeneralUtils.AUTHTOKEN_TYPE_FULL_ACCESS,
                                 null, null, mainActivity, new AccountManagerCallback<Bundle>() {
@@ -338,6 +343,15 @@ public class MainActivity extends AppCompatActivity
                 String authtoken = data.getStringExtra(AccountManager.KEY_AUTHTOKEN);
                 PostSignInTask postSignInTask = new PostSignInTask(mainActivity);
                 postSignInTask.execute(authtoken, accountName);
+            }
+        }
+        if (requestCode == resultUserConfigCode) {
+            if (resultCode == RESULT_OK) {
+                boolean isLogOut = data.getBooleanExtra("is_log_out", false);
+                if (isLogOut){
+                    ((TextView) getNavigationView().findViewById(R.id.username_tv)).setText(getResources().getText(R.string.def_username));
+                    ((TextView) getNavigationView().findViewById(R.id.profile_config_tv)).setText("Создать Профиль");
+                }
             }
         }
     }

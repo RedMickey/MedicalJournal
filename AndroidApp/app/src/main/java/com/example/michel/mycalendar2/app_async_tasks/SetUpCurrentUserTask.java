@@ -5,8 +5,11 @@ import android.accounts.AccountManager;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.michel.mycalendar2.activities.MainActivity;
+import com.example.michel.mycalendar2.activities.R;
 import com.example.michel.mycalendar2.authentication.AccountGeneralUtils;
 import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
 import com.example.michel.mycalendar2.models.User;
@@ -17,19 +20,19 @@ public class SetUpCurrentUserTask extends AsyncTask<Void, Void, Integer> {
     private Account account = null;
     private String authToken = null;
     private User user = null;
+    private MainActivity mainActivity = null;
 
     public SetUpCurrentUserTask(){
 
     }
 
-    public SetUpCurrentUserTask(Context context){
-        this.context =context;
+    public SetUpCurrentUserTask(MainActivity mainActivity){
+        this.mainActivity = mainActivity;
+        this.context = mainActivity.getBaseContext();
     }
 
-    public SetUpCurrentUserTask(Account account, User user, Context context){
-        this.account =account;
-        this.user =user;
-        this.context = context;
+    public SetUpCurrentUserTask(Context context){
+        this.context =context;
     }
 
     @Override
@@ -81,8 +84,13 @@ public class SetUpCurrentUserTask extends AsyncTask<Void, Void, Integer> {
 
     @Override
     protected void onPostExecute(Integer status) {
-        if (status > 0)
+        if (status > 0){
             Toast.makeText(context, user.getEmail() + " " + account.name + "\n" + authToken, Toast.LENGTH_LONG).show();
+            if (mainActivity!=null){
+                ((TextView) mainActivity.getNavigationView().findViewById(R.id.username_tv)).setText(user.getName());
+                ((TextView) mainActivity.getNavigationView().findViewById(R.id.profile_config_tv)).setText("Редактировать профиль");
+            }
+        }
         else
             Toast.makeText(context, "An error has occurred", Toast.LENGTH_LONG).show();
     }

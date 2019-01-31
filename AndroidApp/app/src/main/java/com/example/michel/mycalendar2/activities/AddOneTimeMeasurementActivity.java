@@ -1,13 +1,16 @@
 package com.example.michel.mycalendar2.activities;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -28,9 +31,11 @@ import android.widget.ToggleButton;
 
 import com.example.michel.mycalendar2.adapters.TimesOfTakingMedicineAdapter;
 import com.example.michel.mycalendar2.app_async_tasks.AddMeasurementActivityCreationTask;
+import com.example.michel.mycalendar2.app_async_tasks.MeasurementNotificationsCreationTask;
 import com.example.michel.mycalendar2.app_async_tasks.MeasurementRemindersInsertionTask;
 import com.example.michel.mycalendar2.app_async_tasks.MeasurementRemindersUpdateTask;
 import com.example.michel.mycalendar2.app_async_tasks.OneTimeMeasurementReminderInsertionTask;
+import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
 import com.example.michel.mycalendar2.calendarview.data.DateData;
 import com.example.michel.mycalendar2.calendarview.utils.CalendarUtil;
 import com.example.michel.mycalendar2.expandableLayout.ExpandableRelativeLayout;
@@ -42,6 +47,7 @@ import com.example.michel.mycalendar2.utils.DBStaticEntries;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.concurrent.ExecutionException;
 
 
 public class AddOneTimeMeasurementActivity extends AppCompatActivity {
@@ -253,4 +259,14 @@ public class AddOneTimeMeasurementActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 }

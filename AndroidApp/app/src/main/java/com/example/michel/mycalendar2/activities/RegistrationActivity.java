@@ -1,5 +1,6 @@
 package com.example.michel.mycalendar2.activities;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputType;
@@ -18,7 +19,9 @@ import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.ToggleButton;
 
+import com.example.michel.mycalendar2.app_async_tasks.UserLocalUpdateTask;
 import com.example.michel.mycalendar2.app_async_tasks.UserSignUpTask;
+import com.example.michel.mycalendar2.authentication.AccountGeneralUtils;
 import com.example.michel.mycalendar2.models.User;
 
 import java.util.ArrayList;
@@ -44,7 +47,7 @@ public class RegistrationActivity extends AppCompatActivity {
         birthdayYearSpinner = (Spinner) findViewById(R.id.birthday_year_spinner);
         ArrayList<String> years = new ArrayList<String>();
         int endYear = Calendar.getInstance().get(Calendar.YEAR)-10;
-        int startYear = endYear-100;
+        int startYear = endYear-110;
 
         for (int i = endYear; i > startYear; i--) {
             years.add(Integer.toString(i));
@@ -99,12 +102,16 @@ public class RegistrationActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.submit) {
-            createAndSendSignUpRequest();
-            return true;
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            case R.id.log_out:
+                createAndSendSignUpRequest();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
     private void createAndSendSignUpRequest(){

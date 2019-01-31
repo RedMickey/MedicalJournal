@@ -1,8 +1,13 @@
 package com.example.michel.mycalendar2.authentication;
 
 import android.accounts.Account;
+import android.accounts.AccountManager;
+import android.accounts.AuthenticatorException;
+import android.accounts.OperationCanceledException;
 
 import com.example.michel.mycalendar2.models.User;
+
+import java.io.IOException;
 
 public class AccountGeneralUtils {
 
@@ -32,9 +37,9 @@ public class AccountGeneralUtils {
 
     public static User curUser = null;
 
-    public static String[] parseJWT(String token){
-        String[] nameAndGender = new String[2];
-
-        return nameAndGender;
+    public static void updateTokenSync(AccountManager accountManager) throws AuthenticatorException,
+            OperationCanceledException, IOException {
+        accountManager.invalidateAuthToken(AccountGeneralUtils.ACCOUNT_TYPE, AccountGeneralUtils.curToken);
+        curToken = accountManager.blockingGetAuthToken(curAccount, ACCOUNT_TYPE, true);
     }
 }
