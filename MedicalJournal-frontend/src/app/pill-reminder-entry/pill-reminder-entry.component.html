@@ -1,0 +1,28 @@
+<mat-card>
+  <div fxLayout="row">
+    <div fxFlex="7%" fxLayoutAlign="center center">
+        <mat-checkbox></mat-checkbox>
+      </div>
+      <div fxFlex="7%" fxLayoutAlign="center center">
+        <mat-icon svgIcon="pill"></mat-icon>
+      </div>
+      <div fxFlex="32%" class="p-coll-5">
+        <div>
+          {{pillReminderEntry.date | date:'HH:mm' }}
+        </div>
+        <div>
+          {{pillReminderEntry.pillName}}
+        </div>
+      </div>
+      <div fxFlex="35%" fxLayoutAlign="start center" class="p-coll-5">
+        {{pillReminderEntry.pillCount + " " + pillReminderEntry.pillCountType}}
+      </div>
+      <div fxFlex="12%" fxLayout="row wrap" fxLayoutAlign="center center">
+        <span class="having-meals-type-pretext">{{havingMealsTypePretext}}</span>
+        <mat-icon *ngIf="pillReminderEntry.havingMealsType" svgIcon="restaurant"></mat-icon>
+      </div>
+      <div fxFlex="7%" fxLayoutAlign="center center">
+        <mat-icon *ngIf="pillReminderEntry.isLate" color="warn">error_outline</mat-icon>
+      </div>
+  </div>
+</mat-card>

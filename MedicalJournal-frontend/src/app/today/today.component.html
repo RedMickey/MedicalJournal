@@ -1,0 +1,17 @@
+<div class="today-container">
+  <div fxLayout="row" fxLayoutAlign="space-between center" class="today-header black-87" >
+    <div>
+      {{today | date:'d MMMM':'':'ru'}}
+    </div>
+    <div>
+      {{today | date:'EEEE':'':'ru'}}
+    </div>
+  </div>
+  <mat-divider></mat-divider>
+  <mat-list>
+    <app-pill-reminder-entry *ngFor="let pillReminderEntry of pillReminderEntries" [pillReminderEntry]="pillReminderEntry"></app-pill-reminder-entry>
+    <mat-card>Simple card2</mat-card>
+    <mat-list-item> Salt </mat-list-item>
+    <mat-list-item> Paprika </mat-list-item>
+  </mat-list>
+</div>
