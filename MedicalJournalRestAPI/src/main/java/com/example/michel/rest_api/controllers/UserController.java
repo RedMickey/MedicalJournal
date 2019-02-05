@@ -1,6 +1,9 @@
 package com.example.michel.rest_api.controllers;
 
+import com.example.michel.rest_api.models.MeasurementType;
+import com.example.michel.rest_api.models.TestModel;
 import com.example.michel.rest_api.models.User;
+import com.example.michel.rest_api.repositories.MeasurementTypeRepository;
 import com.example.michel.rest_api.repositories.UserRepository;
 import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,13 +22,18 @@ public class UserController {
     private UserRepository userRepository;
 
     @Autowired
+    private MeasurementTypeRepository measurementTypeRepository;
+
+    @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @PostMapping(value = "/test1", produces = "application/json")
-    public Map test1(@RequestBody Map<String, String> req){
-        String s = req.get("s");
-        s += " success";
-        return Collections.singletonMap("response", s);
+    public MeasurementType test1(@RequestBody Map<String, Integer> req){
+        Integer s = req.get("s");
+        //MeasurementType measurementType = measurementTypeRepository.findMeasurementTypeById(s);
+        MeasurementType measurementType = (MeasurementType) measurementTypeRepository.findMeasurementTypeByIdMeasurementType(s);
+        //TestModel t = measurementTypeRepository.findmeasurementvaluetypeName(s);
+        return measurementType;
     }
 
     @GetMapping("/test2")
