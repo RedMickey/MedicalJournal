@@ -8,9 +8,10 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "measurement_type", schema = "medical_journal", catalog = "")
-@SecondaryTable(name="measurement_value_type", pkJoinColumns={
-        @PrimaryKeyJoinColumn(name="_id_measur_value_type", referencedColumnName="_id_measurement_type")}
-)
+/*@SecondaryTable(name="measurement_value_type", pkJoinColumns={
+        @PrimaryKeyJoinColumn(name="_id_measur_value_type", referencedColumnName="_id_measur_value_type")}
+)*/
+
 public class MeasurementType {
     private int idMeasurementType;
     private String typeName;
@@ -18,7 +19,7 @@ public class MeasurementType {
     private double standardMaxValue;
     private int idMeasurValueType;
 
-    private String typeValueName;
+    //private String typeValueName;
     //private MeasurementValueType measurementValueType;
 
     @Id
@@ -91,21 +92,21 @@ public class MeasurementType {
         return Objects.hash(idMeasurementType, typeName, standardMinValue, standardMaxValue);
     }
 
-    @Column(name = "_id_measur_value_type")
+    /*@Column(name = "_id_measur_value_type")
     public int getIdMeasurValueType() {
         return idMeasurValueType;
     }
 
     public void setIdMeasurValueType(int idMeasurValueType) {
         this.idMeasurValueType = idMeasurValueType;
-    }
+    }*/
 
-    @Column(table="measurement_value_type")
+    /*@Column(table="measurement_value_type")
     public String getTypeValueName() {
         return typeValueName;
     }
 
     public void setTypeValueName(String typeValueName) {
         this.typeValueName = typeValueName;
-    }
+    }*/
 }
