@@ -3,9 +3,9 @@ package com.example.michel.rest_api.mappers;
 import com.example.michel.rest_api.models.pill.PillReminderEntryF;
 import org.springframework.jdbc.core.RowMapper;
 
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 
 public class PillReminderEntryFRowMapper implements RowMapper<PillReminderEntryF> {
     @Override
@@ -16,12 +16,14 @@ public class PillReminderEntryFRowMapper implements RowMapper<PillReminderEntryF
         pillReminderEntryF.setPillName(resultSet.getString("pill_name"));
         pillReminderEntryF.setPillCount(resultSet.getInt("pill_count"));
         pillReminderEntryF.setPillCountType(resultSet.getString("type_name"));
-        pillReminderEntryF.setDate(resultSet.getDate("type_name"));
+        pillReminderEntryF.setDate(new Date(resultSet.getTimestamp("reminder_date").getTime()));
         pillReminderEntryF.setHavingMealsType(resultSet.getInt("_id_having_meals_type"));
         int havingMealsTimeStr = resultSet.getInt("having_meals_time");
         pillReminderEntryF.setHavingMealsTime(new Date(pillReminderEntryF.getDate().getTime()+
             havingMealsTimeStr*60*1000));
         pillReminderEntryF.setIsDone(resultSet.getInt("is_done"));
+
+        //Date d =
         return pillReminderEntryF;
     }
 }

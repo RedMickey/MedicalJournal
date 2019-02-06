@@ -22,7 +22,7 @@ public class PillReminderEntryFDao implements IPillReminderEntryFDao {
     public List<PillReminderEntryF> getPillReminderEntriesByDate(Date date) {
         String sql = "select pre._id_pill_reminder_entry, pre.is_done, pr._id_having_meals_type, pre.reminder_time, pr.having_meals_time, pr.pill_count, pct.type_name, pre.reminder_date, pi.pill_name" +
                 " from pill_reminder_entry pre inner join pill_reminder pr on pre._id_pill_reminder=pr._id_pill_reminder inner join pill pi on pi._id_pill=pr._id_pill inner join pill_count_type pct on" +
-                " pr._id_pill_count_type=pct._id_pill_count_type where pre.reminder_date=? and (pr.is_active=1 or pre.is_done=1) ORDER BY pre.is_done";
+                " pr._id_pill_count_type=pct._id_pill_count_type where DATE(pre.reminder_date)=DATE(?) and (pr.is_active=1 or pre.is_done=1) ORDER BY pre.is_done";
         return jdbcTemplate.query(sql, new PillReminderEntryFRowMapper(), date);
     }
 }

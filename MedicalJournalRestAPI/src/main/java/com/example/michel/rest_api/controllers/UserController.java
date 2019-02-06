@@ -3,15 +3,20 @@ package com.example.michel.rest_api.controllers;
 import com.example.michel.rest_api.models.MeasurementType;
 import com.example.michel.rest_api.models.TestModel;
 import com.example.michel.rest_api.models.User;
+import com.example.michel.rest_api.models.pill.PillReminderEntryF;
 import com.example.michel.rest_api.repositories.MeasurementTypeRepository;
 import com.example.michel.rest_api.repositories.UserRepository;
+import com.example.michel.rest_api.services.PillReminderEntryFService;
 import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Date;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -22,18 +27,24 @@ public class UserController {
     private UserRepository userRepository;
 
     @Autowired
-    private MeasurementTypeRepository measurementTypeRepository;
+    private PillReminderEntryFService pillReminderEntryFService;
 
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @PostMapping(value = "/test1", produces = "application/json")
-    public MeasurementType test1(@RequestBody Map<String, Integer> req){
+    public List<PillReminderEntryF> test1(@RequestBody Map<String, Integer> req){
         Integer s = req.get("s");
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2019, 1, 4, 0, 0, 0);
+        java.util.Date date = new java.util.Date(calendar.getTimeInMillis());
+
+        List<PillReminderEntryF> l = pillReminderEntryFService.getPillReminderEntriesByDate(date);
         //MeasurementType measurementType = measurementTypeRepository.findMeasurementTypeById(s);
-        MeasurementType measurementType = (MeasurementType) measurementTypeRepository.findMeasurementTypeByIdMeasurementType(s);
+        //MeasurementType measurementType = (MeasurementType) measurementTypeRepository.findMeasurementTypeByIdMeasurementType(s);
         //TestModel t = measurementTypeRepository.findmeasurementvaluetypeName(s);
-        return measurementType;
+        return l;
     }
 
     @GetMapping("/test2")

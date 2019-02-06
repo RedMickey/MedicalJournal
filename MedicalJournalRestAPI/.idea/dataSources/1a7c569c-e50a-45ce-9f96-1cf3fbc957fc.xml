@@ -24,7 +24,7 @@
     <schema id="6" parent="1" name="sys">
       <Collation>utf8_general_ci</Collation>
     </schema>
-    <schema id="7" parent="1" name="test1">
+    <schema id="7" parent="1" name="test">
       <Collation>utf8_general_ci</Collation>
     </schema>
     <collation id="8" parent="1" name="armscii8_bin">

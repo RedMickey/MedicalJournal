@@ -12,8 +12,8 @@ public class PillReminderEntryF {
     private int pillCount;
     private String pillCountType;
     protected int isDone;
-    protected java.sql.Date date;
-    protected java.sql.Date havingMealsTime;
+    protected Date date;
+    protected Date havingMealsTime;
     protected boolean isLate;
     protected String id;
     protected int havingMealsType;
