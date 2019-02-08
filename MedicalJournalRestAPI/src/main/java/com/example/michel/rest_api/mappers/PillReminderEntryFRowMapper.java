@@ -1,18 +1,30 @@
 package com.example.michel.rest_api.mappers;
 
 import com.example.michel.rest_api.models.pill.PillReminderEntryF;
+import org.apache.commons.logging.Log;
 import org.springframework.jdbc.core.RowMapper;
 
+import java.io.Console;
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
+import java.util.UUID;
 
 public class PillReminderEntryFRowMapper implements RowMapper<PillReminderEntryF> {
     @Override
     public PillReminderEntryF mapRow(ResultSet resultSet, int i) throws SQLException {
         PillReminderEntryF pillReminderEntryF = new PillReminderEntryF();
 
-        pillReminderEntryF.setId(resultSet.getString("_id_pill_reminder_entry"));
+        byte[] binStr = resultSet.getBytes("_id_pill_reminder_entry");
+        ByteBuffer bbr = ByteBuffer.wrap(binStr);
+        long high = bbr.getLong();
+        long low = bbr.getLong();
+
+        pillReminderEntryF.setId(new UUID(high, low));
         pillReminderEntryF.setPillName(resultSet.getString("pill_name"));
         pillReminderEntryF.setPillCount(resultSet.getInt("pill_count"));
         pillReminderEntryF.setPillCountType(resultSet.getString("type_name"));
@@ -23,7 +35,6 @@ public class PillReminderEntryFRowMapper implements RowMapper<PillReminderEntryF
             havingMealsTimeStr*60*1000));
         pillReminderEntryF.setIsDone(resultSet.getInt("is_done"));
 
-        //Date d =
         return pillReminderEntryF;
     }
 }

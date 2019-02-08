@@ -1,11 +1,10 @@
 package com.example.michel.rest_api.controllers;
 
-import com.example.michel.rest_api.models.MeasurementType;
-import com.example.michel.rest_api.models.TestModel;
-import com.example.michel.rest_api.models.User;
+import com.example.michel.rest_api.models.*;
 import com.example.michel.rest_api.models.pill.PillReminderEntryF;
 import com.example.michel.rest_api.repositories.MeasurementTypeRepository;
 import com.example.michel.rest_api.repositories.UserRepository;
+import com.example.michel.rest_api.repositories.WeekScheduleRepository;
 import com.example.michel.rest_api.services.PillReminderEntryFService;
 import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,11 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Date;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/user")
@@ -27,25 +22,29 @@ public class UserController {
     private UserRepository userRepository;
 
     @Autowired
-    private PillReminderEntryFService pillReminderEntryFService;
-
-    @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    @Autowired
+    private WeekScheduleRepository weekScheduleRepository;
+
+    @CrossOrigin(origins = "http://localhost:4000")
     @PostMapping(value = "/test1", produces = "application/json")
-    public List<PillReminderEntryF> test1(@RequestBody Map<String, Integer> req){
-        Integer s = req.get("s");
+    public List<WeekSchedule> test1(@RequestBody Map<String, Integer> req){
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(2019, 1, 4, 0, 0, 0);
-        java.util.Date date = new java.util.Date(calendar.getTimeInMillis());
+        List<WeekSchedule> l = weekScheduleRepository.findAll();
 
-        List<PillReminderEntryF> l = pillReminderEntryFService.getPillReminderEntriesByDate(date);
-        //MeasurementType measurementType = measurementTypeRepository.findMeasurementTypeById(s);
-        //MeasurementType measurementType = (MeasurementType) measurementTypeRepository.findMeasurementTypeByIdMeasurementType(s);
-        //TestModel t = measurementTypeRepository.findmeasurementvaluetypeName(s);
         return l;
     }
+
+    /*@CrossOrigin(origins = "http://localhost:4000")
+    @PostMapping(value = "/test1", produces = "application/json")
+    public WeekSchedule test1(@RequestBody Map<String, Integer> req){
+
+        WeekSchedule weekSchedule = new WeekSchedule(UUID.randomUUID(), 1, 0, 1, 0, 0, 1, 0);
+        weekScheduleRepository.save(weekSchedule);
+
+        return weekSchedule;
+    }*/
 
     @GetMapping("/test2")
     public String tes2(){
