@@ -48,7 +48,7 @@ public class ReminderMeasurementItemsCreationTask extends AsyncTask<Void, Void, 
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                     MeasurementReminder mr = (MeasurementReminder)adapterView.getItemAtPosition(i);
                     Intent intent = new Intent(view.getContext(), AddMeasurementActivity.class);
-                    intent.putExtra("MeasurementReminderID", mr.getId());
+                    intent.putExtra("MeasurementReminderID", mr.getId().toString());
                     intent.putExtra("MeasurementTypeID", mr.getIdMeasurementType());
                     intent.putExtra("MeasurementName", DBStaticEntries.getMeasurementTypeById(mr.getIdMeasurementType()).getName());
                     view.getContext().startActivity(intent);

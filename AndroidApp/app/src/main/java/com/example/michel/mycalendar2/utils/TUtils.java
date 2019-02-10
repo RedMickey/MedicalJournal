@@ -7,6 +7,7 @@ import com.example.michel.mycalendar2.models.pill.PillReminderDBInsertEntry;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.UUID;
 
 public class TUtils {
 
@@ -57,7 +58,7 @@ public class TUtils {
 
         cycleDBInsertEntry = setDateParams(cycleDBInsertEntry, period, periodDMType, type);
 
-        Integer pillReminderId = pillReminderDBInsertEntry.getIdPillReminder();
+        UUID pillReminderId = pillReminderDBInsertEntry.getIdPillReminder();
 
         DatabaseAdapter dbAdapter = new DatabaseAdapter();
         dbAdapter.open();

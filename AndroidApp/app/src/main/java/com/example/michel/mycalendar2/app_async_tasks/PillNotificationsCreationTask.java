@@ -81,15 +81,16 @@ public class PillNotificationsCreationTask extends AsyncTask<Context, Void, Void
         return null;
     }
 
-    private void setupAlarms(Context context, List<PillReminderEntry> pillReminderEntries, AlarmManager alarmManager){
+    public static void setupAlarms(Context context, List<PillReminderEntry> pillReminderEntries, AlarmManager alarmManager){
         for (PillReminderEntry pre: pillReminderEntries) {
             if (pre.getIsDone()==0&&!pre.isLate()){
                 Intent myIntent = new Intent(context, AlarmReceiver.class);
                 //SimpleDateFormat simpleDate = new SimpleDateFormat("HH:mm");
                 //myIntent.putExtra("time", simpleDate.format(pre.getDate()));
                 myIntent.putExtra("pre", pre);
+                int m1 = (int)pre.getId().getMostSignificantBits();
                 PendingIntent pendingIntent = PendingIntent.getBroadcast(
-                        context, pre.getId(), myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                        context, (int)pre.getId().getMostSignificantBits(), myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
                 // set alarm time
                 alarmManager.set(AlarmManager.RTC_WAKEUP,
                         pre.getDate().getTime(), pendingIntent);
@@ -97,12 +98,13 @@ public class PillNotificationsCreationTask extends AsyncTask<Context, Void, Void
         }
     }
 
-    private void cancelAlarms(Context context, List<PillReminderEntry> pillReminderEntries, AlarmManager alarmManager){
+    public static void cancelAlarms(Context context, List<PillReminderEntry> pillReminderEntries, AlarmManager alarmManager){
         for (PillReminderEntry pre: pillReminderEntries) {
             if (pre.getIsDone()==0&&!pre.isLate()){
                 Intent myIntent = new Intent(context, AlarmReceiver.class);
+                int m2 = (int)pre.getId().getMostSignificantBits();
                 PendingIntent pendingIntent = PendingIntent.getBroadcast(
-                        context, pre.getId(), myIntent, 0);
+                        context, (int)pre.getId().getMostSignificantBits(), myIntent, 0);
                 // set alarm time
                 try {
                     alarmManager.cancel(pendingIntent);

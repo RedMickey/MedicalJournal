@@ -22,6 +22,7 @@ import com.example.michel.mycalendar2.models.pill.PillReminder;
 import com.example.michel.mycalendar2.models.pill.PillReminderDBInsertEntry;
 import com.example.michel.mycalendar2.models.pill.PillReminderEntry;
 import com.example.michel.mycalendar2.models.ReminderTime;
+import com.example.michel.mycalendar2.utils.ConvertingUtils;
 import com.example.michel.mycalendar2.utils.DBStaticEntries;
 import com.example.michel.mycalendar2.utils.utilModels.MeasurementType;
 
@@ -30,6 +31,7 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -237,17 +239,17 @@ public class DatabaseAdapter {
         cursor.close();
     }
 */
-    public void deleteWeekScheduleByIdCascade(int idWeekSchedule){
-        database.delete("week_schedules", "_id_week_schedule = ?",
-                new String[]{String.valueOf(idWeekSchedule)});
+    public void deleteWeekScheduleByIdCascade(UUID idWeekSchedule){
+        database.delete("week_schedules", "lower(hex(_id_week_schedule)) = ?",
+                new String[]{idWeekSchedule.toString().replace("-", "")});
     }
 
-    public void deleteCycleByIdCascade(int idCycle){
-        database.delete("cycles", "_id_cycle = ?",
-                new String[]{String.valueOf(idCycle)});
+    public void deleteCycleByIdCascade(UUID idCycle){
+        database.delete("cycles", "lower(hex(_id_cycle)) = ?",
+                new String[]{idCycle.toString().replace("-", "")});
     }
 
-    public void deleteReminderTimeByReminderId(int idReminder, int type){
+    public void deleteReminderTimeByReminderId(UUID idReminder, int type){
         /*String idPillReminderStr = String.valueOf(idPillReminder);
 
         database.delete("reminder_time",
@@ -258,15 +260,17 @@ public class DatabaseAdapter {
                 new String[]{idPillReminderStr, date, idPillReminderStr}
                 );*/
         if (type==0)
-            database.delete("reminder_time", "_id_pill_reminder = ?", new String[]{String.valueOf(idReminder)});
+            database.delete("reminder_time", "lower(hex(_id_pill_reminder)) = ?",
+                    new String[]{idReminder.toString().replace("-", "")});
         else
-            database.delete("reminder_time", "_id_measurement_reminder = ?", new String[]{String.valueOf(idReminder)});
+            database.delete("reminder_time", "lower(hex(_id_measurement_reminder)) = ?",
+                    new String[]{idReminder.toString().replace("-", "")});
 
     }
 
-    public int getCountOfPillReminderEntries(int idPillReminder){
-        long count = DatabaseUtils.queryNumEntries(database, "pill_reminder_entries", "_id_pill_reminder = ?",
-                new String[]{String.valueOf(idPillReminder)});
+    public int getCountOfPillReminderEntries(UUID idPillReminder){
+        long count = DatabaseUtils.queryNumEntries(database, "pill_reminder_entries", "lower(hex(_id_pill_reminder)) = ?",
+                new String[]{idPillReminder.toString().replace("-", "")});
 
         return (int)count;
     }
@@ -386,51 +390,57 @@ public class DatabaseAdapter {
     //***********************************end*****************************************************************************
 
     //***********************************work with PillReminder************************************************************
-    public void insertPillReminderEntry(String reminder_date, Integer idPillReminder, String reminderTime, Integer isOneTime){
+    public void insertPillReminderEntry(String reminder_date, UUID idPillReminder, String reminderTime, Integer isOneTime){
         ContentValues pillReminderEntryTableValues = new ContentValues();
         if (isOneTime == 1)
             pillReminderEntryTableValues.put("is_done", 1);
         else
             pillReminderEntryTableValues.put("is_done", 0);
         pillReminderEntryTableValues.put("reminder_date", reminder_date);
-        pillReminderEntryTableValues.put("_id_pill_reminder", idPillReminder);
+        pillReminderEntryTableValues.put("_id_pill_reminder", ConvertingUtils.convertUUIDToBytes(idPillReminder));
         pillReminderEntryTableValues.put("reminder_time", reminderTime);
+        pillReminderEntryTableValues.put("_id_pill_reminder_entry", ConvertingUtils.convertUUIDToBytes(UUID.randomUUID()));
         database.insert("pill_reminder_entries", null, pillReminderEntryTableValues);
     }
 
-    public int insertReminderTime(String reminderTime, Integer reminderId, Integer reminderType){
-        int reminderTimeId = 0;
+    public UUID insertReminderTime(String reminderTime, UUID reminderId, Integer reminderType){
+        UUID reminderTimeId = UUID.randomUUID();
         ContentValues reminderTimeValues = new ContentValues();
         reminderTimeValues.put("reminder_time", reminderTime);
+        reminderTimeValues.put("_id_reminder_time", ConvertingUtils.convertUUIDToBytes(reminderTimeId));
         switch (reminderType){
             case 0:
-                reminderTimeValues.put("_id_pill_reminder", reminderId);
+                reminderTimeValues.put("_id_pill_reminder", ConvertingUtils.convertUUIDToBytes(reminderId));
                 break;
             case 1:
-                reminderTimeValues.put("_id_measurement_reminder", reminderId);
+                reminderTimeValues.put("_id_measurement_reminder", ConvertingUtils.convertUUIDToBytes(reminderId));
                 break;
         }
-        reminderTimeId = (int)database.insert("reminder_time", null, reminderTimeValues);
+        database.insert("reminder_time", null, reminderTimeValues);
 
         return reminderTimeId;
     }
 
-    public int insertPillReminder(String pillName, Integer pillCount, Integer idPillCountType,
-                                   String startDate, @Nullable Integer idCycle, @Nullable Integer idHavingMealsType,
+    public UUID insertPillReminder(String pillName, Integer pillCount, Integer idPillCountType,
+                                   String startDate, @Nullable UUID idCycle, @Nullable Integer idHavingMealsType,
                                    @Nullable Integer havingMealsTime, String annotation, Integer isActive, Integer times_aDay,
                                    Integer isOneTime){
 
+        UUID pillId = UUID.randomUUID();
         ContentValues pillTableValues = new ContentValues();
         pillTableValues.put("pill_name", pillName);
+        pillTableValues.put("_id_pill", ConvertingUtils.convertUUIDToBytes(pillId));
         pillTableValues.put("pill_description", "");
-        long pillId = database.insert("pills", null, pillTableValues);
+        database.insert("pills", null, pillTableValues);
 
+        UUID pillReminderId = UUID.randomUUID();
         ContentValues pillReminderTableValues = new ContentValues();
-        pillReminderTableValues.put("_id_pill", pillId);
+        pillReminderTableValues.put("_id_pill_reminder", ConvertingUtils.convertUUIDToBytes(pillReminderId));
+        pillReminderTableValues.put("_id_pill", ConvertingUtils.convertUUIDToBytes(pillId));
         pillReminderTableValues.put("pill_count", pillCount);
         pillReminderTableValues.put("_id_pill_count_type", idPillCountType);
         pillReminderTableValues.put("start_date", startDate);
-        pillReminderTableValues.put("_id_cycle", idCycle);
+        pillReminderTableValues.put("_id_cycle", idCycle==null?null:ConvertingUtils.convertUUIDToBytes(idCycle));
         pillReminderTableValues.put("_id_having_meals_type", idHavingMealsType);
         pillReminderTableValues.put("having_meals_time", havingMealsTime);
         pillReminderTableValues.put("annotation", annotation);
@@ -438,41 +448,43 @@ public class DatabaseAdapter {
         pillReminderTableValues.put("times_a_day", times_aDay);
         if (isOneTime==1)
             pillReminderTableValues.put("is_one_time", isOneTime);
-        long pillReminderId = database.insert("pill_reminders", null, pillReminderTableValues);
+        database.insert("pill_reminders", null, pillReminderTableValues);
 
         //Log.i("pill_new_id", String.valueOf(pillId));
-        return (int)pillReminderId;
+        return pillReminderId;
     }
 
-    public int updatePillReminder(Integer idPillReminder, String pillName, Integer pillCount, Integer idPillCountType,
-                                  String startDate, Integer idCycle, @Nullable Integer idHavingMealsType,
+    public UUID updatePillReminder(UUID idPillReminder, String pillName, Integer pillCount, Integer idPillCountType,
+                                  String startDate, UUID idCycle, @Nullable Integer idHavingMealsType,
                                   @Nullable Integer havingMealsTime, String annotation, Integer isActive, Integer times_aDay,
                                   boolean needUpdatePill){
-        long pillId = -1;
+        UUID pillId = null;
         if (needUpdatePill){
+            pillId = UUID.randomUUID();
             ContentValues pillTableValues = new ContentValues();
             pillTableValues.put("pill_name", pillName);
+            pillTableValues.put("_id_pill", ConvertingUtils.convertUUIDToBytes(pillId));
             pillTableValues.put("pill_description", "");
-            pillId = database.insert("pills", null, pillTableValues);
+            database.insert("pills", null, pillTableValues);
         }
 
         ContentValues pillReminderTableValues = new ContentValues();
         if (needUpdatePill)
-            pillReminderTableValues.put("_id_pill", pillId);
+            pillReminderTableValues.put("_id_pill", ConvertingUtils.convertUUIDToBytes(pillId));
         pillReminderTableValues.put("pill_count", pillCount);
         pillReminderTableValues.put("_id_pill_count_type", idPillCountType);
         pillReminderTableValues.put("start_date", startDate);
-        pillReminderTableValues.put("_id_cycle", idCycle);
+        pillReminderTableValues.put("_id_cycle", ConvertingUtils.convertUUIDToBytes(idCycle));
         pillReminderTableValues.put("_id_having_meals_type", idHavingMealsType);
         pillReminderTableValues.put("having_meals_time", havingMealsTime);
         pillReminderTableValues.put("annotation", annotation);
         pillReminderTableValues.put("IsActive", isActive);
         pillReminderTableValues.put("times_a_day", times_aDay);
-        long pillReminderId = database.update("pill_reminders", pillReminderTableValues,
-                "_id_pill_reminder = ?", new String[]{String.valueOf(idPillReminder)});
+        database.update("pill_reminders", pillReminderTableValues, "lower(hex(_id_pill_reminder)) = ?",
+                new String[]{idPillReminder.toString().replace("-", "")});
 
         //Log.i("pill_new_id", String.valueOf(pillId));
-        return (int)pillReminderId;
+        return idPillReminder;
     }
 
     public List<PillReminder> getAllPillReminders(){
@@ -486,7 +498,7 @@ public class DatabaseAdapter {
             do{
                 Calendar calendar = Calendar.getInstance();
 
-                int id = cursor.getInt(cursor.getColumnIndex("_id_pill_reminder"));
+                UUID id = ConvertingUtils.convertBytesToUUID(cursor.getBlob(cursor.getColumnIndex("_id_pill_reminder")));
                 String pillName = cursor.getString(cursor.getColumnIndex("pill_name"));
                 int pillCount = cursor.getInt(cursor.getColumnIndex("pill_count"));
                 String pillCountType = cursor.getString(cursor.getColumnIndex("type_name"));
@@ -533,14 +545,15 @@ public class DatabaseAdapter {
         return pillReminders;
     }
 
-    public ReminderTime[] getReminderEntriesTime(int idPillReminder, String startDate, int type){
+    public ReminderTime[] getReminderEntriesTime(UUID idReminder, String startDate, int type){
         List<ReminderTime> pillReminderEntriesTime = new ArrayList<>();
         String rawQuery = "";
+        String uuidStr = idReminder.toString().replace("-", "");
         if (type==0)
-            rawQuery ="select rt._id_reminder_time, rt.reminder_time from reminder_time rt where rt._id_pill_reminder=?";
+            rawQuery ="select rt._id_reminder_time, rt.reminder_time from reminder_time rt where rt._id_pill_reminder= X'"+uuidStr+"'";
         else
-            rawQuery = "select rt._id_reminder_time, rt.reminder_time from reminder_time rt where rt._id_measurement_reminder=?";
-        Cursor cursor = database.rawQuery(rawQuery, new String[]{String.valueOf(idPillReminder)});
+            rawQuery = "select rt._id_reminder_time, rt.reminder_time from reminder_time rt where rt._id_measurement_reminder= X'"+uuidStr+"'";
+        Cursor cursor = database.rawQuery(rawQuery, null);
         /*String idStr = String.valueOf(idPillReminder);
         String rawQuery = "select rt._id_reminder_time, rt.reminder_time," +
                 " (select count(*) from pill_reminder_entries pre2 where pre2._id_pill_reminder=? and pre2.is_done=1 and pre2._id_reminder_time=rt._id_reminder_time) as is_used" +
@@ -551,7 +564,7 @@ public class DatabaseAdapter {
             do{
                 pillReminderEntriesTime.add(
                         new ReminderTime(
-                                cursor.getInt(cursor.getColumnIndex("_id_reminder_time")),
+                                ConvertingUtils.convertBytesToUUID(cursor.getBlob(cursor.getColumnIndex("_id_reminder_time"))),
                                 (cursor.getString(cursor.getColumnIndex("reminder_time"))).substring(0,5)
                                 )
                 );
@@ -562,19 +575,20 @@ public class DatabaseAdapter {
         return pillReminderEntriesTime.toArray(new ReminderTime[pillReminderEntriesTime.size()]);
     }
 
-    public PillReminderDBInsertEntry getPillReminderDBInsertEntryByID(int prID){
+    public PillReminderDBInsertEntry getPillReminderDBInsertEntryByID(UUID prID){
         PillReminderDBInsertEntry prdbie = null;
+        String uuidStr = prID.toString().replace("-", "");
         String rawQuery = "select pr._id_pill_reminder, pi.pill_name, pr.pill_count, pr._id_pill_count_type, pr.start_date, pr._id_having_meals_type, pr.having_meals_time," +
                 " pr._id_cycle, pr.IsActive, pr.times_a_day, pr.annotation" +
-                " from pill_reminders pr inner join pills pi on pi._id_pill=pr._id_pill where pr._id_pill_reminder=?";
-        Cursor cursor = database.rawQuery(rawQuery, new String[]{String.valueOf(prID)});
+                " from pill_reminders pr inner join pills pi on pi._id_pill=pr._id_pill where pr._id_pill_reminder=X'"+uuidStr+"'";
+        Cursor cursor = database.rawQuery(rawQuery, null);
         if(cursor.moveToFirst()){
             do{
-                int idPillReminder = cursor.getInt(cursor.getColumnIndex("_id_pill_reminder"));
+                UUID idPillReminder = ConvertingUtils.convertBytesToUUID(cursor.getBlob(cursor.getColumnIndex("_id_pill_reminder")));
                 String pillName = cursor.getString(cursor.getColumnIndex("pill_name"));
                 int pillCount = cursor.getInt(cursor.getColumnIndex("pill_count"));
                 int idPillCountType = cursor.getInt(cursor.getColumnIndex("_id_pill_count_type"));
-                int idCycle = cursor.getInt(cursor.getColumnIndex("_id_cycle"));
+                UUID idCycle = ConvertingUtils.convertBytesToUUID(cursor.getBlob(cursor.getColumnIndex("_id_cycle")));
                 String startDateStr = cursor.getString(cursor.getColumnIndex("start_date"));
                 int idHavingMealsType = cursor.getInt(cursor.getColumnIndex("_id_having_meals_type"));
                 int havingMealsTime = Math.abs(cursor.getInt(cursor.getColumnIndex("having_meals_time")));
@@ -604,19 +618,20 @@ public class DatabaseAdapter {
         return prdbie;
     }
 
-    public CycleAndPillComby getCycleAndPillCombyByID(int prID){
+    public CycleAndPillComby getCycleAndPillCombyByID(UUID prID){
+        String uuidStr = prID.toString().replace("-", "");
         String rawQuery = "select pr._id_pill_reminder, pi.pill_name, pr.pill_count, pr._id_pill_count_type, pr.start_date, pr._id_having_meals_type, pr.having_meals_time, pr.annotation, pr.IsActive, pr.times_a_day," +
                 " pr._id_cycle, cl.period, cl.period_DM_type, cl.once_a_period, cl.once_a_period_DM_type, cl._id_cycling_type, cl._id_week_schedule" +
-                " from pill_reminders pr inner join pills pi on pi._id_pill=pr._id_pill inner join cycles cl on pr._id_cycle=cl._id_cycle  where pr._id_pill_reminder=?";
-        Cursor cursor = database.rawQuery(rawQuery, new String[]{String.valueOf(prID)});
+                " from pill_reminders pr inner join pills pi on pi._id_pill=pr._id_pill inner join cycles cl on pr._id_cycle=cl._id_cycle  where pr._id_pill_reminder=X'"+uuidStr+"'";
+        Cursor cursor = database.rawQuery(rawQuery, null);
         CycleAndPillComby cycleAndPillComby = new CycleAndPillComby();
         if(cursor.moveToFirst()){
             do{
-                int idPillReminder = cursor.getInt(cursor.getColumnIndex("_id_pill_reminder"));
+                UUID idPillReminder = ConvertingUtils.convertBytesToUUID(cursor.getBlob(cursor.getColumnIndex("_id_pill_reminder")));
                 String pillName = cursor.getString(cursor.getColumnIndex("pill_name"));
                 int pillCount = cursor.getInt(cursor.getColumnIndex("pill_count"));
                 int idPillCountType = cursor.getInt(cursor.getColumnIndex("_id_pill_count_type"));
-                int idCycle = cursor.getInt(cursor.getColumnIndex("_id_cycle"));
+                UUID idCycle =  ConvertingUtils.convertBytesToUUID(cursor.getBlob(cursor.getColumnIndex("_id_cycle")));
                 String startDateStr = cursor.getString(cursor.getColumnIndex("start_date"));
                 int idHavingMealsType = cursor.getInt(cursor.getColumnIndex("_id_having_meals_type"));
                 int havingMealsTime = Math.abs(cursor.getInt(cursor.getColumnIndex("having_meals_time")));
@@ -645,8 +660,17 @@ public class DatabaseAdapter {
                 int once_aPeriod = cursor.getInt(cursor.getColumnIndex("once_a_period"));
                 int once_aPeriodDMtype = cursor.getInt(cursor.getColumnIndex("once_a_period_DM_type"));
                 int idCyclingType = cursor.getInt(cursor.getColumnIndex("_id_cycling_type"));
-                int idWeekSchedule = cursor.getInt(cursor.getColumnIndex("_id_week_schedule"));
-                int[] weekSchedule = getWeekSchedule(idWeekSchedule);
+                byte[] blob = cursor.getBlob(cursor.getColumnIndex("_id_week_schedule"));
+                int[] weekSchedule = null;
+                UUID idWeekSchedule = null;
+                if (blob!=null)
+                {
+                    idWeekSchedule = ConvertingUtils.convertBytesToUUID(
+                            cursor.getBlob(cursor.getColumnIndex("_id_week_schedule")));
+                    weekSchedule = getWeekSchedule(idWeekSchedule);
+                }
+                else
+                    weekSchedule = new int[7];
 
                 CycleDBInsertEntry cdbie = new CycleDBInsertEntry(
                         period, periodDMtype, once_aPeriod, once_aPeriodDMtype, idCyclingType,
@@ -673,7 +697,50 @@ public class DatabaseAdapter {
         Calendar calendar = Calendar.getInstance();
         if(cursor.moveToFirst()){
             do{
-                int id = cursor.getInt(cursor.getColumnIndex("_id_pill_reminder_entry"));
+                UUID id = ConvertingUtils.convertBytesToUUID(cursor.getBlob(cursor.getColumnIndex("_id_pill_reminder_entry")));
+                String pillName = cursor.getString(cursor.getColumnIndex("pill_name"));
+                int pillCount = cursor.getInt(cursor.getColumnIndex("pill_count"));
+                String pillCountType = cursor.getString(cursor.getColumnIndex("type_name"));
+                String dateStr = cursor.getString(cursor.getColumnIndex("reminder_date"));
+                String timeStr = cursor.getString(cursor.getColumnIndex("reminder_time"));
+                int havingMealsType = cursor.getInt(cursor.getColumnIndex("_id_having_meals_type"));
+                int havingMealsTimeStr = cursor.getInt(cursor.getColumnIndex("having_meals_time"));
+                int isDone = cursor.getInt(cursor.getColumnIndex("is_done"));
+
+                Date reminderDate;
+                Date havingMealsTime = new Date();
+                try {
+                    reminderDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(dateStr+" "+timeStr);
+                    havingMealsTime.setTime(reminderDate.getTime()+havingMealsTimeStr*60*1000);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    reminderDate = new Date();
+                }
+                Date f = reminderDate;
+                boolean isLate = false;
+                if (isDone==0)
+                    isLate = calendar.getTime().compareTo(reminderDate)>0?true:false;
+
+                pillReminderEntries.add(new PillReminderEntry(
+                        id, pillName, pillCount, pillCountType, reminderDate, havingMealsType, havingMealsTime, isDone, isLate));
+            }
+            while (cursor.moveToNext());
+        }
+        cursor.close();
+        return  pillReminderEntries;
+    }
+
+    public List<PillReminderEntry> getPillReminderEntriesByDateAndPillReminder(UUID idPillReminder, DateData date){
+        String uuidStr = idPillReminder.toString().replace("-", "");
+        ArrayList<PillReminderEntry> pillReminderEntries = new ArrayList<>();
+        String rawQuery = "select pre._id_pill_reminder_entry, pre.is_done, pr._id_having_meals_type, pre.reminder_time, pr.having_meals_time, pr.pill_count, pct.type_name, pre.reminder_date, pi.pill_name" +
+                " from pill_reminder_entries pre inner join pill_reminders pr on pre._id_pill_reminder=pr._id_pill_reminder inner join pills pi on pi._id_pill=pr._id_pill inner join pill_count_types pct on" +
+                " pr._id_pill_count_type=pct._id_pill_count_type where pre.reminder_date=? and pre._id_pill_reminder =X'" + uuidStr + "' and (pr.IsActive=1 or pre.is_done=1) ORDER BY pre.is_done";
+        Cursor cursor = database.rawQuery(rawQuery, new String[]{date.getDateString()});
+        Calendar calendar = Calendar.getInstance();
+        if(cursor.moveToFirst()){
+            do{
+                UUID id = ConvertingUtils.convertBytesToUUID(cursor.getBlob(cursor.getColumnIndex("_id_pill_reminder_entry")));
                 String pillName = cursor.getString(cursor.getColumnIndex("pill_name"));
                 int pillCount = cursor.getInt(cursor.getColumnIndex("pill_count"));
                 String pillCountType = cursor.getString(cursor.getColumnIndex("type_name"));
@@ -726,7 +793,7 @@ public class DatabaseAdapter {
 
         if(cursor.moveToFirst()){
             do{
-                int id = cursor.getInt(cursor.getColumnIndex("_id_pill_reminder_entry"));
+                UUID id = ConvertingUtils.convertBytesToUUID(cursor.getBlob(cursor.getColumnIndex("_id_pill_reminder_entry")));
                 String pillName = cursor.getString(cursor.getColumnIndex("pill_name"));
                 int pillCount = cursor.getInt(cursor.getColumnIndex("pill_count"));
                 String pillCountType = cursor.getString(cursor.getColumnIndex("type_name"));
@@ -759,35 +826,46 @@ public class DatabaseAdapter {
         return  pillReminderEntries;
     }
 
-    public void updateIsDonePillReminderEntry(int isDone, int pillReminderEntryID, String newTime){
+    public void updateIsDonePillReminderEntry(int isDone, UUID pillReminderEntryID, String newTime){
         ContentValues pillReminderEntryTableValues = new ContentValues();
         pillReminderEntryTableValues.put("is_done", isDone);
         if (!newTime.equals(""))
             pillReminderEntryTableValues.put("reminder_time", newTime);
         database.update("pill_reminder_entries", pillReminderEntryTableValues,
-                "_id_pill_reminder_entry=" + String.valueOf(pillReminderEntryID), null);
+                "_id_pill_reminder_entry=X'" + pillReminderEntryID.toString().replace("-", "") + "'", null);
     }
 
-    public void deletePillReminderEntriesAfterDate(int idPillReminder, String date){
-        database.delete("pill_reminder_entries", "reminder_date >= ? and _id_pill_reminder = ? and is_done = 0",
-                new String[]{date, String.valueOf(idPillReminder)});
+    public void deletePillReminderEntriesAfterDate(UUID idPillReminder, String date){
+        database.delete("pill_reminder_entries", "reminder_date >= ? and lower(hex(_id_pill_reminder)) = ? and is_done = 0",
+                new String[]{date, idPillReminder.toString().replace("-", "")});
+        List<PillReminderEntry> pillReminderEntries = getPillReminderEntriesByDate(new DateData(2019, 2, 10));
+        int f = 10;
     }
 
-    public void deletePillReminderEntriesByPillReminderId(int idPillReminder){
-        database.delete("pill_reminder_entries", "_id_pill_reminder = ?",
-                new String[]{String.valueOf(idPillReminder)});
+    public void deletePillReminderEntriesByPillReminderId(UUID idPillReminder){
+        database.delete("pill_reminder_entries", "lower(hex(_id_pill_reminder)) = ?",
+                new String[]{idPillReminder.toString().replace("-", "")});
     }
 
-    public void deletePillReminderById(int idPillReminder){
-        database.delete("pill_reminders", "_id_pill_reminder = ?",
-                new String[]{String.valueOf(idPillReminder)});
+    public void deletePillReminderById(UUID idPillReminder){
+        database.delete("pill_reminders", "lower(hex(_id_pill_reminder)) = ?",
+                new String[]{idPillReminder.toString().replace("-", "")});
     }
     //***********************************end************************************************************************
 
     //***********************************work with Cycle************************************************************
-    private int[] getWeekSchedule(int idWeekSchedule){
+    private int[] getWeekSchedule(UUID idWeekSchedule){
         int[] weekSchedule = new int[7];
-        Cursor cursor = database.query("week_schedules", null, "_id_week_schedule=?", new String[]{String.valueOf(idWeekSchedule)}, null, null, null);
+        String uuidStr = idWeekSchedule.toString().replace("-", "");
+
+        String rawQuery = "select * from week_schedules where _id_week_schedule = X'"+uuidStr+"'";
+        Cursor cursor = database.rawQuery(rawQuery, null);
+
+        /*String rawQuery = "select * from week_schedules where lower(hex(_id_week_schedule)) = ?";
+        Cursor cursor = database.rawQuery(rawQuery, new String[]{uuidStr});*/
+
+        /*Cursor cursor = database.query("week_schedules", null, "_id_week_schedule=?",
+                new String[]{"X'" + sb.toString()+"'"}, null, null, null);*/
         if(cursor.moveToFirst()){
             do{
                 weekSchedule[0] = cursor.getInt(cursor.getColumnIndex("mon"));
@@ -804,12 +882,13 @@ public class DatabaseAdapter {
         return weekSchedule;
     }
 
-    public int insertCycle(Integer period, Integer periodDMType, @Nullable Integer once_aPeriod,
+    public UUID insertCycle(Integer period, Integer periodDMType, @Nullable Integer once_aPeriod,
                            @Nullable Integer once_aPeriodDMType, Integer idCyclingType,
                            @Nullable int[] weekSchedule){
-        long weekScheduleID = -1;
+        UUID weekScheduleID = null;
         if (weekSchedule!=null)
         {
+            weekScheduleID = UUID.randomUUID();
             ContentValues weekScheduleTableValues = new ContentValues();
             weekScheduleTableValues.put("mon", weekSchedule[1]);
             weekScheduleTableValues.put("tue", weekSchedule[2]);
@@ -818,22 +897,25 @@ public class DatabaseAdapter {
             weekScheduleTableValues.put("fri", weekSchedule[5]);
             weekScheduleTableValues.put("sat", weekSchedule[6]);
             weekScheduleTableValues.put("sun", weekSchedule[0]);
-            weekScheduleID = database.insert("week_schedules", null, weekScheduleTableValues);
+            weekScheduleTableValues.put("_id_week_schedule", ConvertingUtils.convertUUIDToBytes(weekScheduleID));
+            database.insert("week_schedules", null, weekScheduleTableValues);
         }
 
+        UUID cycleId = UUID.randomUUID();
         ContentValues cycleTableValues = new ContentValues();
         cycleTableValues.put("period", period);
+        cycleTableValues.put("_id_cycle", ConvertingUtils.convertUUIDToBytes(cycleId));
         cycleTableValues.put("period_DM_type", periodDMType);
         cycleTableValues.put("once_a_period", once_aPeriod);
         cycleTableValues.put("once_a_period_DM_type", once_aPeriodDMType);
-        cycleTableValues.put("_id_week_schedule", weekScheduleID==-1?null:weekScheduleID);
+        cycleTableValues.put("_id_week_schedule", weekScheduleID==null?null:ConvertingUtils.convertUUIDToBytes(weekScheduleID));
         cycleTableValues.put("_id_cycling_type", idCyclingType);
-        long cycleId = database.insert("cycles", null, cycleTableValues);
+        database.insert("cycles", null, cycleTableValues);
 
-        return (int)cycleId;
+        return cycleId;
     }
 
-    public int updateCycle(Integer inCycleId, Integer weekScheduleID, Integer period, Integer periodDMType, @Nullable Integer once_aPeriod,
+    public UUID updateCycle(UUID inCycleId, UUID weekScheduleID, Integer period, Integer periodDMType, @Nullable Integer once_aPeriod,
                            @Nullable Integer once_aPeriodDMType, Integer idCyclingType,
                            @Nullable int[] weekSchedule){
         if (weekSchedule!=null)
@@ -846,12 +928,15 @@ public class DatabaseAdapter {
             weekScheduleTableValues.put("fri", weekSchedule[5]);
             weekScheduleTableValues.put("sat", weekSchedule[6]);
             weekScheduleTableValues.put("sun", weekSchedule[0]);
-            if (weekScheduleID!=0) {
+            if (weekScheduleID!=null) {
                 database.update("week_schedules", weekScheduleTableValues,
-                        "_id_week_schedule = ?", new String[]{String.valueOf(weekScheduleID)});
+                        "lower(hex(_id_week_schedule)) = ?", new String[]{weekScheduleID.toString().replace("-", "")});
             }
-            else
-                weekScheduleID = (int)database.insert("week_schedules", null, weekScheduleTableValues);
+            else{
+                weekScheduleID = UUID.randomUUID();
+                weekScheduleTableValues.put("_id_week_schedule", ConvertingUtils.convertUUIDToBytes(weekScheduleID));
+                database.insert("week_schedules", null, weekScheduleTableValues);
+            }
         }
 
         ContentValues cycleTableValues = new ContentValues();
@@ -859,25 +944,27 @@ public class DatabaseAdapter {
         cycleTableValues.put("period_DM_type", periodDMType);
         cycleTableValues.put("once_a_period", once_aPeriod);
         cycleTableValues.put("once_a_period_DM_type", once_aPeriodDMType);
-        cycleTableValues.put("_id_week_schedule", weekScheduleID==0?null:weekScheduleID);
+        cycleTableValues.put("_id_week_schedule", weekScheduleID==null?null:ConvertingUtils.convertUUIDToBytes(weekScheduleID));
         cycleTableValues.put("_id_cycling_type", idCyclingType);
-        long cycleId = database.update("cycles", cycleTableValues,
-                "_id_cycle = ?", new String[]{String.valueOf(inCycleId)});
+         database.update("cycles", cycleTableValues, "lower(hex(_id_cycle)) = ?",
+                 new String[]{inCycleId.toString().replace("-", "")});
 
-        return (int)cycleId;
+        return inCycleId;
     }
     //***********************************end************************************************************
 
     //***********************************work with measurement reminder************************************************************
-    public int insertMeasurementReminder(int idMeasurementType,
-                                         String startDate, @Nullable Integer idCycle, @Nullable Integer idHavingMealsType,
+    public UUID insertMeasurementReminder(int idMeasurementType,
+                                         String startDate, @Nullable UUID idCycle, @Nullable Integer idHavingMealsType,
                                          @Nullable Integer havingMealsTime, String annotation, Integer isActive, Integer times_aDay,
                                          Integer isOneTime){
 
+        UUID measurementReminderId = UUID.randomUUID();
         ContentValues measurementReminderTableValues = new ContentValues();
+        measurementReminderTableValues.put("_id_measurement_reminder", ConvertingUtils.convertUUIDToBytes(measurementReminderId));
         measurementReminderTableValues.put("_id_measurement_type", idMeasurementType);
         measurementReminderTableValues.put("start_date", startDate);
-        measurementReminderTableValues.put("_id_cycle", idCycle);
+        measurementReminderTableValues.put("_id_cycle", idCycle==null?null:ConvertingUtils.convertUUIDToBytes(idCycle));
         measurementReminderTableValues.put("_id_having_meals_type", idHavingMealsType);
         measurementReminderTableValues.put("having_meals_time", havingMealsTime);
         measurementReminderTableValues.put("annotation", annotation);
@@ -885,10 +972,10 @@ public class DatabaseAdapter {
         measurementReminderTableValues.put("times_a_day", times_aDay);
         if (isOneTime==1)
             measurementReminderTableValues.put("is_one_time", isOneTime);
-        long measurementReminderId = database.insert("measurement_reminders", null, measurementReminderTableValues);
+        database.insert("measurement_reminders", null, measurementReminderTableValues);
 
         //Log.i("pill_new_id", String.valueOf(pillId));
-        return (int)measurementReminderId;
+        return measurementReminderId;
     }
 
     public List<MeasurementReminder> getAllMeasurementReminders(){
@@ -908,7 +995,7 @@ public class DatabaseAdapter {
             do{
                 Calendar calendar = Calendar.getInstance();
 
-                int id = cursor.getInt(cursor.getColumnIndex("_id_measurement_reminder"));
+                UUID id = ConvertingUtils.convertBytesToUUID(cursor.getBlob(cursor.getColumnIndex("_id_measurement_reminder")));
                 String startDateStr = cursor.getString(cursor.getColumnIndex("start_date"));
                 int havingMealsType = cursor.getInt(cursor.getColumnIndex("_id_having_meals_type"));
                 int period = cursor.getInt(cursor.getColumnIndex("period"));
@@ -955,31 +1042,32 @@ public class DatabaseAdapter {
         return measurementReminders;
     }
 
-    public List<float[]> getMeasurementReminderEntriesPerMonth(int idMeasurementReminder, int month, int year, int type,
+    public List<float[]> getMeasurementReminderEntriesPerMonth(UUID idMeasurementReminder, int month, int year, int type,
                                                                String timeStr1, String timeStr2){
         List<float[]> measurementReminderEntryValues = new ArrayList<float[]>();
+        String uuidStr = idMeasurementReminder.toString().replace("-", "");
         Cursor cursor;
         if (type == 0){
             String rawQuery = "select AVG(mre.value1) as avg_value1, AVG(mre.value2) as avg_value2, mre.reminder_date" +
                     " from measurement_reminder_entries mre inner join measurement_reminders mr on mre._id_measurement_reminder=mr._id_measurement_reminder" +
-                    " where mre._id_measurement_reminder = ? and mre.is_done = 1 and strftime('%m', mre.reminder_date) = ? and strftime('%Y', mre.reminder_date) = ?" +
+                    " where mre._id_measurement_reminder = X'"+uuidStr+"' and mre.is_done = 1 and strftime('%m', mre.reminder_date) = ? and strftime('%Y', mre.reminder_date) = ?" +
                     " and mre.reminder_time between ? and ? GROUP BY mre.reminder_date";
-            cursor = database.rawQuery(rawQuery, new String[]{String.valueOf(idMeasurementReminder), String.format("%02d",month), String.valueOf(year),
+            cursor = database.rawQuery(rawQuery, new String[]{String.format("%02d",month), String.valueOf(year),
                                         timeStr1, timeStr2});
         }
         else if (type == 1){
             String rawQuery = "select AVG(mre.value1) as avg_value1, AVG(mre.value2) as avg_value2, mre.reminder_date" +
                     " from measurement_reminder_entries mre inner join measurement_reminders mr on mre._id_measurement_reminder=mr._id_measurement_reminder" +
-                    " where mre._id_measurement_reminder = ? and mre.is_done = 1 and strftime('%m', mre.reminder_date) = ? and strftime('%Y', mre.reminder_date) = ?" +
+                    " where mre._id_measurement_reminder = X'"+uuidStr+"' and mre.is_done = 1 and strftime('%m', mre.reminder_date) = ? and strftime('%Y', mre.reminder_date) = ?" +
                     " GROUP BY mre.reminder_date";
-            cursor = database.rawQuery(rawQuery, new String[]{String.valueOf(idMeasurementReminder), String.format("%02d",month), String.valueOf(year)});
+            cursor = database.rawQuery(rawQuery, new String[]{String.format("%02d",month), String.valueOf(year)});
         }
         else {
             String rawQuery = "select AVG(mre.value1) as avg_value1, AVG(mre.value2) as avg_value2, mre.reminder_date" +
                     " from measurement_reminder_entries mre inner join measurement_reminders mr on mre._id_measurement_reminder=mr._id_measurement_reminder" +
-                    " where mre._id_measurement_reminder = ? and mre.is_done = 1 and strftime('%m', mre.reminder_date) = ? and strftime('%Y', mre.reminder_date) = ?" +
+                    " where mre._id_measurement_reminder = X'"+uuidStr+"' and mre.is_done = 1 and strftime('%m', mre.reminder_date) = ? and strftime('%Y', mre.reminder_date) = ?" +
                     " and (mre.reminder_time between ? and '00:00:00' or mre.reminder_time between '00:00:00' and ?) GROUP BY mre.reminder_date";
-            cursor = database.rawQuery(rawQuery, new String[]{String.valueOf(idMeasurementReminder), String.valueOf(month), String.valueOf(year)});
+            cursor = database.rawQuery(rawQuery, new String[]{String.valueOf(month), String.valueOf(year)});
         }
         if(cursor.moveToFirst()){
             do{
@@ -1040,7 +1128,7 @@ public class DatabaseAdapter {
                 int idMeasurementType = cursor.getInt(4);
                 int havingMealsType = cursor.getInt(5);
                 int periodDM_Type = cursor.getInt(6);
-                int id = cursor.getInt(7);
+                UUID id = ConvertingUtils.convertBytesToUUID(cursor.getBlob(7));
                 int idMeasurementValueType = cursor.getInt(8);
                 int countDone = cursor.getInt(9);
                 double sumValue1 = cursor.getDouble(10);
@@ -1104,42 +1192,47 @@ public class DatabaseAdapter {
         return measurementStatEntries;
     }
 
-    public void insertMeasurementReminderEntry(String reminder_date, Integer idMeasurementReminder, String reminderTime){
+    public void insertMeasurementReminderEntry(String reminder_date, UUID idMeasurementReminder, String reminderTime){
+        UUID idMeasurRemindEntry = UUID.randomUUID();
         ContentValues measurementReminderEntryTableValues = new ContentValues();
+        measurementReminderEntryTableValues.put("_id_measur_remind_entry", ConvertingUtils.convertUUIDToBytes(idMeasurRemindEntry));
         measurementReminderEntryTableValues.put("is_done", 0);
         measurementReminderEntryTableValues.put("value1", -10000);
         measurementReminderEntryTableValues.put("value2", -10000);
         measurementReminderEntryTableValues.put("reminder_date", reminder_date);
-        measurementReminderEntryTableValues.put("_id_measurement_reminder", idMeasurementReminder);
+        measurementReminderEntryTableValues.put("_id_measurement_reminder", ConvertingUtils.convertUUIDToBytes(idMeasurementReminder));
         measurementReminderEntryTableValues.put("reminder_time", reminderTime);
         database.insert("measurement_reminder_entries", null, measurementReminderEntryTableValues);
     }
 
-    public void insertMeasurementReminderEntry(String reminder_date, Integer idMeasurementReminder, String reminderTime, double value1, double value2){
+    public void insertMeasurementReminderEntry(String reminder_date, UUID idMeasurementReminder, String reminderTime, double value1, double value2){
+        UUID idMeasurRemindEntry = UUID.randomUUID();
         ContentValues measurementReminderEntryTableValues = new ContentValues();
+        measurementReminderEntryTableValues.put("_id_measur_remind_entry", ConvertingUtils.convertUUIDToBytes(idMeasurRemindEntry));
         measurementReminderEntryTableValues.put("is_done", 1);
         measurementReminderEntryTableValues.put("value1", value1);
         measurementReminderEntryTableValues.put("value2", value2);
         measurementReminderEntryTableValues.put("reminder_date", reminder_date);
-        measurementReminderEntryTableValues.put("_id_measurement_reminder", idMeasurementReminder);
+        measurementReminderEntryTableValues.put("_id_measurement_reminder", ConvertingUtils.convertUUIDToBytes(idMeasurementReminder));
         measurementReminderEntryTableValues.put("reminder_time", reminderTime);
         database.insert("measurement_reminder_entries", null, measurementReminderEntryTableValues);
     }
 
-    public CycleAndMeasurementComby getCycleAndMeasurementCombyById(int prID){
+    public CycleAndMeasurementComby getCycleAndMeasurementCombyById(UUID prID){
+        String uuidStr = prID.toString().replace("-", "");
         String rawQuery = "select mr._id_measurement_reminder, mr._id_measurement_type, mt._id_measur_value_type, mr.start_date, mr._id_having_meals_type, mr.having_meals_time, mr.annotation, mr.isActive, mr.times_a_day, " +
-                "                 mr._id_cycle, cl.period, cl.period_DM_type, cl.once_a_period, cl.once_a_period_DM_type, cl._id_cycling_type, cl._id_week_schedule " +
-                "                 from measurement_reminders mr inner join cycles cl on mr._id_cycle=cl._id_cycle inner join measurement_types mt on mr._id_measurement_type=mt._id_measurement_type where mr._id_measurement_reminder=?";
-        Cursor cursor = database.rawQuery(rawQuery, new String[]{String.valueOf(prID)});
+                " mr._id_cycle, cl.period, cl.period_DM_type, cl.once_a_period, cl.once_a_period_DM_type, cl._id_cycling_type, cl._id_week_schedule " +
+                " from measurement_reminders mr inner join cycles cl on mr._id_cycle=cl._id_cycle inner join measurement_types mt on mr._id_measurement_type=mt._id_measurement_type " +
+                " where mr._id_measurement_reminder=X'"+uuidStr+"'";
+        Cursor cursor = database.rawQuery(rawQuery, null);
         CycleAndMeasurementComby cycleAndMeasurementComby = new CycleAndMeasurementComby();
         if(cursor.moveToFirst()){
             do{
-                int idMeasurementReminder = cursor.getInt(cursor.getColumnIndex("_id_measurement_reminder"));
-
+                UUID idMeasurementReminder = ConvertingUtils.convertBytesToUUID(cursor.getBlob(cursor.getColumnIndex("_id_measurement_reminder")));
                 int idMeasurementType = cursor.getInt(cursor.getColumnIndex("_id_measurement_type"));
                 int idMeasurementValueType = cursor.getInt(cursor.getColumnIndex("_id_measur_value_type"));
 
-                int idCycle = cursor.getInt(cursor.getColumnIndex("_id_cycle"));
+                UUID idCycle = ConvertingUtils.convertBytesToUUID(cursor.getBlob(cursor.getColumnIndex("_id_cycle")));
                 String startDateStr = cursor.getString(cursor.getColumnIndex("start_date"));
                 int idHavingMealsType = cursor.getInt(cursor.getColumnIndex("_id_having_meals_type"));
                 int havingMealsTime = Math.abs(cursor.getInt(cursor.getColumnIndex("having_meals_time")));
@@ -1169,8 +1262,17 @@ public class DatabaseAdapter {
                 int once_aPeriod = cursor.getInt(cursor.getColumnIndex("once_a_period"));
                 int once_aPeriodDMtype = cursor.getInt(cursor.getColumnIndex("once_a_period_DM_type"));
                 int idCyclingType = cursor.getInt(cursor.getColumnIndex("_id_cycling_type"));
-                int idWeekSchedule = cursor.getInt(cursor.getColumnIndex("_id_week_schedule"));
-                int[] weekSchedule = getWeekSchedule(idWeekSchedule);
+                byte[] blob = cursor.getBlob(cursor.getColumnIndex("_id_week_schedule"));
+                int[] weekSchedule = null;
+                UUID idWeekSchedule = null;
+                if (blob!=null)
+                {
+                    idWeekSchedule = ConvertingUtils.convertBytesToUUID(
+                            cursor.getBlob(cursor.getColumnIndex("_id_week_schedule")));
+                    weekSchedule = getWeekSchedule(idWeekSchedule);
+                }
+                else
+                    weekSchedule = new int[7];
 
                 CycleDBInsertEntry cdbie = new CycleDBInsertEntry(
                         period, periodDMtype, once_aPeriod, once_aPeriodDMtype, idCyclingType,
@@ -1188,33 +1290,33 @@ public class DatabaseAdapter {
         return cycleAndMeasurementComby;
     }
 
-    public void deleteMeasurementReminderEntriesByMeasurementReminderId(int idMeasurementReminder){
-        database.delete("measurement_reminder_entries", "_id_measurement_reminder = ?",
-                new String[]{String.valueOf(idMeasurementReminder)});
+    public void deleteMeasurementReminderEntriesByMeasurementReminderId(UUID idMeasurementReminder){
+        database.delete("measurement_reminder_entries", "lower(hex(_id_measurement_reminder)) = ?",
+                new String[]{idMeasurementReminder.toString().replace("-", "")});
     }
 
-    public int updateMeasurementReminder(int idMeasurementReminder,
-                                  String startDate, Integer idCycle, @Nullable Integer idHavingMealsType,
+    public UUID updateMeasurementReminder(UUID idMeasurementReminder,
+                                  String startDate, UUID idCycle, @Nullable Integer idHavingMealsType,
                                   @Nullable Integer havingMealsTime, String annotation, Integer isActive, Integer times_aDay
                                   ){
 
         ContentValues measurementReminderTableValues = new ContentValues();
         measurementReminderTableValues.put("start_date", startDate);
-        measurementReminderTableValues.put("_id_cycle", idCycle);
+        measurementReminderTableValues.put("_id_cycle", ConvertingUtils.convertUUIDToBytes(idCycle));
         measurementReminderTableValues.put("_id_having_meals_type", idHavingMealsType);
         measurementReminderTableValues.put("having_meals_time", havingMealsTime);
         measurementReminderTableValues.put("annotation", annotation);
         measurementReminderTableValues.put("IsActive", isActive);
         measurementReminderTableValues.put("times_a_day", times_aDay);
-        long measurementReminderId = database.update("measurement_reminders", measurementReminderTableValues,
-                "_id_measurement_reminder = ?", new String[]{String.valueOf(idMeasurementReminder)});
+        database.update("measurement_reminders", measurementReminderTableValues,
+                "lower(hex(_id_measurement_reminder)) = ?", new String[]{idMeasurementReminder.toString().replace("-", "")});
 
-        return (int)measurementReminderId;
+        return idMeasurementReminder;
     }
 
-    public void deleteMeasurementReminderEntriesAfterDate(int idMeasurementReminder, String date){
-        database.delete("measurement_reminder_entries", "reminder_date >= ? and _id_measurement_reminder = ? and is_done = 0",
-                new String[]{date, String.valueOf(idMeasurementReminder)});
+    public void deleteMeasurementReminderEntriesAfterDate(UUID idMeasurementReminder, String date){
+        database.delete("measurement_reminder_entries", "reminder_date >= ? and lower(hex(_id_measurement_reminder)) = ? and is_done = 0",
+                new String[]{date, idMeasurementReminder.toString().replace("-", "")});
     }
 
     public List<MeasurementReminderEntry> getMeasurementReminderEntriesByDate(DateData date){
@@ -1226,7 +1328,54 @@ public class DatabaseAdapter {
         Calendar calendar = Calendar.getInstance();
         if(cursor.moveToFirst()){
             do{
-                int id = cursor.getInt(cursor.getColumnIndex("_id_measur_remind_entry"));
+                UUID id = ConvertingUtils.convertBytesToUUID(cursor.getBlob(cursor.getColumnIndex("_id_measur_remind_entry")));
+                int idMeasurementType = cursor.getInt(cursor.getColumnIndex("_id_measurement_type"));
+                String measurementValueTypeName = cursor.getString(cursor.getColumnIndex("type_value_name"));
+                double value1 = cursor.getDouble(cursor.getColumnIndex("value1"));
+                double value2 = cursor.getDouble(cursor.getColumnIndex("value2"));
+                String dateStr = cursor.getString(cursor.getColumnIndex("reminder_date"));
+                String timeStr = cursor.getString(cursor.getColumnIndex("reminder_time"));
+                int havingMealsType = cursor.getInt(cursor.getColumnIndex("_id_having_meals_type"));
+                int havingMealsTimeStr = cursor.getInt(cursor.getColumnIndex("having_meals_time"));
+                int isDone = cursor.getInt(cursor.getColumnIndex("is_done"));
+                String measurementTypeName = cursor.getString(cursor.getColumnIndex("type_name"));
+
+                Date reminderDate;
+                Date havingMealsTime = new Date();
+                try {
+                    reminderDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(dateStr+" "+timeStr);
+                    havingMealsTime.setTime(reminderDate.getTime()+havingMealsTimeStr*60*1000);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    reminderDate = new Date();
+                }
+                Date f = reminderDate;
+                boolean isLate = false;
+                if (isDone==0)
+                    isLate = calendar.getTime().compareTo(reminderDate)>0?true:false;
+
+                measurementReminderEntry.add(new MeasurementReminderEntry(
+                        id, havingMealsType, idMeasurementType, measurementValueTypeName,
+                        reminderDate, havingMealsTime, isDone, isLate, value1, value2, measurementTypeName));
+            }
+            while (cursor.moveToNext());
+        }
+        cursor.close();
+        return measurementReminderEntry;
+    }
+
+    public List<MeasurementReminderEntry> getMeasurementReminderEntriesByDateAndMeasurementReminder(UUID idMeasurementReminder, DateData date){
+        String uuidStr = idMeasurementReminder.toString().replace("-", "");
+        ArrayList<MeasurementReminderEntry> measurementReminderEntry = new ArrayList<>();
+        String rawQuery = "select mre._id_measur_remind_entry, mr._id_measurement_type, mvt.type_value_name, mt.type_name, mre.value1, mre.value2, mre.is_done, mr._id_having_meals_type, mre.reminder_time, mr.having_meals_time, mre.reminder_date " +
+                " from measurement_reminder_entries mre inner join measurement_reminders mr on mre._id_measurement_reminder=mr._id_measurement_reminder inner join measurement_types mt on mr._id_measurement_type=mt._id_measurement_type " +
+                " inner join measurement_value_types mvt on mt._id_measur_value_type=mvt._id_measur_value_type where mre.reminder_date=? and mre._id_measurement_reminder =X'" + uuidStr + "'" +
+                " and (mr.IsActive=1 or mre.is_done=1) ORDER BY mre.is_done";
+        Cursor cursor = database.rawQuery(rawQuery, new String[]{date.getDateString()});
+        Calendar calendar = Calendar.getInstance();
+        if(cursor.moveToFirst()){
+            do{
+                UUID id = ConvertingUtils.convertBytesToUUID(cursor.getBlob(cursor.getColumnIndex("_id_measur_remind_entry")));
                 int idMeasurementType = cursor.getInt(cursor.getColumnIndex("_id_measurement_type"));
                 String measurementValueTypeName = cursor.getString(cursor.getColumnIndex("type_value_name"));
                 double value1 = cursor.getDouble(cursor.getColumnIndex("value1"));
@@ -1282,7 +1431,7 @@ public class DatabaseAdapter {
 
         if(cursor.moveToFirst()){
             do{
-                int id = cursor.getInt(cursor.getColumnIndex("_id_measur_remind_entry"));
+                UUID id = ConvertingUtils.convertBytesToUUID(cursor.getBlob(cursor.getColumnIndex("_id_measur_remind_entry")));
                 int idMeasurementType = cursor.getInt(cursor.getColumnIndex("_id_measurement_type"));
                 String measurementValueTypeName = cursor.getString(cursor.getColumnIndex("type_value_name"));
                 double value1 = cursor.getDouble(cursor.getColumnIndex("value1"));
@@ -1318,7 +1467,7 @@ public class DatabaseAdapter {
         return measurementReminderEntry;
     }
 
-    public void updateIsDoneMeasurementReminderEntry(int isDone, int measurementReminderEntryID, String newTime, double value1, double value2, int type){
+    public void updateIsDoneMeasurementReminderEntry(int isDone, UUID measurementReminderEntryID, String newTime, double value1, double value2, int type){
         ContentValues measurementReminderEntryTableValues = new ContentValues();
         measurementReminderEntryTableValues.put("is_done", isDone);
         if (!newTime.equals(""))
@@ -1328,7 +1477,7 @@ public class DatabaseAdapter {
             measurementReminderEntryTableValues.put("value2", value2);
         }
         database.update("measurement_reminder_entries", measurementReminderEntryTableValues,
-                "_id_measur_remind_entry=" + String.valueOf(measurementReminderEntryID), null);
+                "_id_measur_remind_entry=X'" + measurementReminderEntryID.toString().replace("-", "") + "'", null);
     }
 
     //***********************************end************************************************************

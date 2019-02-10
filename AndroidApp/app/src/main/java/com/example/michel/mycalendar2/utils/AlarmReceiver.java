@@ -51,8 +51,8 @@ public class AlarmReceiver extends BroadcastReceiver {
         PillReminderEntry pre =  intent.getParcelableExtra("pre");
         MeasurementReminderEntry mre = intent.getParcelableExtra("mre");
 
-        int pillReminderEntryID = pre==null?-1:pre.getId();
-        int measurementReminderEntryID = mre==null?-1:mre.getId();
+        String pillReminderEntryID = pre==null?"":pre.getId().toString();
+        String measurementReminderEntryID = mre==null?"":mre.getId().toString();
 
         Intent cancelIntent = new Intent(context, AlarmService.class);
         //notificationIntent2.putExtra("isActual", 1);
@@ -82,7 +82,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         Notification.Builder  builder = new Notification.Builder(context);
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm, d MMM");
 
-        if (pillReminderEntryID!=-1){
+        if (!pillReminderEntryID.equals("")){
             builder.setContentIntent(contentIntent)
                     .setSmallIcon(R.mipmap.ic_launcher)
                     .setContentTitle(sdf.format(pre.getDate()) + " " + pre.getPillName())

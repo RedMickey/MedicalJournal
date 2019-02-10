@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import com.example.michel.mycalendar2.models.ReminderEntryModel;
 
 import java.util.Date;
+import java.util.UUID;
 
 public class MeasurementReminderEntry extends ReminderEntryModel implements Parcelable {
     private double value1;
@@ -14,7 +15,7 @@ public class MeasurementReminderEntry extends ReminderEntryModel implements Parc
     private String measurementTypeName;
     private String measurementValueTypeName;
 
-    public MeasurementReminderEntry(int id, int havingMealsType,
+    public MeasurementReminderEntry(UUID id, int havingMealsType,
                                     int idMeasurementType, String measurementValueTypeName, Date date,
                                     Date havingMealsTime, int isDone, boolean isLate,
                                     double value1, double value2, String measurementTypeName)
@@ -34,7 +35,7 @@ public class MeasurementReminderEntry extends ReminderEntryModel implements Parc
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeInt(id);
+        parcel.writeString(id.toString());
         parcel.writeInt(havingMealsType);
         parcel.writeLong(date.getTime());
         parcel.writeLong(havingMealsTime.getTime());
@@ -47,7 +48,7 @@ public class MeasurementReminderEntry extends ReminderEntryModel implements Parc
     }
 
     public MeasurementReminderEntry(Parcel in){
-        super(in.readInt(), in.readInt(), new Date(in.readLong()), new Date(in.readLong()), in.readInt(), false);
+        super(UUID.fromString(in.readString()), in.readInt(), new Date(in.readLong()), new Date(in.readLong()), in.readInt(), false);
         this.idMeasurementType = in.readInt();
         this.measurementValueTypeName = in.readString();
         this.value1 = in.readDouble();

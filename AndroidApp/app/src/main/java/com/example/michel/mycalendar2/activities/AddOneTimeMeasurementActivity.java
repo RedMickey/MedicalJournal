@@ -150,7 +150,7 @@ public class AddOneTimeMeasurementActivity extends AppCompatActivity {
 
         String measurementName = arguments.getString("MeasurementName");
         measurementTypeId = arguments.getInt("MeasurementTypeID");
-        int id = arguments.getInt("MeasurementReminderID");
+        String id = arguments.getString("MeasurementReminderID");
 
         // Declaration end
 

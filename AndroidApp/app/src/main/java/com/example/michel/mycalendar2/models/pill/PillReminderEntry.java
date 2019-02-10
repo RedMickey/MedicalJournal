@@ -7,13 +7,14 @@ import com.example.michel.mycalendar2.models.CycleDBInsertEntry;
 import com.example.michel.mycalendar2.models.ReminderEntryModel;
 
 import java.util.Date;
+import java.util.UUID;
 
 public class PillReminderEntry extends ReminderEntryModel implements Parcelable {
     private String pillName;
     private int pillCount;
     private String pillCountType;
 
-    public PillReminderEntry(int id, String pillName, int pillCount, String pillCountType,
+    public PillReminderEntry(UUID id, String pillName, int pillCount, String pillCountType,
                              Date date, int havingMealsType, Date havingMealsTime, int isDone, boolean isLate)
     {
         super(id, havingMealsType, date, havingMealsTime, isDone, isLate);
@@ -53,7 +54,7 @@ public class PillReminderEntry extends ReminderEntryModel implements Parcelable 
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeInt(id);
+        parcel.writeString(id.toString());
         parcel.writeInt(havingMealsType);
         parcel.writeLong(date.getTime());
         parcel.writeLong(havingMealsTime.getTime());
@@ -65,7 +66,7 @@ public class PillReminderEntry extends ReminderEntryModel implements Parcelable 
     }
 
     public PillReminderEntry(Parcel in){
-        super(in.readInt(), in.readInt(), new Date(in.readLong()), new Date(in.readLong()), in.readInt(), false);
+        super(UUID.fromString(in.readString()), in.readInt(), new Date(in.readLong()), new Date(in.readLong()), in.readInt(), false);
         this.pillName = in.readString();
         this.pillCount = in.readInt();
         this.pillCountType = in.readString();

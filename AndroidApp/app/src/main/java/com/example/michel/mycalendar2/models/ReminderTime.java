@@ -1,16 +1,18 @@
 package com.example.michel.mycalendar2.models;
 
+import java.util.UUID;
+
 public class ReminderTime {
     private String reminderTimeStr;
-    private int idReminderTime;
+    private UUID idReminderTime;
 
-    public ReminderTime(int idReminderTime, String reminderTimeStr){
+    public ReminderTime(UUID idReminderTime, String reminderTimeStr){
         this.idReminderTime = idReminderTime;
         this.reminderTimeStr = reminderTimeStr;
     }
 
     public ReminderTime(String reminderTimeStr){
-        this.idReminderTime = 0;
+        this.idReminderTime = null;
         this.reminderTimeStr = reminderTimeStr;
     }
 
@@ -22,11 +24,11 @@ public class ReminderTime {
         this.reminderTimeStr = reminderTimeStr;
     }
 
-    public int getIdReminderTime() {
+    public UUID getIdReminderTime() {
         return idReminderTime;
     }
 
-    public void setIdReminderTime(int idReminderTime) {
+    public void setIdReminderTime(UUID idReminderTime) {
         this.idReminderTime = idReminderTime;
     }
 
@@ -34,6 +36,7 @@ public class ReminderTime {
     public boolean equals(Object obj) {
         if (obj==this) return true;
         if (obj==null || obj.getClass()!=this.getClass()) return false;
-        return (this.idReminderTime==((ReminderTime) obj).getIdReminderTime()&&this.reminderTimeStr.equals(((ReminderTime) obj).getReminderTimeStr()));
+        return (this.idReminderTime==((ReminderTime) obj).getIdReminderTime()&&
+                this.reminderTimeStr.compareTo(((ReminderTime) obj).getReminderTimeStr()) ==0);
     }
 }

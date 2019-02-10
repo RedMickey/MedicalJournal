@@ -6,13 +6,15 @@ import com.example.michel.mycalendar2.calendarview.data.DateData;
 import com.example.michel.mycalendar2.models.ReminderDBEntry;
 import com.example.michel.mycalendar2.models.ReminderTime;
 
+import java.util.UUID;
+
 public class MeasurementReminderDBEntry extends ReminderDBEntry {
     private int idMeasurementType;
-    private Integer idMeasurementReminder;
+    private UUID idMeasurementReminder;
     private int idMeasurementValueType;
 
-    public MeasurementReminderDBEntry(int idMeasurementType, Integer idMeasurementReminder,
-                                    DateData startDate, Integer idCycle, @Nullable Integer idHavingMealsType,
+    public MeasurementReminderDBEntry(int idMeasurementType, UUID idMeasurementReminder,
+                                    DateData startDate, UUID idCycle, @Nullable Integer idHavingMealsType,
                                     @Nullable Integer havingMealsTime, String annotation, Integer isActive,
                                     ReminderTime[] reminderTimes, int idMeasurementValueType)
     {
@@ -38,11 +40,11 @@ public class MeasurementReminderDBEntry extends ReminderDBEntry {
         this.idMeasurementType = idMeasurementType;
     }
 
-    public Integer getIdMeasurementReminder() {
+    public UUID getIdMeasurementReminder() {
         return idMeasurementReminder;
     }
 
-    public void setIdMeasurementReminder(Integer idMeasurementReminder) {
+    public void setIdMeasurementReminder(UUID idMeasurementReminder) {
         this.idMeasurementReminder = idMeasurementReminder;
     }
 

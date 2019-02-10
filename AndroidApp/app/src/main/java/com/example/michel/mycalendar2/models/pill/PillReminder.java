@@ -2,12 +2,14 @@ package com.example.michel.mycalendar2.models.pill;
 
 import com.example.michel.mycalendar2.models.ItemReminderModel;
 
+import java.util.UUID;
+
 public class PillReminder extends ItemReminderModel {
     private String pillName;
     private int pillCount;
     private String pillCountType;
 
-    public PillReminder(int id, String pillName, int pillCount, String pillCountType,
+    public PillReminder(UUID id, String pillName, int pillCount, String pillCountType,
                         int havingMealsType, int isActive, int numberOfDoingAction,
                         String startDate, String endDate, int numberOfDoingActionLeft)
     {

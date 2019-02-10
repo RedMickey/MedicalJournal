@@ -101,8 +101,9 @@ public class MeasurementChartActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 //Toast.makeText(view.getContext(), String.valueOf(i), Toast.LENGTH_SHORT).show();
                 MeasurementChartCreationTask mcct = new MeasurementChartCreationTask(
-                        selfMca, mse.getIdMeasurementType(), mse.getMeasurementValueTypeStr());
-                mcct.execute(mse.getId(), calendar.get(Calendar.MONTH)+1, calendar.get(Calendar.YEAR), i);
+                        selfMca, mse.getIdMeasurementType(), mse.getMeasurementValueTypeStr(),
+                        mse.getId());
+                mcct.execute(calendar.get(Calendar.MONTH)+1, calendar.get(Calendar.YEAR), i);
             }
 
             @Override
@@ -125,8 +126,9 @@ public class MeasurementChartActivity extends AppCompatActivity {
         }
         textViewCurrentDate.setText(CalendarUtil.getDateString(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH)+1));
         MeasurementChartCreationTask mcct = new MeasurementChartCreationTask(
-                this, mse.getIdMeasurementType(), mse.getMeasurementValueTypeStr());
-        mcct.execute(mse.getId(), calendar.get(Calendar.MONTH)+1, calendar.get(Calendar.YEAR), reminderTimeSpinner.getSelectedItemPosition());
+                this, mse.getIdMeasurementType(), mse.getMeasurementValueTypeStr(),
+                mse.getId());
+        mcct.execute(calendar.get(Calendar.MONTH)+1, calendar.get(Calendar.YEAR), reminderTimeSpinner.getSelectedItemPosition());
     }
 
     public void onButtonNextClick(View view) {
@@ -137,8 +139,9 @@ public class MeasurementChartActivity extends AppCompatActivity {
         }
         textViewCurrentDate.setText(CalendarUtil.getDateString(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH)+1));
         MeasurementChartCreationTask mcct = new MeasurementChartCreationTask(
-                this, mse.getIdMeasurementType(), mse.getMeasurementValueTypeStr());
-        mcct.execute(mse.getId(), calendar.get(Calendar.MONTH)+1, calendar.get(Calendar.YEAR), reminderTimeSpinner.getSelectedItemPosition());
+                this, mse.getIdMeasurementType(), mse.getMeasurementValueTypeStr(),
+                mse.getId());
+        mcct.execute(calendar.get(Calendar.MONTH)+1, calendar.get(Calendar.YEAR), reminderTimeSpinner.getSelectedItemPosition());
     }
 
     private String[] createCurValueAndStandardValueStrs(MeasurementStatEntry mse){

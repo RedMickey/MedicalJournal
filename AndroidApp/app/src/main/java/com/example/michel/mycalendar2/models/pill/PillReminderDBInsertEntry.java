@@ -10,14 +10,16 @@ import com.example.michel.mycalendar2.calendarview.data.DateData;
 import com.example.michel.mycalendar2.models.ReminderDBEntry;
 import com.example.michel.mycalendar2.models.ReminderTime;
 
+import java.util.UUID;
+
 public class PillReminderDBInsertEntry extends ReminderDBEntry {
     private String pillName;
     private Integer pillCount;
     private Integer idPillCountType;
-    private Integer idPillReminder;
+    private UUID idPillReminder;
 
-    public PillReminderDBInsertEntry(Integer idPillReminder, String pillName, Integer pillCount, Integer idPillCountType,
-                                     DateData startDate, Integer idCycle, @Nullable Integer idHavingMealsType,
+    public PillReminderDBInsertEntry(UUID idPillReminder, String pillName, Integer pillCount, Integer idPillCountType,
+                                     DateData startDate, UUID idCycle, @Nullable Integer idHavingMealsType,
                                      @Nullable Integer havingMealsTime, String annotation, Integer isActive,
                                      ReminderTime[] reminderTimes)
     {
@@ -62,11 +64,11 @@ public class PillReminderDBInsertEntry extends ReminderDBEntry {
         this.pillName = pillName;
     }
 
-    public Integer getIdPillReminder() {
+    public UUID getIdPillReminder() {
         return idPillReminder;
     }
 
-    public void setIdPillReminder(Integer idPillReminder) {
+    public void setIdPillReminder(UUID idPillReminder) {
         this.idPillReminder = idPillReminder;
     }
 }

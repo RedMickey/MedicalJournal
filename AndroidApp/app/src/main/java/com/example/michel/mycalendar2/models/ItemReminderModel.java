@@ -1,5 +1,7 @@
 package com.example.michel.mycalendar2.models;
 
+import java.util.UUID;
+
 public class ItemReminderModel extends ReminderModel {
     protected int isActive;
     protected int numberOfDoingAction;
@@ -7,7 +9,7 @@ public class ItemReminderModel extends ReminderModel {
     protected String endDate;
     protected int numberOfDoingActionLeft;
 
-    public ItemReminderModel(int id, int havingMealsType, int isActive,
+    public ItemReminderModel(UUID id, int havingMealsType, int isActive,
                              int numberOfDoingAction, String startDate,
                              String endDate, int numberOfDoingActionLeft)
     {

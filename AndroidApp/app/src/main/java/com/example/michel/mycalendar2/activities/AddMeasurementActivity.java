@@ -44,6 +44,7 @@ import com.example.michel.mycalendar2.utils.DBStaticEntries;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
 public class AddMeasurementActivity extends AppCompatActivity {
@@ -56,7 +57,7 @@ public class AddMeasurementActivity extends AppCompatActivity {
     private Button pickDateButton;
     private DateData pickDateButtonDateData;
     private MeasurementReminderDBEntry oldMeasurementReminder;
-    private int idWeekSchedule = 0;
+    private UUID idWeekSchedule = null;
     private TextView active_ind_tv;
     int measurementTypeId;
 
@@ -175,7 +176,7 @@ public class AddMeasurementActivity extends AppCompatActivity {
                 measurementReminderDBEntry.setReminderTimes(reminderTimes);
                 measurementReminderDBEntry.setIdMeasurementType(measurementTypeId);
 
-                if (getIntent().getExtras().getInt("MeasurementReminderID") == 0) {
+                if (getIntent().getExtras().getString("MeasurementReminderID") == null) {
                     measurementReminderDBEntry.setIsActive(1);
                     Snackbar.make(view, "ReadyInsert", Snackbar.LENGTH_SHORT)
                             .setAction("Action", null).show();
@@ -219,7 +220,7 @@ public class AddMeasurementActivity extends AppCompatActivity {
 
         String measurementName = arguments.getString("MeasurementName");
         measurementTypeId = arguments.getInt("MeasurementTypeID");
-        int id = arguments.getInt("MeasurementReminderID");
+        String id = arguments.getString("MeasurementReminderID");
 
         // Declaration end
 
@@ -289,7 +290,7 @@ public class AddMeasurementActivity extends AppCompatActivity {
 
         getSupportActionBar().setTitle(measurementName);
 
-        if (id == 0){
+        if (id == null){
             ((LinearLayout)findViewById(R.id.active_status_layout)).setVisibility(View.GONE);
 
             cal = Calendar.getInstance();
@@ -305,7 +306,7 @@ public class AddMeasurementActivity extends AppCompatActivity {
         else {
             AddMeasurementActivityCreationTask addMeasurementActivityCreationTask = new AddMeasurementActivityCreationTask(
                     this, pickDateButtonDateData, timesOfTakingMedicineAdapter);
-            addMeasurementActivityCreationTask.execute(id);
+            addMeasurementActivityCreationTask.execute(UUID.fromString(id));
         }
 
     }
@@ -340,7 +341,7 @@ public class AddMeasurementActivity extends AppCompatActivity {
                                     dbAdapter.open();
                                     dbAdapter.deleteMeasurementReminderEntriesByMeasurementReminderId(oldMeasurementReminder.getIdMeasurementReminder());
                                     dbAdapter.deleteReminderTimeByReminderId(oldMeasurementReminder.getIdMeasurementReminder(), 1);
-                                    if (idWeekSchedule!=0)
+                                    if (idWeekSchedule!=null)
                                         dbAdapter.deleteWeekScheduleByIdCascade(idWeekSchedule);
                                     dbAdapter.deleteCycleByIdCascade(oldMeasurementReminder.getIdCycle());
                                     dbAdapter.close();
@@ -475,7 +476,7 @@ public class AddMeasurementActivity extends AppCompatActivity {
         this.oldMeasurementReminder = oldMeasurementReminder;
     }
 
-    public void setIdWeekSchedule(int idWeekSchedule) {
+    public void setIdWeekSchedule(UUID idWeekSchedule) {
         this.idWeekSchedule = idWeekSchedule;
     }
 

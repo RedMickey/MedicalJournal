@@ -2,6 +2,7 @@ package com.example.michel.mycalendar2.models;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.UUID;
 
 public class ReminderEntryModel extends ReminderModel {
     protected int isDone;
@@ -9,7 +10,7 @@ public class ReminderEntryModel extends ReminderModel {
     protected Date havingMealsTime;
     protected boolean isLate;
 
-    public ReminderEntryModel(int id, int havingMealsType, Date date,
+    public ReminderEntryModel(UUID id, int havingMealsType, Date date,
                               Date havingMealsTime, int isDone, boolean isLate)
     {
         super(id, havingMealsType);

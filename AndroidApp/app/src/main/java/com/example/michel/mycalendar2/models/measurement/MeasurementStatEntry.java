@@ -3,12 +3,14 @@ package com.example.michel.mycalendar2.models.measurement;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.UUID;
+
 public class MeasurementStatEntry extends MeasurementReminder implements Parcelable {
     private double[] averageCurValues;
     private double[] standardValues;
     private String measurementValueTypeStr;
 
-    public MeasurementStatEntry(int id, int idMeasurementType, int havingMealsType,
+    public MeasurementStatEntry(UUID id, int idMeasurementType, int havingMealsType,
                                 int isActive, int numberOfDoingAction, String startDate,
                                 String endDate, int numberOfDoingActionLeft, int idMeasurementValueType,
                                 double[] averageCurValues, double[] standardValues, String measurementValueTypeStr) {
@@ -49,7 +51,7 @@ public class MeasurementStatEntry extends MeasurementReminder implements Parcela
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeInt(id);
+        parcel.writeString(id.toString());
         parcel.writeInt(idMeasurementType);
         parcel.writeInt(havingMealsType);
         parcel.writeInt(isActive);
@@ -64,7 +66,7 @@ public class MeasurementStatEntry extends MeasurementReminder implements Parcela
     }
 
     public MeasurementStatEntry(Parcel in) {
-        super(in.readInt(), in.readInt(), in.readInt(), in.readInt(), in.readInt(), in.readString(), in.readString(), in.readInt(), in.readInt());
+        super(UUID.fromString(in.readString()), in.readInt(), in.readInt(), in.readInt(), in.readInt(), in.readString(), in.readString(), in.readInt(), in.readInt());
         averageCurValues = in.createDoubleArray();
         standardValues = in.createDoubleArray();
         measurementValueTypeStr = in.readString();

@@ -5,6 +5,8 @@ import android.os.AsyncTask;
 import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
 import com.example.michel.mycalendar2.models.pill.PillReminderDBInsertEntry;
 
+import java.util.UUID;
+
 public class OneTimePillReminderInsertionTask extends AsyncTask<PillReminderDBInsertEntry, Void, Void> {
 
     @Override
@@ -14,7 +16,7 @@ public class OneTimePillReminderInsertionTask extends AsyncTask<PillReminderDBIn
         DatabaseAdapter dbAdapter = new DatabaseAdapter();
         dbAdapter.open();
 
-        Integer pillReminderId = dbAdapter.insertPillReminder(
+        UUID pillReminderId = dbAdapter.insertPillReminder(
                 pillReminderDBInsertEntry.getPillName(), pillReminderDBInsertEntry.getPillCount(),
                 pillReminderDBInsertEntry.getIdPillCountType(), pillReminderDBInsertEntry.getStartDate().getDateString(),
                 pillReminderDBInsertEntry.getIdCycle(), pillReminderDBInsertEntry.getIdHavingMealsType(),

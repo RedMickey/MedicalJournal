@@ -81,13 +81,13 @@ public class MeasurementNotificationsCreationTask extends AsyncTask<Context, Voi
         return null;
     }
 
-    private void setupAlarms(Context context, List<MeasurementReminderEntry> measurementReminderEntry, AlarmManager alarmManager){
+    public static void setupAlarms(Context context, List<MeasurementReminderEntry> measurementReminderEntry, AlarmManager alarmManager){
         for (MeasurementReminderEntry mre: measurementReminderEntry) {
             if (mre.getIsDone()==0&&!mre.isLate()){
                 Intent myIntent = new Intent(context, AlarmReceiver.class);
                 myIntent.putExtra("mre", mre);
                 PendingIntent pendingIntent = PendingIntent.getBroadcast(
-                        context, mre.getId(), myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                        context, (int)mre.getId().getMostSignificantBits(), myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
                 // set alarm time
                 alarmManager.set(AlarmManager.RTC_WAKEUP,
                         mre.getDate().getTime(), pendingIntent);
@@ -95,12 +95,12 @@ public class MeasurementNotificationsCreationTask extends AsyncTask<Context, Voi
         }
     }
 
-    private void cancelAlarms(Context context, List<MeasurementReminderEntry> measurementReminderEntry, AlarmManager alarmManager){
+    public static void cancelAlarms(Context context, List<MeasurementReminderEntry> measurementReminderEntry, AlarmManager alarmManager){
         for (MeasurementReminderEntry mre: measurementReminderEntry) {
             if (mre.getIsDone()==0&&!mre.isLate()){
                 Intent myIntent = new Intent(context, AlarmReceiver.class);
                 PendingIntent pendingIntent = PendingIntent.getBroadcast(
-                        context, mre.getId(), myIntent, 0);
+                        context, (int) mre.getId().getMostSignificantBits(), myIntent, 0);
                 // set alarm time
                 try {
                     alarmManager.cancel(pendingIntent);

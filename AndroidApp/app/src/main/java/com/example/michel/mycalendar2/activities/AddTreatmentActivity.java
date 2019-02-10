@@ -43,6 +43,7 @@ import com.example.michel.mycalendar2.utils.DBStaticEntries;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
 public class AddTreatmentActivity extends AppCompatActivity {
@@ -55,7 +56,7 @@ public class AddTreatmentActivity extends AppCompatActivity {
     private Button pickDateButton;
     private DateData pickDateButtonDateData;
     PillReminderDBInsertEntry oldPillReminder;
-    private int idWeekSchedule = 0;
+    private UUID idWeekSchedule = null;
     private TextView active_ind_tv;
 
     private ArrayList<String> time = new ArrayList();
@@ -321,7 +322,7 @@ public class AddTreatmentActivity extends AppCompatActivity {
             }
         }
         else {
-            int id = arguments.getInt("PillReminderID");
+            UUID id = UUID.fromString(arguments.getString("PillReminderID"));
             AddTreatmentActivityCreationTask addTreatmentActivityCreationTask = new AddTreatmentActivityCreationTask(
                     this, pickDateButtonDateData, timesOfTakingMedicineAdapter);
             addTreatmentActivityCreationTask.execute(id);
@@ -366,7 +367,7 @@ public class AddTreatmentActivity extends AppCompatActivity {
                                     dbAdapter.open();
                                     dbAdapter.deletePillReminderEntriesByPillReminderId(oldPillReminder.getIdPillReminder());
                                     dbAdapter.deleteReminderTimeByReminderId(oldPillReminder.getIdPillReminder(), 0);
-                                    if (idWeekSchedule!=0)
+                                    if (idWeekSchedule!=null)
                                         dbAdapter.deleteWeekScheduleByIdCascade(idWeekSchedule);
                                     dbAdapter.deleteCycleByIdCascade(oldPillReminder.getIdCycle());
                                     dbAdapter.close();
@@ -500,7 +501,7 @@ public class AddTreatmentActivity extends AppCompatActivity {
         this.oldPillReminder = oldPillReminder;
     }
 
-    public void setIdWeekSchedule(int idWeekSchedule) {
+    public void setIdWeekSchedule(UUID idWeekSchedule) {
         this.idWeekSchedule = idWeekSchedule;
     }
 

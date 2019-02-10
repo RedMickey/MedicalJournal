@@ -11,6 +11,7 @@ import com.example.michel.mycalendar2.models.measurement.MeasurementReminderDBEn
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.UUID;
 
 public class MeasurementRemindersInsertionTask extends AsyncTask<CycleAndMeasurementComby, Void, Void> {
     private Context appContext;
@@ -33,7 +34,7 @@ public class MeasurementRemindersInsertionTask extends AsyncTask<CycleAndMeasure
                 )
         );
 
-        Integer measurementReminderId = dbAdapter.insertMeasurementReminder(
+        UUID measurementReminderId = dbAdapter.insertMeasurementReminder(
                 mrdbe.getIdMeasurementType(),
                 mrdbe.getStartDate().getDateString(),
                 mrdbe.getIdCycle(), mrdbe.getIdHavingMealsType(),

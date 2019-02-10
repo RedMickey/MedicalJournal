@@ -13,8 +13,9 @@ import com.example.michel.mycalendar2.models.pill.PillReminderDBInsertEntry;
 import com.example.michel.mycalendar2.utils.DBStaticEntries;
 
 import java.util.List;
+import java.util.UUID;
 
-public class OneTimeTreatmentParamsChangingTask extends AsyncTask<Integer, Void, PillReminderDBInsertEntry> {
+public class OneTimeTreatmentParamsChangingTask extends AsyncTask<UUID, Void, PillReminderDBInsertEntry> {
     private AddOneTimeTreatmentActivity activity;
 
     public OneTimeTreatmentParamsChangingTask(AddOneTimeTreatmentActivity activity){
@@ -23,10 +24,10 @@ public class OneTimeTreatmentParamsChangingTask extends AsyncTask<Integer, Void,
     }
 
     @Override
-    protected PillReminderDBInsertEntry doInBackground(Integer... integers) {
+    protected PillReminderDBInsertEntry doInBackground(UUID... uuids) {
         DatabaseAdapter databaseAdapter = new DatabaseAdapter();
         databaseAdapter.open();
-        PillReminderDBInsertEntry pillReminderDBInsertEntry = databaseAdapter.getPillReminderDBInsertEntryByID(integers[0]);
+        PillReminderDBInsertEntry pillReminderDBInsertEntry = databaseAdapter.getPillReminderDBInsertEntryByID(uuids[0]);
 
         databaseAdapter.close();
         return pillReminderDBInsertEntry;

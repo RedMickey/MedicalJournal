@@ -1,19 +1,21 @@
 package com.example.michel.mycalendar2.models;
 
+import java.util.UUID;
+
 public class ReminderModel {
-    protected int id;
+    protected UUID id;
     protected int havingMealsType;
 
-    public ReminderModel(int id, int havingMealsType){
+    public ReminderModel(UUID id, int havingMealsType){
         this.id = id;
         this.havingMealsType = havingMealsType;
     }
 
-    public int getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

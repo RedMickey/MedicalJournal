@@ -28,7 +28,9 @@ import com.example.michel.mycalendar2.models.measurement.MeasurementReminderDBEn
 import com.example.michel.mycalendar2.models.pill.PillReminderDBInsertEntry;
 import com.example.michel.mycalendar2.utils.DBStaticEntries;
 
-public class AddMeasurementActivityCreationTask extends AsyncTask<Integer, Void, CycleAndMeasurementComby> {
+import java.util.UUID;
+
+public class AddMeasurementActivityCreationTask extends AsyncTask<UUID, Void, CycleAndMeasurementComby> {
     private AddMeasurementActivity view;
     private DateData pickDateButtonDateData;
     private TimesOfTakingMedicineAdapter timesOfTakingMedicineAdapter;
@@ -41,11 +43,11 @@ public class AddMeasurementActivityCreationTask extends AsyncTask<Integer, Void,
     }
 
     @Override
-    protected CycleAndMeasurementComby doInBackground(Integer... integers) {
+    protected CycleAndMeasurementComby doInBackground(UUID... uuids) {
 
         DatabaseAdapter databaseAdapter = new DatabaseAdapter();
         databaseAdapter.open();
-        CycleAndMeasurementComby cycleAndMeasurementComby = databaseAdapter.getCycleAndMeasurementCombyById(integers[0]);
+        CycleAndMeasurementComby cycleAndMeasurementComby = databaseAdapter.getCycleAndMeasurementCombyById(uuids[0]);
 
         databaseAdapter.close();
 

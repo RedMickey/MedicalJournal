@@ -22,6 +22,7 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.UUID;
 
 public class MeasurementChartCreationTask extends AsyncTask<Integer, Void, List<float[]>> {
     private MeasurementChartActivity view;
@@ -29,13 +30,15 @@ public class MeasurementChartCreationTask extends AsyncTask<Integer, Void, List<
     private int dateYear;
     private int idMeasurementType;
     private String measurementValueTypeStr;
+    private UUID idMeasurementStatEntry;
 
     public MeasurementChartCreationTask(MeasurementChartActivity mca, int idMeasurementType,
-                                        String measurementValueTypeStr){
+                                        String measurementValueTypeStr, UUID idMeasurementStatEntry){
         super();
         this.view = mca;
         this.idMeasurementType = idMeasurementType;
         this.measurementValueTypeStr = measurementValueTypeStr;
+        this.idMeasurementStatEntry = idMeasurementStatEntry;
     }
 
     @Override
@@ -67,11 +70,11 @@ public class MeasurementChartCreationTask extends AsyncTask<Integer, Void, List<
         }
 
         databaseAdapter.open();
-        List<float[]> measurementReminderEntryValues = databaseAdapter.getMeasurementReminderEntriesPerMonth(integers[0], integers[1],
-                integers[2], type, timeStr1, timeStr2);
+        List<float[]> measurementReminderEntryValues = databaseAdapter.getMeasurementReminderEntriesPerMonth(idMeasurementStatEntry, integers[0],
+                integers[1], type, timeStr1, timeStr2);
         databaseAdapter.close();
-        dateMonth = integers[1];
-        dateYear = integers[2];
+        dateMonth = integers[0];
+        dateYear = integers[1];
         return measurementReminderEntryValues;
     }
 

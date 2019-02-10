@@ -47,7 +47,7 @@ public class ReminderMedicineItemsCreationTask extends AsyncTask<Void, Void, Lis
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                     PillReminder pr = (PillReminder)adapterView.getItemAtPosition(i);
                     Intent intent = new Intent(view.getContext(), AddTreatmentActivity.class);
-                    intent.putExtra("PillReminderID", pr.getId());
+                    intent.putExtra("PillReminderID", pr.getId().toString());
                     view.getContext().startActivity(intent);
                 }
             };

@@ -11,6 +11,7 @@ import com.example.michel.mycalendar2.models.pill.PillReminderDBInsertEntry;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.UUID;
 
 public class PillRemindersInsertionTask extends AsyncTask<CycleAndPillComby, Void, Void> {
     private Context appContext;
@@ -33,7 +34,7 @@ public class PillRemindersInsertionTask extends AsyncTask<CycleAndPillComby, Voi
                 )
         );
 
-        Integer pillReminderId = dbAdapter.insertPillReminder(
+        UUID pillReminderId = dbAdapter.insertPillReminder(
                 pillReminderDBInsertEntry.getPillName(), pillReminderDBInsertEntry.getPillCount(),
                 pillReminderDBInsertEntry.getIdPillCountType(), pillReminderDBInsertEntry.getStartDate().getDateString(),
                 pillReminderDBInsertEntry.getIdCycle(), pillReminderDBInsertEntry.getIdHavingMealsType(),

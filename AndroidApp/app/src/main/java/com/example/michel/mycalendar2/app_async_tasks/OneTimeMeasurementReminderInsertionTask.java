@@ -5,6 +5,8 @@ import android.os.AsyncTask;
 import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
 import com.example.michel.mycalendar2.models.measurement.MeasurementReminderDBEntry;
 
+import java.util.UUID;
+
 public class OneTimeMeasurementReminderInsertionTask extends AsyncTask<MeasurementReminderDBEntry, Void, Void> {
     private double value1;
     private double value2;
@@ -21,7 +23,7 @@ public class OneTimeMeasurementReminderInsertionTask extends AsyncTask<Measureme
         DatabaseAdapter dbAdapter = new DatabaseAdapter();
         dbAdapter.open();
 
-        Integer measurementReminderId = dbAdapter.insertMeasurementReminder(
+        UUID measurementReminderId = dbAdapter.insertMeasurementReminder(
                 mrdbe.getIdMeasurementType(),
                 mrdbe.getStartDate().getDateString(),
                 mrdbe.getIdCycle(), mrdbe.getIdHavingMealsType(),

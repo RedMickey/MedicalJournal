@@ -3,6 +3,8 @@ package com.example.michel.mycalendar2.models;
 
 import android.support.annotation.Nullable;
 
+import java.util.UUID;
+
 public class CycleDBInsertEntry {
     private Integer period;
     private Integer periodDMType;
@@ -12,8 +14,8 @@ public class CycleDBInsertEntry {
     private int[] weekSchedule;
     private int dayCount;
     private int dayInterval;
-    private int idCycle;
-    private int idWeekSchedule;
+    private UUID idCycle;
+    private UUID idWeekSchedule;
 
     public CycleDBInsertEntry(Integer period, Integer periodDMType, @Nullable Integer once_aPeriod,
                               @Nullable Integer once_aPeriodDMType, Integer idCyclingType,
@@ -27,8 +29,8 @@ public class CycleDBInsertEntry {
         this.weekSchedule=weekSchedule;
         this.dayCount=dayCount;
         this.dayInterval=0;
-        this.idCycle=0;
-        this.idWeekSchedule=0;
+        this.idCycle=null;
+        this.idWeekSchedule=null;
     }
 
     public CycleDBInsertEntry()
@@ -41,8 +43,8 @@ public class CycleDBInsertEntry {
         this.weekSchedule=null;
         this.dayCount=0;
         this.dayInterval=0;
-        this.idWeekSchedule=0;
-        this.idCycle=0;
+        this.idWeekSchedule=null;
+        this.idCycle=null;
     }
 
     public Integer getPeriod() {
@@ -109,19 +111,19 @@ public class CycleDBInsertEntry {
         this.dayInterval = dayInterval;
     }
 
-    public int getIdCycle() {
+    public UUID getIdCycle() {
         return idCycle;
     }
 
-    public void setIdCycle(int idCycle) {
+    public void setIdCycle(UUID idCycle) {
         this.idCycle = idCycle;
     }
 
-    public int getIdWeekSchedule() {
+    public UUID getIdWeekSchedule() {
         return idWeekSchedule;
     }
 
-    public void setIdWeekSchedule(int idWeekSchedule) {
+    public void setIdWeekSchedule(UUID idWeekSchedule) {
         this.idWeekSchedule = idWeekSchedule;
     }
 
@@ -136,7 +138,7 @@ public class CycleDBInsertEntry {
                 this.idCyclingType==((CycleDBInsertEntry) obj).getIdCyclingType()&&
                 this.dayCount==((CycleDBInsertEntry) obj).getDayCount()&&
                 this.dayInterval==((CycleDBInsertEntry) obj).getDayInterval()&&
-                this.idCycle==((CycleDBInsertEntry) obj).getIdCycle()&&
-                this.idWeekSchedule==((CycleDBInsertEntry) obj).getIdWeekSchedule());
+                this.idCycle.compareTo(((CycleDBInsertEntry) obj).getIdCycle())==0&&
+                this.idWeekSchedule.compareTo(((CycleDBInsertEntry) obj).getIdWeekSchedule())==0);
     }
 }

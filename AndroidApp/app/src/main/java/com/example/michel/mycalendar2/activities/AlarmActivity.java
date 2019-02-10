@@ -20,9 +20,10 @@ import com.example.michel.mycalendar2.models.measurement.MeasurementReminderEntr
 import com.example.michel.mycalendar2.models.pill.PillReminderEntry;
 
 import java.text.SimpleDateFormat;
+import java.util.UUID;
 
 public class AlarmActivity extends AppCompatActivity {
-private int reminderEntryID;
+private UUID reminderEntryID;
 private int reminderType;
 private SwipeButton swipeButton;
 private Ringtone ringtone;

@@ -13,6 +13,8 @@ import com.example.michel.mycalendar2.activities.MainActivity;
 import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
 import com.example.michel.mycalendar2.utils.AlarmReceiver;
 
+import java.util.UUID;
+
 public class AlarmService extends Service {
     AlarmReceiver alarmReceiver;
 
@@ -27,8 +29,8 @@ public class AlarmService extends Service {
         int isCancel = intent.getIntExtra("isCancel",1);
         int notifId = intent.getIntExtra("notifId",0);
 
-        int pillReminderEntryID = intent.getIntExtra("pillReminderEntryID", -1);
-        int measurementReminderEntryID =  intent.getIntExtra("measurementReminderEntryID", -1);
+        String pillReminderEntryID = intent.getStringExtra("pillReminderEntryID");
+        String measurementReminderEntryID =  intent.getStringExtra("measurementReminderEntryID");
 
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
@@ -39,14 +41,14 @@ public class AlarmService extends Service {
 
             //Toast.makeText(this,"isCancel==0", Toast.LENGTH_SHORT).show();
 
-            if (pillReminderEntryID!=-1){
+            if (!pillReminderEntryID.equals("")){
                 DatabaseAdapter databaseAdapter = new DatabaseAdapter();
                 databaseAdapter.open();
-                databaseAdapter.updateIsDonePillReminderEntry( 1, pillReminderEntryID, "");
+                databaseAdapter.updateIsDonePillReminderEntry( 1, UUID.fromString(pillReminderEntryID), "");
                 databaseAdapter.close();
             }
 
-            if (measurementReminderEntryID!=-1){
+            if (!measurementReminderEntryID.equals("")){
                 Intent i = new Intent(Intent.ACTION_MAIN);
                 i.setComponent(new ComponentName(this, MainActivity.class));
                 i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP |

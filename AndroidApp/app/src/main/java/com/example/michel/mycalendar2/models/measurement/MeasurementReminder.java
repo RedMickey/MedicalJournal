@@ -3,11 +3,13 @@ package com.example.michel.mycalendar2.models.measurement;
 import com.example.michel.mycalendar2.models.ItemReminderModel;
 import com.example.michel.mycalendar2.models.ReminderModel;
 
+import java.util.UUID;
+
 public class MeasurementReminder extends ItemReminderModel {
     protected int idMeasurementType;
     protected int idMeasurementValueType;
 
-    public MeasurementReminder(int id, int idMeasurementType, int havingMealsType,
+    public MeasurementReminder(UUID id, int idMeasurementType, int havingMealsType,
                                int isActive, int numberOfDoingAction, String startDate,
                                String endDate, int numberOfDoingActionLeft, int idMeasurementValueType)
     {

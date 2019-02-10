@@ -1,16 +1,23 @@
 package com.example.michel.mycalendar2.app_async_tasks;
 
+import android.app.AlarmManager;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
+import com.example.michel.mycalendar2.calendarview.data.DateData;
 import com.example.michel.mycalendar2.models.CycleAndPillComby;
 import com.example.michel.mycalendar2.models.CycleDBInsertEntry;
 import com.example.michel.mycalendar2.models.pill.PillReminderDBInsertEntry;
+import com.example.michel.mycalendar2.models.pill.PillReminderEntry;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+
+import static android.content.Context.ALARM_SERVICE;
 
 public class PillRemindersUpdateTask extends AsyncTask<CycleAndPillComby, Void, Void> {
     private boolean needUpdatePill;
@@ -47,6 +54,23 @@ public class PillRemindersUpdateTask extends AsyncTask<CycleAndPillComby, Void, 
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String curDate = sdf.format(cal.getTime());
+
+        List<PillReminderEntry> todayPillReminderEntriesOld = dbAdapter.getPillReminderEntriesByDateAndPillReminder(
+                pillReminderDBInsertEntry.getIdPillReminder(),
+                new DateData(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH)+1, cal.get(Calendar.DAY_OF_MONTH)
+        ));
+
+        cal.add(Calendar.DAY_OF_MONTH,1);
+        List<PillReminderEntry> tomorrowPillReminderEntriesOld = dbAdapter.getPillReminderEntriesByDateAndPillReminder(
+                pillReminderDBInsertEntry.getIdPillReminder(),
+                new DateData(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH)+1, cal.get(Calendar.DAY_OF_MONTH)
+        ));
+
+        AlarmManager alarmManager = (AlarmManager) appContext.getSystemService(ALARM_SERVICE);
+        PillNotificationsCreationTask.cancelAlarms(appContext, todayPillReminderEntriesOld, alarmManager);
+        PillNotificationsCreationTask.cancelAlarms(appContext, tomorrowPillReminderEntriesOld, alarmManager);
+
+        cal.add(Calendar.DAY_OF_MONTH, -1);
         dbAdapter.deletePillReminderEntriesAfterDate(pillReminderDBInsertEntry.getIdPillReminder(), curDate);
         // need check for change start date
 
@@ -105,13 +129,28 @@ public class PillRemindersUpdateTask extends AsyncTask<CycleAndPillComby, Void, 
             }
         }
 
+        cal = Calendar.getInstance();
+        List<PillReminderEntry> todayPillReminderEntriesNew = dbAdapter.getPillReminderEntriesByDateAndPillReminder(
+                pillReminderDBInsertEntry.getIdPillReminder(),
+                new DateData(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH)+1, cal.get(Calendar.DAY_OF_MONTH)
+                ));
+
+        cal.add(Calendar.DAY_OF_MONTH,1);
+        List<PillReminderEntry> tomorrowPillReminderEntriesNew = dbAdapter.getPillReminderEntriesByDateAndPillReminder(
+                pillReminderDBInsertEntry.getIdPillReminder(),
+                new DateData(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH)+1, cal.get(Calendar.DAY_OF_MONTH)
+                ));
+
+        PillNotificationsCreationTask.setupAlarms(appContext, todayPillReminderEntriesNew, alarmManager);
+        PillNotificationsCreationTask.setupAlarms(appContext, tomorrowPillReminderEntriesNew, alarmManager);
+
         dbAdapter.close();
         return null;
     }
 
-    @Override
+    /*@Override
     protected void onPostExecute(Void aVoid) {
         PillNotificationsCreationTask nct = new PillNotificationsCreationTask();
         nct.execute(appContext);
-    }
+    }*/
 }
