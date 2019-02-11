@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { PillReminderEntry } from '../models/PillReminderEntry';
+import { PillReminderEntryService } from '../services/pill-reminder-entry.service';
 
 @Component({
   selector: 'app-pill-reminder-entry',
@@ -10,8 +11,29 @@ export class PillReminderEntryComponent implements OnInit {
   @Input() pillReminderEntry: PillReminderEntry;
 
   havingMealsTypePretext: string;
+  checked: boolean = false;
 
-  constructor() { }
+  constructor(private pillReminderEntryService: PillReminderEntryService) { }
+
+  onIsDoneChange(event: any){
+    if (event.checked){
+      console.log(event.checked);
+      this.pillReminderEntry.isDone = 1;
+      this.pillReminderEntry.date = new Date();
+      if (this.pillReminderEntry.isLate){
+        this.pillReminderEntry.isLate = false;
+      }
+    }
+    else{
+      this.pillReminderEntry.isDone = 0;
+      this.pillReminderEntry.isLate = new Date()>this.pillReminderEntry.date?true:false;
+    } 
+    this.pillReminderEntryService.updatePillReminderEntry({
+      isDone: this.pillReminderEntry.isDone,
+      id: this.pillReminderEntry.id,
+      date: this.pillReminderEntry.date
+    }).subscribe(() => console.log("done"));
+  }
 
   ngOnInit() {
     switch(this.pillReminderEntry.havingMealsType){
@@ -25,6 +47,9 @@ export class PillReminderEntryComponent implements OnInit {
         this.havingMealsTypePretext = "после"
         break;
     }
+    this.checked = this.pillReminderEntry.isDone==1?true:false;
+
+    console.log(this.pillReminderEntry);
   }
 
 }

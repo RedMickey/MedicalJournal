@@ -1,7 +1,8 @@
 <mat-card>
   <div fxLayout="row">
     <div fxFlex="7%" fxLayoutAlign="center center">
-        <mat-checkbox></mat-checkbox>
+        <mat-checkbox [(ngModel)] = "checked" 
+          (change)="onIsDoneChange($event)"></mat-checkbox>
       </div>
       <div fxFlex="7%" fxLayoutAlign="center center">
         <mat-icon svgIcon="pill"></mat-icon>

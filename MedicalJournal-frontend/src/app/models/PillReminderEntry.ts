@@ -4,7 +4,8 @@ export class PillReminderEntry {
     pillCountType: string;
     isDone: number;
     date: Date;
+    havingMealsTime: Date;
     isLate: boolean;
-    id: number;
+    id: string;
     havingMealsType: number;
   }

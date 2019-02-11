@@ -17,3 +17,10 @@
   top: 0;
   z-index: 1;
 }
+
+.mat-toolbar>a{
+  text-decoration: none;
+  font: inherit;
+  color: inherit;
+}
+
