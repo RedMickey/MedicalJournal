@@ -1,8 +1,6 @@
 package com.example.michel.rest_api.repositories;
 
 import com.example.michel.rest_api.models.MeasurementType;
-import com.example.michel.rest_api.models.PillReminderEntry;
-import com.example.michel.rest_api.models.TestModel;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 

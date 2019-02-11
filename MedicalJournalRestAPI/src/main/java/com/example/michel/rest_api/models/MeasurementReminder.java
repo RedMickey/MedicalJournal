@@ -6,6 +6,7 @@ import javax.persistence.*;
 import java.sql.Date;
 import java.sql.Time;
 import java.util.Objects;
+import java.util.UUID;
 
 @Entity
 @Data
@@ -13,13 +14,13 @@ import java.util.Objects;
 public class MeasurementReminder {
     @Id
     @Column(name = "_id_measurement_reminder")
-    private String id;
+    private UUID id;
     @Column(name = "_id_measurement_type")
     private int idMeasurementType;
     @Column(name = "start_date")
     private Date startDate;
     @Column(name = "_id_cycle")
-    private String idCycle;
+    private UUID idCycle;
     @Column(name = "_id_having_meals_type")
     private Integer idHavingMealsType;
     @Column(name = "having_meals_time")

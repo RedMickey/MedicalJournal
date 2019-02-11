@@ -5,6 +5,7 @@ import lombok.Data;
 import javax.persistence.*;
 import java.sql.Time;
 import java.util.Objects;
+import java.util.UUID;
 
 @Entity
 @Data
@@ -12,11 +13,11 @@ import java.util.Objects;
 public class ReminderTime {
     @Id
     @Column(name = "_id_reminder_time")
-    private String id;
+    private UUID id;
     @Column(name = "reminder_time")
     private Time reminderTime;
     @Column(name = "_id_pill_reminder")
-    private String idPillReminder;
+    private UUID idPillReminder;
     @Column(name = "_id_measurement_reminder")
-    private String idMeasurementReminder;
+    private UUID idMeasurementReminder;
 }

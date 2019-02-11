@@ -5,6 +5,7 @@ import lombok.Data;
 import javax.persistence.*;
 import java.sql.Date;
 import java.util.Objects;
+import java.util.UUID;
 
 @Entity
 @Data
@@ -12,9 +13,9 @@ import java.util.Objects;
 public class PillReminder {
     @Id
     @Column(name = "_id_pill_reminder")
-    private String id;
+    private UUID id;
     @Column(name = "_id_pill")
-    private String idPill;
+    private UUID idPill;
     @Column(name = "pill_count")
     private int pillCount;
     @Column(name = "_id_pill_count_type")
@@ -22,7 +23,7 @@ public class PillReminder {
     @Column(name = "start_date")
     private Date startDate;
     @Column(name = "_id_cycle")
-    private String idCycle;
+    private UUID idCycle;
     @Column(name = "_id_having_meals_type")
     private Integer idHavingMealsType;
     @Column(name = "having_meals_time")

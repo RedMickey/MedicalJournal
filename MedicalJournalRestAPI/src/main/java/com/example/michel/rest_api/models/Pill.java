@@ -7,13 +7,14 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.util.Objects;
+import java.util.UUID;
 
 @Entity
 @Data
 public class Pill {
     @Id
     @Column(name = "_id_pill")
-    private String id;
+    private UUID id;
     @Column(name = "pill_name")
     private String pillName;
     @Column(name = "pill_description")
