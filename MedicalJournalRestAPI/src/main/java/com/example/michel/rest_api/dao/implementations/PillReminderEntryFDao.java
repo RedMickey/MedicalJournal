@@ -2,7 +2,7 @@ package com.example.michel.rest_api.dao.implementations;
 
 import com.example.michel.rest_api.dao.interfaces.IPillReminderEntryFDao;
 import com.example.michel.rest_api.mappers.PillReminderEntryFRowMapper;
-import com.example.michel.rest_api.models.auxiliary_models.UpdateReminderBody;
+import com.example.michel.rest_api.models.auxiliary_models.UpdatePillReminderBody;
 import com.example.michel.rest_api.models.pill.PillReminderEntryF;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -33,17 +33,17 @@ public class PillReminderEntryFDao implements IPillReminderEntryFDao {
     }
 
     @Override
-    public int updateIsDonePillReminderEntry(UpdateReminderBody updateReminderBody) {
+    public int updateIsDonePillReminderEntry(UpdatePillReminderBody updatePillReminderBody) {
         String sql = "UPDATE pill_reminder_entry SET reminder_date = ?, is_done = ? WHERE _id_pill_reminder_entry = ?";
-        byte[] uuid = ByteBuffer.allocate(16).putLong(updateReminderBody.getId().getMostSignificantBits())
-                .putLong(updateReminderBody.getId().getLeastSignificantBits()).array();
+        byte[] uuid = ByteBuffer.allocate(16).putLong(updatePillReminderBody.getId().getMostSignificantBits())
+                .putLong(updatePillReminderBody.getId().getLeastSignificantBits()).array();
 
         return jdbcTemplate.update(sql, new PreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement preparedStatement) throws SQLException {
-                preparedStatement.setTimestamp(1, new Timestamp(updateReminderBody.getDate().getTime()));
+                preparedStatement.setTimestamp(1, new Timestamp(updatePillReminderBody.getDate().getTime()));
                 preparedStatement.setBytes(3, uuid);
-                preparedStatement.setInt(2, updateReminderBody.getIsDone());
+                preparedStatement.setInt(2, updatePillReminderBody.getIsDone());
             }
         });
     }

@@ -1,8 +1,7 @@
 package com.example.michel.rest_api.services;
 
 import com.example.michel.rest_api.dao.implementations.PillReminderEntryFDao;
-import com.example.michel.rest_api.dao.interfaces.IPillReminderEntryFDao;
-import com.example.michel.rest_api.models.auxiliary_models.UpdateReminderBody;
+import com.example.michel.rest_api.models.auxiliary_models.UpdatePillReminderBody;
 import com.example.michel.rest_api.models.pill.PillReminderEntryF;
 import com.example.michel.rest_api.services.interfaces.IPillReminderEntryFService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +27,7 @@ public class PillReminderEntryFService implements IPillReminderEntryFService {
     }
 
     @Override
-    public int updateIsDonePillReminderEntry(UpdateReminderBody updateReminderBody) {
-        return pillReminderEntryFDao.updateIsDonePillReminderEntry(updateReminderBody);
+    public int updateIsDonePillReminderEntry(UpdatePillReminderBody updatePillReminderBody) {
+        return pillReminderEntryFDao.updateIsDonePillReminderEntry(updatePillReminderBody);
     }
 }

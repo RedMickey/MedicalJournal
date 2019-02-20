@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.UUID;
 
 @Data
-public class UpdateReminderBody {
+public class UpdatePillReminderBody {
     protected Integer isDone;
     protected UUID id;
     protected Date date;

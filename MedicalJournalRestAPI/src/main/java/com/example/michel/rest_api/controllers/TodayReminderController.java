@@ -1,7 +1,10 @@
 package com.example.michel.rest_api.controllers;
 
-import com.example.michel.rest_api.models.auxiliary_models.UpdateReminderBody;
+import com.example.michel.rest_api.models.auxiliary_models.UpdateMeasurementReminderBody;
+import com.example.michel.rest_api.models.auxiliary_models.UpdatePillReminderBody;
+import com.example.michel.rest_api.models.measurement.MeasurementReminderEntryF;
 import com.example.michel.rest_api.models.pill.PillReminderEntryF;
+import com.example.michel.rest_api.services.MeasurementReminderEntryFService;
 import com.example.michel.rest_api.services.PillReminderEntryFService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,16 +23,30 @@ public class TodayReminderController {
     @Autowired
     private PillReminderEntryFService pillReminderEntryFService;
 
-    @PostMapping(value = "/getReminders", produces = "application/json")
-    public List<PillReminderEntryF> getReminders(@RequestBody Map<String, Date> req){
-        Date date = req.get("date");
+    @Autowired
+    private MeasurementReminderEntryFService measurementReminderEntryFService;
 
+    @PostMapping(value = "/getPillReminders", produces = "application/json")
+    public List<PillReminderEntryF> getPillReminders(@RequestBody Map<String, Date> req){
+        Date date = req.get("date");
         List<PillReminderEntryF> pillReminderEntryFList = pillReminderEntryFService.getPillReminderEntriesByDate(date);
         return pillReminderEntryFList;
     }
 
-    @PostMapping(value = "/updateReminder", produces = "application/json")
-    public void updateReminder(@RequestBody UpdateReminderBody updateReminderBody){
-        int r = pillReminderEntryFService.updateIsDonePillReminderEntry(updateReminderBody);
+    @PostMapping(value = "/getMeasurementReminders", produces = "application/json")
+    public List<MeasurementReminderEntryF> getMeasurementReminders(@RequestBody Map<String, Date> req){
+        Date date = req.get("date");
+        List<MeasurementReminderEntryF> measurementReminderEntryFList = measurementReminderEntryFService.getMeasurementReminderEntriesByDate(date);
+        return measurementReminderEntryFList;
+    }
+
+    @PostMapping(value = "/updatePillReminder", produces = "application/json")
+    public void updatePillReminder(@RequestBody UpdatePillReminderBody updatePillReminderBody){
+        int r = pillReminderEntryFService.updateIsDonePillReminderEntry(updatePillReminderBody);
+    }
+
+    @PostMapping(value = "/updateMeasurementReminder", produces = "application/json")
+    public void updateMeasurementReminder(@RequestBody UpdateMeasurementReminderBody updateMeasurementReminderBody){
+        int r = measurementReminderEntryFService.updateIsDoneMeasurementReminderEntry(updateMeasurementReminderBody);
     }
 }
