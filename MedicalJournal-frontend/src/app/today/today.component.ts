@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { PillReminderEntry } from '../models/PillReminderEntry';
-import { PillReminderEntryService } from '../services/pill-reminder-entry.service';
+import { MeasurementReminderEntry } from '../models/MeasurementReminderEntry';
+import { ReminderEntriesService } from '../services/reminder-entries.service';
 
 @Component({
   selector: 'app-today',
@@ -9,17 +10,20 @@ import { PillReminderEntryService } from '../services/pill-reminder-entry.servic
 })
 export class TodayComponent implements OnInit {
   private today: Date
+  public animationMode = 'fling';
 
   pillReminderEntries: PillReminderEntry[];
+  measurementReminderEntries: MeasurementReminderEntry[];
 
-  constructor(private pillReminderEntryService: PillReminderEntryService) {
+  constructor(private reminderEntryService: ReminderEntriesService) {
     //this.today = new Date();
    }
 
   ngOnInit() {
-    //this.today = new Date(2019, 1, 4, 14, 30, 0);
+    //this.today = new Date(2019, 1, 19, 23, 30, 0);
     this.today = new Date();
     this.getPillReminderEntriesByDate(this.today);
+    this.getMeasurementReminderEntriesByDate(this.today);
     /*this.pillReminderEntries = [
       {pillCount: 2, pillName: "pill1",
           pillCountType: "mg", isDone: 1, date: new Date,
@@ -34,9 +38,9 @@ export class TodayComponent implements OnInit {
   }
 
   getPillReminderEntriesByDate (date: Date): void{
-    this.pillReminderEntryService.getPillReminderEntriesByDate(date)
+    this.reminderEntryService.getPillReminderEntriesByDate(date)
       .subscribe(pillReminderEntries => {this.pillReminderEntries = pillReminderEntries; 
-        this.pillReminderEntries.forEach(pillReminderEntry =>{
+        this.pillReminderEntries.forEach(pillReminderEntry => {
           pillReminderEntry.date = new Date(pillReminderEntry.date);
           if(pillReminderEntry.isDone==0){
             pillReminderEntry.isLate = this.today>pillReminderEntry.date?true:false;
@@ -47,5 +51,25 @@ export class TodayComponent implements OnInit {
         //console.log(this.today);
       });
   }
+
+  getMeasurementReminderEntriesByDate (date: Date): void{
+    //let bufDate = new Date(2019, 1, 13, 16, 0, 0);
+    this.reminderEntryService.getMeasurementReminderEntriesByDate(date)
+      .subscribe(measurementReminderEntries => {this.measurementReminderEntries = measurementReminderEntries; 
+        this.measurementReminderEntries.forEach(measurementReminderEntry => {
+          measurementReminderEntry.date = new Date(measurementReminderEntry.date);
+          if(measurementReminderEntry.isDone==0){
+            measurementReminderEntry.isLate = date>measurementReminderEntry.date?true:false;
+            //console.log(pillReminderEntry.date.constructor.name);
+          }
+        });
+        //console.log(this.pillReminderEntries);
+        //console.log(this.today);
+      });
+  }
+
+  public doAction(event: any) {
+    console.log(event);
+}
 
 }

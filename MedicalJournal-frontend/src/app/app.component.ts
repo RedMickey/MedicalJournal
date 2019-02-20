@@ -17,6 +17,10 @@ export class AppComponent {
       this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/additional_icons/food.svg'))
       .addSvgIcon('pill', 
       this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/additional_icons/pill.svg'))
+      .addSvgIcon('ruler', 
+      this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/additional_icons/ruler.svg'))
+      .addSvgIcon('thermometer', 
+      this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/additional_icons/thermometer1.svg'))
     }
 
   title = 'MedicalJournal-frontend';

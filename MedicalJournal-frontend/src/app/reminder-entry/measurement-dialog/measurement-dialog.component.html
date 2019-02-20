@@ -1,0 +1,20 @@
+<h1 mat-dialog-title>{{data.measurementTypeName}}</h1>
+<div mat-dialog-content>
+  <div fxLayoutAlign="center center">
+    <mat-icon svgIcon={{data.iconName}}></mat-icon>
+    <mat-form-field class="ml-20 w-60">
+      <input matInput [formControl]="valueStr1FormControl">
+    </mat-form-field>
+    <mat-form-field *ngIf="data.idMeasurementType == 2" class="ml-10 w-60">
+      <input matInput [formControl]="valueStr2FormControl">
+    </mat-form-field>
+    <span class="ml-10">{{data.measurementValueTypeName}}</span>
+  </div>
+  <div *ngIf="error" class="error">
+    {{error}}
+  </div>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button color="accent" (click)="onDialogResult(false)">Отмена</button>
+  <button mat-button color="accent" (click)="onDialogResult(true)">Добавить</button>
+</div>

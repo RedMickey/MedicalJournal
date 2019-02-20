@@ -6,3 +6,26 @@
     margin-left: 5px;
     margin-right: 5px;
 }
+
+.fab-menu{
+    margin: 1em;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+}
+
+.mb-8{
+    margin-bottom: 8px;
+}
+
+/*:host >>> app-reminder-entry.meas-remind-bg {
+    background: #CCECD7;
+  }
+
+.meas-remind-bg > mat-card{
+    background: #CCECD7;
+}*/
+
+:host >>> app-reminder-entry.meas-remind-bg  mat-card{
+    background: #CCECD7;
+}

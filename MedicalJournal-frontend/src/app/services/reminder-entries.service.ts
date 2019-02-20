@@ -5,6 +5,7 @@ import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 
 import { PillReminderEntry } from '../models/PillReminderEntry';
+import { MeasurementReminderEntry } from '../models/MeasurementReminderEntry';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -12,24 +13,32 @@ const httpOptions = {
 
 //@Injectable({ providedIn: 'root' })
 @Injectable()
-export class PillReminderEntryService {
+export class ReminderEntriesService {
 
-  private PillReminderEntriesUrl = 'http://localhost:8090/today';  // URL to web api
+  private ReminderEntriesUrl = 'http://localhost:8090/today';  // URL to web api
 
   constructor(
     private http: HttpClient) { }
 
   /** POST PillReminderEntries by date from the server */
   getPillReminderEntriesByDate (date: Date): Observable<PillReminderEntry[]> {
-    return this.http.post<PillReminderEntry[]>(this.PillReminderEntriesUrl + "/getReminders", {"date": date}, httpOptions)
+    return this.http.post<PillReminderEntry[]>(this.ReminderEntriesUrl + "/getPillReminders", {"date": date}, httpOptions)
       .pipe(
         catchError(this.handleError<PillReminderEntry[]>(' getPillReminderEntriesByDate', []))
       );
   }
 
+    /** POST MeasurementReminderEntries by date from the server */
+    getMeasurementReminderEntriesByDate (date: Date): Observable<MeasurementReminderEntry[]> {
+      return this.http.post<MeasurementReminderEntry[]>(this.ReminderEntriesUrl + "/getMeasurementReminders", {"date": date}, httpOptions)
+        .pipe(
+          catchError(this.handleError<MeasurementReminderEntry[]>(' getMeasurementReminderEntriesByDate', []))
+        );
+    }
+
   updatePillReminderEntry (updateReminderBody: any): Observable<any> {
     console.log(updateReminderBody);
-    return this.http.post(this.PillReminderEntriesUrl + "/updateReminder", 
+    return this.http.post(this.ReminderEntriesUrl + "/updatePillReminder", 
       {"isDone": updateReminderBody.isDone,
        "id": updateReminderBody.id,
        "date": updateReminderBody.date},
@@ -39,6 +48,21 @@ export class PillReminderEntryService {
     );
   }
 
+  updateMeasurementReminderEntry (updateReminderBody: any): Observable<any> {
+    console.log(updateReminderBody);
+    return this.http.post(this.ReminderEntriesUrl + "/updateMeasurementReminder", 
+      {
+        "isDone": updateReminderBody.isDone,
+        "id": updateReminderBody.id,
+        "date": updateReminderBody.date,
+        "value1": updateReminderBody.value1,
+        "value2": updateReminderBody.value2
+      },
+      httpOptions)
+    .pipe(
+      catchError(this.handleError<any>('updateMeasurementReminderEntry'))
+    );
+  }
 
   /**
    * Handle Http operation that failed.

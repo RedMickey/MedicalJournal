@@ -8,9 +8,10 @@ import { LayoutModule } from '@angular/cdk/layout';
 import { AppRoutingModule } from './app-routing.module';
 import { TodayComponent } from './today/today.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { PillReminderEntryComponent } from './pill-reminder-entry/pill-reminder-entry.component';
+import { ReminderEntryComponent } from './reminder-entry/reminder-entry.component';
 import { HttpClientModule } from "@angular/common/http";
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {EcoFabSpeedDialModule} from '@ecodev/fab-speed-dial';
 import { MatButtonModule, 
   MatIconModule, 
   MatListModule,
@@ -49,12 +50,14 @@ import { MatButtonModule,
   MatTreeModule,
 } from '@angular/material';
 
-import { PillReminderEntryService } from './services/pill-reminder-entry.service';
+import { ReminderEntriesService } from './services/reminder-entries.service';
 
 import { registerLocaleData } from '@angular/common';
 import localeRu from '@angular/common/locales/ru';
 import { PillsComponent } from './pills/pills.component';
 import { MeasurementsComponent } from './measurements/measurements.component';
+import { from } from 'rxjs';
+import { MeasurementDialogComponent } from './reminder-entry/measurement-dialog/measurement-dialog.component';
 
 registerLocaleData(localeRu, 'ru');
 
@@ -63,9 +66,10 @@ registerLocaleData(localeRu, 'ru');
     AppComponent,
     MainNavComponent,
     TodayComponent,
-    PillReminderEntryComponent,
+    ReminderEntryComponent,
     PillsComponent,
-    MeasurementsComponent
+    MeasurementsComponent,
+    MeasurementDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -78,6 +82,7 @@ registerLocaleData(localeRu, 'ru');
     HttpClientModule,
     FormsModule, 
     ReactiveFormsModule,
+    EcoFabSpeedDialModule,
     
     MatListModule,
     MatToolbarModule,
@@ -113,8 +118,11 @@ registerLocaleData(localeRu, 'ru');
     MatTooltipModule,
     MatTreeModule,
   ],
+  entryComponents: [
+    MeasurementDialogComponent,
+  ],
   providers: [
-    PillReminderEntryService
+    ReminderEntriesService
   ],
   bootstrap: [AppComponent]
 })
