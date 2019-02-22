@@ -35,7 +35,6 @@ import com.example.michel.mycalendar2.app_async_tasks.MeasurementNotificationsCr
 import com.example.michel.mycalendar2.app_async_tasks.MeasurementRemindersInsertionTask;
 import com.example.michel.mycalendar2.app_async_tasks.MeasurementRemindersUpdateTask;
 import com.example.michel.mycalendar2.app_async_tasks.OneTimeMeasurementReminderInsertionTask;
-import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
 import com.example.michel.mycalendar2.calendarview.data.DateData;
 import com.example.michel.mycalendar2.calendarview.utils.CalendarUtil;
 import com.example.michel.mycalendar2.expandableLayout.ExpandableRelativeLayout;

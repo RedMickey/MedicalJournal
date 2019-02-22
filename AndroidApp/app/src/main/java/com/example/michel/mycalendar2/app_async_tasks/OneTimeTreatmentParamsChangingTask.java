@@ -8,6 +8,7 @@ import android.widget.Spinner;
 import com.example.michel.mycalendar2.activities.AddOneTimeTreatmentActivity;
 import com.example.michel.mycalendar2.activities.R;
 import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
+import com.example.michel.mycalendar2.dao.PillReminderDao;
 import com.example.michel.mycalendar2.models.pill.PillReminder;
 import com.example.michel.mycalendar2.models.pill.PillReminderDBInsertEntry;
 import com.example.michel.mycalendar2.utils.DBStaticEntries;
@@ -26,8 +27,8 @@ public class OneTimeTreatmentParamsChangingTask extends AsyncTask<UUID, Void, Pi
     @Override
     protected PillReminderDBInsertEntry doInBackground(UUID... uuids) {
         DatabaseAdapter databaseAdapter = new DatabaseAdapter();
-        databaseAdapter.open();
-        PillReminderDBInsertEntry pillReminderDBInsertEntry = databaseAdapter.getPillReminderDBInsertEntryByID(uuids[0]);
+        PillReminderDao pillReminderDao = new PillReminderDao(databaseAdapter.open().getDatabase());
+        PillReminderDBInsertEntry pillReminderDBInsertEntry = pillReminderDao.getPillReminderDBInsertEntryByID(uuids[0]);
 
         databaseAdapter.close();
         return pillReminderDBInsertEntry;

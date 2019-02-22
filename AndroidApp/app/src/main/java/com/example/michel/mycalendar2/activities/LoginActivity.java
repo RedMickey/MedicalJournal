@@ -34,6 +34,7 @@ import com.example.michel.mycalendar2.app_async_tasks.PostSignInTask;
 import com.example.michel.mycalendar2.app_async_tasks.UserLocalUpdateTask;
 import com.example.michel.mycalendar2.authentication.AccountGeneralUtils;
 import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
+import com.example.michel.mycalendar2.dao.UserDao;
 import com.example.michel.mycalendar2.models.User;
 
 import java.util.ArrayList;
@@ -345,8 +346,8 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             protected List<String> doInBackground(Void... voids) {
                 DatabaseAdapter databaseAdapter = new DatabaseAdapter();
-                databaseAdapter.open();
-                List<User> users = databaseAdapter.getAllUsers();
+                UserDao userDao = new UserDao(databaseAdapter.open().getDatabase());;
+                List<User> users = userDao.getAllUsers();
 
                 databaseAdapter.close();
 

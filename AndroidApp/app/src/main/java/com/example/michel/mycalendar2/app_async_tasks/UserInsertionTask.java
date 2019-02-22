@@ -3,6 +3,7 @@ package com.example.michel.mycalendar2.app_async_tasks;
 import android.os.AsyncTask;
 
 import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
+import com.example.michel.mycalendar2.dao.UserDao;
 import com.example.michel.mycalendar2.models.User;
 
 public class UserInsertionTask extends AsyncTask<User, Void, String> {
@@ -10,8 +11,8 @@ public class UserInsertionTask extends AsyncTask<User, Void, String> {
     @Override
     protected String doInBackground(User... users) {
         DatabaseAdapter databaseAdapter = new DatabaseAdapter();
-        databaseAdapter.open();
-        databaseAdapter.insertUser(users[0]);
+        UserDao userDao = new UserDao(databaseAdapter.open().getDatabase());
+        userDao.insertUser(users[0]);
 
         databaseAdapter.close();
 

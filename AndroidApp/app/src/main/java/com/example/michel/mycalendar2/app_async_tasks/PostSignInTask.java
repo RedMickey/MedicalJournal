@@ -9,6 +9,7 @@ import com.example.michel.mycalendar2.activities.MainActivity;
 import com.example.michel.mycalendar2.activities.R;
 import com.example.michel.mycalendar2.authentication.AccountGeneralUtils;
 import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
+import com.example.michel.mycalendar2.dao.UserDao;
 import com.example.michel.mycalendar2.models.User;
 import com.example.michel.mycalendar2.utils.TimestampTypeAdapter;
 import com.google.gson.GsonBuilder;
@@ -106,12 +107,12 @@ public class PostSignInTask extends AsyncTask<String, Void, Integer> {
         }
 
         DatabaseAdapter databaseAdapter = new DatabaseAdapter();
-        databaseAdapter.open();
-        if (!databaseAdapter.ifUserExists(user.getEmail())){
-            databaseAdapter.insertUser(user);
+        UserDao userDao = new UserDao(databaseAdapter.open().getDatabase());
+        if (!userDao.ifUserExists(user.getEmail())){
+            userDao.insertUser(user);
         }
         else {
-            databaseAdapter.updateUser(user, 0);
+            userDao.updateUser(user, 0);
         }
         databaseAdapter.close();
 

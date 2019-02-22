@@ -8,6 +8,7 @@ import android.view.View;
 import com.example.michel.mycalendar2.activities.R;
 import com.example.michel.mycalendar2.adapters.StatisticListAdapter;
 import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
+import com.example.michel.mycalendar2.dao.MeasurementReminderDao;
 import com.example.michel.mycalendar2.models.measurement.MeasurementStatEntry;
 
 import java.util.ArrayList;
@@ -24,8 +25,8 @@ public class StatisticListItemsCreationTask extends AsyncTask<Integer, Void, Lis
     @Override
     protected List<MeasurementStatEntry> doInBackground(Integer... integers) {
         DatabaseAdapter databaseAdapter = new DatabaseAdapter();
-        databaseAdapter.open();
-        List<MeasurementStatEntry> measurementStatEntries = databaseAdapter.getAllMeasurementStatEntries(integers[0]);
+        MeasurementReminderDao measurementReminderDao = new MeasurementReminderDao(databaseAdapter.open().getDatabase());
+        List<MeasurementStatEntry> measurementStatEntries = measurementReminderDao.getAllMeasurementStatEntries(integers[0]);
         databaseAdapter.close();
 
         return measurementStatEntries;

@@ -3,6 +3,7 @@ package com.example.michel.mycalendar2.app_async_tasks;
 import android.os.AsyncTask;
 
 import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
+import com.example.michel.mycalendar2.dao.MeasurementReminderDao;
 import com.example.michel.mycalendar2.models.measurement.MeasurementReminderDBEntry;
 
 import java.util.UUID;
@@ -21,9 +22,9 @@ public class OneTimeMeasurementReminderInsertionTask extends AsyncTask<Measureme
     protected Void doInBackground(MeasurementReminderDBEntry... measurementReminderDBEntries) {
         MeasurementReminderDBEntry mrdbe = measurementReminderDBEntries[0];
         DatabaseAdapter dbAdapter = new DatabaseAdapter();
-        dbAdapter.open();
+        MeasurementReminderDao measurementReminderDao = new MeasurementReminderDao(dbAdapter.open().getDatabase());
 
-        UUID measurementReminderId = dbAdapter.insertMeasurementReminder(
+        UUID measurementReminderId = measurementReminderDao.insertMeasurementReminder(
                 mrdbe.getIdMeasurementType(),
                 mrdbe.getStartDate().getDateString(),
                 mrdbe.getIdCycle(), mrdbe.getIdHavingMealsType(),
@@ -31,7 +32,7 @@ public class OneTimeMeasurementReminderInsertionTask extends AsyncTask<Measureme
                 mrdbe.getIsActive(), mrdbe.getReminderTimes().length,1
         );
 
-        dbAdapter.insertMeasurementReminderEntry(
+        measurementReminderDao.insertMeasurementReminderEntry(
                 mrdbe.getStartDate().getDateString(),
                 measurementReminderId,
                 mrdbe.getReminderTimes()[0].getReminderTimeStr(),

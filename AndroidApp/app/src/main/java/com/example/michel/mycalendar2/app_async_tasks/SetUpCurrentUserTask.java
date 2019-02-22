@@ -12,6 +12,7 @@ import com.example.michel.mycalendar2.activities.MainActivity;
 import com.example.michel.mycalendar2.activities.R;
 import com.example.michel.mycalendar2.authentication.AccountGeneralUtils;
 import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
+import com.example.michel.mycalendar2.dao.UserDao;
 import com.example.michel.mycalendar2.models.User;
 
 public class SetUpCurrentUserTask extends AsyncTask<Void, Void, Integer> {
@@ -44,8 +45,8 @@ public class SetUpCurrentUserTask extends AsyncTask<Void, Void, Integer> {
         databaseAdapter.close();*/
 
         if (user == null){
-            databaseAdapter.open();
-            user = databaseAdapter.getCurrentUser();
+            UserDao userDao = new UserDao(databaseAdapter.open().getDatabase());
+            user = userDao.getCurrentUser();
             databaseAdapter.close();
             if (user == null){
                 Log.e("UERR", "There is not the current user!");

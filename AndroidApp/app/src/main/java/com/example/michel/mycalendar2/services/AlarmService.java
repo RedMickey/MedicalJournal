@@ -11,6 +11,7 @@ import android.widget.Toast;
 import com.example.michel.mycalendar2.activities.AddTreatmentActivity;
 import com.example.michel.mycalendar2.activities.MainActivity;
 import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
+import com.example.michel.mycalendar2.dao.PillReminderDao;
 import com.example.michel.mycalendar2.utils.AlarmReceiver;
 
 import java.util.UUID;
@@ -43,8 +44,8 @@ public class AlarmService extends Service {
 
             if (!pillReminderEntryID.equals("")){
                 DatabaseAdapter databaseAdapter = new DatabaseAdapter();
-                databaseAdapter.open();
-                databaseAdapter.updateIsDonePillReminderEntry( 1, UUID.fromString(pillReminderEntryID), "");
+                PillReminderDao pillReminderDao = new PillReminderDao(databaseAdapter.open().getDatabase());
+                pillReminderDao.updateIsDonePillReminderEntry( 1, UUID.fromString(pillReminderEntryID), "");
                 databaseAdapter.close();
             }
 

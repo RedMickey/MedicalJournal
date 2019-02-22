@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.example.michel.mycalendar2.additional_views.swipe_button.OnStateChangeListener;
 import com.example.michel.mycalendar2.additional_views.swipe_button.SwipeButton;
 import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
+import com.example.michel.mycalendar2.dao.PillReminderDao;
 import com.example.michel.mycalendar2.models.measurement.MeasurementReminderEntry;
 import com.example.michel.mycalendar2.models.pill.PillReminderEntry;
 
@@ -63,8 +64,8 @@ private TextView alarmResult;
                     if (reminderType == 1)
                     {
                         DatabaseAdapter databaseAdapter = new DatabaseAdapter();
-                        databaseAdapter.open();
-                        databaseAdapter.updateIsDonePillReminderEntry( 1, reminderEntryID, "");
+                        PillReminderDao pillReminderDao = new PillReminderDao(databaseAdapter.open().getDatabase());
+                        pillReminderDao.updateIsDonePillReminderEntry( 1, reminderEntryID, "");
                         databaseAdapter.close();
                     }
 

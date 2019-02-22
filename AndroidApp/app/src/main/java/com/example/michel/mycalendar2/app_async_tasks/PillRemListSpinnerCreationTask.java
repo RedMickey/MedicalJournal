@@ -16,6 +16,7 @@ import com.example.michel.mycalendar2.activities.AddTreatmentActivity;
 import com.example.michel.mycalendar2.activities.R;
 import com.example.michel.mycalendar2.adapters.PillReminderListAdapter;
 import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
+import com.example.michel.mycalendar2.dao.PillReminderDao;
 import com.example.michel.mycalendar2.models.pill.PillReminder;
 
 import java.util.List;
@@ -35,8 +36,8 @@ public class PillRemListSpinnerCreationTask extends AsyncTask<Void, Void, List<P
     @Override
     protected List<PillReminder> doInBackground(Void... voids) {
         DatabaseAdapter databaseAdapter = new DatabaseAdapter();
-        databaseAdapter.open();
-        List<PillReminder> pillReminders = databaseAdapter.getAllPillReminders();
+        PillReminderDao pillReminderDao = new PillReminderDao(databaseAdapter.open().getDatabase());
+        List<PillReminder> pillReminders = pillReminderDao.getAllPillReminders();
 
         databaseAdapter.close();
 

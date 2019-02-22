@@ -7,6 +7,9 @@ import android.util.Log;
 
 import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
 import com.example.michel.mycalendar2.calendarview.data.DateData;
+import com.example.michel.mycalendar2.dao.CycleDao;
+import com.example.michel.mycalendar2.dao.PillReminderDao;
+import com.example.michel.mycalendar2.dao.ReminderTimeDao;
 import com.example.michel.mycalendar2.models.CycleAndPillComby;
 import com.example.michel.mycalendar2.models.CycleDBInsertEntry;
 import com.example.michel.mycalendar2.models.pill.PillReminderDBInsertEntry;
@@ -34,15 +37,17 @@ public class PillRemindersUpdateTask extends AsyncTask<CycleAndPillComby, Void, 
         PillReminderDBInsertEntry pillReminderDBInsertEntry = cycleAndPillCombies[0].pillReminderDBInsertEntry;
         CycleDBInsertEntry cycleDBInsertEntry = cycleAndPillCombies[0].cycleDBInsertEntry;
         DatabaseAdapter dbAdapter = new DatabaseAdapter();
-        dbAdapter.open();
+        PillReminderDao pillReminderDao = new PillReminderDao(dbAdapter.open().getDatabase());
+        CycleDao cycleDao = new CycleDao(dbAdapter.getDatabase());
+        ReminderTimeDao reminderTimeDao = new ReminderTimeDao(dbAdapter.getDatabase());
 
-        dbAdapter.updateCycle(cycleDBInsertEntry.getIdCycle(), cycleDBInsertEntry.getIdWeekSchedule(),
+        cycleDao.updateCycle(cycleDBInsertEntry.getIdCycle(), cycleDBInsertEntry.getIdWeekSchedule(),
                 cycleDBInsertEntry.getPeriod(), cycleDBInsertEntry.getPeriodDMType(),
                 cycleDBInsertEntry.getOnce_aPeriod(), cycleDBInsertEntry.getOnce_aPeriodDMType(),
                 cycleDBInsertEntry.getIdCyclingType(), cycleDBInsertEntry.getWeekSchedule()
         );
 
-        dbAdapter.updatePillReminder( pillReminderDBInsertEntry.getIdPillReminder(),
+        pillReminderDao.updatePillReminder( pillReminderDBInsertEntry.getIdPillReminder(),
                 pillReminderDBInsertEntry.getPillName(), pillReminderDBInsertEntry.getPillCount(),
                 pillReminderDBInsertEntry.getIdPillCountType(), pillReminderDBInsertEntry.getStartDate().getDateString(),
                 pillReminderDBInsertEntry.getIdCycle(), pillReminderDBInsertEntry.getIdHavingMealsType(),
@@ -55,13 +60,13 @@ public class PillRemindersUpdateTask extends AsyncTask<CycleAndPillComby, Void, 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String curDate = sdf.format(cal.getTime());
 
-        List<PillReminderEntry> todayPillReminderEntriesOld = dbAdapter.getPillReminderEntriesByDateAndPillReminder(
+        List<PillReminderEntry> todayPillReminderEntriesOld = pillReminderDao.getPillReminderEntriesByDateAndPillReminder(
                 pillReminderDBInsertEntry.getIdPillReminder(),
                 new DateData(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH)+1, cal.get(Calendar.DAY_OF_MONTH)
         ));
 
         cal.add(Calendar.DAY_OF_MONTH,1);
-        List<PillReminderEntry> tomorrowPillReminderEntriesOld = dbAdapter.getPillReminderEntriesByDateAndPillReminder(
+        List<PillReminderEntry> tomorrowPillReminderEntriesOld = pillReminderDao.getPillReminderEntriesByDateAndPillReminder(
                 pillReminderDBInsertEntry.getIdPillReminder(),
                 new DateData(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH)+1, cal.get(Calendar.DAY_OF_MONTH)
         ));
@@ -71,13 +76,13 @@ public class PillRemindersUpdateTask extends AsyncTask<CycleAndPillComby, Void, 
         PillNotificationsCreationTask.cancelAlarms(appContext, tomorrowPillReminderEntriesOld, alarmManager);
 
         cal.add(Calendar.DAY_OF_MONTH, -1);
-        dbAdapter.deletePillReminderEntriesAfterDate(pillReminderDBInsertEntry.getIdPillReminder(), curDate);
+        pillReminderDao.deletePillReminderEntriesAfterDate(pillReminderDBInsertEntry.getIdPillReminder(), curDate);
         // need check for change start date
 
-        dbAdapter.deleteReminderTimeByReminderId(pillReminderDBInsertEntry.getIdPillReminder(),0);
+        reminderTimeDao.deleteReminderTimeByReminderId(pillReminderDBInsertEntry.getIdPillReminder(),0);
 
         for (int i=0; i<pillReminderDBInsertEntry.getReminderTimes().length; i++){
-            dbAdapter.insertReminderTime(pillReminderDBInsertEntry.getReminderTimes()[i].getReminderTimeStr(), pillReminderDBInsertEntry.getIdPillReminder(), 0);
+            reminderTimeDao.insertReminderTime(pillReminderDBInsertEntry.getReminderTimes()[i].getReminderTimeStr(), pillReminderDBInsertEntry.getIdPillReminder(), 0);
         }
         //dbAdapter.deleteIrrelevantReminderTime(pillReminderDBInsertEntry.getIdPillReminder(), pillReminderDBInsertEntry.getStartDate().getDateString());
         /*int[] reminderTimeIds = new int[pillReminderDBInsertEntry.getReminderTimes().length];
@@ -91,7 +96,7 @@ public class PillRemindersUpdateTask extends AsyncTask<CycleAndPillComby, Void, 
                 case 1:
                     for (int i = 0; i < cycleDBInsertEntry.getDayCount(); i++) {
                         for (int j = 0; j < pillReminderDBInsertEntry.getReminderTimes().length; j++) {
-                            dbAdapter.insertPillReminderEntry(
+                            pillReminderDao.insertPillReminderEntry(
                                     sdf.format(new Date(cal.getTimeInMillis())),
                                     pillReminderDBInsertEntry.getIdPillReminder(),
                                     pillReminderDBInsertEntry.getReminderTimes()[j].getReminderTimeStr(),0
@@ -104,7 +109,7 @@ public class PillRemindersUpdateTask extends AsyncTask<CycleAndPillComby, Void, 
                     for (int i = 0; i < cycleDBInsertEntry.getDayCount(); i++) {
                         if (cycleDBInsertEntry.getWeekSchedule()[cal.get(Calendar.DAY_OF_WEEK) - 1] == 1) {
                             for (int j = 0; j < pillReminderDBInsertEntry.getReminderTimes().length; j++) {
-                                dbAdapter.insertPillReminderEntry(
+                                pillReminderDao.insertPillReminderEntry(
                                         sdf.format(new Date(cal.getTimeInMillis())),
                                         pillReminderDBInsertEntry.getIdPillReminder(),
                                         pillReminderDBInsertEntry.getReminderTimes()[j].getReminderTimeStr(),0
@@ -117,7 +122,7 @@ public class PillRemindersUpdateTask extends AsyncTask<CycleAndPillComby, Void, 
                 case 3:
                     for (int i = 0; i < cycleDBInsertEntry.getDayCount(); i += cycleDBInsertEntry.getDayInterval()) {
                         for (int j = 0; j < pillReminderDBInsertEntry.getReminderTimes().length; j++) {
-                            dbAdapter.insertPillReminderEntry(
+                            pillReminderDao.insertPillReminderEntry(
                                     sdf.format(new Date(cal.getTimeInMillis())),
                                     pillReminderDBInsertEntry.getIdPillReminder(),
                                     pillReminderDBInsertEntry.getReminderTimes()[j].getReminderTimeStr(),0
@@ -130,13 +135,13 @@ public class PillRemindersUpdateTask extends AsyncTask<CycleAndPillComby, Void, 
         }
 
         cal = Calendar.getInstance();
-        List<PillReminderEntry> todayPillReminderEntriesNew = dbAdapter.getPillReminderEntriesByDateAndPillReminder(
+        List<PillReminderEntry> todayPillReminderEntriesNew = pillReminderDao.getPillReminderEntriesByDateAndPillReminder(
                 pillReminderDBInsertEntry.getIdPillReminder(),
                 new DateData(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH)+1, cal.get(Calendar.DAY_OF_MONTH)
                 ));
 
         cal.add(Calendar.DAY_OF_MONTH,1);
-        List<PillReminderEntry> tomorrowPillReminderEntriesNew = dbAdapter.getPillReminderEntriesByDateAndPillReminder(
+        List<PillReminderEntry> tomorrowPillReminderEntriesNew = pillReminderDao.getPillReminderEntriesByDateAndPillReminder(
                 pillReminderDBInsertEntry.getIdPillReminder(),
                 new DateData(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH)+1, cal.get(Calendar.DAY_OF_MONTH)
                 ));

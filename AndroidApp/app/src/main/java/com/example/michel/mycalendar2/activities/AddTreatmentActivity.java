@@ -34,6 +34,9 @@ import com.example.michel.mycalendar2.app_async_tasks.PillRemindersUpdateTask;
 import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
 import com.example.michel.mycalendar2.calendarview.data.DateData;
 import com.example.michel.mycalendar2.calendarview.utils.CalendarUtil;
+import com.example.michel.mycalendar2.dao.CycleDao;
+import com.example.michel.mycalendar2.dao.PillReminderDao;
+import com.example.michel.mycalendar2.dao.ReminderTimeDao;
 import com.example.michel.mycalendar2.expandableLayout.ExpandableRelativeLayout;
 import com.example.michel.mycalendar2.models.CycleAndPillComby;
 import com.example.michel.mycalendar2.models.CycleDBInsertEntry;
@@ -364,12 +367,14 @@ public class AddTreatmentActivity extends AppCompatActivity {
                                     }
 
                                     DatabaseAdapter dbAdapter = new DatabaseAdapter();
-                                    dbAdapter.open();
-                                    dbAdapter.deletePillReminderEntriesByPillReminderId(oldPillReminder.getIdPillReminder());
-                                    dbAdapter.deleteReminderTimeByReminderId(oldPillReminder.getIdPillReminder(), 0);
+                                    PillReminderDao pillReminderDao = new PillReminderDao(dbAdapter.open().getDatabase());
+                                    ReminderTimeDao reminderTimeDao = new ReminderTimeDao(dbAdapter.getDatabase());
+                                    CycleDao cycleDao = new CycleDao(dbAdapter.getDatabase());
+                                    pillReminderDao.deletePillReminderEntriesByPillReminderId(oldPillReminder.getIdPillReminder());
+                                    reminderTimeDao.deleteReminderTimeByReminderId(oldPillReminder.getIdPillReminder(), 0);
                                     if (idWeekSchedule!=null)
-                                        dbAdapter.deleteWeekScheduleByIdCascade(idWeekSchedule);
-                                    dbAdapter.deleteCycleByIdCascade(oldPillReminder.getIdCycle());
+                                        cycleDao.deleteWeekScheduleByIdCascade(idWeekSchedule);
+                                    cycleDao.deleteCycleByIdCascade(oldPillReminder.getIdCycle());
                                     dbAdapter.close();
                                     PillNotificationsCreationTask nctNew = new PillNotificationsCreationTask(2);
                                     nctNew.execute(getApplicationContext());

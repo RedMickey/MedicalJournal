@@ -20,6 +20,7 @@ import com.example.michel.mycalendar2.adapters.TimesOfTakingMedicineAdapter;
 import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
 import com.example.michel.mycalendar2.calendarview.data.DateData;
 import com.example.michel.mycalendar2.calendarview.utils.CalendarUtil;
+import com.example.michel.mycalendar2.dao.PillReminderDao;
 import com.example.michel.mycalendar2.models.CycleAndPillComby;
 import com.example.michel.mycalendar2.models.CycleDBInsertEntry;
 import com.example.michel.mycalendar2.models.pill.PillReminderDBInsertEntry;
@@ -42,8 +43,8 @@ public class AddTreatmentActivityCreationTask extends AsyncTask<UUID, Void, Cycl
     @Override
     protected CycleAndPillComby doInBackground(UUID... uuids) {
         DatabaseAdapter databaseAdapter = new DatabaseAdapter();
-        databaseAdapter.open();
-        CycleAndPillComby cycleAndPillComby = databaseAdapter.getCycleAndPillCombyByID(uuids[0]);
+        PillReminderDao pillReminderDao = new PillReminderDao(databaseAdapter.open().getDatabase());
+        CycleAndPillComby cycleAndPillComby = pillReminderDao.getCycleAndPillCombyByID(uuids[0]);
 
         databaseAdapter.close();
 

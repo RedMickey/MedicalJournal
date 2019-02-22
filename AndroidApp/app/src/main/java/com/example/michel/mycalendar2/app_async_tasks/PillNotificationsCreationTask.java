@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
 import com.example.michel.mycalendar2.calendarview.data.DateData;
+import com.example.michel.mycalendar2.dao.PillReminderDao;
 import com.example.michel.mycalendar2.models.pill.PillReminderEntry;
 import com.example.michel.mycalendar2.utils.AlarmReceiver;
 
@@ -36,22 +37,22 @@ public class PillNotificationsCreationTask extends AsyncTask<Context, Void, Void
     protected Void doInBackground(Context... Contexts) {
         AlarmManager alarmManager = (AlarmManager) Contexts[0].getSystemService(ALARM_SERVICE);
         DatabaseAdapter databaseAdapter = new DatabaseAdapter();
-        databaseAdapter.open();
+        PillReminderDao pillReminderDao = new PillReminderDao(databaseAdapter.open().getDatabase());
         Calendar cal = Calendar.getInstance();
 
-        List<PillReminderEntry> todayPillReminderEntries = databaseAdapter.getPillReminderEntriesByDate(new DateData(
+        List<PillReminderEntry> todayPillReminderEntries = pillReminderDao.getPillReminderEntriesByDate(new DateData(
                 cal.get(Calendar.YEAR), cal.get(Calendar.MONTH)+1, cal.get(Calendar.DAY_OF_MONTH)
         ));
 
 
         cal.add(Calendar.DAY_OF_MONTH, -1);
-        List<PillReminderEntry> yesterdayPillReminderEntries = databaseAdapter.getPillReminderEntriesByDate(new DateData(
+        List<PillReminderEntry> yesterdayPillReminderEntries = pillReminderDao.getPillReminderEntriesByDate(new DateData(
                 cal.get(Calendar.YEAR), cal.get(Calendar.MONTH)+1, cal.get(Calendar.DAY_OF_MONTH)
         ));
 
 
         cal.add(Calendar.DAY_OF_MONTH,2);
-        List<PillReminderEntry> tomorrowPillReminderEntries = databaseAdapter.getPillReminderEntriesByDate(new DateData(
+        List<PillReminderEntry> tomorrowPillReminderEntries = pillReminderDao.getPillReminderEntriesByDate(new DateData(
                 cal.get(Calendar.YEAR), cal.get(Calendar.MONTH)+1, cal.get(Calendar.DAY_OF_MONTH)
         ));
 

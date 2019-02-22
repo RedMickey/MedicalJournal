@@ -11,6 +11,7 @@ import com.example.michel.mycalendar2.activities.AddMeasurementActivity;
 import com.example.michel.mycalendar2.activities.R;
 import com.example.michel.mycalendar2.adapters.MeasurementReminderListAdapter;
 import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
+import com.example.michel.mycalendar2.dao.MeasurementReminderDao;
 import com.example.michel.mycalendar2.models.measurement.MeasurementReminder;
 import com.example.michel.mycalendar2.models.pill.PillReminder;
 import com.example.michel.mycalendar2.utils.DBStaticEntries;
@@ -28,8 +29,8 @@ public class ReminderMeasurementItemsCreationTask extends AsyncTask<Void, Void, 
     @Override
     protected List<MeasurementReminder> doInBackground(Void... voids) {
         DatabaseAdapter databaseAdapter = new DatabaseAdapter();
-        databaseAdapter.open();
-        List<MeasurementReminder> measurementReminders = databaseAdapter.getAllMeasurementReminders();
+        MeasurementReminderDao measurementReminderDao = new MeasurementReminderDao(databaseAdapter.open().getDatabase());
+        List<MeasurementReminder> measurementReminders = measurementReminderDao.getAllMeasurementReminders();
 
         databaseAdapter.close();
 

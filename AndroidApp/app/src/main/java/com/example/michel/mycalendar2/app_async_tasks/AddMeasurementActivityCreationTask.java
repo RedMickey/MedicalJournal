@@ -1,5 +1,6 @@
 package com.example.michel.mycalendar2.app_async_tasks;
 
+import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -21,11 +22,11 @@ import com.example.michel.mycalendar2.adapters.TimesOfTakingMedicineAdapter;
 import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
 import com.example.michel.mycalendar2.calendarview.data.DateData;
 import com.example.michel.mycalendar2.calendarview.utils.CalendarUtil;
+import com.example.michel.mycalendar2.dao.MeasurementReminderDao;
 import com.example.michel.mycalendar2.models.CycleAndMeasurementComby;
 import com.example.michel.mycalendar2.models.CycleAndPillComby;
 import com.example.michel.mycalendar2.models.CycleDBInsertEntry;
 import com.example.michel.mycalendar2.models.measurement.MeasurementReminderDBEntry;
-import com.example.michel.mycalendar2.models.pill.PillReminderDBInsertEntry;
 import com.example.michel.mycalendar2.utils.DBStaticEntries;
 
 import java.util.UUID;
@@ -46,8 +47,8 @@ public class AddMeasurementActivityCreationTask extends AsyncTask<UUID, Void, Cy
     protected CycleAndMeasurementComby doInBackground(UUID... uuids) {
 
         DatabaseAdapter databaseAdapter = new DatabaseAdapter();
-        databaseAdapter.open();
-        CycleAndMeasurementComby cycleAndMeasurementComby = databaseAdapter.getCycleAndMeasurementCombyById(uuids[0]);
+        MeasurementReminderDao measurementReminderDao = new MeasurementReminderDao(databaseAdapter.open().getDatabase());
+        CycleAndMeasurementComby cycleAndMeasurementComby = measurementReminderDao.getCycleAndMeasurementCombyById(uuids[0]);
 
         databaseAdapter.close();
 

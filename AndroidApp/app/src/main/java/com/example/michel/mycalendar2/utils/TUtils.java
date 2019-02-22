@@ -1,6 +1,7 @@
 package com.example.michel.mycalendar2.utils;
 
 import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
+import com.example.michel.mycalendar2.dao.PillReminderDao;
 import com.example.michel.mycalendar2.models.CycleDBInsertEntry;
 import com.example.michel.mycalendar2.models.pill.PillReminderDBInsertEntry;
 
@@ -61,7 +62,7 @@ public class TUtils {
         UUID pillReminderId = pillReminderDBInsertEntry.getIdPillReminder();
 
         DatabaseAdapter dbAdapter = new DatabaseAdapter();
-        dbAdapter.open();
+        PillReminderDao pillReminderDao = new PillReminderDao(dbAdapter.open().getDatabase());
 
         Calendar cal = Calendar.getInstance();
         cal.set(pillReminderDBInsertEntry.getStartDate().getYear(),
@@ -72,7 +73,7 @@ public class TUtils {
             case 1:
                 for(int i=0; i<cycleDBInsertEntry.getDayCount();i++){
                     for (int j=0; j<pillReminderDBInsertEntry.getReminderTimes().length; j++){
-                        dbAdapter.insertPillReminderEntry(
+                        pillReminderDao.insertPillReminderEntry(
                                 sdf.format(new Date(cal.getTimeInMillis())),
                                 pillReminderId,
                                 pillReminderDBInsertEntry.getReminderTimes()[j].getReminderTimeStr(), 0
@@ -85,7 +86,7 @@ public class TUtils {
                 for(int i=0; i<cycleDBInsertEntry.getDayCount();i++){
                     if(cycleDBInsertEntry.getWeekSchedule()[cal.get(Calendar.DAY_OF_WEEK)-1]==1){
                         for (int j=0; j<pillReminderDBInsertEntry.getReminderTimes().length; j++){
-                            dbAdapter.insertPillReminderEntry(
+                            pillReminderDao.insertPillReminderEntry(
                                     sdf.format(cal.getTime()),
                                     pillReminderId,
                                     pillReminderDBInsertEntry.getReminderTimes()[j].getReminderTimeStr(), 0
@@ -98,7 +99,7 @@ public class TUtils {
             case 3:
                 for(int i=0; i<cycleDBInsertEntry.getDayCount();i+=cycleDBInsertEntry.getDayInterval()){
                     for (int j=0; j<pillReminderDBInsertEntry.getReminderTimes().length; j++){
-                        dbAdapter.insertPillReminderEntry(
+                        pillReminderDao.insertPillReminderEntry(
                                 sdf.format(new Date(cal.getTimeInMillis())),
                                 pillReminderId,
                                 pillReminderDBInsertEntry.getReminderTimes()[j].getReminderTimeStr(), 0

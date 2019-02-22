@@ -71,6 +71,10 @@ public class DatabaseAdapter {
         dbHelper.close();
     }
 
+    public SQLiteDatabase getDatabase() {
+        return database;
+    }
+
     public List<String> getTestEntries(){
         List<String> testEntries = new ArrayList<String>();
         Cursor cursor = database.rawQuery("select * from test_table", null);
@@ -239,17 +243,9 @@ public class DatabaseAdapter {
         cursor.close();
     }
 */
-    public void deleteWeekScheduleByIdCascade(UUID idWeekSchedule){
-        database.delete("week_schedules", "lower(hex(_id_week_schedule)) = ?",
-                new String[]{idWeekSchedule.toString().replace("-", "")});
-    }
 
-    public void deleteCycleByIdCascade(UUID idCycle){
-        database.delete("cycles", "lower(hex(_id_cycle)) = ?",
-                new String[]{idCycle.toString().replace("-", "")});
-    }
+    /*public void deleteReminderTimeByReminderId(UUID idReminder, int type){*/
 
-    public void deleteReminderTimeByReminderId(UUID idReminder, int type){
         /*String idPillReminderStr = String.valueOf(idPillReminder);
 
         database.delete("reminder_time",
@@ -259,6 +255,7 @@ public class DatabaseAdapter {
                         " (select count(*) from pill_reminder_entries pre2 where pre2._id_pill_reminder=? and pre2.is_done=1 and pre2._id_reminder_time=rt._id_reminder_time)=0)",
                 new String[]{idPillReminderStr, date, idPillReminderStr}
                 );*/
+        /*
         if (type==0)
             database.delete("reminder_time", "lower(hex(_id_pill_reminder)) = ?",
                     new String[]{idReminder.toString().replace("-", "")});
@@ -273,11 +270,11 @@ public class DatabaseAdapter {
                 new String[]{idPillReminder.toString().replace("-", "")});
 
         return (int)count;
-    }
+    }*/
 
     //***********************************work with User************************************************************
 
-    public int insertUser(User user){
+    /*public int insertUser(User user){
         ContentValues userValues = new ContentValues();
         userValues.put("_id_user", user.getId());
         userValues.put("synchronization_time", user.getSynchronizationTime().getTime()/1000);
@@ -386,10 +383,11 @@ public class DatabaseAdapter {
 
         return user;
     }
-
+    */
     //***********************************end*****************************************************************************
 
     //***********************************work with PillReminder************************************************************
+    /*
     public void insertPillReminderEntry(String reminder_date, UUID idPillReminder, String reminderTime, Integer isOneTime){
         ContentValues pillReminderEntryTableValues = new ContentValues();
         if (isOneTime == 1)
@@ -554,12 +552,15 @@ public class DatabaseAdapter {
         else
             rawQuery = "select rt._id_reminder_time, rt.reminder_time from reminder_time rt where rt._id_measurement_reminder= X'"+uuidStr+"'";
         Cursor cursor = database.rawQuery(rawQuery, null);
+        */
+
         /*String idStr = String.valueOf(idPillReminder);
         String rawQuery = "select rt._id_reminder_time, rt.reminder_time," +
                 " (select count(*) from pill_reminder_entries pre2 where pre2._id_pill_reminder=? and pre2.is_done=1 and pre2._id_reminder_time=rt._id_reminder_time) as is_used" +
                 " from reminder_time rt where rt._id_pill_reminder=?";
         Cursor cursor = database.rawQuery(rawQuery, new String[]{idStr, idStr});*/
 
+        /*
         if(cursor.moveToFirst()){
             do{
                 pillReminderEntriesTime.add(
@@ -851,21 +852,24 @@ public class DatabaseAdapter {
         database.delete("pill_reminders", "lower(hex(_id_pill_reminder)) = ?",
                 new String[]{idPillReminder.toString().replace("-", "")});
     }
+    */
     //***********************************end************************************************************************
 
     //***********************************work with Cycle************************************************************
-    private int[] getWeekSchedule(UUID idWeekSchedule){
+
+    /*private int[] getWeekSchedule(UUID idWeekSchedule){
         int[] weekSchedule = new int[7];
         String uuidStr = idWeekSchedule.toString().replace("-", "");
 
         String rawQuery = "select * from week_schedules where _id_week_schedule = X'"+uuidStr+"'";
         Cursor cursor = database.rawQuery(rawQuery, null);
-
+        */
         /*String rawQuery = "select * from week_schedules where lower(hex(_id_week_schedule)) = ?";
         Cursor cursor = database.rawQuery(rawQuery, new String[]{uuidStr});*/
 
         /*Cursor cursor = database.query("week_schedules", null, "_id_week_schedule=?",
                 new String[]{"X'" + sb.toString()+"'"}, null, null, null);*/
+        /*
         if(cursor.moveToFirst()){
             do{
                 weekSchedule[0] = cursor.getInt(cursor.getColumnIndex("mon"));
@@ -951,6 +955,16 @@ public class DatabaseAdapter {
 
         return inCycleId;
     }
+
+    public void deleteWeekScheduleByIdCascade(UUID idWeekSchedule){
+        database.delete("week_schedules", "lower(hex(_id_week_schedule)) = ?",
+                new String[]{idWeekSchedule.toString().replace("-", "")});
+    }
+
+    public void deleteCycleByIdCascade(UUID idCycle){
+        database.delete("cycles", "lower(hex(_id_cycle)) = ?",
+                new String[]{idCycle.toString().replace("-", "")});
+    }
     //***********************************end************************************************************
 
     //***********************************work with measurement reminder************************************************************
@@ -980,12 +994,14 @@ public class DatabaseAdapter {
 
     public List<MeasurementReminder> getAllMeasurementReminders(){
         List<MeasurementReminder> measurementReminders = new ArrayList<>();
+        */
         /*String rawQuery = "select  mr.start_date, mr.isActive, cl.period, mr.times_a_day, mr._id_measurement_type, mr._id_having_meals_type, cl.period_DM_type, " +
                 "      CASE mr._id_measurement_type  " +
                 "         WHEN 1 THEN (select COUNT(*) from temperature_measurements tm where tm._id_measurement_reminder=mr._id_measurement_reminder and tm.is_done=0 ) " +
                 "         WHEN 2 THEN (select COUNT(*) from blood_pressure_measurements bpm where bpm._id_measurement_reminder=mr._id_measurement_reminder and bpm.is_done=0 ) " +
                 "      END as count_left, mr._id_measurement_reminder " +
                 "    from measurement_reminders mr inner join cycles cl on mr._id_cycle=cl._id_cycle ORDER BY mr.IsActive";*/
+        /*
         String rawQuery = "select  mr.start_date, mr.isActive, cl.period, mr.times_a_day, mr._id_measurement_type, mr._id_having_meals_type, cl.period_DM_type, " +
                 "(select COUNT(*) from measurement_reminder_entries mre where mre._id_measurement_reminder=mr._id_measurement_reminder and mre.is_done=0 ) " +
                 "as count_left, mr._id_measurement_reminder, mt._id_measur_value_type " +
@@ -1133,6 +1149,7 @@ public class DatabaseAdapter {
                 int countDone = cursor.getInt(9);
                 double sumValue1 = cursor.getDouble(10);
                 double sumValue2 = cursor.getDouble(11);
+                */
 
                 /*int id = cursor.getInt(cursor.getColumnIndex("_id_measurement_reminder"));
                 String startDateStr = cursor.getString(cursor.getColumnIndex("start_date"));
@@ -1146,6 +1163,7 @@ public class DatabaseAdapter {
                 int idMeasurementValueType = cursor.getInt(cursor.getColumnIndex("_id_measur_value_type"));
                 double sumValue1 = cursor.getDouble(cursor.getColumnIndex("sum_value1"));
                 double sumValue2 = cursor.getDouble(cursor.getColumnIndex("sum_value2"));*/
+                /*
 
                 double[] averageCurValues = new double[2];
                 averageCurValues[0] = sumValue1>-10000?(double)(sumValue1/countDone):-10000;
@@ -1479,7 +1497,7 @@ public class DatabaseAdapter {
         database.update("measurement_reminder_entries", measurementReminderEntryTableValues,
                 "_id_measur_remind_entry=X'" + measurementReminderEntryID.toString().replace("-", "") + "'", null);
     }
-
+    */
     //***********************************end************************************************************
 
     public long getCount(){

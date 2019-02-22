@@ -6,6 +6,9 @@ import android.os.AsyncTask;
 
 import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
 import com.example.michel.mycalendar2.calendarview.data.DateData;
+import com.example.michel.mycalendar2.dao.CycleDao;
+import com.example.michel.mycalendar2.dao.MeasurementReminderDao;
+import com.example.michel.mycalendar2.dao.ReminderTimeDao;
 import com.example.michel.mycalendar2.models.CycleAndMeasurementComby;
 import com.example.michel.mycalendar2.models.CycleDBInsertEntry;
 import com.example.michel.mycalendar2.models.measurement.MeasurementReminderDBEntry;
@@ -34,15 +37,17 @@ public class MeasurementRemindersUpdateTask extends AsyncTask<CycleAndMeasuremen
         MeasurementReminderDBEntry mrdbe = cycleAndMeasurementCombies[0].measurementReminderDBEntry;
         CycleDBInsertEntry cdbie = cycleAndMeasurementCombies[0].cycleDBInsertEntry;
         DatabaseAdapter dbAdapter = new DatabaseAdapter();
-        dbAdapter.open();
+        MeasurementReminderDao measurementReminderDao = new MeasurementReminderDao(dbAdapter.open().getDatabase());
+        CycleDao cycleDao = new CycleDao(dbAdapter.getDatabase());
+        ReminderTimeDao reminderTimeDao = new ReminderTimeDao(dbAdapter.getDatabase());
 
-        dbAdapter.updateCycle(cdbie.getIdCycle(), cdbie.getIdWeekSchedule(),
+        cycleDao.updateCycle(cdbie.getIdCycle(), cdbie.getIdWeekSchedule(),
                 cdbie.getPeriod(), cdbie.getPeriodDMType(),
                 cdbie.getOnce_aPeriod(), cdbie.getOnce_aPeriodDMType(),
                 cdbie.getIdCyclingType(), cdbie.getWeekSchedule()
         );
 
-        dbAdapter.updateMeasurementReminder( mrdbe.getIdMeasurementReminder(),
+        measurementReminderDao.updateMeasurementReminder( mrdbe.getIdMeasurementReminder(),
                 mrdbe.getStartDate().getDateString(),
                 mrdbe.getIdCycle(), mrdbe.getIdHavingMealsType(),
                 mrdbe.getHavingMealsTime(), mrdbe.getAnnotation(),
@@ -53,13 +58,13 @@ public class MeasurementRemindersUpdateTask extends AsyncTask<CycleAndMeasuremen
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String curDate = sdf.format(cal.getTime());
 
-        List<MeasurementReminderEntry> todayMeasurementReminderEntriesOld = dbAdapter.getMeasurementReminderEntriesByDateAndMeasurementReminder(
+        List<MeasurementReminderEntry> todayMeasurementReminderEntriesOld = measurementReminderDao.getMeasurementReminderEntriesByDateAndMeasurementReminder(
                 mrdbe.getIdMeasurementReminder(),
                 new DateData(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH)+1, cal.get(Calendar.DAY_OF_MONTH)
         ));
 
         cal.add(Calendar.DAY_OF_MONTH,1);
-        List<MeasurementReminderEntry> tomorrowMeasurementReminderEntriesOld = dbAdapter.getMeasurementReminderEntriesByDateAndMeasurementReminder(
+        List<MeasurementReminderEntry> tomorrowMeasurementReminderEntriesOld = measurementReminderDao.getMeasurementReminderEntriesByDateAndMeasurementReminder(
                 mrdbe.getIdMeasurementReminder(),
                 new DateData(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH)+1, cal.get(Calendar.DAY_OF_MONTH)
         ));
@@ -69,13 +74,13 @@ public class MeasurementRemindersUpdateTask extends AsyncTask<CycleAndMeasuremen
         MeasurementNotificationsCreationTask.cancelAlarms(appContext, tomorrowMeasurementReminderEntriesOld, alarmManager);
 
         cal.add(Calendar.DAY_OF_MONTH, -1);
-        dbAdapter.deleteMeasurementReminderEntriesAfterDate(mrdbe.getIdMeasurementReminder(), curDate);
+        measurementReminderDao.deleteMeasurementReminderEntriesAfterDate(mrdbe.getIdMeasurementReminder(), curDate);
         // need check for change start date
 
-        dbAdapter.deleteReminderTimeByReminderId(mrdbe.getIdMeasurementReminder(),1);
+        reminderTimeDao.deleteReminderTimeByReminderId(mrdbe.getIdMeasurementReminder(),1);
 
         for (int i=0; i<mrdbe.getReminderTimes().length; i++){
-            dbAdapter.insertReminderTime(mrdbe.getReminderTimes()[i].getReminderTimeStr(), mrdbe.getIdMeasurementReminder(), 1);
+            reminderTimeDao.insertReminderTime(mrdbe.getReminderTimes()[i].getReminderTimeStr(), mrdbe.getIdMeasurementReminder(), 1);
         }
 
         if (mrdbe.getIsActive()==1) {
@@ -83,7 +88,7 @@ public class MeasurementRemindersUpdateTask extends AsyncTask<CycleAndMeasuremen
                 case 1:
                     for(int i=0; i<cdbie.getDayCount();i++){
                         for (int j=0; j<mrdbe.getReminderTimes().length; j++){
-                            dbAdapter.insertMeasurementReminderEntry(
+                            measurementReminderDao.insertMeasurementReminderEntry(
                                     sdf.format(new Date(cal.getTimeInMillis())),
                                     mrdbe.getIdMeasurementReminder(),
                                     mrdbe.getReminderTimes()[j].getReminderTimeStr()
@@ -96,7 +101,7 @@ public class MeasurementRemindersUpdateTask extends AsyncTask<CycleAndMeasuremen
                     for(int i=0; i<cdbie.getDayCount();i++){
                         if(cdbie.getWeekSchedule()[cal.get(Calendar.DAY_OF_WEEK)-1]==1){
                             for (int j=0; j<mrdbe.getReminderTimes().length; j++){
-                                dbAdapter.insertMeasurementReminderEntry(
+                                measurementReminderDao.insertMeasurementReminderEntry(
                                         sdf.format(cal.getTime()),
                                         mrdbe.getIdMeasurementReminder(),
                                         mrdbe.getReminderTimes()[j].getReminderTimeStr()
@@ -109,7 +114,7 @@ public class MeasurementRemindersUpdateTask extends AsyncTask<CycleAndMeasuremen
                 case 3:
                     for(int i=0; i<cdbie.getDayCount();i+=cdbie.getDayInterval()){
                         for (int j=0; j<mrdbe.getReminderTimes().length; j++){
-                            dbAdapter.insertMeasurementReminderEntry(
+                            measurementReminderDao.insertMeasurementReminderEntry(
                                     sdf.format(new Date(cal.getTimeInMillis())),
                                     mrdbe.getIdMeasurementReminder(),
                                     mrdbe.getReminderTimes()[j].getReminderTimeStr()
@@ -122,13 +127,13 @@ public class MeasurementRemindersUpdateTask extends AsyncTask<CycleAndMeasuremen
         }
 
         cal = Calendar.getInstance();
-        List<MeasurementReminderEntry> todayMeasurementReminderEntriesNew = dbAdapter.getMeasurementReminderEntriesByDateAndMeasurementReminder(
+        List<MeasurementReminderEntry> todayMeasurementReminderEntriesNew = measurementReminderDao.getMeasurementReminderEntriesByDateAndMeasurementReminder(
                 mrdbe.getIdMeasurementReminder(),
                 new DateData(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH)+1, cal.get(Calendar.DAY_OF_MONTH)
                 ));
 
         cal.add(Calendar.DAY_OF_MONTH,1);
-        List<MeasurementReminderEntry> tomorrowMeasurementReminderEntriesNew = dbAdapter.getMeasurementReminderEntriesByDateAndMeasurementReminder(
+        List<MeasurementReminderEntry> tomorrowMeasurementReminderEntriesNew = measurementReminderDao.getMeasurementReminderEntriesByDateAndMeasurementReminder(
                 mrdbe.getIdMeasurementReminder(),
                 new DateData(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH)+1, cal.get(Calendar.DAY_OF_MONTH)
                 ));

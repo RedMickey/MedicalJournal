@@ -35,6 +35,9 @@ import com.example.michel.mycalendar2.app_async_tasks.PillNotificationsCreationT
 import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
 import com.example.michel.mycalendar2.calendarview.data.DateData;
 import com.example.michel.mycalendar2.calendarview.utils.CalendarUtil;
+import com.example.michel.mycalendar2.dao.CycleDao;
+import com.example.michel.mycalendar2.dao.MeasurementReminderDao;
+import com.example.michel.mycalendar2.dao.ReminderTimeDao;
 import com.example.michel.mycalendar2.expandableLayout.ExpandableRelativeLayout;
 import com.example.michel.mycalendar2.models.CycleAndMeasurementComby;
 import com.example.michel.mycalendar2.models.CycleDBInsertEntry;
@@ -338,12 +341,14 @@ public class AddMeasurementActivity extends AppCompatActivity {
                                     }
 
                                     DatabaseAdapter dbAdapter = new DatabaseAdapter();
-                                    dbAdapter.open();
-                                    dbAdapter.deleteMeasurementReminderEntriesByMeasurementReminderId(oldMeasurementReminder.getIdMeasurementReminder());
-                                    dbAdapter.deleteReminderTimeByReminderId(oldMeasurementReminder.getIdMeasurementReminder(), 1);
+                                    MeasurementReminderDao measurementReminderDao = new MeasurementReminderDao(dbAdapter.open().getDatabase());
+                                    ReminderTimeDao reminderTimeDao = new ReminderTimeDao(dbAdapter.getDatabase());
+                                    CycleDao cycleDao = new CycleDao(dbAdapter.getDatabase());
+                                    measurementReminderDao.deleteMeasurementReminderEntriesByMeasurementReminderId(oldMeasurementReminder.getIdMeasurementReminder());
+                                    reminderTimeDao.deleteReminderTimeByReminderId(oldMeasurementReminder.getIdMeasurementReminder(), 1);
                                     if (idWeekSchedule!=null)
-                                        dbAdapter.deleteWeekScheduleByIdCascade(idWeekSchedule);
-                                    dbAdapter.deleteCycleByIdCascade(oldMeasurementReminder.getIdCycle());
+                                        cycleDao.deleteWeekScheduleByIdCascade(idWeekSchedule);
+                                    cycleDao.deleteCycleByIdCascade(oldMeasurementReminder.getIdCycle());
                                     dbAdapter.close();
                                     MeasurementNotificationsCreationTask nctNew = new MeasurementNotificationsCreationTask(2);
                                     nctNew.execute(getApplicationContext());

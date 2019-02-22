@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
 import com.example.michel.mycalendar2.calendarview.data.DateData;
+import com.example.michel.mycalendar2.dao.MeasurementReminderDao;
 import com.example.michel.mycalendar2.models.measurement.MeasurementReminderEntry;
 import com.example.michel.mycalendar2.models.pill.PillReminderEntry;
 import com.example.michel.mycalendar2.utils.AlarmReceiver;
@@ -36,22 +37,22 @@ public class MeasurementNotificationsCreationTask extends AsyncTask<Context, Voi
     protected Void doInBackground(Context... contexts) {
         AlarmManager alarmManager = (AlarmManager) contexts[0].getSystemService(ALARM_SERVICE);
         DatabaseAdapter databaseAdapter = new DatabaseAdapter();
-        databaseAdapter.open();
+        MeasurementReminderDao measurementReminderDao = new MeasurementReminderDao(databaseAdapter.open().getDatabase());
         Calendar cal = Calendar.getInstance();
 
-        List<MeasurementReminderEntry> todayMeasurementReminderEntries = databaseAdapter.getMeasurementReminderEntriesByDate(new DateData(
+        List<MeasurementReminderEntry> todayMeasurementReminderEntries = measurementReminderDao.getMeasurementReminderEntriesByDate(new DateData(
                 cal.get(Calendar.YEAR), cal.get(Calendar.MONTH)+1, cal.get(Calendar.DAY_OF_MONTH)
         ));
 
 
         cal.add(Calendar.DAY_OF_MONTH, -1);
-        List<MeasurementReminderEntry> yesterdayMeasurementReminderEntries = databaseAdapter.getMeasurementReminderEntriesByDate(new DateData(
+        List<MeasurementReminderEntry> yesterdayMeasurementReminderEntries = measurementReminderDao.getMeasurementReminderEntriesByDate(new DateData(
                 cal.get(Calendar.YEAR), cal.get(Calendar.MONTH)+1, cal.get(Calendar.DAY_OF_MONTH)
         ));
 
 
         cal.add(Calendar.DAY_OF_MONTH,2);
-        List<MeasurementReminderEntry> tomorrowMeasurementReminderEntries = databaseAdapter.getMeasurementReminderEntriesByDate(new DateData(
+        List<MeasurementReminderEntry> tomorrowMeasurementReminderEntries = measurementReminderDao.getMeasurementReminderEntriesByDate(new DateData(
                 cal.get(Calendar.YEAR), cal.get(Calendar.MONTH)+1, cal.get(Calendar.DAY_OF_MONTH)
         ));
 

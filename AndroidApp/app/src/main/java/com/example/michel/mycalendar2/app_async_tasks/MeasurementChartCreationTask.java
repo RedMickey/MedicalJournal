@@ -9,6 +9,7 @@ import com.example.michel.mycalendar2.activities.R;
 import com.example.michel.mycalendar2.auxiliary_fragments.ChartMarkerView;
 import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
 import com.example.michel.mycalendar2.calendarview.utils.CalendarUtil;
+import com.example.michel.mycalendar2.dao.MeasurementReminderDao;
 import com.example.michel.mycalendar2.utils.DBStaticEntries;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
@@ -44,9 +45,10 @@ public class MeasurementChartCreationTask extends AsyncTask<Integer, Void, List<
     @Override
     protected List<float[]> doInBackground(Integer... integers) {
         DatabaseAdapter databaseAdapter = new DatabaseAdapter();
+        MeasurementReminderDao measurementReminderDao = new MeasurementReminderDao(databaseAdapter.open().getDatabase());
         String timeStr1 = "", timeStr2 = "";
         int type = 1;
-        switch (integers[3]){
+        switch (integers[2]){
             case 0: // morning
                 timeStr1 = "04:00:00";
                 timeStr2 = "11:59:00";
@@ -69,8 +71,7 @@ public class MeasurementChartCreationTask extends AsyncTask<Integer, Void, List<
                 break;
         }
 
-        databaseAdapter.open();
-        List<float[]> measurementReminderEntryValues = databaseAdapter.getMeasurementReminderEntriesPerMonth(idMeasurementStatEntry, integers[0],
+        List<float[]> measurementReminderEntryValues = measurementReminderDao.getMeasurementReminderEntriesPerMonth(idMeasurementStatEntry, integers[0],
                 integers[1], type, timeStr1, timeStr2);
         databaseAdapter.close();
         dateMonth = integers[0];

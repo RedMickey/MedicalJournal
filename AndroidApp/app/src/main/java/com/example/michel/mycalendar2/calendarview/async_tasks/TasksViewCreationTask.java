@@ -18,6 +18,8 @@ import android.widget.Toast;
 import com.example.michel.mycalendar2.activities.R;
 import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
 import com.example.michel.mycalendar2.calendarview.data.DateData;
+import com.example.michel.mycalendar2.dao.MeasurementReminderDao;
+import com.example.michel.mycalendar2.dao.PillReminderDao;
 import com.example.michel.mycalendar2.models.measurement.MeasurementReminderEntry;
 import com.example.michel.mycalendar2.models.pill.PillReminderEntry;
 import com.example.michel.mycalendar2.utils.utilModels.PillAndMeasurementReminderEntries;
@@ -39,9 +41,10 @@ public class TasksViewCreationTask extends AsyncTask<DateData, Void, PillAndMeas
     @Override
     protected PillAndMeasurementReminderEntries doInBackground(DateData... dateData) {
         DatabaseAdapter databaseAdapter = new DatabaseAdapter();
-        databaseAdapter.open();
-        List<PillReminderEntry> pillReminderEntries = databaseAdapter.getPillReminderEntriesByDate(dateData[0]);
-        List<MeasurementReminderEntry> measurementReminderEntries = databaseAdapter.getMeasurementReminderEntriesByDate(dateData[0]);
+        PillReminderDao pillReminderDao = new PillReminderDao(databaseAdapter.open().getDatabase());
+        MeasurementReminderDao measurementReminderDao = new MeasurementReminderDao(databaseAdapter.getDatabase());
+        List<PillReminderEntry> pillReminderEntries = pillReminderDao.getPillReminderEntriesByDate(dateData[0]);
+        List<MeasurementReminderEntry> measurementReminderEntries = measurementReminderDao.getMeasurementReminderEntriesByDate(dateData[0]);
         databaseAdapter.close();
 
         return new PillAndMeasurementReminderEntries(pillReminderEntries, measurementReminderEntries);
@@ -97,18 +100,18 @@ public class TasksViewCreationTask extends AsyncTask<DateData, Void, PillAndMeas
                     @Override
                     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                         DatabaseAdapter databaseAdapter = new DatabaseAdapter();
-                        databaseAdapter.open();
+                        PillReminderDao pillReminderDao = new PillReminderDao(databaseAdapter.open().getDatabase());
                         if (b){
                             Calendar cal = Calendar.getInstance();
                             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
                             String curTime = sdf.format(cal.getTime());
                             reminderTimeTv.setText(curTime);
-                            databaseAdapter.updateIsDonePillReminderEntry(1, pre.getId(), curTime+":00");
+                            pillReminderDao.updateIsDonePillReminderEntry(1, pre.getId(), curTime+":00");
                             if (pre.isLate())
                                 imageTimeExpired.setImageResource(android.R.color.transparent);
                         }
                         else {
-                            databaseAdapter.updateIsDonePillReminderEntry( 0, pre.getId(), "");
+                            pillReminderDao.updateIsDonePillReminderEntry( 0, pre.getId(), "");
                             if (pre.isLateCheck())
                                 imageTimeExpired.setImageResource(R.drawable.ic_time_expired);
                         }
@@ -247,8 +250,8 @@ public class TasksViewCreationTask extends AsyncTask<DateData, Void, PillAndMeas
                                                     setUpReminderCountTypeTv(reminderCountTypeTv, mre);
 
                                                     DatabaseAdapter databaseAdapter = new DatabaseAdapter();
-                                                    databaseAdapter.open();
-                                                    databaseAdapter.updateIsDoneMeasurementReminderEntry(1, mre.getId(), curTime+":00",
+                                                    MeasurementReminderDao measurementReminderDao = new MeasurementReminderDao(databaseAdapter.open().getDatabase());
+                                                    measurementReminderDao.updateIsDoneMeasurementReminderEntry(1, mre.getId(), curTime+":00",
                                                             mre.getValue1(), mre.getValue2(), 0);
                                                     databaseAdapter.close();
                                                     if (mre.isLate())
@@ -273,8 +276,8 @@ public class TasksViewCreationTask extends AsyncTask<DateData, Void, PillAndMeas
                                 if (mre.isLateCheck())
                                     imageTimeExpired.setImageResource(R.drawable.ic_time_expired);
                                 DatabaseAdapter databaseAdapter = new DatabaseAdapter();
-                                databaseAdapter.open();
-                                databaseAdapter.updateIsDoneMeasurementReminderEntry(0, mre.getId(), "",
+                                MeasurementReminderDao measurementReminderDao = new MeasurementReminderDao(databaseAdapter.open().getDatabase());
+                                measurementReminderDao.updateIsDoneMeasurementReminderEntry(0, mre.getId(), "",
                                         mre.getValue1(), mre.getValue2(), 1);
                                 databaseAdapter.close();
                                 reminderCountTypeTv.setText("");
