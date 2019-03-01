@@ -93,7 +93,7 @@ public class UserActivity extends AppCompatActivity {
                 AccountGeneralUtils.curUser.setIsCurrent(0);
                 UserLocalUpdateTask userUpdateTask = new UserLocalUpdateTask(1);
                 userUpdateTask.execute(AccountGeneralUtils.curUser);
-                AccountGeneralUtils.curUser = null;
+                AccountGeneralUtils.curUser = new User();
                 AccountGeneralUtils.curToken = null;
                 AccountGeneralUtils.curAccount = null;
                 Intent data = new Intent();
@@ -162,6 +162,14 @@ public class UserActivity extends AppCompatActivity {
         }
 
         return isCorrect;
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent data = new Intent();
+        data.putExtra("is_log_out",false);
+        setResult(RESULT_OK, data);
+        super.onBackPressed();
     }
 
     public void onChangePasswordButtonClick(View view) {

@@ -16,4 +16,16 @@ public class PillReminderEntryDB extends SynchModel {
     private UUID idPillReminder;
     private Time reminderTime;
     //private Integer isOneTime;
+
+    public PillReminderEntryDB(Date synchTime, int changeType, UUID idPillReminderEntry,
+                               int isDone, Date reminderDate, UUID idPillReminder,
+                               Time reminderTime)
+    {
+        super(synchTime,changeType);
+        this.idPillReminderEntry = idPillReminderEntry;
+        this.isDone = isDone;
+        this.reminderDate = reminderDate;
+        this.idPillReminder = idPillReminder;
+        this.reminderTime = reminderTime;
+    }
 }

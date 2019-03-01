@@ -92,8 +92,10 @@ public class SetUpCurrentUserTask extends AsyncTask<Void, Void, Integer> {
                 ((TextView) mainActivity.getNavigationView().findViewById(R.id.profile_config_tv)).setText("Редактировать профиль");
             }
         }
-        else
+        else{
+            AccountGeneralUtils.curUser = new User();
             Toast.makeText(context, "An error has occurred", Toast.LENGTH_LONG).show();
+        }
     }
 
     public void setContext(Context context) {

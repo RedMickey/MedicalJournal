@@ -9,7 +9,7 @@ import android.widget.Toast;
 import com.example.michel.mycalendar2.activities.UserActivity;
 import com.example.michel.mycalendar2.authentication.AccountGeneralUtils;
 import com.example.michel.mycalendar2.models.User;
-import com.example.michel.mycalendar2.utils.TimestampTypeAdapter;
+import com.example.michel.mycalendar2.utils.DateTypeAdapter;
 import com.google.gson.GsonBuilder;
 
 import org.json.JSONObject;
@@ -20,6 +20,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.Timestamp;
+import java.util.Date;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -35,7 +36,7 @@ public class UserGlobalUpdateTask extends AsyncTask<User, Void, User> {
     @Override
     protected User doInBackground(User... users) {
         String response = "";
-        String JSONStr = new GsonBuilder().registerTypeAdapter(Timestamp.class,new TimestampTypeAdapter())
+        String JSONStr = new GsonBuilder().registerTypeAdapter(Date.class,new DateTypeAdapter())
                 .create().toJson(users[0]);
         int requestAttempts = 0;
 
@@ -121,6 +122,7 @@ public class UserGlobalUpdateTask extends AsyncTask<User, Void, User> {
             AccountGeneralUtils.curUser.setGenderId(user.getGenderId());
             AccountGeneralUtils.curUser.setBirthdayYear(user.getBirthdayYear());
             AccountGeneralUtils.curUser.setEmail(user.getEmail());
+            AccountGeneralUtils.curUser.setSynchronizationTime(new Date());
 
             accountManager.setPassword(AccountGeneralUtils.curAccount, user.getPassword());
 

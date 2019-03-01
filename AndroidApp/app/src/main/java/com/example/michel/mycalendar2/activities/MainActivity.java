@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (AccountGeneralUtils.curUser == null){
+                        if (AccountGeneralUtils.curUser.getId() == 1){
                             Intent intent = new Intent(mainActivity, LoginActivity.class);
                             mainActivity.startActivityForResult(intent, resultSignInCode);
                         }
@@ -351,6 +351,9 @@ public class MainActivity extends AppCompatActivity
                 if (isLogOut){
                     ((TextView) getNavigationView().findViewById(R.id.username_tv)).setText(getResources().getText(R.string.def_username));
                     ((TextView) getNavigationView().findViewById(R.id.profile_config_tv)).setText("Создать Профиль");
+                }
+                else {
+                    ((TextView) getNavigationView().findViewById(R.id.username_tv)).setText(AccountGeneralUtils.curUser.getName());
                 }
             }
         }

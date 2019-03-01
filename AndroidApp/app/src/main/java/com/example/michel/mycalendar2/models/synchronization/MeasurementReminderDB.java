@@ -21,4 +21,22 @@ public class MeasurementReminderDB extends SynchModel {
     private int timesADay;
     private Integer isOneTime;
     private int userId;
+
+    public MeasurementReminderDB(Date synchTime, int changeType, UUID idMeasurementReminder,
+                                 int idMeasurementType, Date startDate, UUID idCycle,
+                                 Integer idHavingMealsType, Time havingMealsTime, String annotation,
+                                 int isActive, int timesADay, Integer isOneTime, int userId){
+        super(synchTime,changeType);
+        this.idMeasurementReminder = idMeasurementReminder;
+        this.idMeasurementType = idMeasurementType;
+        this.startDate = startDate;
+        this.idCycle = idCycle;
+        this.idHavingMealsType = idHavingMealsType;
+        this.havingMealsTime = havingMealsTime;
+        this.annotation = annotation;
+        this.isActive = isActive;
+        this.timesADay = timesADay;
+        this.isOneTime = isOneTime;
+        this.userId = userId;
+    }
 }

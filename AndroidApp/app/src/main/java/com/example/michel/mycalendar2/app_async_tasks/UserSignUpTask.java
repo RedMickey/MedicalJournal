@@ -12,7 +12,7 @@ import android.widget.Toast;
 import com.example.michel.mycalendar2.activities.R;
 import com.example.michel.mycalendar2.activities.RegistrationActivity;
 import com.example.michel.mycalendar2.models.User;
-import com.example.michel.mycalendar2.utils.TimestampTypeAdapter;
+import com.example.michel.mycalendar2.utils.DateTypeAdapter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.TypeAdapter;
@@ -27,6 +27,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.sql.Date;
 import java.sql.Timestamp;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -74,7 +75,7 @@ public class UserSignUpTask extends AsyncTask<User, Void, User> {
             conn.setDoInput(true);
             conn.setDoOutput(true);
 
-            String JSONStr = new GsonBuilder().registerTypeAdapter(Timestamp.class,new TimestampTypeAdapter())
+            String JSONStr = new GsonBuilder().registerTypeAdapter(Date.class,new DateTypeAdapter())
                     .create().toJson(users[0]);
 
             OutputStream os = conn.getOutputStream();

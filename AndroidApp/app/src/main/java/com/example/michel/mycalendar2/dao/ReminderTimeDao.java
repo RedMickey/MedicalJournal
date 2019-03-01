@@ -9,6 +9,7 @@ import com.example.michel.mycalendar2.models.ReminderTime;
 import com.example.michel.mycalendar2.utils.ConvertingUtils;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 

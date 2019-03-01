@@ -3,6 +3,8 @@ package com.example.michel.mycalendar2.app_async_tasks;
 import android.content.Context;
 import android.os.AsyncTask;
 
+import com.example.michel.mycalendar2.app_async_tasks.synchronization.SynchronizationWeekScheduleTask;
+import com.example.michel.mycalendar2.authentication.AccountGeneralUtils;
 import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
 import com.example.michel.mycalendar2.dao.CycleDao;
 import com.example.michel.mycalendar2.dao.MeasurementReminderDao;
@@ -106,5 +108,9 @@ public class MeasurementRemindersInsertionTask extends AsyncTask<CycleAndMeasure
     protected void onPostExecute(Void aVoid) {
         MeasurementNotificationsCreationTask mnct = new MeasurementNotificationsCreationTask();
         mnct.execute(appContext);
+        if (AccountGeneralUtils.curUser.getId()!=1){
+            SynchronizationWeekScheduleTask synchronizationWeekScheduleTask = new SynchronizationWeekScheduleTask(appContext);
+            synchronizationWeekScheduleTask.execute();
+        }
     }
 }

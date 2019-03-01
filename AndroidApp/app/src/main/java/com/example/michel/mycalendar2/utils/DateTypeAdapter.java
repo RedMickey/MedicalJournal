@@ -5,13 +5,12 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 
 import java.io.IOException;
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class TimestampTypeAdapter extends TypeAdapter<Timestamp> {
+public class DateTypeAdapter extends TypeAdapter<Date> {
     @Override
-    public void write(JsonWriter out, Timestamp value) throws IOException {
+    public void write(JsonWriter out, Date value) throws IOException {
         if (value == null)
             out.nullValue();
         else
@@ -19,15 +18,15 @@ public class TimestampTypeAdapter extends TypeAdapter<Timestamp> {
     }
 
     @Override
-    public Timestamp read(JsonReader in) throws IOException {
+    public Date read(JsonReader in) throws IOException {
         if (in != null){
-            String timestampStr = in.nextString();
+            String dateStr = in.nextString();
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
             try {
-                Date parsedDate = dateFormat.parse(timestampStr);
-                return new Timestamp(parsedDate.getTime());
+                Date parsedDate = dateFormat.parse(dateStr);
+                return new Date(parsedDate.getTime());
             }catch (Exception e){
-                return new Timestamp(0);
+                return new Date(0);
             }
         }
         else

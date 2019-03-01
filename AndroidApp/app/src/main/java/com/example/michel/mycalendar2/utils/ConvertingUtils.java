@@ -1,6 +1,9 @@
 package com.example.michel.mycalendar2.utils;
 
 import java.nio.ByteBuffer;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.UUID;
 
 public class ConvertingUtils {
@@ -23,4 +26,23 @@ public class ConvertingUtils {
     for (byte b : ConvertingUtils.convertUUIDToBytes(idWeekSchedule)) {
             sb.append(String.format("%02x", b));
     }*/
+
+    public static String convertDateToString(Date date){
+        String pattern = "yyyy-MM-dd HH:mm:ss";
+        SimpleDateFormat df = new SimpleDateFormat(pattern);
+        return df.format(date);
+    }
+
+    public static Date convertStringToDate(String dateStr){
+        Date date;
+        String pattern = "yyyy-MM-dd HH:mm:ss";
+        try {
+            date = new SimpleDateFormat(pattern).parse(dateStr);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            date = new Date();
+        }
+        return date;
+    }
+
 }

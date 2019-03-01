@@ -12,7 +12,7 @@ public class User {
     private Integer birthdayYear;
     private String email;
     private String password;
-    private Timestamp synchronizationTime;
+    private Date synchronizationTime;
     private Integer roleId;
     private Integer isCurrent;
 
@@ -28,7 +28,7 @@ public class User {
 
     public User(Integer id, String name, String surname,
                 Integer genderId, Integer birthdayYear, String email,
-                String password, Timestamp synchronizationTime){
+                String password, Date synchronizationTime){
         this.id = id;
         this.name = name;
         this.surname = surname;
@@ -97,11 +97,11 @@ public class User {
         this.birthdayYear = birthdayYear;
     }
 
-    public Timestamp getSynchronizationTime() {
+    public Date getSynchronizationTime() {
         return synchronizationTime;
     }
 
-    public void setSynchronizationTime(Timestamp synchronizationTime) {
+    public void setSynchronizationTime(Date synchronizationTime) {
         this.synchronizationTime = synchronizationTime;
     }
 

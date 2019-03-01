@@ -11,7 +11,7 @@ import com.example.michel.mycalendar2.authentication.AccountGeneralUtils;
 import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
 import com.example.michel.mycalendar2.dao.UserDao;
 import com.example.michel.mycalendar2.models.User;
-import com.example.michel.mycalendar2.utils.TimestampTypeAdapter;
+import com.example.michel.mycalendar2.utils.DateTypeAdapter;
 import com.google.gson.GsonBuilder;
 
 import org.json.JSONObject;
@@ -21,6 +21,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.sql.Date;
 import java.sql.Timestamp;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -97,7 +98,7 @@ public class PostSignInTask extends AsyncTask<String, Void, Integer> {
         }
 
         try {
-            user = new GsonBuilder().registerTypeAdapter(Timestamp.class,new TimestampTypeAdapter())
+            user = new GsonBuilder().registerTypeAdapter(Date.class,new DateTypeAdapter())
                     .create().fromJson(response, User.class);
             user.setIsCurrent(1);
         }

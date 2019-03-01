@@ -1,5 +1,6 @@
 package com.example.michel.mycalendar2.models.synchronization;
 
+import java.util.Date;
 import java.util.UUID;
 
 import lombok.Data;
@@ -16,4 +17,17 @@ public class WeekScheduleDB extends SynchModel {
     private int fri;
     private int sat;
     private int sun;
+
+    public WeekScheduleDB(Date synchTime, int changeType, UUID idWeekSchedule,
+                          int mon, int tue, int wed, int thu, int fri, int sat, int sun){
+        super(synchTime,changeType);
+        this.idWeekSchedule = idWeekSchedule;
+        this.mon = mon;
+        this.tue = tue;
+        this.wed = wed;
+        this.thu = thu;
+        this.fri = fri;
+        this.sat = sat;
+        this.sun = sun;
+    }
 }
