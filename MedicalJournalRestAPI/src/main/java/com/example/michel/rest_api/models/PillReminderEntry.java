@@ -5,6 +5,7 @@ import lombok.Data;
 import javax.persistence.*;
 import java.sql.Date;
 import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -25,4 +26,8 @@ public class PillReminderEntry {
     private Time reminderTime;
     @Column(name = "is_one_time")
     private Integer isOneTime;
+    @Column(name = "synch_time")
+    private Timestamp synchTime;
+    @Column(name = "change_type")
+    private int changeType;
 }

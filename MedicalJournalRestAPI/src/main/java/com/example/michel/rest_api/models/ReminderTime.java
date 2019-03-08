@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -20,4 +21,8 @@ public class ReminderTime {
     private UUID idPillReminder;
     @Column(name = "_id_measurement_reminder")
     private UUID idMeasurementReminder;
+    @Column(name = "synch_time")
+    private Timestamp synchTime;
+    @Column(name = "change_type")
+    private int changeType;
 }

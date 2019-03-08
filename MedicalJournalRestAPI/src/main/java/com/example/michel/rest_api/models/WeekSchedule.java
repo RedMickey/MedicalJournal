@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -25,4 +26,8 @@ public class WeekSchedule {
     private Integer fri;
     private Integer sat;
     private Integer sun;
+    @Column(name = "synch_time")
+    private Timestamp synchTime;
+    @Column(name = "change_type")
+    private int changeType;
 }

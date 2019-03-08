@@ -1,6 +1,8 @@
 package com.example.michel.rest_api.models;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -92,21 +94,12 @@ public class MeasurementType {
         return Objects.hash(idMeasurementType, typeName, standardMinValue, standardMaxValue);
     }
 
-    /*@Column(name = "_id_measur_value_type")
+    @Column(name = "_id_measur_value_type")
     public int getIdMeasurValueType() {
         return idMeasurValueType;
     }
 
     public void setIdMeasurValueType(int idMeasurValueType) {
         this.idMeasurValueType = idMeasurValueType;
-    }*/
-
-    /*@Column(table="measurement_value_type")
-    public String getTypeValueName() {
-        return typeValueName;
     }
-
-    public void setTypeValueName(String typeValueName) {
-        this.typeValueName = typeValueName;
-    }*/
 }

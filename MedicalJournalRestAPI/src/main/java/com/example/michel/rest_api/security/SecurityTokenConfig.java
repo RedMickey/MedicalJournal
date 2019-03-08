@@ -65,6 +65,7 @@ public class SecurityTokenConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, jwtConfig.getUrl()).permitAll()
                 .antMatchers(HttpMethod.POST, "/user/test1").permitAll()
                 .antMatchers(HttpMethod.POST, "/today/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/reminders/**").permitAll()
                 .antMatchers(HttpMethod.GET, new String[]{"/user/test2"}).permitAll()
                 .antMatchers("/user/test3").hasRole("2")
                 // any other requests must be authenticated

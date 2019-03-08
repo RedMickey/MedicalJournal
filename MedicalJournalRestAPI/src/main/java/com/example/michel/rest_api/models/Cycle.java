@@ -6,6 +6,7 @@ import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import java.sql.Timestamp;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -26,4 +27,8 @@ public class Cycle {
     private UUID idWeekSchedule;
     @Column(name = "_id_cycling_type")
     private int idCyclingType;
+    @Column(name = "synch_time")
+    private Timestamp synchTime;
+    @Column(name = "change_type")
+    private int changeType;
 }
