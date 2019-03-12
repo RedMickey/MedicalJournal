@@ -1,8 +1,13 @@
 <div class="reminders-container">
   <div>
     <mat-list>
-      <app-measurement-reminder-list-item></app-measurement-reminder-list-item>
-      <app-measurement-reminder-list-item></app-measurement-reminder-list-item>
+      <app-measurement-reminder-list-item *ngFor="let measurementReminderItem of measurementReminderItems"
+      [measurementReminderItem]="measurementReminderItem">
+      </app-measurement-reminder-list-item>
     </mat-list>
   </div>
+
+  <button mat-fab class="fab-button" (click)="addMeasurementReminder($event)">
+    <mat-icon>add</mat-icon>
+  </button>
 </div>

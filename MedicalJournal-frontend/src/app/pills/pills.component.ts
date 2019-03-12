@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ReminderItemsService } from '../services/reminder-items.service';
+import { PillReminder } from '../models/PillReminder';
 
 @Component({
   selector: 'app-pills',
@@ -7,9 +9,18 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PillsComponent implements OnInit {
 
-  constructor() { }
+  pillReminderItems: PillReminder[];
+
+  constructor(private reminderItemsService: ReminderItemsService) { }
 
   ngOnInit() {
+    this.reminderItemsService.getAllPillReminders()
+      .subscribe(pillReminderItems => {this.pillReminderItems = pillReminderItems;
+      console.log(pillReminderItems);
+      });
   }
 
+  /*public addPillReminder(event: any) {
+    console.log(event);
+  }*/
 }

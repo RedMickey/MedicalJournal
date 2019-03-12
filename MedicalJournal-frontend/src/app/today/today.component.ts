@@ -40,6 +40,7 @@ export class TodayComponent implements OnInit {
   getPillReminderEntriesByDate (date: Date): void{
     this.reminderEntryService.getPillReminderEntriesByDate(date)
       .subscribe(pillReminderEntries => {this.pillReminderEntries = pillReminderEntries; 
+        console.log(this.pillReminderEntries);
         this.pillReminderEntries.forEach(pillReminderEntry => {
           pillReminderEntry.date = new Date(pillReminderEntry.date);
           if(pillReminderEntry.isDone==0){
@@ -56,6 +57,7 @@ export class TodayComponent implements OnInit {
     //let bufDate = new Date(2019, 1, 13, 16, 0, 0);
     this.reminderEntryService.getMeasurementReminderEntriesByDate(date)
       .subscribe(measurementReminderEntries => {this.measurementReminderEntries = measurementReminderEntries; 
+        console.log(this.measurementReminderEntries);
         this.measurementReminderEntries.forEach(measurementReminderEntry => {
           measurementReminderEntry.date = new Date(measurementReminderEntry.date);
           if(measurementReminderEntry.isDone==0){
@@ -70,6 +72,6 @@ export class TodayComponent implements OnInit {
 
   public doAction(event: any) {
     console.log(event);
-}
+  }
 
 }

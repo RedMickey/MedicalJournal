@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { PillReminderEntry } from '../models/PillReminderEntry';
 import { MeasurementReminderEntry } from '../models/MeasurementReminderEntry';
 import { ReminderEntriesService } from '../services/reminder-entries.service';
+import { UtilsService } from '../services/utils.service';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { MeasurementDialogComponent } from './measurement-dialog/measurement-dialog.component';
 
@@ -23,6 +24,7 @@ export class ReminderEntryComponent implements OnInit {
   checked: boolean = false;
 
   constructor(private reminderEntryService: ReminderEntriesService,
+    private utilsService: UtilsService,
     public dialog: MatDialog) { }
 
   onIsDoneChange(event: any){
@@ -98,17 +100,9 @@ export class ReminderEntryComponent implements OnInit {
   }
 
   ngOnInit() {
-    switch(this.reminderEntry.havingMealsType){
-      case 1:
-        this.havingMealsTypePretext = "до"
-        break;
-      case 2:
-        this.havingMealsTypePretext = "с"
-        break;
-      case 3:
-        this.havingMealsTypePretext = "после"
-        break;
-    }
+    this.havingMealsTypePretext = this.utilsService.createHavingMealsTypePretext(
+      this.reminderEntry.havingMealsType
+    );
     
     //this.reminderDate = this.reminderEntry.date;
     if (this.type == 0){
@@ -132,8 +126,8 @@ export class ReminderEntryComponent implements OnInit {
 
     this.checked = this.reminderEntry.isDone==1?true:false;
 
-    console.log(this.reminderEntry);
-    console.log(this.type);
+    //console.log(this.reminderEntry);
+    //console.log(this.type);
   }
 
   setUpReminderCountType(): string{

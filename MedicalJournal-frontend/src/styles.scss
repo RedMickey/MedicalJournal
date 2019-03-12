@@ -37,12 +37,24 @@ html, body{
     margin-right: 5px;
 }
 
+.ml-5{
+    margin-left: 5px;
+}
+
 .ml-10{
     margin-left: 10px;
 }
 
 .ml-20{
     margin-left: 20px;
+}
+
+.mr-20{
+    margin-right: 20px;
+}
+
+.mt-10{
+    margin-top: 10px;
 }
 
 .font-b{
@@ -53,10 +65,17 @@ html, body{
     margin: 10px 20px 20px;
 }
 
-.link-card{
+.link-non-deco, .link-card{
     text-decoration: none;
+}
+
+.link-card{
     margin-bottom: 3px;
     display: block;
+}
+
+.w-100p{
+    width: 100%;
 }
 
 .error{

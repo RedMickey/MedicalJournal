@@ -1,7 +1,13 @@
 <div class="reminders-container">
   <div>
     <mat-list>
-      <app-pill-reminder-list-item></app-pill-reminder-list-item>
+      <app-pill-reminder-list-item *ngFor="let pillReminderItem of pillReminderItems"
+      [pillReminderItem]="pillReminderItem">
+      </app-pill-reminder-list-item>
     </mat-list>
   </div>
+
+  <a mat-fab class="fab-button" routerLink="./add">
+    <mat-icon>add</mat-icon>
+  </a>
 </div>

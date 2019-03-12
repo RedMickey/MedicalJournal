@@ -60,6 +60,9 @@ import { from } from 'rxjs';
 import { MeasurementDialogComponent } from './reminder-entry/measurement-dialog/measurement-dialog.component';
 import { PillReminderListItemComponent } from './pills/pill-reminder-list-item/pill-reminder-list-item.component';
 import { MeasurementReminderListItemComponent } from './measurements/measurement-reminder-list-item/measurement-reminder-list-item.component';
+import { ChoosingMeasurementTypeDialogComponent } from './measurements/choosing-measurement-type-dialog/choosing-measurement-type-dialog.component';
+import { AddMeasurementComponent } from './measurements/add-measurement/add-measurement.component';
+import { AddPillComponent } from './pills/add-pill/add-pill.component';
 
 registerLocaleData(localeRu, 'ru');
 
@@ -73,7 +76,10 @@ registerLocaleData(localeRu, 'ru');
     MeasurementsComponent,
     MeasurementDialogComponent,
     PillReminderListItemComponent,
-    MeasurementReminderListItemComponent
+    MeasurementReminderListItemComponent,
+    ChoosingMeasurementTypeDialogComponent,
+    AddMeasurementComponent,
+    AddPillComponent
   ],
   imports: [
     BrowserModule,
@@ -124,6 +130,7 @@ registerLocaleData(localeRu, 'ru');
   ],
   entryComponents: [
     MeasurementDialogComponent,
+    ChoosingMeasurementTypeDialogComponent,
   ],
   providers: [
     ReminderEntriesService

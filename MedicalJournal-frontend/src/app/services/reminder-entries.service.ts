@@ -28,13 +28,13 @@ export class ReminderEntriesService {
       );
   }
 
-    /** POST MeasurementReminderEntries by date from the server */
-    getMeasurementReminderEntriesByDate (date: Date): Observable<MeasurementReminderEntry[]> {
-      return this.http.post<MeasurementReminderEntry[]>(this.ReminderEntriesUrl + "/getMeasurementReminders", {"date": date}, httpOptions)
-        .pipe(
-          catchError(this.handleError<MeasurementReminderEntry[]>(' getMeasurementReminderEntriesByDate', []))
-        );
-    }
+  /** POST MeasurementReminderEntries by date from the server */
+  getMeasurementReminderEntriesByDate (date: Date): Observable<MeasurementReminderEntry[]> {
+    return this.http.post<MeasurementReminderEntry[]>(this.ReminderEntriesUrl + "/getMeasurementReminders", {"date": date}, httpOptions)
+      .pipe(
+        catchError(this.handleError<MeasurementReminderEntry[]>(' getMeasurementReminderEntriesByDate', []))
+      );
+  }
 
   updatePillReminderEntry (updateReminderBody: any): Observable<any> {
     console.log(updateReminderBody);

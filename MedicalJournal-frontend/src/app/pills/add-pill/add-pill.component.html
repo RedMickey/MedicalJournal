@@ -1,0 +1,186 @@
+<!--<div>
+  <mat-accordion>
+    <mat-expansion-panel [expanded]="opened">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Personal data
+        </mat-panel-title>
+        <mat-panel-description>
+          Type your name and age
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+
+      <mat-form-field>
+        <input matInput placeholder="First name">
+      </mat-form-field>
+
+      <mat-form-field>
+        <input matInput placeholder="Age">
+      </mat-form-field>
+    </mat-expansion-panel>
+    
+    <mat-expansion-panel (opened)="panelOpenState = true"
+                        (closed)="panelOpenState = false">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Self aware panel
+        </mat-panel-title>
+        <mat-panel-description>
+          Currently I am {{panelOpenState ? 'open' : 'closed'}}
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <p>I'm visible because I am open</p>
+    </mat-expansion-panel>
+  </mat-accordion>
+
+  <button mat-raised-button (click)="change()">Basic</button>
+</div>-->
+
+<div class="reminders-container">
+  <div fxLayout="raw" fxLayout.lt-lg="column" fxFlex>
+    <div fxFlex>
+      Расписание
+      <div fxLayout="row">
+        <div fxLayoutAlign="start center" fxFlex style="color:gray;">
+          Активное
+        </div>
+        <div fxLayoutAlign="end center" fxFlex>
+          <mat-slide-toggle></mat-slide-toggle>
+        </div>
+      </div>
+      <div class="mt-10">
+        <div>
+          Медикамент
+        </div>
+        <mat-form-field class="w-100p">
+          <input matInput placeholder="Название" [formControl]="nameFormControl">
+          <mat-error *ngIf="nameFormControl.hasError('required')">
+            Email is <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div>
+        <div style="display:inline-block">
+          <mat-form-field style="width: 70px;" class="mr-10">
+            <input matInput placeholder="Доза" [formControl]="doseFormControl">
+            <mat-error *ngIf="doseFormControl.hasError('required')">
+              Доза is <strong>required</strong>
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div style="display:inline-block">
+          <mat-form-field style="width: 70px;">
+            <mat-select [(value)]="selected">
+              <mat-option *ngFor="let doseType of doseTypes" [value]="doseType.value">
+                {{doseType.viewValue}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div fxLayout="raw" fxLayoutAlign="start center">
+        <mat-icon class="mr-20">event</mat-icon> 
+        Начиная с
+        <button mat-button class="date-pick-padding">Basic dfgdf</button> 
+      </div>
+      <div class="ml-44" >
+        <div>
+          <mat-radio-group [(ngModel)]="radioGroupSelected" fxLayout="column">
+            <mat-radio-button class="radio-button-mp" [value]=1>
+              Каждый день
+            </mat-radio-button>
+            <mat-radio-button class="radio-button-mp" [value]=2>
+              По определённыйм дням
+            </mat-radio-button>
+            <mat-radio-button class="radio-button-mp" [value]=3>
+              Дневной интервал
+            </mat-radio-button>
+          </mat-radio-group>
+          
+          <mat-expansion-panel [expanded]="radioGroupSelected === 1">
+            <div fxLayout="raw" fxLayoutAlign="start center" class="ml-5">
+              <span class="sp-period-w">Период</span>
+              <mat-form-field class="ml-20" style="width:50px;">
+                <input matInput value=10>
+              </mat-form-field>
+              <mat-form-field style="width: 50px;" class="ml-10">
+                <mat-select [(value)]="selectedDateType1">
+                  <mat-option *ngFor="let dateType of dateTypes" [value]="dateType.value">
+                    {{dateType.viewValue}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </mat-expansion-panel>
+          <mat-expansion-panel [expanded]="radioGroupSelected === 2">
+            <table>
+              <tr align="center">
+                <td>Пн</td>
+                <td>Вт</td>
+                <td>Ср</td>
+                <td>Чт</td>
+                <td>Пт</td>
+                <td>Сб</td>
+                <td>Вс</td>
+              </tr>
+              <tr>
+                <td><mat-checkbox class="m-3"></mat-checkbox></td>
+                <td><mat-checkbox class="m-3"></mat-checkbox></td>
+                <td><mat-checkbox class="m-3"></mat-checkbox></td>
+                <td><mat-checkbox class="m-3"></mat-checkbox></td>
+                <td><mat-checkbox class="m-3"></mat-checkbox></td>
+                <td><mat-checkbox class="m-3"></mat-checkbox></td>
+                <td><mat-checkbox class="m-3"></mat-checkbox></td>
+              </tr>
+            </table>
+            <div fxLayout="raw" fxLayoutAlign="start center" class="ml-5">
+              <span class="sp-period-w">Период</span>
+              <mat-form-field class="ml-20" style="width:50px;">
+                <input matInput value=10>
+              </mat-form-field>
+              <mat-form-field style="width: 50px;" class="ml-10">
+                <mat-select [(value)]="selectedDateType1">
+                  <mat-option *ngFor="let dateType of dateTypes" [value]="dateType.value">
+                    {{dateType.viewValue}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </mat-expansion-panel>
+          <mat-expansion-panel [expanded]="radioGroupSelected === 3">       
+            <div fxLayout="raw" fxLayoutAlign="start center" class="ml-5">
+              <span class="sp-period-w">Раз в</span>
+              <mat-form-field class="ml-20" style="width:50px;">
+                <input matInput value=10>
+              </mat-form-field>
+              <mat-form-field style="width: 50px;" class="ml-10">
+                <mat-select [(value)]="selectedDateType1">
+                  <mat-option *ngFor="let dateType of dateTypes" [value]="dateType.value">
+                    {{dateType.viewValue}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div fxLayout="raw" fxLayoutAlign="start center" class="ml-5">
+              <span class="sp-period-w">Период</span>
+              <mat-form-field class="ml-20" style="width:50px;">
+                <input matInput value=10>
+              </mat-form-field>
+              <mat-form-field style="width: 50px;" class="ml-10">
+                <mat-select [(value)]="selectedDateType2">
+                  <mat-option *ngFor="let dateType of dateTypes" [value]="dateType.value">
+                    {{dateType.viewValue}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </mat-expansion-panel>
+        </div>
+      </div>
+    </div>
+    <div fxFlex="20px" fxShow="false" fxShow.gt-md></div>
+    <div fxFlex> 
+        tert
+    </div>
+  </div>
+</div>

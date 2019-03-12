@@ -28,18 +28,18 @@
 
   <eco-fab-speed-dial class="fab-menu" [animationMode]="animationMode">
     <eco-fab-speed-dial-trigger spin=true>
-        <button mat-fab (click)="doAction('trigger')"><mat-icon class="spin180">add</mat-icon></button>
+      <button mat-fab (click)="doAction('trigger')"><mat-icon class="spin180">add</mat-icon></button>
     </eco-fab-speed-dial-trigger>
  
     <eco-fab-speed-dial-actions>
-        <button mat-mini-fab (click)="doAction('action1')" matTooltip="График приёмов"
-          matTooltipPosition="left"><mat-icon>assignment</mat-icon></button>
-        <button mat-mini-fab (click)="doAction('action2')" matTooltip="Одиночный приём"
-          matTooltipPosition="left"><mat-icon svgIcon="pill" ></mat-icon></button>
-        <button mat-mini-fab color="primary" (click)="doAction('action3')" matTooltip="График измерений"
-          matTooltipPosition="left"><mat-icon>assignment</mat-icon></button>
-        <button mat-mini-fab color="primary" (click)="doAction('action4')" matTooltip="Измерение"
-          matTooltipPosition="left"><mat-icon svgIcon="ruler"></mat-icon></button>
+      <button mat-mini-fab (click)="doAction('action1')" matTooltip="График приёмов"
+        matTooltipPosition="left"><mat-icon>assignment</mat-icon></button>
+      <button mat-mini-fab (click)="doAction('action2')" matTooltip="Одиночный приём"
+        matTooltipPosition="left"><mat-icon svgIcon="pill" ></mat-icon></button>
+      <button mat-mini-fab color="primary" (click)="doAction('action3')" matTooltip="График измерений"
+        matTooltipPosition="left"><mat-icon>assignment</mat-icon></button>
+      <button mat-mini-fab color="primary" (click)="doAction('action4')" matTooltip="Измерение"
+        matTooltipPosition="left"><mat-icon svgIcon="ruler"></mat-icon></button>
     </eco-fab-speed-dial-actions>
   </eco-fab-speed-dial>
 </div>
