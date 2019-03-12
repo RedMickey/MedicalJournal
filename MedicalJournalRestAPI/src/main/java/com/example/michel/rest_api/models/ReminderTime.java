@@ -14,7 +14,7 @@ import java.util.UUID;
 public class ReminderTime {
     @Id
     @Column(name = "_id_reminder_time")
-    private UUID id;
+    private UUID idReminderTime;
     @Column(name = "reminder_time")
     private Time reminderTime;
     @Column(name = "_id_pill_reminder")

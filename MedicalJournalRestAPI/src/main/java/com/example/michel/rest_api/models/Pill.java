@@ -15,7 +15,7 @@ import java.util.UUID;
 public class Pill {
     @Id
     @Column(name = "_id_pill")
-    private UUID id;
+    private UUID idPill;
     @Column(name = "pill_name")
     private String pillName;
     @Column(name = "pill_description")

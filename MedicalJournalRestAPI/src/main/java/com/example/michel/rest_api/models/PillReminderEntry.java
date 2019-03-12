@@ -15,7 +15,7 @@ import java.util.UUID;
 public class PillReminderEntry {
     @Id
     @Column(name = "_id_pill_reminder_entry")
-    private UUID id;
+    private UUID idPillReminderEntry;
     @Column(name = "is_done")
     private int isDone;
     @Column(name = "reminder_date")

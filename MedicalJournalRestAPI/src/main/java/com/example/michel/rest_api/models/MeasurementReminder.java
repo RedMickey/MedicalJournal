@@ -15,7 +15,7 @@ import java.util.UUID;
 public class MeasurementReminder {
     @Id
     @Column(name = "_id_measurement_reminder")
-    private UUID id;
+    private UUID idMeasurementReminder;
     @Column(name = "_id_measurement_type")
     private int idMeasurementType;
     @Column(name = "start_date")
@@ -25,7 +25,7 @@ public class MeasurementReminder {
     @Column(name = "_id_having_meals_type")
     private Integer idHavingMealsType;
     @Column(name = "having_meals_time")
-    private Time havingMealsTime;
+    private Integer havingMealsTime;
     private String annotation;
     @Column(name = "is_active")
     private int isActive;

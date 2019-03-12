@@ -5,6 +5,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import javax.annotation.PostConstruct;
+import java.util.TimeZone;
+
 @Configuration
 public class AdditionalConfiguration {
 
@@ -16,5 +19,10 @@ public class AdditionalConfiguration {
     @Bean
     public JwtConfig jwtConfig() {
         return new JwtConfig();
+    }
+
+    @PostConstruct
+    public void init(){
+        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));   // It will set UTC timezone
     }
 }

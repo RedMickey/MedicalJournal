@@ -14,9 +14,10 @@ public class MeasurementReminderEntryF {
     private String measurementTypeName;
     private String measurementValueTypeName;
     protected int isDone;
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ", timezone = "Europe/Moscow")
+    //@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ", timezone = "Europe/Moscow")
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
     protected Date date;
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ", timezone = "Europe/Moscow")
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
     protected Date havingMealsTime;
     protected UUID id;
     protected int havingMealsType;

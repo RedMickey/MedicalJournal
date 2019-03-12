@@ -18,7 +18,7 @@ import java.util.UUID;
 public class WeekSchedule {
     @Id
     @Column(name = "_id_week_schedule")
-    private UUID id;
+    private UUID idWeekSchedule;
     private Integer mon;
     private Integer tue;
     private Integer wed;

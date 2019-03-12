@@ -15,7 +15,7 @@ import java.util.UUID;
 public class MeasurementReminderEntry {
     @Id
     @Column(name = "_id_measur_remind_entry")
-    private UUID id;
+    private UUID idMeasurRemindEntry;
     private Double value1;
     private Double value2;
     @Column(name = "_id_measurement_reminder")

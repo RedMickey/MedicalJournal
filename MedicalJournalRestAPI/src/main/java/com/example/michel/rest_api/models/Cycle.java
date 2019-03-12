@@ -15,7 +15,7 @@ import java.util.UUID;
 public class Cycle {
     @Id
     @Column(name = "_id_cycle")
-    private UUID id;
+    private UUID idCycle;
     private int period;
     @Column(name = "period_DM_type")
     private int periodDmType;
