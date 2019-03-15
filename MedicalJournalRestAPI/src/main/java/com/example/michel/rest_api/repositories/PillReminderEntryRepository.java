@@ -3,5 +3,7 @@ package com.example.michel.rest_api.repositories;
 import com.example.michel.rest_api.models.PillReminderEntry;
 import org.springframework.data.repository.CrudRepository;
 
-public interface PillReminderEntryRepository extends CrudRepository<PillReminderEntry, String> {
+import java.util.UUID;
+
+public interface PillReminderEntryRepository extends CrudRepository<PillReminderEntry, UUID> {
 }

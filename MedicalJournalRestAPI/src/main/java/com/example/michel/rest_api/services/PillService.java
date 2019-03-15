@@ -15,4 +15,17 @@ public class PillService {
     public Iterable<Pill> saveAll(List<Pill> pillList) {
         return pillRepository.saveAll(pillList);
     }
+
+    public boolean updateOrDelete(List<Pill> pillList){
+        boolean hasDeletion = false;
+        for (Pill pill: pillList) {
+            if (pill.getChangeType()<3)
+                pillRepository.save(pill);
+            else{
+                pillRepository.delete(pill);
+                hasDeletion = true;
+            }
+        }
+        return hasDeletion;
+    }
 }

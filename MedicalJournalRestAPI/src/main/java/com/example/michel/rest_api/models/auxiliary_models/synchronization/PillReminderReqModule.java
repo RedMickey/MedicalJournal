@@ -13,4 +13,5 @@ public class PillReminderReqModule {
     private List<PillReminderEntry> pillReminderEntryDBList;
     private List<WeekSchedule> weekScheduleDBList;
     private List<ReminderTime> reminderTimeDBList;
+    private int type;
 }

@@ -3,5 +3,7 @@ package com.example.michel.rest_api.repositories;
 import com.example.michel.rest_api.models.ReminderTime;
 import org.springframework.data.repository.CrudRepository;
 
-public interface ReminderTimeRepository extends CrudRepository<ReminderTime, String> {
+import java.util.UUID;
+
+public interface ReminderTimeRepository extends CrudRepository<ReminderTime, UUID> {
 }

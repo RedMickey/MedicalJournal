@@ -12,4 +12,5 @@ public class MeasurementReminderReqModule {
     private List<MeasurementReminderEntry> measurementReminderEntryDBList;
     private List<WeekSchedule> weekScheduleDBList;
     private List<ReminderTime> reminderTimeDBList;
+    private int type;
 }

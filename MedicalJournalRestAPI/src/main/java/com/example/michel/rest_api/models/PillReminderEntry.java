@@ -3,9 +3,9 @@ package com.example.michel.rest_api.models;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.Objects;
 import java.util.UUID;
 

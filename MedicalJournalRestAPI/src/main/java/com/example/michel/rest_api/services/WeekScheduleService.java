@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class WeekScheduleService {
@@ -31,5 +32,22 @@ public class WeekScheduleService {
 
     public Iterable<WeekSchedule> saveAll(List<WeekSchedule> weekSchedules){
         return weekScheduleRepository.saveAll(weekSchedules);
+    }
+
+    public boolean updateOrDelete(List<WeekSchedule> weekSchedules){
+        boolean hasDeletion = false;
+        for (WeekSchedule weekSchedule: weekSchedules) {
+            if (weekSchedule.getChangeType()<3)
+                weekScheduleRepository.save(weekSchedule);
+            else{
+                weekScheduleRepository.delete(weekSchedule);
+                hasDeletion = true;
+            }
+        }
+        return hasDeletion;
+    }
+
+    public void deleteAllByIds(List<UUID> uuidList){
+        uuidList.forEach(id -> weekScheduleRepository.deleteById(id));
     }
 }

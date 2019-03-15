@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class MeasurementReminderService {
@@ -14,5 +15,22 @@ public class MeasurementReminderService {
 
     public Iterable<MeasurementReminder> saveAll(List<MeasurementReminder> measurementReminderList) {
         return measurementReminderRepository.saveAll(measurementReminderList);
+    }
+
+    public boolean updateOrDelete(List<MeasurementReminder> measurementReminderList){
+        boolean hasDeletion = false;
+        for (MeasurementReminder measurementReminder: measurementReminderList) {
+            if (measurementReminder.getChangeType()<3)
+                measurementReminderRepository.save(measurementReminder);
+            else{
+                measurementReminderRepository.delete(measurementReminder);
+                hasDeletion = true;
+            }
+        }
+        return hasDeletion;
+    }
+
+    public void deleteAllByIds(List<UUID> uuidList){
+        uuidList.forEach(id -> measurementReminderRepository.deleteById(id));
     }
 }
