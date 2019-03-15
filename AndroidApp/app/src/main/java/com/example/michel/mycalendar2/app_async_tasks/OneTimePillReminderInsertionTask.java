@@ -2,6 +2,8 @@ package com.example.michel.mycalendar2.app_async_tasks;
 
 import android.os.AsyncTask;
 
+import com.example.michel.mycalendar2.app_async_tasks.synchronization.SynchronizationPillReminderTask;
+import com.example.michel.mycalendar2.authentication.AccountGeneralUtils;
 import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
 import com.example.michel.mycalendar2.dao.PillReminderDao;
 import com.example.michel.mycalendar2.models.pill.PillReminderDBInsertEntry;
@@ -33,5 +35,14 @@ public class OneTimePillReminderInsertionTask extends AsyncTask<PillReminderDBIn
 
         dbAdapter.close();
         return null;
+    }
+
+
+    @Override
+    protected void onPostExecute(Void aVoid) {
+        if (AccountGeneralUtils.curUser.getId()!=1) {
+            SynchronizationPillReminderTask synchronizationPillReminderTask = new SynchronizationPillReminderTask(DatabaseAdapter.AppContext, 1);
+            synchronizationPillReminderTask.execute();
+        }
     }
 }

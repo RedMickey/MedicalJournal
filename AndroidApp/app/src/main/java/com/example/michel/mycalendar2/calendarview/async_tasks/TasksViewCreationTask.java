@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.michel.mycalendar2.activities.R;
+import com.example.michel.mycalendar2.app_async_tasks.synchronization.SynchronizationReminderEntriesTask;
 import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
 import com.example.michel.mycalendar2.calendarview.data.DateData;
 import com.example.michel.mycalendar2.dao.MeasurementReminderDao;
@@ -107,11 +108,19 @@ public class TasksViewCreationTask extends AsyncTask<DateData, Void, PillAndMeas
                             String curTime = sdf.format(cal.getTime());
                             reminderTimeTv.setText(curTime);
                             pillReminderDao.updateIsDonePillReminderEntry(1, pre.getId(), curTime+":00");
+                            SynchronizationReminderEntriesTask synchronizationReminderEntriesTask = new SynchronizationReminderEntriesTask(
+                                    mView.getContext(), pre.getId(),1
+                            );
+                            synchronizationReminderEntriesTask.execute();
                             if (pre.isLate())
                                 imageTimeExpired.setImageResource(android.R.color.transparent);
                         }
                         else {
                             pillReminderDao.updateIsDonePillReminderEntry( 0, pre.getId(), "");
+                            SynchronizationReminderEntriesTask synchronizationReminderEntriesTask = new SynchronizationReminderEntriesTask(
+                                    mView.getContext(), pre.getId(),1
+                            );
+                            synchronizationReminderEntriesTask.execute();
                             if (pre.isLateCheck())
                                 imageTimeExpired.setImageResource(R.drawable.ic_time_expired);
                         }
@@ -254,6 +263,10 @@ public class TasksViewCreationTask extends AsyncTask<DateData, Void, PillAndMeas
                                                     measurementReminderDao.updateIsDoneMeasurementReminderEntry(1, mre.getId(), curTime+":00",
                                                             mre.getValue1(), mre.getValue2(), 0);
                                                     databaseAdapter.close();
+                                                    SynchronizationReminderEntriesTask synchronizationReminderEntriesTask = new SynchronizationReminderEntriesTask(
+                                                            mView.getContext(), mre.getId(),2
+                                                    );
+                                                    synchronizationReminderEntriesTask.execute();
                                                     if (mre.isLate())
                                                         imageTimeExpired.setImageResource(android.R.color.transparent);
                                                 }
@@ -280,6 +293,10 @@ public class TasksViewCreationTask extends AsyncTask<DateData, Void, PillAndMeas
                                 measurementReminderDao.updateIsDoneMeasurementReminderEntry(0, mre.getId(), "",
                                         mre.getValue1(), mre.getValue2(), 1);
                                 databaseAdapter.close();
+                                SynchronizationReminderEntriesTask synchronizationReminderEntriesTask = new SynchronizationReminderEntriesTask(
+                                        mView.getContext(), mre.getId(),2
+                                );
+                                synchronizationReminderEntriesTask.execute();
                                 reminderCountTypeTv.setText("");
                             }
                             else

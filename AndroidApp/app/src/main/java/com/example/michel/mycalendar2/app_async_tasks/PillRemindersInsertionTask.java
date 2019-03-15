@@ -3,6 +3,9 @@ package com.example.michel.mycalendar2.app_async_tasks;
 import android.content.Context;
 import android.os.AsyncTask;
 
+import com.example.michel.mycalendar2.app_async_tasks.synchronization.SynchronizationPillReminderTask;
+import com.example.michel.mycalendar2.app_async_tasks.synchronization.SynchronizationWeekScheduleTask;
+import com.example.michel.mycalendar2.authentication.AccountGeneralUtils;
 import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
 import com.example.michel.mycalendar2.dao.CycleDao;
 import com.example.michel.mycalendar2.dao.MeasurementReminderDao;
@@ -106,5 +109,10 @@ public class PillRemindersInsertionTask extends AsyncTask<CycleAndPillComby, Voi
     protected void onPostExecute(Void aVoid) {
         PillNotificationsCreationTask nct = new PillNotificationsCreationTask();
         nct.execute(appContext);
+
+        if (AccountGeneralUtils.curUser.getId()!=1) {
+            SynchronizationPillReminderTask synchronizationPillReminderTask = new SynchronizationPillReminderTask(appContext, 1);
+            synchronizationPillReminderTask.execute();
+        }
     }
 }

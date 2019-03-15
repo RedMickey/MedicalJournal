@@ -5,6 +5,8 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.example.michel.mycalendar2.app_async_tasks.synchronization.SynchronizationPillReminderTask;
+import com.example.michel.mycalendar2.authentication.AccountGeneralUtils;
 import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
 import com.example.michel.mycalendar2.calendarview.data.DateData;
 import com.example.michel.mycalendar2.dao.CycleDao;
@@ -153,9 +155,13 @@ public class PillRemindersUpdateTask extends AsyncTask<CycleAndPillComby, Void, 
         return null;
     }
 
-    /*@Override
+    @Override
     protected void onPostExecute(Void aVoid) {
-        PillNotificationsCreationTask nct = new PillNotificationsCreationTask();
-        nct.execute(appContext);
-    }*/
+        /*PillNotificationsCreationTask nct = new PillNotificationsCreationTask();
+        nct.execute(appContext);*/
+        if (AccountGeneralUtils.curUser.getId()!=1) {
+            SynchronizationPillReminderTask synchronizationPillReminderTask = new SynchronizationPillReminderTask(appContext, 2);
+            synchronizationPillReminderTask.execute();
+        }
+    }
 }

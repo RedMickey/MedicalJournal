@@ -8,7 +8,9 @@ import java.util.UUID;
 
 public class ConvertingUtils {
 
-    public static UUID convertBytesToUUID(byte[] blob){
+    public static UUID convertBytesToUUID(byte[] blob) throws NullPointerException{
+        if (blob == null)
+            throw new NullPointerException();
         ByteBuffer bbr = ByteBuffer.wrap(blob);
         long high = bbr.getLong();
         long low = bbr.getLong();
@@ -45,4 +47,27 @@ public class ConvertingUtils {
         return date;
     }
 
+    public static Date convertStringToTime(String timeStr){
+        Date time;
+        String pattern = "HH:mm:ss";
+        try {
+            time = new SimpleDateFormat(pattern).parse(timeStr);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            time = new Date();
+        }
+        return time;
+    }
+
+    public static Date convertStringToOnlyDate(String dateStr){
+        Date date;
+        String pattern = "yyyy-MM-dd";
+        try {
+            date = new SimpleDateFormat(pattern).parse(dateStr);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            date = new Date();
+        }
+        return date;
+    }
 }

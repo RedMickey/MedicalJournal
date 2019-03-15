@@ -2,6 +2,8 @@ package com.example.michel.mycalendar2.app_async_tasks;
 
 import android.os.AsyncTask;
 
+import com.example.michel.mycalendar2.app_async_tasks.synchronization.SynchronizationMeasurementReminderTask;
+import com.example.michel.mycalendar2.authentication.AccountGeneralUtils;
 import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
 import com.example.michel.mycalendar2.dao.MeasurementReminderDao;
 import com.example.michel.mycalendar2.models.measurement.MeasurementReminderDBEntry;
@@ -42,5 +44,14 @@ public class OneTimeMeasurementReminderInsertionTask extends AsyncTask<Measureme
         dbAdapter.close();
 
         return null;
+    }
+
+    @Override
+    protected void onPostExecute(Void aVoid) {
+        if (AccountGeneralUtils.curUser.getId()!=1){
+            SynchronizationMeasurementReminderTask synchronizationMeasurementReminderTask = new
+                    SynchronizationMeasurementReminderTask(DatabaseAdapter.AppContext, 1);
+            synchronizationMeasurementReminderTask.execute();
+        }
     }
 }

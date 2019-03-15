@@ -1,7 +1,7 @@
 package com.example.michel.mycalendar2.models.synchronization;
 
-import java.sql.Date;
 import java.sql.Time;
+import java.util.Date;
 import java.util.UUID;
 
 import lombok.Data;
@@ -15,13 +15,13 @@ public class MeasurementReminderEntryDB extends SynchModel {
     private Double value2;
     private UUID idMeasurementReminder;
     private int isDone;
-    private Time reminderTime;
+    private Date reminderTime;
     private Date reminderDate;
     //private Integer isOneTime;
 
     public MeasurementReminderEntryDB(Date synchTime, int changeType, UUID idMeasurRemindEntry,
                                       Double value1, Double value2, UUID idMeasurementReminder,
-                                      int isDone, Time reminderTime, Date reminderDate)
+                                      int isDone, Date reminderTime, Date reminderDate)
     {
         super(synchTime,changeType);
         this.idMeasurRemindEntry = idMeasurRemindEntry;

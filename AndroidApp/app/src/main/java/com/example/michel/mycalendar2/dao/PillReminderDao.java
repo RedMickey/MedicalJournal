@@ -13,6 +13,9 @@ import com.example.michel.mycalendar2.models.ReminderTime;
 import com.example.michel.mycalendar2.models.pill.PillReminder;
 import com.example.michel.mycalendar2.models.pill.PillReminderDBInsertEntry;
 import com.example.michel.mycalendar2.models.pill.PillReminderEntry;
+import com.example.michel.mycalendar2.models.synchronization.PillDB;
+import com.example.michel.mycalendar2.models.synchronization.PillReminderDB;
+import com.example.michel.mycalendar2.models.synchronization.PillReminderEntryDB;
 import com.example.michel.mycalendar2.utils.ConvertingUtils;
 
 import java.text.ParseException;
@@ -451,5 +454,152 @@ public class PillReminderDao {
     public void deletePillReminderById(UUID idPillReminder){
         database.delete("pill_reminders", "lower(hex(_id_pill_reminder)) = ?",
                 new String[]{idPillReminder.toString().replace("-", "")});
+    }
+
+    public List<PillDB> getPillDBEntriesForSynchronization(Date date){
+        ArrayList<PillDB> pillDBList = new ArrayList<>();
+        String dateStr = ConvertingUtils.convertDateToString(date);
+        String userIdStr = String.valueOf(AccountGeneralUtils.curUser.getId());
+        String rawQuery = "select  pl._id_pill, pl.pill_name, pl.pill_description, pl.synch_time, pl.change_type " +
+                "from pills pl inner join pill_reminders pr on pl._id_pill=pr._id_pill " +
+                "where pl.synch_time >= ? and pr._id_user=?";
+
+        Cursor cursor = database.rawQuery(rawQuery, new String[]{dateStr, userIdStr});
+        if(cursor.moveToFirst()){
+            do{
+                UUID id = ConvertingUtils.convertBytesToUUID(cursor.getBlob(0));
+                String pillName = cursor.getString(1);
+                String pillDescription = cursor.getString(2);
+                String synchTimeStr = cursor.getString(3);
+                int changeType = cursor.getInt(4);
+
+                pillDBList.add(new PillDB(ConvertingUtils.convertStringToDate(synchTimeStr),
+                        changeType, id, pillName, pillDescription));
+            }
+            while (cursor.moveToNext());
+        }
+        cursor.close();
+
+        return pillDBList;
+    }
+
+    public List<PillReminderDB> getPillReminderDBEntriesForSynchronization(Date date){
+        ArrayList<PillReminderDB> pillReminderDBList = new ArrayList<>();
+        String dateStr = ConvertingUtils.convertDateToString(date);
+        String userIdStr = String.valueOf(AccountGeneralUtils.curUser.getId());
+        String rawQuery = "select * " +
+                "from pill_reminders pr " +
+                "where pr.synch_time >= ? and pr._id_user=?";
+
+        Cursor cursor = database.rawQuery(rawQuery, new String[]{dateStr, userIdStr});
+        if(cursor.moveToFirst()){
+            do{
+                UUID id = ConvertingUtils.convertBytesToUUID(cursor.getBlob(cursor.getColumnIndex("_id_pill_reminder")));
+                UUID idPill = ConvertingUtils.convertBytesToUUID(cursor.getBlob(cursor.getColumnIndex("_id_pill")));
+                int pillCount = cursor.getInt(cursor.getColumnIndex("pill_count"));
+                int idPillCountType = cursor.getInt(cursor.getColumnIndex("_id_pill_count_type"));
+                String startDateStr = cursor.getString(cursor.getColumnIndex("start_date"));
+                UUID idCycle = null;
+                try {
+                    idCycle = ConvertingUtils.convertBytesToUUID(cursor.getBlob(cursor.getColumnIndex("_id_cycle")));
+                }
+                catch (NullPointerException ex){
+
+                }
+                int idHavingMealsType = cursor.getInt(cursor.getColumnIndex("_id_having_meals_type"));
+                int havingMealsTime = cursor.getInt(cursor.getColumnIndex("having_meals_time"));
+                String annotation = cursor.getString(cursor.getColumnIndex("annotation"));
+                int isActive = cursor.getInt(cursor.getColumnIndex("IsActive"));
+                int timesADay = cursor.getInt(cursor.getColumnIndex("times_a_day"));
+                int changeType = cursor.getInt(cursor.getColumnIndex("change_type"));
+                String synchTimeStr = cursor.getString(cursor.getColumnIndex("synch_time"));
+                int idUser = cursor.getInt(cursor.getColumnIndex("_id_user"));
+
+                pillReminderDBList.add(new PillReminderDB(ConvertingUtils.convertStringToDate(synchTimeStr),
+                        changeType, id, idPill, pillCount, idPillCountType,
+                        ConvertingUtils.convertStringToOnlyDate(startDateStr), idCycle, idHavingMealsType>0?idHavingMealsType:null,
+                        havingMealsTime, annotation, isActive, timesADay, idUser));
+            }
+            while (cursor.moveToNext());
+        }
+        cursor.close();
+
+        return pillReminderDBList;
+    }
+
+    public List<PillReminderEntryDB> getPillReminderEntryDBEntriesForSynchronization(Date date){
+        ArrayList<PillReminderEntryDB> pillReminderEntryDBList = new ArrayList<>();
+        String dateStr = ConvertingUtils.convertDateToString(date);
+        String userIdStr = String.valueOf(AccountGeneralUtils.curUser.getId());
+        String rawQuery = "select pre._id_pill_reminder_entry, pre.is_done, pre.reminder_date, pre._id_pill_reminder, pre.reminder_time, " +
+                "pre.synch_time, pre.change_type " +
+                "from pill_reminder_entries pre inner join pill_reminders pr on pre._id_pill_reminder=pr._id_pill_reminder " +
+                "where pre.synch_time >= ? and pr._id_user=?";
+
+        Cursor cursor = database.rawQuery(rawQuery, new String[]{dateStr, userIdStr});
+        if(cursor.moveToFirst()){
+            do{
+                UUID id = ConvertingUtils.convertBytesToUUID(cursor.getBlob(cursor.getColumnIndex("_id_pill_reminder_entry")));
+                int isDone = cursor.getInt(cursor.getColumnIndex("is_done"));
+                String reminderDateStr = cursor.getString(cursor.getColumnIndex("reminder_date"));
+                UUID idPillReminder = ConvertingUtils.convertBytesToUUID(cursor.getBlob(cursor.getColumnIndex("_id_pill_reminder")));
+                String reminderTimeStr = cursor.getString(cursor.getColumnIndex("reminder_time"));
+                int changeType = cursor.getInt(cursor.getColumnIndex("change_type"));
+                String synchTimeStr = cursor.getString(cursor.getColumnIndex("synch_time"));
+
+                pillReminderEntryDBList.add(new PillReminderEntryDB(ConvertingUtils.convertStringToDate(synchTimeStr),
+                        changeType, id, isDone,
+                        ConvertingUtils.convertStringToDate(reminderDateStr+" "+reminderTimeStr),
+                        idPillReminder, null));
+            }
+            while (cursor.moveToNext());
+        }
+        cursor.close();
+
+        return pillReminderEntryDBList;
+    }
+
+    public PillReminderEntryDB getPillReminderEntryDBForSynchronizationById(UUID id){
+        PillReminderEntryDB pillReminderEntryDB = null;
+        Cursor cursor = database.query("pill_reminder_entries", null, "_id_pill_reminder_entry=X'" + id.toString().replace("-", "") + "'",
+                null, null, null, null);
+
+        if(cursor.moveToFirst()){
+            do{
+                //UUID id = ConvertingUtils.convertBytesToUUID(cursor.getBlob(cursor.getColumnIndex("_id_pill_reminder_entry")));
+                int isDone = cursor.getInt(cursor.getColumnIndex("is_done"));
+                String reminderDateStr = cursor.getString(cursor.getColumnIndex("reminder_date"));
+                UUID idPillReminder = ConvertingUtils.convertBytesToUUID(cursor.getBlob(cursor.getColumnIndex("_id_pill_reminder")));
+                String reminderTimeStr = cursor.getString(cursor.getColumnIndex("reminder_time"));
+                int changeType = cursor.getInt(cursor.getColumnIndex("change_type"));
+                String synchTimeStr = cursor.getString(cursor.getColumnIndex("synch_time"));
+
+                pillReminderEntryDB = new PillReminderEntryDB(ConvertingUtils.convertStringToDate(synchTimeStr),
+                        changeType, id, isDone,
+                        ConvertingUtils.convertStringToDate(reminderDateStr+" "+reminderTimeStr),
+                        idPillReminder, null);
+            }
+            while (cursor.moveToNext());
+        }
+        cursor.close();
+
+        return pillReminderEntryDB;
+    }
+
+    //************************************************************Bebore_deletion************************************************************
+    public UUID updatePillReminderBeforeDeletion(UUID idPillReminder){
+        ContentValues pillReminderTableValues = new ContentValues();
+        pillReminderTableValues.put("change_type", 3);
+        database.update("pill_reminders", pillReminderTableValues, "lower(hex(_id_pill_reminder)) = ?",
+                new String[]{idPillReminder.toString().replace("-", "")});
+        return idPillReminder;
+    }
+
+    public UUID updatePillReminderEntryBeforeDeletion(UUID pillReminderEntryID){
+        ContentValues pillReminderEntryTableValues = new ContentValues();
+        pillReminderEntryTableValues.put("change_type", 3);
+        database.update("pill_reminder_entries", pillReminderEntryTableValues,
+                "_id_pill_reminder_entry=X'" + pillReminderEntryID.toString().replace("-", "") + "'", null);
+        return pillReminderEntryID;
     }
 }

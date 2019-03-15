@@ -3,6 +3,7 @@ package com.example.michel.mycalendar2.app_async_tasks;
 import android.content.Context;
 import android.os.AsyncTask;
 
+import com.example.michel.mycalendar2.app_async_tasks.synchronization.SynchronizationMeasurementReminderTask;
 import com.example.michel.mycalendar2.app_async_tasks.synchronization.SynchronizationWeekScheduleTask;
 import com.example.michel.mycalendar2.authentication.AccountGeneralUtils;
 import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
@@ -109,8 +110,9 @@ public class MeasurementRemindersInsertionTask extends AsyncTask<CycleAndMeasure
         MeasurementNotificationsCreationTask mnct = new MeasurementNotificationsCreationTask();
         mnct.execute(appContext);
         if (AccountGeneralUtils.curUser.getId()!=1){
-            SynchronizationWeekScheduleTask synchronizationWeekScheduleTask = new SynchronizationWeekScheduleTask(appContext);
-            synchronizationWeekScheduleTask.execute();
+            SynchronizationMeasurementReminderTask synchronizationMeasurementReminderTask = new
+                    SynchronizationMeasurementReminderTask(appContext, 1);
+            synchronizationMeasurementReminderTask.execute();
         }
     }
 }

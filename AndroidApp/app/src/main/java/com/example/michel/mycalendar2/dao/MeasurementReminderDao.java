@@ -14,6 +14,8 @@ import com.example.michel.mycalendar2.models.measurement.MeasurementReminder;
 import com.example.michel.mycalendar2.models.measurement.MeasurementReminderDBEntry;
 import com.example.michel.mycalendar2.models.measurement.MeasurementReminderEntry;
 import com.example.michel.mycalendar2.models.measurement.MeasurementStatEntry;
+import com.example.michel.mycalendar2.models.synchronization.MeasurementReminderDB;
+import com.example.michel.mycalendar2.models.synchronization.MeasurementReminderEntryDB;
 import com.example.michel.mycalendar2.utils.ConvertingUtils;
 import com.example.michel.mycalendar2.utils.DBStaticEntries;
 import com.example.michel.mycalendar2.utils.utilModels.MeasurementType;
@@ -388,7 +390,6 @@ public class MeasurementReminderDao {
                                           String startDate, UUID idCycle, @Nullable Integer idHavingMealsType,
                                           @Nullable Integer havingMealsTime, String annotation, Integer isActive, Integer times_aDay
     ){
-
         ContentValues measurementReminderTableValues = new ContentValues();
         measurementReminderTableValues.put("start_date", startDate);
         measurementReminderTableValues.put("_id_cycle", ConvertingUtils.convertUUIDToBytes(idCycle));
@@ -574,4 +575,127 @@ public class MeasurementReminderDao {
         database.update("measurement_reminder_entries", measurementReminderEntryTableValues,
                 "_id_measur_remind_entry=X'" + measurementReminderEntryID.toString().replace("-", "") + "'", null);
     }
+
+    public List<MeasurementReminderDB> getMeasurementReminderDBEntriesForSynchronization(Date date){
+        ArrayList<MeasurementReminderDB> measurementReminderDBList = new ArrayList<>();
+        String dateStr = ConvertingUtils.convertDateToString(date);
+        String userIdStr = String.valueOf(AccountGeneralUtils.curUser.getId());
+        String rawQuery = "select * " +
+                "from measurement_reminders mr " +
+                "where mr.synch_time >= ? and mr._id_user=?";
+
+        Cursor cursor = database.rawQuery(rawQuery, new String[]{dateStr, userIdStr});
+        if(cursor.moveToFirst()){
+            do{
+                UUID id = ConvertingUtils.convertBytesToUUID(cursor.getBlob(cursor.getColumnIndex("_id_measurement_reminder")));
+                int idMeasurementType = cursor.getInt(cursor.getColumnIndex("_id_measurement_type"));
+                String startDateStr = cursor.getString(cursor.getColumnIndex("start_date"));
+                UUID idCycle = null;
+                try {
+                    idCycle = ConvertingUtils.convertBytesToUUID(cursor.getBlob(cursor.getColumnIndex("_id_cycle")));
+                }
+                catch (NullPointerException ex){
+
+                }
+                int idHavingMealsType = cursor.getInt(cursor.getColumnIndex("_id_having_meals_type"));
+                int havingMealsTime = cursor.getInt(cursor.getColumnIndex("having_meals_time"));
+                String annotation = cursor.getString(cursor.getColumnIndex("annotation"));
+                int isActive = cursor.getInt(cursor.getColumnIndex("isActive"));
+                int timesADay = cursor.getInt(cursor.getColumnIndex("times_a_day"));
+                int changeType = cursor.getInt(cursor.getColumnIndex("change_type"));
+                String synchTimeStr = cursor.getString(cursor.getColumnIndex("synch_time"));
+                int idUser = cursor.getInt(cursor.getColumnIndex("_id_user"));
+
+                measurementReminderDBList.add(new MeasurementReminderDB(ConvertingUtils.convertStringToDate(synchTimeStr),
+                        changeType, id, idMeasurementType,
+                        ConvertingUtils.convertStringToOnlyDate(startDateStr), idCycle, idHavingMealsType>0?idHavingMealsType:null,
+                        havingMealsTime, annotation, isActive, timesADay, idUser));
+            }
+            while (cursor.moveToNext());
+        }
+        cursor.close();
+
+        return measurementReminderDBList;
+    }
+
+    public List<MeasurementReminderEntryDB> getMeasurementReminderEntryDBEntriesForSynchronization(Date date){
+        ArrayList<MeasurementReminderEntryDB> measurementReminderEntryDBList = new ArrayList<>();
+        String dateStr = ConvertingUtils.convertDateToString(date);
+        String userIdStr = String.valueOf(AccountGeneralUtils.curUser.getId());
+        String rawQuery = "select mre._id_measur_remind_entry, mre.value1, mre.value2, mre._id_measurement_reminder, mre.is_done, mre.reminder_date, " +
+                "mre.reminder_time, mre.synch_time, mre.change_type " +
+                "from measurement_reminder_entries mre inner join measurement_reminders mr on mre._id_measurement_reminder=mr._id_measurement_reminder " +
+                "where mre.synch_time >= ? and mr._id_user=?";
+
+        Cursor cursor = database.rawQuery(rawQuery, new String[]{dateStr, userIdStr});
+        if(cursor.moveToFirst()){
+            do{
+                UUID id = ConvertingUtils.convertBytesToUUID(cursor.getBlob(cursor.getColumnIndex("_id_measur_remind_entry")));
+                double value1 = cursor.getDouble(cursor.getColumnIndex("value1"));
+                double value2 = cursor.getDouble(cursor.getColumnIndex("value2"));
+                UUID idMeasurementReminder = ConvertingUtils.convertBytesToUUID(cursor.getBlob(cursor.getColumnIndex("_id_measurement_reminder")));
+                int isDone = cursor.getInt(cursor.getColumnIndex("is_done"));
+                String reminderDateStr = cursor.getString(cursor.getColumnIndex("reminder_date"));
+                String reminderTimeStr = cursor.getString(cursor.getColumnIndex("reminder_time"));
+                int changeType = cursor.getInt(cursor.getColumnIndex("change_type"));
+                String synchTimeStr = cursor.getString(cursor.getColumnIndex("synch_time"));
+
+                measurementReminderEntryDBList.add(new MeasurementReminderEntryDB(ConvertingUtils.convertStringToDate(synchTimeStr),
+                        changeType, id, value1, value2, idMeasurementReminder,
+                        isDone, null,
+                        ConvertingUtils.convertStringToDate(reminderDateStr+" "+reminderTimeStr)));
+            }
+            while (cursor.moveToNext());
+        }
+        cursor.close();
+
+        return measurementReminderEntryDBList;
+    }
+
+    public MeasurementReminderEntryDB getMeasurementReminderEntryDBForSynchronizationById(UUID id){
+        MeasurementReminderEntryDB measurementReminderEntryDB = null;
+        Cursor cursor = database.query("measurement_reminder_entries", null, "_id_measur_remind_entry=X'" + id.toString().replace("-", "") + "'",
+                null, null, null, null);
+
+        if(cursor.moveToFirst()){
+            do{
+                //UUID id = ConvertingUtils.convertBytesToUUID(cursor.getBlob(cursor.getColumnIndex("_id_measur_remind_entry")));
+                double value1 = cursor.getDouble(cursor.getColumnIndex("value1"));
+                double value2 = cursor.getDouble(cursor.getColumnIndex("value2"));
+                UUID idMeasurementReminder = ConvertingUtils.convertBytesToUUID(cursor.getBlob(cursor.getColumnIndex("_id_measurement_reminder")));
+                int isDone = cursor.getInt(cursor.getColumnIndex("is_done"));
+                String reminderDateStr = cursor.getString(cursor.getColumnIndex("reminder_date"));
+                String reminderTimeStr = cursor.getString(cursor.getColumnIndex("reminder_time"));
+                int changeType = cursor.getInt(cursor.getColumnIndex("change_type"));
+                String synchTimeStr = cursor.getString(cursor.getColumnIndex("synch_time"));
+
+                measurementReminderEntryDB = new MeasurementReminderEntryDB(ConvertingUtils.convertStringToDate(synchTimeStr),
+                        changeType, id, value1, value2, idMeasurementReminder,
+                        isDone, null,
+                        ConvertingUtils.convertStringToDate(reminderDateStr+" "+reminderTimeStr));
+            }
+            while (cursor.moveToNext());
+        }
+        cursor.close();
+
+        return measurementReminderEntryDB;
+    }
+
+    //************************************************************Bebore_deletion************************************************************
+    public UUID updateMeasurementReminderBeforeDeletion(UUID idMeasurementReminder){
+        ContentValues measurementReminderTableValues = new ContentValues();
+        measurementReminderTableValues.put("change_type", 3);
+        database.update("measurement_reminders", measurementReminderTableValues,
+                "lower(hex(_id_measurement_reminder)) = ?", new String[]{idMeasurementReminder.toString().replace("-", "")});
+        return idMeasurementReminder;
+    }
+
+    public UUID updateMeasurementReminderEntryBeforeDeletion(UUID measurementReminderEntryID){
+        ContentValues measurementReminderEntryTableValues = new ContentValues();
+        measurementReminderEntryTableValues.put("change_type", 3);
+        database.update("measurement_reminder_entries", measurementReminderEntryTableValues,
+                "_id_measur_remind_entry=X'" + measurementReminderEntryID.toString().replace("-", "") + "'", null);
+        return measurementReminderEntryID;
+    }
+
 }

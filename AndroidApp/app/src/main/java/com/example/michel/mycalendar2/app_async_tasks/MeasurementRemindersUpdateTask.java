@@ -4,6 +4,8 @@ import android.app.AlarmManager;
 import android.content.Context;
 import android.os.AsyncTask;
 
+import com.example.michel.mycalendar2.app_async_tasks.synchronization.SynchronizationMeasurementReminderTask;
+import com.example.michel.mycalendar2.authentication.AccountGeneralUtils;
 import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
 import com.example.michel.mycalendar2.calendarview.data.DateData;
 import com.example.michel.mycalendar2.dao.CycleDao;
@@ -145,9 +147,14 @@ public class MeasurementRemindersUpdateTask extends AsyncTask<CycleAndMeasuremen
         return null;
     }
 
-    /*@Override
+    @Override
     protected void onPostExecute(Void aVoid) {
-        MeasurementNotificationsCreationTask mnct = new MeasurementNotificationsCreationTask();
-        mnct.execute(appContext);
-    }*/
+        /*MeasurementNotificationsCreationTask mnct = new MeasurementNotificationsCreationTask();
+        mnct.execute(appContext);*/
+        if (AccountGeneralUtils.curUser.getId()!=1){
+            SynchronizationMeasurementReminderTask synchronizationMeasurementReminderTask = new
+                    SynchronizationMeasurementReminderTask(appContext, 2);
+            synchronizationMeasurementReminderTask.execute();
+        }
+    }
 }

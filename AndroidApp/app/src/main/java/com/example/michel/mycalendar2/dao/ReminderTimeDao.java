@@ -5,7 +5,9 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.example.michel.mycalendar2.authentication.AccountGeneralUtils;
 import com.example.michel.mycalendar2.models.ReminderTime;
+import com.example.michel.mycalendar2.models.synchronization.ReminderTimeDB;
 import com.example.michel.mycalendar2.utils.ConvertingUtils;
 
 import java.util.ArrayList;
@@ -93,4 +95,63 @@ public class ReminderTimeDao {
 
         return reminderTimeId;
     }
+
+    public List<ReminderTimeDB> getReminderTimeDBEntriesForSynchronization(Date date){
+        ArrayList<ReminderTimeDB> reminderTimeDBList = new ArrayList<>();
+        String dateStr = ConvertingUtils.convertDateToString(date);
+        String userIdStr = String.valueOf(AccountGeneralUtils.curUser.getId());
+        String rawQuery = "select rt._id_reminder_time, rt.reminder_time, rt._id_pill_reminder, rt._id_measurement_reminder, rt.synch_time, rt.change_type " +
+                "from reminder_time rt inner join pill_reminders pr on rt._id_pill_reminder=pr._id_pill_reminder " +
+                "where rt.synch_time >= ? and pr._id_user=? " +
+                "union " +
+                "select rt._id_reminder_time, rt.reminder_time, rt._id_pill_reminder, rt._id_measurement_reminder, rt.synch_time, rt.change_type " +
+                "from reminder_time rt inner join measurement_reminders mr on rt._id_measurement_reminder=mr._id_measurement_reminder " +
+                "where rt.synch_time >= ? and mr._id_user=?";
+
+        Cursor cursor = database.rawQuery(rawQuery, new String[]{dateStr, userIdStr, dateStr, userIdStr});
+        if(cursor.moveToFirst()){
+            do{
+                UUID id = ConvertingUtils.convertBytesToUUID(cursor.getBlob(0));
+                String reminderTimeStr = cursor.getString(1);
+                UUID idPillReminder = null;
+                UUID idMeasurementReminder = null;
+                try {
+                    idPillReminder = ConvertingUtils.convertBytesToUUID(cursor.getBlob(2));
+                }
+                catch (NullPointerException ex){
+
+                }
+                try {
+                    idMeasurementReminder = ConvertingUtils.convertBytesToUUID(cursor.getBlob(3));
+                }
+                catch (NullPointerException ex){
+
+                }
+                String synchTimeStr = cursor.getString(4);
+                int changeType = cursor.getInt(5);
+
+                reminderTimeDBList.add(new ReminderTimeDB(ConvertingUtils.convertStringToDate(synchTimeStr),
+                        changeType, id, ConvertingUtils.convertStringToTime(reminderTimeStr),
+                        idPillReminder, idMeasurementReminder));
+            }
+            while (cursor.moveToNext());
+        }
+        cursor.close();
+
+        return reminderTimeDBList;
+    }
+
+    //************************************************************Bebore_deletion************************************************************
+    public void updateReminderTimeBeforeDeletionByReminderId(UUID idReminder, int type){
+        ContentValues reminderTimeTableValues = new ContentValues();
+        reminderTimeTableValues.put("change_type", 3);
+        if (type==0)
+            database.update("reminder_time", reminderTimeTableValues,"lower(hex(_id_pill_reminder)) = ?",
+                    new String[]{idReminder.toString().replace("-", "")});
+        else
+            database.update("reminder_time", reminderTimeTableValues,"lower(hex(_id_measurement_reminder)) = ?",
+                    new String[]{idReminder.toString().replace("-", "")});
+
+    }
+
 }

@@ -1,7 +1,7 @@
 package com.example.michel.mycalendar2.models.synchronization;
 
-import java.sql.Date;
 import java.sql.Time;
+import java.util.Date;
 import java.util.UUID;
 
 import lombok.Data;
@@ -14,12 +14,12 @@ public class PillReminderEntryDB extends SynchModel {
     private int isDone;
     private Date reminderDate;
     private UUID idPillReminder;
-    private Time reminderTime;
+    private Date reminderTime;
     //private Integer isOneTime;
 
     public PillReminderEntryDB(Date synchTime, int changeType, UUID idPillReminderEntry,
                                int isDone, Date reminderDate, UUID idPillReminder,
-                               Time reminderTime)
+                               Date reminderTime)
     {
         super(synchTime,changeType);
         this.idPillReminderEntry = idPillReminderEntry;

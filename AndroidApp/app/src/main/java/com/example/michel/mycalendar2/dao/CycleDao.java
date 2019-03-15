@@ -174,14 +174,20 @@ public class CycleDao {
                 int periodDMType = cursor.getInt(2);
                 int onceAPeriod = cursor.getInt(3);
                 int onceAPeriodDMType = cursor.getInt(4);
-                UUID idWeekSchedule = ConvertingUtils.convertBytesToUUID(cursor.getBlob(5));
+                UUID idWeekSchedule = null;
+                try {
+                    idWeekSchedule = ConvertingUtils.convertBytesToUUID(cursor.getBlob(5));
+                }
+                catch (NullPointerException ex){
+
+                }
                 int idCyclingType = cursor.getInt(6);
                 int changeType = cursor.getInt(7);
                 String synchTimeStr = cursor.getString(8);
 
                 cycleDBArrayList.add(new CycleDB(ConvertingUtils.convertStringToDate(synchTimeStr),
-                        changeType, id, period, periodDMType, onceAPeriod,
-                        onceAPeriodDMType, idWeekSchedule, idCyclingType));
+                        changeType, id, period, periodDMType, onceAPeriod>0?onceAPeriod:null,
+                        onceAPeriodDMType>0?onceAPeriodDMType:null, idWeekSchedule, idCyclingType));
             }
             while (cursor.moveToNext());
         }
@@ -194,11 +200,11 @@ public class CycleDao {
         ArrayList<WeekScheduleDB> weekScheduleDBArrayList = new ArrayList<>();
         String dateStr = ConvertingUtils.convertDateToString(date);
         String userIdStr = String.valueOf(AccountGeneralUtils.curUser.getId());
-        String rawQuery = "select ws.mon, ws.tue, ws.wed, ws.thu, ws.fri, ws.sat, ws.sun,  ws._id_week_schedule, ws.change_type, ws.synch_time " +
+        String rawQuery = "select ws.mon, ws.tue, ws.wed, ws.thu, ws.fri, ws.sat, ws.sun, ws._id_week_schedule, ws.change_type, ws.synch_time " +
                 "from week_schedules ws inner join cycles cl on ws._id_week_schedule=cl._id_week_schedule inner join pill_reminders pr on cl._id_cycle=pr._id_cycle " +
                 "where ws.synch_time >= ? and pr._id_user=? " +
                 "union " +
-                "select ws.mon, ws.tue, ws.wed, ws.thu, ws.fri, ws.sat, ws.sun,  ws._id_week_schedule, ws.change_type, ws.synch_time " +
+                "select ws.mon, ws.tue, ws.wed, ws.thu, ws.fri, ws.sat, ws.sun, ws._id_week_schedule, ws.change_type, ws.synch_time " +
                 "from week_schedules ws inner join cycles cl on ws._id_week_schedule=cl._id_week_schedule inner join measurement_reminders mr on cl._id_cycle=mr._id_cycle " +
                 "where ws.synch_time >= ? and mr._id_user=?";
 
@@ -241,5 +247,22 @@ public class CycleDao {
         cursor.close();
 
         return weekScheduleDBArrayList;
+    }
+
+    //************************************************************Bebore_deletion************************************************************
+    public UUID updateCycleBeforeDeletion(UUID cycleId){
+        ContentValues cycleTableValues = new ContentValues();
+        cycleTableValues.put("change_type", 3);
+        database.update("cycles", cycleTableValues, "lower(hex(_id_cycle)) = ?",
+                new String[]{cycleId.toString().replace("-", "")});
+        return cycleId;
+    }
+
+    public UUID updateWeekScheduleBeforeDeletion(UUID weekScheduleID){
+        ContentValues weekScheduleTableValues = new ContentValues();
+        weekScheduleTableValues.put("change_type", 3);
+        database.update("week_schedules", weekScheduleTableValues,
+                "lower(hex(_id_week_schedule)) = ?", new String[]{weekScheduleID.toString().replace("-", "")});
+        return weekScheduleID;
     }
 }
