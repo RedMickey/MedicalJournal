@@ -14,7 +14,10 @@ import com.example.michel.mycalendar2.dao.ReminderTimeDao;
 import com.example.michel.mycalendar2.models.synchronization.PillReminderReqModule;
 import com.example.michel.mycalendar2.models.synchronization.WeekScheduleDB;
 import com.example.michel.mycalendar2.utils.DateTypeAdapter;
+import com.example.michel.mycalendar2.utils.utilModels.DataForDeletion;
 import com.google.gson.GsonBuilder;
+
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -30,6 +33,7 @@ public class SynchronizationPillReminderTask extends AsyncTask<Void, Void, Integ
     private Context context;
     private AccountManager accountManager;
     private int typeOfAction;
+    private DataForDeletion dataForDeletion;
 
     public SynchronizationPillReminderTask(Context context, int typeOfAction){
         this.context = context;
@@ -134,6 +138,16 @@ public class SynchronizationPillReminderTask extends AsyncTask<Void, Void, Integ
             }
         }
 
+        try {
+            JSONObject jsonObject = new JSONObject(response);
+            boolean hasDeletion = jsonObject.getBoolean("hasDeletion");
+            if (hasDeletion)
+                resCode = 2;
+        }
+        catch (Exception e){
+            Log.e("JSONObject", e.getMessage());
+        }
+
         return resCode;
     }
 
@@ -143,6 +157,22 @@ public class SynchronizationPillReminderTask extends AsyncTask<Void, Void, Integ
             AccountGeneralUtils.curUser.setSynchronizationTime(new Date());
             UserLocalUpdateTask userLocalUpdateTask = new UserLocalUpdateTask(2);
             userLocalUpdateTask.execute(AccountGeneralUtils.curUser);
+            if (typeOfAction == 2){
+                AfterSynchronizationDeletionTask afterSynchronizationDeletionTask = new AfterSynchronizationDeletionTask(
+                        1,
+                        dataForDeletion.getReminderId(),
+                        dataForDeletion.getCurDateStr()
+                );
+                afterSynchronizationDeletionTask.execute();
+            }
         }
+    }
+
+    public DataForDeletion getDataForDeletion() {
+        return dataForDeletion;
+    }
+
+    public void setDataForDeletion(DataForDeletion dataForDeletion) {
+        this.dataForDeletion = dataForDeletion;
     }
 }

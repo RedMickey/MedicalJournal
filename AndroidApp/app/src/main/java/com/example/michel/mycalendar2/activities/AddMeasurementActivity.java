@@ -32,6 +32,8 @@ import com.example.michel.mycalendar2.app_async_tasks.MeasurementNotificationsCr
 import com.example.michel.mycalendar2.app_async_tasks.MeasurementRemindersInsertionTask;
 import com.example.michel.mycalendar2.app_async_tasks.MeasurementRemindersUpdateTask;
 import com.example.michel.mycalendar2.app_async_tasks.PillNotificationsCreationTask;
+import com.example.michel.mycalendar2.app_async_tasks.synchronization.BeforeDeletionSynchronizationTask;
+import com.example.michel.mycalendar2.authentication.AccountGeneralUtils;
 import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
 import com.example.michel.mycalendar2.calendarview.data.DateData;
 import com.example.michel.mycalendar2.calendarview.utils.CalendarUtil;
@@ -344,11 +346,29 @@ public class AddMeasurementActivity extends AppCompatActivity {
                                     MeasurementReminderDao measurementReminderDao = new MeasurementReminderDao(dbAdapter.open().getDatabase());
                                     ReminderTimeDao reminderTimeDao = new ReminderTimeDao(dbAdapter.getDatabase());
                                     CycleDao cycleDao = new CycleDao(dbAdapter.getDatabase());
-                                    measurementReminderDao.deleteMeasurementReminderEntriesByMeasurementReminderId(oldMeasurementReminder.getIdMeasurementReminder());
-                                    reminderTimeDao.deleteReminderTimeByReminderId(oldMeasurementReminder.getIdMeasurementReminder(), 1);
-                                    if (idWeekSchedule!=null)
-                                        cycleDao.deleteWeekScheduleByIdCascade(idWeekSchedule);
-                                    cycleDao.deleteCycleByIdCascade(oldMeasurementReminder.getIdCycle());
+
+                                    if (AccountGeneralUtils.curUser.getId()==1){
+                                        measurementReminderDao.deleteMeasurementReminderEntriesByMeasurementReminderId(oldMeasurementReminder.getIdMeasurementReminder());
+                                        reminderTimeDao.deleteReminderTimeByReminderId(oldMeasurementReminder.getIdMeasurementReminder(), 1);
+                                        if (idWeekSchedule!=null)
+                                            cycleDao.deleteWeekScheduleByIdCascade(idWeekSchedule);
+                                        cycleDao.deleteCycleByIdCascade(oldMeasurementReminder.getIdCycle());
+                                    }
+                                    else {
+                                        measurementReminderDao.updateBeforeDeletionMeasurementReminderEntriesByMeasurementReminderId(
+                                                oldMeasurementReminder.getIdMeasurementReminder());
+                                        reminderTimeDao.updateBeforeDeletionReminderTimeByReminderId(oldMeasurementReminder.getIdMeasurementReminder(), 1);
+                                        if (idWeekSchedule!=null)
+                                            cycleDao.updateBeforeDeletionWeekScheduleById(idWeekSchedule);
+                                        cycleDao.updateBeforeDeletionCycle(oldMeasurementReminder.getIdCycle());
+                                        measurementReminderDao.updateBeforeDeletionMeasurementReminder(oldMeasurementReminder.getIdMeasurementReminder());
+                                        BeforeDeletionSynchronizationTask beforeDeletionSynchronizationTask = new BeforeDeletionSynchronizationTask(
+                                                getApplicationContext(), 2
+                                        );
+                                        beforeDeletionSynchronizationTask.setReminderId(oldMeasurementReminder.getIdMeasurementReminder());
+                                        beforeDeletionSynchronizationTask.execute();
+                                    }
+
                                     dbAdapter.close();
                                     MeasurementNotificationsCreationTask nctNew = new MeasurementNotificationsCreationTask(2);
                                     nctNew.execute(getApplicationContext());

@@ -78,10 +78,15 @@ public class PillRemindersUpdateTask extends AsyncTask<CycleAndPillComby, Void, 
         PillNotificationsCreationTask.cancelAlarms(appContext, tomorrowPillReminderEntriesOld, alarmManager);
 
         cal.add(Calendar.DAY_OF_MONTH, -1);
-        pillReminderDao.deletePillReminderEntriesAfterDate(pillReminderDBInsertEntry.getIdPillReminder(), curDate);
-        // need check for change start date
 
-        reminderTimeDao.deleteReminderTimeByReminderId(pillReminderDBInsertEntry.getIdPillReminder(),0);
+        if (AccountGeneralUtils.curUser.getId()==1){
+            pillReminderDao.deletePillReminderEntriesAfterDate(pillReminderDBInsertEntry.getIdPillReminder(), curDate);
+            reminderTimeDao.deleteReminderTimeByReminderId(pillReminderDBInsertEntry.getIdPillReminder(),0);
+        }
+        else {
+            pillReminderDao.updateBeforeDeletionPillReminderEntriesAfterDate(pillReminderDBInsertEntry.getIdPillReminder(), curDate);
+            reminderTimeDao.updateBeforeDeletionReminderTimeByReminderId(pillReminderDBInsertEntry.getIdPillReminder(),0);
+        }
 
         for (int i=0; i<pillReminderDBInsertEntry.getReminderTimes().length; i++){
             reminderTimeDao.insertReminderTime(pillReminderDBInsertEntry.getReminderTimes()[i].getReminderTimeStr(), pillReminderDBInsertEntry.getIdPillReminder(), 0);

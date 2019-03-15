@@ -69,10 +69,10 @@ public class MeasurementReminderDao {
                 "      END as count_left, mr._id_measurement_reminder " +
                 "    from measurement_reminders mr inner join cycles cl on mr._id_cycle=cl._id_cycle ORDER BY mr.IsActive";*/
         String rawQuery = "select  mr.start_date, mr.isActive, cl.period, mr.times_a_day, mr._id_measurement_type, mr._id_having_meals_type, cl.period_DM_type, " +
-                "(select COUNT(*) from measurement_reminder_entries mre where mre._id_measurement_reminder=mr._id_measurement_reminder and mre.is_done=0 and mr._id_user=? ) " +
-                "as count_left, mr._id_measurement_reminder, mt._id_measur_value_type " +
+                "(select COUNT(*) from measurement_reminder_entries mre where mre._id_measurement_reminder=mr._id_measurement_reminder and mre.is_done=0 and mre.change_type<3 " +
+                "and mr._id_user=? ) as count_left, mr._id_measurement_reminder, mt._id_measur_value_type " +
                 "from measurement_reminders mr inner join cycles cl on mr._id_cycle=cl._id_cycle inner join measurement_types mt on mr._id_measurement_type=mt._id_measurement_type " +
-                "where mr._id_user=? ORDER BY mr.isActive DESC";
+                "where mr.change_type<3 and mr._id_user=? ORDER BY mr.isActive DESC";
         String userIdStr = String.valueOf(AccountGeneralUtils.curUser.getId());
         Cursor cursor = database.rawQuery(rawQuery, new String[]{userIdStr, userIdStr});
         if(cursor.moveToFirst()){
@@ -135,7 +135,7 @@ public class MeasurementReminderDao {
             String rawQuery = "select AVG(mre.value1) as avg_value1, AVG(mre.value2) as avg_value2, mre.reminder_date" +
                     " from measurement_reminder_entries mre inner join measurement_reminders mr on mre._id_measurement_reminder=mr._id_measurement_reminder" +
                     " where mre._id_measurement_reminder = X'"+uuidStr+"' and mre.is_done = 1 and strftime('%m', mre.reminder_date) = ? and strftime('%Y', mre.reminder_date) = ?" +
-                    " and mre.reminder_time between ? and ? and mr._id_user=? GROUP BY mre.reminder_date";
+                    " and mre.reminder_time between ? and ? and mre.change_type<3 and mr._id_user=? GROUP BY mre.reminder_date";
             cursor = database.rawQuery(rawQuery, new String[]{String.format("%02d",month), String.valueOf(year),
                     timeStr1, timeStr2, String.valueOf(AccountGeneralUtils.curUser.getId())});
         }
@@ -143,7 +143,7 @@ public class MeasurementReminderDao {
             String rawQuery = "select AVG(mre.value1) as avg_value1, AVG(mre.value2) as avg_value2, mre.reminder_date" +
                     " from measurement_reminder_entries mre inner join measurement_reminders mr on mre._id_measurement_reminder=mr._id_measurement_reminder" +
                     " where mre._id_measurement_reminder = X'"+uuidStr+"' and mre.is_done = 1 and strftime('%m', mre.reminder_date) = ? and strftime('%Y', mre.reminder_date) = ?" +
-                    " and mr._id_user=? GROUP BY mre.reminder_date";
+                    " and mre.change_type<3 and mr._id_user=? GROUP BY mre.reminder_date";
             cursor = database.rawQuery(rawQuery, new String[]{String.format("%02d",month), String.valueOf(year),
                     String.valueOf(AccountGeneralUtils.curUser.getId())});
         }
@@ -151,7 +151,7 @@ public class MeasurementReminderDao {
             String rawQuery = "select AVG(mre.value1) as avg_value1, AVG(mre.value2) as avg_value2, mre.reminder_date" +
                     " from measurement_reminder_entries mre inner join measurement_reminders mr on mre._id_measurement_reminder=mr._id_measurement_reminder" +
                     " where mre._id_measurement_reminder = X'"+uuidStr+"' and mre.is_done = 1 and strftime('%m', mre.reminder_date) = ? and strftime('%Y', mre.reminder_date) = ?" +
-                    " and (mre.reminder_time between ? and '00:00:00' or mre.reminder_time between '00:00:00' and ?) and mr._id_user=? GROUP BY mre.reminder_date";
+                    " and (mre.reminder_time between ? and '00:00:00' or mre.reminder_time between '00:00:00' and ?) and mre.change_type<3 and mr._id_user=? GROUP BY mre.reminder_date";
             cursor = database.rawQuery(rawQuery, new String[]{String.valueOf(month), String.valueOf(year),
                     String.valueOf(AccountGeneralUtils.curUser.getId())});
         }
@@ -179,8 +179,8 @@ public class MeasurementReminderDao {
         Cursor cursor;
         String userIdStr = String.valueOf(AccountGeneralUtils.curUser.getId());
         if (limit!=-1) {
-            String rawQuery = "select mr.start_date, mr.isActive, cl.period, mr.times_a_day, mr._id_measurement_type, mr._id_having_meals_type, cl.period_DM_type, mr._id_measurement_reminder, mt._id_measur_value_type," +
-                    " COUNT(sub.id) as count_done, SUM(sub.value1) as sum_value1, SUM(sub.value2) as sum_value2" +
+            String rawQuery = "select mr.start_date, mr.isActive, cl.period, mr.times_a_day, mr._id_measurement_type, mr._id_having_meals_type, cl.period_DM_type, mr._id_measurement_reminder," +
+                    " mt._id_measur_value_type, COUNT(sub.id) as count_done, SUM(sub.value1) as sum_value1, SUM(sub.value2) as sum_value2" +
                     " from measurement_reminders mr inner join cycles cl on mr._id_cycle=cl._id_cycle inner join measurement_types mt on mr._id_measurement_type=mt._id_measurement_type" +
                     " join (" +
                     "    select" +
@@ -188,13 +188,13 @@ public class MeasurementReminderDao {
                     "        mre.value1," +
                     "        mre.value2" +
                     "    from measurement_reminder_entries mre inner join measurement_reminders mr on mre._id_measurement_reminder=mr._id_measurement_reminder where mre.is_done=1" +
-                    "    and mr._id_user=?" +
-                    " ) sub on sub.id=mr._id_measurement_reminder where mr._id_user=? GROUP BY mr._id_measurement_reminder ORDER BY mr.start_date DESC LIMIT ?";
+                    "    and mre.change_type<3 and mr._id_user=?" +
+                    " ) sub on sub.id=mr._id_measurement_reminder where mr.change_type<3 and mr._id_user=? GROUP BY mr._id_measurement_reminder ORDER BY mr.start_date DESC LIMIT ?";
             cursor = database.rawQuery(rawQuery, new String[]{userIdStr, userIdStr, String.valueOf(limit)});
         }
         else {
-            String rawQuery = "select mr.start_date, mr.isActive, cl.period, mr.times_a_day, mr._id_measurement_type, mr._id_having_meals_type, cl.period_DM_type, mr._id_measurement_reminder, mt._id_measur_value_type," +
-                    " COUNT(sub.id) as count_done, SUM(sub.value1) as sum_value1, SUM(sub.value2) as sum_value2" +
+            String rawQuery = "select mr.start_date, mr.isActive, cl.period, mr.times_a_day, mr._id_measurement_type, mr._id_having_meals_type, cl.period_DM_type, mr._id_measurement_reminder," +
+                    " mt._id_measur_value_type, COUNT(sub.id) as count_done, SUM(sub.value1) as sum_value1, SUM(sub.value2) as sum_value2" +
                     " from measurement_reminders mr inner join cycles cl on mr._id_cycle=cl._id_cycle inner join measurement_types mt on mr._id_measurement_type=mt._id_measurement_type" +
                     " join (" +
                     "    select" +
@@ -202,8 +202,8 @@ public class MeasurementReminderDao {
                     "        mre.value1," +
                     "        mre.value2" +
                     "    from measurement_reminder_entries mre inner join measurement_reminders mr on mre._id_measurement_reminder=mr._id_measurement_reminder where mre.is_done=1" +
-                    "    and mr._id_user=?" +
-                    " ) sub on sub.id=mr._id_measurement_reminder where mr._id_user=? GROUP BY mr._id_measurement_reminder ORDER BY mr.start_date DESC";
+                    "    and mre.change_type<3 and mr._id_user=?" +
+                    " ) sub on sub.id=mr._id_measurement_reminder where mr.change_type<3 and mr._id_user=? GROUP BY mr._id_measurement_reminder ORDER BY mr.start_date DESC";
             cursor = database.rawQuery(rawQuery, new String[]{userIdStr, userIdStr});
         }
         if(cursor.moveToFirst()){
@@ -312,7 +312,7 @@ public class MeasurementReminderDao {
         String rawQuery = "select mr._id_measurement_reminder, mr._id_measurement_type, mt._id_measur_value_type, mr.start_date, mr._id_having_meals_type, mr.having_meals_time, mr.annotation, mr.isActive, mr.times_a_day, " +
                 " mr._id_cycle, cl.period, cl.period_DM_type, cl.once_a_period, cl.once_a_period_DM_type, cl._id_cycling_type, cl._id_week_schedule " +
                 " from measurement_reminders mr inner join cycles cl on mr._id_cycle=cl._id_cycle inner join measurement_types mt on mr._id_measurement_type=mt._id_measurement_type " +
-                " where mr._id_user=? and mr._id_measurement_reminder=X'"+uuidStr+"'";
+                " where mr.change_type<3 and mr._id_user=? and mr._id_measurement_reminder=X'"+uuidStr+"'";
         Cursor cursor = database.rawQuery(rawQuery, new String[]{String.valueOf(AccountGeneralUtils.curUser.getId())});
         CycleAndMeasurementComby cycleAndMeasurementComby = new CycleAndMeasurementComby();
         if(cursor.moveToFirst()){
@@ -410,11 +410,18 @@ public class MeasurementReminderDao {
                 new String[]{date, idMeasurementReminder.toString().replace("-", "")});
     }
 
+    public void deleteMeasurementReminderById(UUID idMeasurementReminder) {
+        database.delete("measurement_reminders", "lower(hex(_id_measurement_reminder)) = ?",
+                new String[]{idMeasurementReminder.toString().replace("-", "")});
+    }
+
     public List<MeasurementReminderEntry> getMeasurementReminderEntriesByDate(DateData date){
         ArrayList<MeasurementReminderEntry> measurementReminderEntry = new ArrayList<>();
-        String rawQuery = "select mre._id_measur_remind_entry, mr._id_measurement_type, mvt.type_value_name, mt.type_name, mre.value1, mre.value2, mre.is_done, mr._id_having_meals_type, mre.reminder_time, mr.having_meals_time, mre.reminder_date " +
-                " from measurement_reminder_entries mre inner join measurement_reminders mr on mre._id_measurement_reminder=mr._id_measurement_reminder inner join measurement_types mt on mr._id_measurement_type=mt._id_measurement_type " +
-                " inner join measurement_value_types mvt on mt._id_measur_value_type=mvt._id_measur_value_type where mre.reminder_date=? and (mr.IsActive=1 or mre.is_done=1) and mr._id_user=? ORDER BY mre.is_done";
+        String rawQuery = "select mre._id_measur_remind_entry, mr._id_measurement_type, mvt.type_value_name, mt.type_name, mre.value1, mre.value2, mre.is_done, mr._id_having_meals_type," +
+                " mre.reminder_time, mr.having_meals_time, mre.reminder_date " +
+                " from measurement_reminder_entries mre inner join measurement_reminders mr on mre._id_measurement_reminder=mr._id_measurement_reminder inner join measurement_types mt on" +
+                " mr._id_measurement_type=mt._id_measurement_type inner join measurement_value_types mvt on mt._id_measur_value_type=mvt._id_measur_value_type where mre.reminder_date=? and" +
+                " (mr.IsActive=1 or mre.is_done=1) and mre.change_type<3 and mr._id_user=? ORDER BY mre.is_done";
         Cursor cursor = database.rawQuery(rawQuery, new String[]{date.getDateString(), String.valueOf(AccountGeneralUtils.curUser.getId())});
         Calendar calendar = Calendar.getInstance();
         if(cursor.moveToFirst()){
@@ -458,10 +465,11 @@ public class MeasurementReminderDao {
     public List<MeasurementReminderEntry> getMeasurementReminderEntriesByDateAndMeasurementReminder(UUID idMeasurementReminder, DateData date){
         String uuidStr = idMeasurementReminder.toString().replace("-", "");
         ArrayList<MeasurementReminderEntry> measurementReminderEntry = new ArrayList<>();
-        String rawQuery = "select mre._id_measur_remind_entry, mr._id_measurement_type, mvt.type_value_name, mt.type_name, mre.value1, mre.value2, mre.is_done, mr._id_having_meals_type, mre.reminder_time, mr.having_meals_time, mre.reminder_date " +
-                " from measurement_reminder_entries mre inner join measurement_reminders mr on mre._id_measurement_reminder=mr._id_measurement_reminder inner join measurement_types mt on mr._id_measurement_type=mt._id_measurement_type " +
-                " inner join measurement_value_types mvt on mt._id_measur_value_type=mvt._id_measur_value_type where mre.reminder_date=? and mre._id_measurement_reminder =X'" + uuidStr + "'" +
-                " and (mr.IsActive=1 or mre.is_done=1) and mr._id_user=? ORDER BY mre.is_done";
+        String rawQuery = "select mre._id_measur_remind_entry, mr._id_measurement_type, mvt.type_value_name, mt.type_name, mre.value1, mre.value2, mre.is_done, mr._id_having_meals_type," +
+                " mre.reminder_time, mr.having_meals_time, mre.reminder_date " +
+                " from measurement_reminder_entries mre inner join measurement_reminders mr on mre._id_measurement_reminder=mr._id_measurement_reminder inner join measurement_types mt on" +
+                " mr._id_measurement_type=mt._id_measurement_type inner join measurement_value_types mvt on mt._id_measur_value_type=mvt._id_measur_value_type where mre.reminder_date=? and" +
+                " mre._id_measurement_reminder =X'" + uuidStr + "' and (mr.IsActive=1 or mre.is_done=1) and mre.change_type<3 and mr._id_user=? ORDER BY mre.is_done";
         Cursor cursor = database.rawQuery(rawQuery, new String[]{date.getDateString(), String.valueOf(AccountGeneralUtils.curUser.getId())});
         Calendar calendar = Calendar.getInstance();
         if(cursor.moveToFirst()){
@@ -507,18 +515,20 @@ public class MeasurementReminderDao {
         Cursor cursor;
         String userIdStr = String.valueOf(AccountGeneralUtils.curUser.getId());
         if (param==0){
-            String rawQuery = "select mre._id_measur_remind_entry, mr._id_measurement_type, mvt.type_value_name, mt.type_name, mre.value1, mre.value2, mre.is_done, mr._id_having_meals_type, mre.reminder_time, mr.having_meals_time, mre.reminder_date" +
-                    " from measurement_reminder_entries mre inner join measurement_reminders mr on mre._id_measurement_reminder=mr._id_measurement_reminder inner join measurement_types mt on mr._id_measurement_type=mt._id_measurement_type" +
-                    " inner join measurement_value_types mvt on mt._id_measur_value_type=mvt._id_measur_value_type where mre.reminder_date between ? and ? and (mr.IsActive=1 or mre.is_done=1) and mr._id_user=?" +
-                    " ORDER BY mre.reminder_date DESC, mre.reminder_time DESC";
+            String rawQuery = "select mre._id_measur_remind_entry, mr._id_measurement_type, mvt.type_value_name, mt.type_name, mre.value1, mre.value2, mre.is_done, mr._id_having_meals_type," +
+                    " mre.reminder_time, mr.having_meals_time, mre.reminder_date" +
+                    " from measurement_reminder_entries mre inner join measurement_reminders mr on mre._id_measurement_reminder=mr._id_measurement_reminder inner join measurement_types mt on" +
+                    " mr._id_measurement_type=mt._id_measurement_type inner join measurement_value_types mvt on mt._id_measur_value_type=mvt._id_measur_value_type" +
+                    " where mre.reminder_date between ? and ? and (mr.IsActive=1 or mre.is_done=1) and mre.change_type<3 and mr._id_user=? ORDER BY mre.reminder_date DESC, mre.reminder_time DESC";
             cursor = database.rawQuery(rawQuery, new String[]{date1.getDateString(), date2.getDateString(),
                     userIdStr});
         }
         else {
-            String rawQuery = "select mre._id_measur_remind_entry, mr._id_measurement_type, mvt.type_value_name, mt.type_name, mre.value1, mre.value2, mre.is_done, mr._id_having_meals_type, mre.reminder_time, mr.having_meals_time, mre.reminder_date" +
-                    " from measurement_reminder_entries mre inner join measurement_reminders mr on mre._id_measurement_reminder=mr._id_measurement_reminder inner join measurement_types mt on mr._id_measurement_type=mt._id_measurement_type" +
-                    " inner join measurement_value_types mvt on mt._id_measur_value_type=mvt._id_measur_value_type where mre.reminder_date <= ? and (mr.IsActive=1 or mre.is_done=1) and mr._id_user=?" +
-                    " ORDER BY mre.reminder_date DESC, mre.reminder_time DESC";
+            String rawQuery = "select mre._id_measur_remind_entry, mr._id_measurement_type, mvt.type_value_name, mt.type_name, mre.value1, mre.value2, mre.is_done, mr._id_having_meals_type," +
+                    " mre.reminder_time, mr.having_meals_time, mre.reminder_date" +
+                    " from measurement_reminder_entries mre inner join measurement_reminders mr on mre._id_measurement_reminder=mr._id_measurement_reminder inner join measurement_types mt on" +
+                    " mr._id_measurement_type=mt._id_measurement_type inner join measurement_value_types mvt on mt._id_measur_value_type=mvt._id_measur_value_type" +
+                    " where mre.reminder_date <= ? and (mr.IsActive=1 or mre.is_done=1) and mre.change_type<3 and mr._id_user=? ORDER BY mre.reminder_date DESC, mre.reminder_time DESC";
             cursor = database.rawQuery(rawQuery, new String[]{date2.getDateString(), userIdStr});
         }
 
@@ -576,6 +586,7 @@ public class MeasurementReminderDao {
                 "_id_measur_remind_entry=X'" + measurementReminderEntryID.toString().replace("-", "") + "'", null);
     }
 
+    //**************************************************************Synchronization************************************************************
     public List<MeasurementReminderDB> getMeasurementReminderDBEntriesForSynchronization(Date date){
         ArrayList<MeasurementReminderDB> measurementReminderDBList = new ArrayList<>();
         String dateStr = ConvertingUtils.convertDateToString(date);
@@ -618,6 +629,27 @@ public class MeasurementReminderDao {
         return measurementReminderDBList;
     }
 
+    public List<UUID> getMarkedForDeletionMeasurementReminderIds(){
+        List<UUID> uuidList = new ArrayList<>();
+        String userIdStr = String.valueOf(AccountGeneralUtils.curUser.getId());
+        String rawQuery = "select mr._id_measurement_reminder " +
+                "from measurement_reminders mr " +
+                "where mr.change_type = 3 and mr._id_user=?";
+
+        Cursor cursor = database.rawQuery(rawQuery, new String[]{userIdStr});
+
+        if(cursor.moveToFirst()){
+            do{
+                UUID id = ConvertingUtils.convertBytesToUUID(cursor.getBlob(cursor.getColumnIndex("_id_measurement_reminder")));
+                uuidList.add(id);
+            }
+            while (cursor.moveToNext());
+        }
+        cursor.close();
+
+        return uuidList;
+    }
+
     public List<MeasurementReminderEntryDB> getMeasurementReminderEntryDBEntriesForSynchronization(Date date){
         ArrayList<MeasurementReminderEntryDB> measurementReminderEntryDBList = new ArrayList<>();
         String dateStr = ConvertingUtils.convertDateToString(date);
@@ -652,6 +684,27 @@ public class MeasurementReminderDao {
         return measurementReminderEntryDBList;
     }
 
+    public List<UUID> getMarkedForDeletionMeasurementReminderEntryIds(){
+        List<UUID> uuidList = new ArrayList<>();
+        String userIdStr = String.valueOf(AccountGeneralUtils.curUser.getId());
+        String rawQuery = "select mre._id_measur_remind_entry " +
+                "from measurement_reminder_entries mre inner join measurement_reminders mr on mre._id_measurement_reminder=mr._id_measurement_reminder " +
+                "where mre.change_type = 3 and mr._id_user=?";
+
+        Cursor cursor = database.rawQuery(rawQuery, new String[]{userIdStr});
+
+        if(cursor.moveToFirst()){
+            do{
+                UUID id = ConvertingUtils.convertBytesToUUID(cursor.getBlob(cursor.getColumnIndex("_id_measur_remind_entry")));
+                uuidList.add(id);
+            }
+            while (cursor.moveToNext());
+        }
+        cursor.close();
+
+        return uuidList;
+    }
+
     public MeasurementReminderEntryDB getMeasurementReminderEntryDBForSynchronizationById(UUID id){
         MeasurementReminderEntryDB measurementReminderEntryDB = null;
         Cursor cursor = database.query("measurement_reminder_entries", null, "_id_measur_remind_entry=X'" + id.toString().replace("-", "") + "'",
@@ -681,8 +734,39 @@ public class MeasurementReminderDao {
         return measurementReminderEntryDB;
     }
 
+    public void deleteMeasurementReminderEntriesAfterSynchronization(UUID idMeasurementReminder) {
+        database.delete("measurement_reminder_entries", "change_type = 3 and lower(hex(_id_measurement_reminder)) = ?",
+                new String[]{idMeasurementReminder.toString().replace("-", "")});
+    }
+
+    public void deleteMeasurementReminderEntriesAfterSynchronization() {
+        database.delete("measurement_reminder_entries", "change_type = 3", null);
+    }
+
+    public void deleteMeasurementReminderAfterSynchronization() {
+        database.delete("measurement_reminders", "change_type = 3", null);
+    }
+
     //************************************************************Bebore_deletion************************************************************
-    public UUID updateMeasurementReminderBeforeDeletion(UUID idMeasurementReminder){
+    public void updateBeforeDeletionMeasurementReminderEntriesAfterDate(UUID idMeasurementReminder, String date){
+        ContentValues measurementReminderEntryTableValues = new ContentValues();
+        measurementReminderEntryTableValues.put("change_type", 3);
+
+        database.update("measurement_reminder_entries", measurementReminderEntryTableValues,
+                "reminder_date >= ? and lower(hex(_id_measurement_reminder)) = ? and is_done = 0",
+                new String[]{date, idMeasurementReminder.toString().replace("-", "")});
+    }
+
+    public void updateBeforeDeletionMeasurementReminderEntriesByMeasurementReminderId(UUID idMeasurementReminder){
+        ContentValues measurementReminderEntryTableValues = new ContentValues();
+        measurementReminderEntryTableValues.put("change_type", 3);
+
+        database.update("measurement_reminder_entries", measurementReminderEntryTableValues,
+                "lower(hex(_id_measurement_reminder)) = ?",
+                new String[]{idMeasurementReminder.toString().replace("-", "")});
+    }
+
+    public UUID updateBeforeDeletionMeasurementReminder(UUID idMeasurementReminder){
         ContentValues measurementReminderTableValues = new ContentValues();
         measurementReminderTableValues.put("change_type", 3);
         database.update("measurement_reminders", measurementReminderTableValues,
@@ -690,7 +774,7 @@ public class MeasurementReminderDao {
         return idMeasurementReminder;
     }
 
-    public UUID updateMeasurementReminderEntryBeforeDeletion(UUID measurementReminderEntryID){
+    public UUID updateBeforeDeletionMeasurementReminderEntry(UUID measurementReminderEntryID){
         ContentValues measurementReminderEntryTableValues = new ContentValues();
         measurementReminderEntryTableValues.put("change_type", 3);
         database.update("measurement_reminder_entries", measurementReminderEntryTableValues,

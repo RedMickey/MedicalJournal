@@ -27,9 +27,11 @@ public class ReminderTimeDao {
         String rawQuery = "";
         String uuidStr = idReminder.toString().replace("-", "");
         if (type==0)
-            rawQuery ="select rt._id_reminder_time, rt.reminder_time from reminder_time rt where rt._id_pill_reminder= X'"+uuidStr+"'";
+            rawQuery ="select rt._id_reminder_time, rt.reminder_time from reminder_time rt where rt.change_type<3" +
+                    " and rt._id_pill_reminder= X'"+uuidStr+"'";
         else
-            rawQuery = "select rt._id_reminder_time, rt.reminder_time from reminder_time rt where rt._id_measurement_reminder= X'"+uuidStr+"'";
+            rawQuery = "select rt._id_reminder_time, rt.reminder_time from reminder_time rt where rt.change_type<3" +
+                    " and rt._id_measurement_reminder= X'"+uuidStr+"'";
         Cursor cursor = database.rawQuery(rawQuery, null);
         /*String idStr = String.valueOf(idPillReminder);
         String rawQuery = "select rt._id_reminder_time, rt.reminder_time," +
@@ -68,14 +70,6 @@ public class ReminderTimeDao {
         else
             database.delete("reminder_time", "lower(hex(_id_measurement_reminder)) = ?",
                     new String[]{idReminder.toString().replace("-", "")});
-
-    }
-
-    public int getCountOfPillReminderEntries(UUID idPillReminder){
-        long count = DatabaseUtils.queryNumEntries(database, "pill_reminder_entries", "lower(hex(_id_pill_reminder)) = ?",
-                new String[]{idPillReminder.toString().replace("-", "")});
-
-        return (int)count;
     }
 
     public UUID insertReminderTime(String reminderTime, UUID reminderId, Integer reminderType){
@@ -96,6 +90,7 @@ public class ReminderTimeDao {
         return reminderTimeId;
     }
 
+    //****************************************************************Synchronization*******************************************************************
     public List<ReminderTimeDB> getReminderTimeDBEntriesForSynchronization(Date date){
         ArrayList<ReminderTimeDB> reminderTimeDBList = new ArrayList<>();
         String dateStr = ConvertingUtils.convertDateToString(date);
@@ -141,8 +136,47 @@ public class ReminderTimeDao {
         return reminderTimeDBList;
     }
 
+    public List<UUID> getMarkedForDeletionReminderTimeIds(){
+        List<UUID> uuidList = new ArrayList<>();
+        String userIdStr = String.valueOf(AccountGeneralUtils.curUser.getId());
+        String rawQuery = "select rt._id_reminder_time " +
+                "from reminder_time rt inner join pill_reminders pr on rt._id_pill_reminder=pr._id_pill_reminder " +
+                "where rt.change_type = 3 and pr._id_user=? " +
+                "union " +
+                "select rt._id_reminder_time " +
+                "from reminder_time rt inner join measurement_reminders mr on rt._id_measurement_reminder=mr._id_measurement_reminder " +
+                "where rt.change_type = 3 and mr._id_user=?";
+
+        Cursor cursor = database.rawQuery(rawQuery, new String[]{userIdStr, userIdStr});
+
+        if(cursor.moveToFirst()){
+            do{
+                UUID id = ConvertingUtils.convertBytesToUUID(cursor.getBlob(0));
+                uuidList.add(id);
+            }
+            while (cursor.moveToNext());
+        }
+        cursor.close();
+
+        return uuidList;
+    }
+
+    public void deleteReminderTimeAfterSynchronizationByReminderId(UUID idReminder, int type){
+        if (type==0)
+            database.delete("reminder_time", "change_type = 3 and lower(hex(_id_pill_reminder)) = ?",
+                    new String[]{idReminder.toString().replace("-", "")});
+        else
+            database.delete("reminder_time", "change_type = 3 and lower(hex(_id_measurement_reminder)) = ?",
+                    new String[]{idReminder.toString().replace("-", "")});
+    }
+
+    public void deleteReminderTimeAfterSynchronization(){
+        database.delete("reminder_time", "change_type = 3", null);
+    }
+
     //************************************************************Bebore_deletion************************************************************
-    public void updateReminderTimeBeforeDeletionByReminderId(UUID idReminder, int type){
+
+    public void updateBeforeDeletionReminderTimeByReminderId(UUID idReminder, int type){
         ContentValues reminderTimeTableValues = new ContentValues();
         reminderTimeTableValues.put("change_type", 3);
         if (type==0)

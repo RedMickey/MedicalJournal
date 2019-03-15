@@ -16,6 +16,7 @@ import com.example.michel.mycalendar2.models.CycleDBInsertEntry;
 import com.example.michel.mycalendar2.models.measurement.MeasurementReminderDBEntry;
 import com.example.michel.mycalendar2.models.measurement.MeasurementReminderEntry;
 import com.example.michel.mycalendar2.models.pill.PillReminderEntry;
+import com.example.michel.mycalendar2.utils.utilModels.DataForDeletion;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -24,7 +25,7 @@ import java.util.List;
 
 import static android.content.Context.ALARM_SERVICE;
 
-public class MeasurementRemindersUpdateTask extends AsyncTask<CycleAndMeasurementComby, Void, Void> {
+public class MeasurementRemindersUpdateTask extends AsyncTask<CycleAndMeasurementComby, Void, DataForDeletion> {
     //private boolean needUpdateMeasurement;
     private Context appContext;
 
@@ -35,7 +36,7 @@ public class MeasurementRemindersUpdateTask extends AsyncTask<CycleAndMeasuremen
     }
 
     @Override
-    protected Void doInBackground(CycleAndMeasurementComby... cycleAndMeasurementCombies) {
+    protected DataForDeletion doInBackground(CycleAndMeasurementComby... cycleAndMeasurementCombies) {
         MeasurementReminderDBEntry mrdbe = cycleAndMeasurementCombies[0].measurementReminderDBEntry;
         CycleDBInsertEntry cdbie = cycleAndMeasurementCombies[0].cycleDBInsertEntry;
         DatabaseAdapter dbAdapter = new DatabaseAdapter();
@@ -76,10 +77,17 @@ public class MeasurementRemindersUpdateTask extends AsyncTask<CycleAndMeasuremen
         MeasurementNotificationsCreationTask.cancelAlarms(appContext, tomorrowMeasurementReminderEntriesOld, alarmManager);
 
         cal.add(Calendar.DAY_OF_MONTH, -1);
-        measurementReminderDao.deleteMeasurementReminderEntriesAfterDate(mrdbe.getIdMeasurementReminder(), curDate);
-        // need check for change start date
 
-        reminderTimeDao.deleteReminderTimeByReminderId(mrdbe.getIdMeasurementReminder(),1);
+        DataForDeletion dataForDeletion = null;
+        if (AccountGeneralUtils.curUser.getId()==1){
+            measurementReminderDao.deleteMeasurementReminderEntriesAfterDate(mrdbe.getIdMeasurementReminder(), curDate);
+            reminderTimeDao.deleteReminderTimeByReminderId(mrdbe.getIdMeasurementReminder(),1);
+        }
+        else {
+            measurementReminderDao.updateBeforeDeletionMeasurementReminderEntriesAfterDate(mrdbe.getIdMeasurementReminder(), curDate);
+            reminderTimeDao.updateBeforeDeletionReminderTimeByReminderId(mrdbe.getIdMeasurementReminder(),1);
+            dataForDeletion = new DataForDeletion(mrdbe.getIdMeasurementReminder(), curDate);
+        }
 
         for (int i=0; i<mrdbe.getReminderTimes().length; i++){
             reminderTimeDao.insertReminderTime(mrdbe.getReminderTimes()[i].getReminderTimeStr(), mrdbe.getIdMeasurementReminder(), 1);
@@ -144,16 +152,17 @@ public class MeasurementRemindersUpdateTask extends AsyncTask<CycleAndMeasuremen
         MeasurementNotificationsCreationTask.setupAlarms(appContext, tomorrowMeasurementReminderEntriesNew, alarmManager);
 
         dbAdapter.close();
-        return null;
+        return dataForDeletion;
     }
 
     @Override
-    protected void onPostExecute(Void aVoid) {
+    protected void onPostExecute(DataForDeletion dataForDeletion) {
         /*MeasurementNotificationsCreationTask mnct = new MeasurementNotificationsCreationTask();
         mnct.execute(appContext);*/
         if (AccountGeneralUtils.curUser.getId()!=1){
             SynchronizationMeasurementReminderTask synchronizationMeasurementReminderTask = new
                     SynchronizationMeasurementReminderTask(appContext, 2);
+            synchronizationMeasurementReminderTask.setDataForDeletion(dataForDeletion);
             synchronizationMeasurementReminderTask.execute();
         }
     }

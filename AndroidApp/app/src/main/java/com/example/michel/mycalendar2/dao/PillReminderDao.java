@@ -2,6 +2,7 @@ package com.example.michel.mycalendar2.dao;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.Nullable;
 
@@ -118,9 +119,9 @@ public class PillReminderDao {
         List<PillReminder> pillReminders = new ArrayList<>();
         String userIdStr = String.valueOf(AccountGeneralUtils.curUser.getId());
         String rawQuery = "select pr._id_pill_reminder, pr._id_having_meals_type, pr.pill_count, pct.type_name, pi.pill_name, pr.start_date, pr.IsActive, cl.period, pr.times_a_day, "+
-                "cl.period_DM_type,(select COUNT(*) from pill_reminder_entries pre where pre._id_pill_reminder=pr._id_pill_reminder and pre.is_done=0 and pr._id_user=?) as count_left "+
+                "cl.period_DM_type,(select COUNT(*) from pill_reminder_entries pre where pre.change_type<3 and pre._id_pill_reminder=pr._id_pill_reminder and pre.is_done=0 and pr._id_user=?) as count_left "+
                 "from pill_reminders pr inner join pills pi on pi._id_pill=pr._id_pill inner join pill_count_types pct on pr._id_pill_count_type=pct._id_pill_count_type "+
-                "inner join cycles cl on pr._id_cycle=cl._id_cycle where pr._id_user=? ORDER BY pr.IsActive DESC, pi.pill_name";
+                "inner join cycles cl on pr._id_cycle=cl._id_cycle where pr.change_type<3 and pr._id_user=? ORDER BY pr.IsActive DESC, pi.pill_name";
         Cursor cursor = database.rawQuery(rawQuery, new String[]{userIdStr, userIdStr});
         if(cursor.moveToFirst()){
             do{
@@ -178,7 +179,7 @@ public class PillReminderDao {
         String uuidStr = prID.toString().replace("-", "");
         String rawQuery = "select pr._id_pill_reminder, pi.pill_name, pr.pill_count, pr._id_pill_count_type, pr.start_date, pr._id_having_meals_type, pr.having_meals_time," +
                 " pr._id_cycle, pr.IsActive, pr.times_a_day, pr.annotation" +
-                " from pill_reminders pr inner join pills pi on pi._id_pill=pr._id_pill where pr._id_user=? and pr._id_pill_reminder=X'"+uuidStr+"'";
+                " from pill_reminders pr inner join pills pi on pi._id_pill=pr._id_pill where pr.change_type<3 and pr._id_user=? and pr._id_pill_reminder=X'"+uuidStr+"'";
         Cursor cursor = database.rawQuery(rawQuery, new String[]{String.valueOf(AccountGeneralUtils.curUser.getId())});
         if(cursor.moveToFirst()){
             do{
@@ -218,9 +219,10 @@ public class PillReminderDao {
 
     public CycleAndPillComby getCycleAndPillCombyByID(UUID prID){
         String uuidStr = prID.toString().replace("-", "");
-        String rawQuery = "select pr._id_pill_reminder, pi.pill_name, pr.pill_count, pr._id_pill_count_type, pr.start_date, pr._id_having_meals_type, pr.having_meals_time, pr.annotation, pr.IsActive, pr.times_a_day," +
-                " pr._id_cycle, cl.period, cl.period_DM_type, cl.once_a_period, cl.once_a_period_DM_type, cl._id_cycling_type, cl._id_week_schedule" +
-                " from pill_reminders pr inner join pills pi on pi._id_pill=pr._id_pill inner join cycles cl on pr._id_cycle=cl._id_cycle  where pr._id_user=? and pr._id_pill_reminder=X'"+uuidStr+"'";
+        String rawQuery = "select pr._id_pill_reminder, pi.pill_name, pr.pill_count, pr._id_pill_count_type, pr.start_date, pr._id_having_meals_type, pr.having_meals_time, pr.annotation," +
+                " pr.IsActive, pr.times_a_day, pr._id_cycle, cl.period, cl.period_DM_type, cl.once_a_period, cl.once_a_period_DM_type, cl._id_cycling_type, cl._id_week_schedule" +
+                " from pill_reminders pr inner join pills pi on pi._id_pill=pr._id_pill inner join cycles cl on pr._id_cycle=cl._id_cycle" +
+                " where pr.change_type<3 and pr._id_user=? and pr._id_pill_reminder=X'"+uuidStr+"'";
         Cursor cursor = database.rawQuery(rawQuery, new String[]{String.valueOf(AccountGeneralUtils.curUser.getId())});
         CycleAndPillComby cycleAndPillComby = new CycleAndPillComby();
         if(cursor.moveToFirst()){
@@ -288,11 +290,18 @@ public class PillReminderDao {
         return cycleAndPillComby;
     }
 
+    public int getCountOfPillReminderEntries(UUID idPillReminder){
+        long count = DatabaseUtils.queryNumEntries(database, "pill_reminder_entries", "lower(hex(_id_pill_reminder)) = ?",
+                new String[]{idPillReminder.toString().replace("-", "")});
+
+        return (int)count;
+    }
+
     public List<PillReminderEntry> getPillReminderEntriesByDate(DateData date){
         ArrayList<PillReminderEntry> pillReminderEntries = new ArrayList<>();
         String rawQuery = "select pre._id_pill_reminder_entry, pre.is_done, pr._id_having_meals_type, pre.reminder_time, pr.having_meals_time, pr.pill_count, pct.type_name, pre.reminder_date, pi.pill_name" +
                 " from pill_reminder_entries pre inner join pill_reminders pr on pre._id_pill_reminder=pr._id_pill_reminder inner join pills pi on pi._id_pill=pr._id_pill inner join pill_count_types pct on" +
-                " pr._id_pill_count_type=pct._id_pill_count_type where pre.reminder_date=? and (pr.IsActive=1 or pre.is_done=1) and pr._id_user=? ORDER BY pre.is_done";
+                " pr._id_pill_count_type=pct._id_pill_count_type where pre.reminder_date=? and (pr.IsActive=1 or pre.is_done=1) and pre.change_type<3 and pr._id_user=? ORDER BY pre.is_done";
         Cursor cursor = database.rawQuery(rawQuery, new String[]{date.getDateString(), String.valueOf(AccountGeneralUtils.curUser.getId())});
         Calendar calendar = Calendar.getInstance();
         if(cursor.moveToFirst()){
@@ -335,7 +344,8 @@ public class PillReminderDao {
         ArrayList<PillReminderEntry> pillReminderEntries = new ArrayList<>();
         String rawQuery = "select pre._id_pill_reminder_entry, pre.is_done, pr._id_having_meals_type, pre.reminder_time, pr.having_meals_time, pr.pill_count, pct.type_name, pre.reminder_date, pi.pill_name" +
                 " from pill_reminder_entries pre inner join pill_reminders pr on pre._id_pill_reminder=pr._id_pill_reminder inner join pills pi on pi._id_pill=pr._id_pill inner join pill_count_types pct on" +
-                " pr._id_pill_count_type=pct._id_pill_count_type where pre.reminder_date=? and pre._id_pill_reminder =X'" + uuidStr + "' and (pr.IsActive=1 or pre.is_done=1) and pr._id_user=? ORDER BY pre.is_done";
+                " pr._id_pill_count_type=pct._id_pill_count_type where pre.reminder_date=? and pre._id_pill_reminder =X'" + uuidStr + "' and (pr.IsActive=1 or pre.is_done=1)" +
+                " and pre.change_type<3 and pr._id_user=? ORDER BY pre.is_done";
         Cursor cursor = database.rawQuery(rawQuery, new String[]{date.getDateString(), String.valueOf(AccountGeneralUtils.curUser.getId())});
         Calendar calendar = Calendar.getInstance();
         if(cursor.moveToFirst()){
@@ -380,14 +390,14 @@ public class PillReminderDao {
         if (param==0){
             String rawQuery = "select pre._id_pill_reminder_entry, pre.is_done, pr._id_having_meals_type, pre.reminder_time, pr.having_meals_time, pr.pill_count, pct.type_name, pre.reminder_date, pi.pill_name" +
                     " from pill_reminder_entries pre inner join pill_reminders pr on pre._id_pill_reminder=pr._id_pill_reminder inner join pills pi on pi._id_pill=pr._id_pill inner join pill_count_types pct on" +
-                    " pr._id_pill_count_type=pct._id_pill_count_type where pre.reminder_date between ? and ? and (pr.IsActive=1 or pre.is_done=1) and pr._id_user=?" +
+                    " pr._id_pill_count_type=pct._id_pill_count_type where pre.reminder_date between ? and ? and (pr.IsActive=1 or pre.is_done=1) and pre.change_type<3 and pr._id_user=?" +
                     " ORDER BY pre.reminder_date DESC, pre.reminder_time DESC";
             cursor = database.rawQuery(rawQuery, new String[]{date1.getDateString(), date2.getDateString(), userIdStr});
         }
         else {
             String rawQuery = "select pre._id_pill_reminder_entry, pre.is_done, pr._id_having_meals_type, pre.reminder_time, pr.having_meals_time, pr.pill_count, pct.type_name, pre.reminder_date, pi.pill_name" +
                     " from pill_reminder_entries pre inner join pill_reminders pr on pre._id_pill_reminder=pr._id_pill_reminder inner join pills pi on pi._id_pill=pr._id_pill inner join pill_count_types pct on" +
-                    " pr._id_pill_count_type=pct._id_pill_count_type where pre.reminder_date <= ? and (pr.IsActive=1 or pre.is_done=1) and pr._id_user=?" +
+                    " pr._id_pill_count_type=pct._id_pill_count_type where pre.reminder_date <= ? and (pr.IsActive=1 or pre.is_done=1) and pre.change_type<3 and pr._id_user=?" +
                     " ORDER BY pre.reminder_date DESC, pre.reminder_time DESC";
             cursor = database.rawQuery(rawQuery, new String[]{date2.getDateString(), userIdStr});
         }
@@ -442,8 +452,8 @@ public class PillReminderDao {
     public void deletePillReminderEntriesAfterDate(UUID idPillReminder, String date){
         database.delete("pill_reminder_entries", "reminder_date >= ? and lower(hex(_id_pill_reminder)) = ? and is_done = 0",
                 new String[]{date, idPillReminder.toString().replace("-", "")});
-        List<PillReminderEntry> pillReminderEntries = getPillReminderEntriesByDate(new DateData(2019, 2, 10));
-        int f = 10;
+        //List<PillReminderEntry> pillReminderEntries = getPillReminderEntriesByDate(new DateData(2019, 2, 10));
+        //int f = 10;
     }
 
     public void deletePillReminderEntriesByPillReminderId(UUID idPillReminder){
@@ -456,6 +466,7 @@ public class PillReminderDao {
                 new String[]{idPillReminder.toString().replace("-", "")});
     }
 
+    //********************************************************************Synchronization***************************************************************
     public List<PillDB> getPillDBEntriesForSynchronization(Date date){
         ArrayList<PillDB> pillDBList = new ArrayList<>();
         String dateStr = ConvertingUtils.convertDateToString(date);
@@ -527,6 +538,27 @@ public class PillReminderDao {
         return pillReminderDBList;
     }
 
+    public List<UUID> getMarkedForDeletionPillReminderIds(){
+        List<UUID> uuidList = new ArrayList<>();
+        String userIdStr = String.valueOf(AccountGeneralUtils.curUser.getId());
+        String rawQuery = "select pr._id_pill_reminder " +
+                "from pill_reminders pr " +
+                "where pr.change_type = 3 and pr._id_user=?";
+
+        Cursor cursor = database.rawQuery(rawQuery, new String[]{userIdStr});
+
+        if(cursor.moveToFirst()){
+            do{
+                UUID id = ConvertingUtils.convertBytesToUUID(cursor.getBlob(cursor.getColumnIndex("_id_pill_reminder")));
+                uuidList.add(id);
+            }
+            while (cursor.moveToNext());
+        }
+        cursor.close();
+
+        return uuidList;
+    }
+
     public List<PillReminderEntryDB> getPillReminderEntryDBEntriesForSynchronization(Date date){
         ArrayList<PillReminderEntryDB> pillReminderEntryDBList = new ArrayList<>();
         String dateStr = ConvertingUtils.convertDateToString(date);
@@ -559,6 +591,27 @@ public class PillReminderDao {
         return pillReminderEntryDBList;
     }
 
+    public List<UUID> getMarkedForDeletionPillReminderEntryIds(){
+        List<UUID> uuidList = new ArrayList<>();
+        String userIdStr = String.valueOf(AccountGeneralUtils.curUser.getId());
+        String rawQuery = "select pre._id_pill_reminder_entry " +
+                "from pill_reminder_entries pre inner join pill_reminders pr on pre._id_pill_reminder=pr._id_pill_reminder " +
+                "where pre.change_type = 3 and pr._id_user=?";
+
+        Cursor cursor = database.rawQuery(rawQuery, new String[]{userIdStr});
+
+        if(cursor.moveToFirst()){
+            do{
+                UUID id = ConvertingUtils.convertBytesToUUID(cursor.getBlob(cursor.getColumnIndex("_id_pill_reminder_entry")));
+                uuidList.add(id);
+            }
+            while (cursor.moveToNext());
+        }
+        cursor.close();
+
+        return uuidList;
+    }
+
     public PillReminderEntryDB getPillReminderEntryDBForSynchronizationById(UUID id){
         PillReminderEntryDB pillReminderEntryDB = null;
         Cursor cursor = database.query("pill_reminder_entries", null, "_id_pill_reminder_entry=X'" + id.toString().replace("-", "") + "'",
@@ -586,8 +639,39 @@ public class PillReminderDao {
         return pillReminderEntryDB;
     }
 
+    public void deletePillReminderEntriesAfterSynchronization(UUID idPillReminder){
+        database.delete("pill_reminder_entries", "change_type = 3 and lower(hex(_id_pill_reminder)) = ?",
+                new String[]{idPillReminder.toString().replace("-", "")});
+    }
+
+    public void deletePillReminderEntriesAfterSynchronization(){
+        database.delete("pill_reminder_entries", "change_type = 3", null);
+    }
+
+    public void deletePillReminderAfterSynchronization(){
+        database.delete("pill_reminders", "change_type = 3", null);
+    }
+
     //************************************************************Bebore_deletion************************************************************
-    public UUID updatePillReminderBeforeDeletion(UUID idPillReminder){
+    public void updateBeforeDeletionPillReminderEntriesAfterDate(UUID idPillReminder, String date){
+        ContentValues pillReminderEntryTableValues = new ContentValues();
+        pillReminderEntryTableValues.put("change_type", 3);
+
+        database.update("pill_reminder_entries", pillReminderEntryTableValues,
+                "reminder_date >= ? and lower(hex(_id_pill_reminder)) = ? and is_done = 0",
+                new String[]{date, idPillReminder.toString().replace("-", "")});
+    }
+
+    public void updateBeforeDeletionPillReminderEntriesByPillReminderId(UUID idPillReminder){
+        ContentValues pillReminderEntryTableValues = new ContentValues();
+        pillReminderEntryTableValues.put("change_type", 3);
+
+        database.update("pill_reminder_entries", pillReminderEntryTableValues,
+                "lower(hex(_id_pill_reminder)) = ?",
+                new String[]{idPillReminder.toString().replace("-", "")});
+    }
+
+    public UUID updateBeforeDeletionPillReminder(UUID idPillReminder){
         ContentValues pillReminderTableValues = new ContentValues();
         pillReminderTableValues.put("change_type", 3);
         database.update("pill_reminders", pillReminderTableValues, "lower(hex(_id_pill_reminder)) = ?",
@@ -595,7 +679,7 @@ public class PillReminderDao {
         return idPillReminder;
     }
 
-    public UUID updatePillReminderEntryBeforeDeletion(UUID pillReminderEntryID){
+    public UUID updateBeforeDeletionPillReminderEntry(UUID pillReminderEntryID){
         ContentValues pillReminderEntryTableValues = new ContentValues();
         pillReminderEntryTableValues.put("change_type", 3);
         database.update("pill_reminder_entries", pillReminderEntryTableValues,

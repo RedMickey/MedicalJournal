@@ -30,7 +30,7 @@ public class CycleDao {
         int[] weekSchedule = new int[7];
         String uuidStr = idWeekSchedule.toString().replace("-", "");
 
-        String rawQuery = "select * from week_schedules where _id_week_schedule = X'"+uuidStr+"'";
+        String rawQuery = "select * from week_schedules where change_type<3 and _id_week_schedule = X'"+uuidStr+"'";
         Cursor cursor = database.rawQuery(rawQuery, null);
 
         /*String rawQuery = "select * from week_schedules where lower(hex(_id_week_schedule)) = ?";
@@ -47,8 +47,8 @@ public class CycleDao {
                 weekSchedule[4] = cursor.getInt(cursor.getColumnIndex("fri"));
                 weekSchedule[5] = cursor.getInt(cursor.getColumnIndex("sat"));
                 weekSchedule[6] = cursor.getInt(cursor.getColumnIndex("sun"));
-                String f = cursor.getString(cursor.getColumnIndex("synch_time"));
-                String f3 = cursor.getString(cursor.getColumnIndex("synch_time"));
+                //String f = cursor.getString(cursor.getColumnIndex("synch_time"));
+                //String f3 = cursor.getString(cursor.getColumnIndex("synch_time"));
             }
             while (cursor.moveToNext());
         }
@@ -138,6 +138,7 @@ public class CycleDao {
                 new String[]{idCycle.toString().replace("-", "")});
     }
 
+    //************************************************************Synchronization*************************************************************
     public List<CycleDB> getCycleDBEntriesForSynchronization(Date date){
         ArrayList<CycleDB> cycleDBArrayList = new ArrayList<>();
         String dateStr = ConvertingUtils.convertDateToString(date);
@@ -196,6 +197,29 @@ public class CycleDao {
         return cycleDBArrayList;
     }
 
+    public List<UUID> getMarkedForDeletionCycleIds(){
+        List<UUID> uuidList = new ArrayList<>();
+        String userIdStr = String.valueOf(AccountGeneralUtils.curUser.getId());
+        String rawQuery = "select cl._id_cycle from cycles cl inner join pill_reminders pr on cl._id_cycle=pr._id_cycle " +
+                "where cl.change_type = 3 and pr._id_user=? " +
+                "union " +
+                "select cl._id_cycle from cycles cl inner join measurement_reminders mr on cl._id_cycle=mr._id_cycle " +
+                "where cl.change_type = 3 and mr._id_user=?";
+
+        Cursor cursor = database.rawQuery(rawQuery, new String[]{userIdStr, userIdStr});
+
+        if(cursor.moveToFirst()){
+            do{
+                UUID id = ConvertingUtils.convertBytesToUUID(cursor.getBlob(0));
+                uuidList.add(id);
+            }
+            while (cursor.moveToNext());
+        }
+        cursor.close();
+
+        return uuidList;
+    }
+
     public List<WeekScheduleDB> getWeekScheduleDBEntriesForSynchronization(Date date){
         ArrayList<WeekScheduleDB> weekScheduleDBArrayList = new ArrayList<>();
         String dateStr = ConvertingUtils.convertDateToString(date);
@@ -249,8 +273,49 @@ public class CycleDao {
         return weekScheduleDBArrayList;
     }
 
+    public List<UUID> getMarkedForDeletionWeekScheduleIds(){
+        List<UUID> uuidList = new ArrayList<>();
+        String userIdStr = String.valueOf(AccountGeneralUtils.curUser.getId());
+        String rawQuery = "select ws._id_week_schedule " +
+                "from week_schedules ws inner join cycles cl on ws._id_week_schedule=cl._id_week_schedule inner join pill_reminders pr on cl._id_cycle=pr._id_cycle " +
+                "where ws.change_type = 3 and pr._id_user=? " +
+                "union " +
+                "select ws._id_week_schedule " +
+                "from week_schedules ws inner join cycles cl on ws._id_week_schedule=cl._id_week_schedule inner join measurement_reminders mr on cl._id_cycle=mr._id_cycle " +
+                "where ws.change_type = 3 and mr._id_user=?";
+
+        Cursor cursor = database.rawQuery(rawQuery, new String[]{userIdStr, userIdStr});
+
+        if(cursor.moveToFirst()){
+            do{
+                UUID id = ConvertingUtils.convertBytesToUUID(cursor.getBlob(0));
+                uuidList.add(id);
+            }
+            while (cursor.moveToNext());
+        }
+        cursor.close();
+
+        return uuidList;
+    }
+
+    public void deleteWeekSchedulesAfterSynchronization(){
+        database.delete("week_schedules", "change_type = 3", null);
+    }
+
+    public void deleteCyclesAfterSynchronizationCascade(){
+        database.delete("cycles", "change_type = 3", null);
+    }
+
     //************************************************************Bebore_deletion************************************************************
-    public UUID updateCycleBeforeDeletion(UUID cycleId){
+    public void updateBeforeDeletionWeekScheduleById(UUID idWeekSchedule){
+        ContentValues weekScheduleTableValues = new ContentValues();
+        weekScheduleTableValues.put("change_type", 3);
+        database.update("week_schedules", weekScheduleTableValues,
+                "lower(hex(_id_week_schedule)) = ?",
+                new String[]{idWeekSchedule.toString().replace("-", "")});
+    }
+
+    public UUID updateBeforeDeletionCycle(UUID cycleId){
         ContentValues cycleTableValues = new ContentValues();
         cycleTableValues.put("change_type", 3);
         database.update("cycles", cycleTableValues, "lower(hex(_id_cycle)) = ?",
@@ -258,11 +323,4 @@ public class CycleDao {
         return cycleId;
     }
 
-    public UUID updateWeekScheduleBeforeDeletion(UUID weekScheduleID){
-        ContentValues weekScheduleTableValues = new ContentValues();
-        weekScheduleTableValues.put("change_type", 3);
-        database.update("week_schedules", weekScheduleTableValues,
-                "lower(hex(_id_week_schedule)) = ?", new String[]{weekScheduleID.toString().replace("-", "")});
-        return weekScheduleID;
-    }
 }

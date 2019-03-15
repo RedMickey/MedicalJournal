@@ -12,13 +12,10 @@ import com.example.michel.mycalendar2.dao.CycleDao;
 import com.example.michel.mycalendar2.dao.MeasurementReminderDao;
 import com.example.michel.mycalendar2.dao.PillReminderDao;
 import com.example.michel.mycalendar2.dao.ReminderTimeDao;
+import com.example.michel.mycalendar2.models.synchronization.BeforeDeletionReqModule;
 import com.example.michel.mycalendar2.models.synchronization.MeasurementReminderReqModule;
-import com.example.michel.mycalendar2.models.synchronization.PillReminderReqModule;
 import com.example.michel.mycalendar2.utils.DateTypeAdapter;
-import com.example.michel.mycalendar2.utils.utilModels.DataForDeletion;
 import com.google.gson.GsonBuilder;
-
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -26,54 +23,57 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Date;
+import java.util.UUID;
 
 import javax.net.ssl.HttpsURLConnection;
 
-public class SynchronizationMeasurementReminderTask extends AsyncTask<Void, Void, Integer> {
+public class BeforeDeletionSynchronizationTask extends AsyncTask<Void, Void, Integer> {
     private Context context;
     private AccountManager accountManager;
-    private int typeOfAction;
-    private DataForDeletion dataForDeletion;
+    private int typeOfReminder;
+    private UUID reminderId;
 
-    public SynchronizationMeasurementReminderTask(Context context, int typeOfAction){
+    public BeforeDeletionSynchronizationTask(Context context, int typeOfReminder){
         this.context = context;
         accountManager = AccountManager.get(context);
-        this.typeOfAction = typeOfAction;
+        this.typeOfReminder = typeOfReminder;
     }
 
     @Override
     protected Integer doInBackground(Void... voids) {
         int resCode = 1;
-        MeasurementReminderReqModule measurementReminderReqModule = new MeasurementReminderReqModule();
-        measurementReminderReqModule.setType(typeOfAction);
+        BeforeDeletionReqModule beforeDeletionReqModule = new BeforeDeletionReqModule();
+        beforeDeletionReqModule.setType(typeOfReminder);
 
         DatabaseAdapter databaseAdapter = new DatabaseAdapter();
         CycleDao cycleDao = new CycleDao(databaseAdapter.open().getDatabase());
         MeasurementReminderDao measurementReminderDao = new MeasurementReminderDao(databaseAdapter.getDatabase());
+        PillReminderDao pillReminderDao = new PillReminderDao(databaseAdapter.getDatabase());
         ReminderTimeDao reminderTimeDao = new ReminderTimeDao(databaseAdapter.getDatabase());
 
-        measurementReminderReqModule.setCycleDBList(cycleDao
-                .getCycleDBEntriesForSynchronization(AccountGeneralUtils.curUser.getSynchronizationTime()));
-        measurementReminderReqModule.setWeekScheduleDBList(cycleDao
-                .getWeekScheduleDBEntriesForSynchronization(AccountGeneralUtils.curUser.getSynchronizationTime()));
-        measurementReminderReqModule.setMeasurementReminderDBList(measurementReminderDao
-                .getMeasurementReminderDBEntriesForSynchronization(AccountGeneralUtils.curUser.getSynchronizationTime()));
-        measurementReminderReqModule.setMeasurementReminderEntryDBList(measurementReminderDao
-                .getMeasurementReminderEntryDBEntriesForSynchronization(AccountGeneralUtils.curUser.getSynchronizationTime()));
-        measurementReminderReqModule.setReminderTimeDBList(reminderTimeDao
-                .getReminderTimeDBEntriesForSynchronization(AccountGeneralUtils.curUser.getSynchronizationTime()));
+        beforeDeletionReqModule.setWeekScheduleIds(cycleDao.getMarkedForDeletionWeekScheduleIds());
+        beforeDeletionReqModule.setCycleIds(cycleDao.getMarkedForDeletionCycleIds());
+        beforeDeletionReqModule.setReminderTimeIds(reminderTimeDao.getMarkedForDeletionReminderTimeIds());
+        if (typeOfReminder==1){
+            beforeDeletionReqModule.setReminderIds(pillReminderDao.getMarkedForDeletionPillReminderIds());
+            beforeDeletionReqModule.setReminderEntriesIds(pillReminderDao.getMarkedForDeletionPillReminderEntryIds());
+        }
+        else{
+            beforeDeletionReqModule.setReminderIds(measurementReminderDao.getMarkedForDeletionMeasurementReminderIds());
+            beforeDeletionReqModule.setReminderEntriesIds(measurementReminderDao.getMarkedForDeletionMeasurementReminderEntryIds());
+        }
 
         databaseAdapter.close();
 
-
         String response = "";
-        String JSONStr = new GsonBuilder().registerTypeAdapter(Date.class,new DateTypeAdapter())
-                .create().toJson(measurementReminderReqModule);
+
+        String JSONStr = new GsonBuilder().registerTypeAdapter(Date.class, new DateTypeAdapter())
+                .create().toJson(beforeDeletionReqModule);
         int requestAttempts = 0;
 
         while (requestAttempts<2){
             try {
-                URL url = new URL("http://192.168.0.181:8090/synchronization/synchronizeMeasurementReminderReqModules");
+                URL url = new URL("http://192.168.0.181:8090/synchronization/synchronizeDeletion");
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
                 conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
@@ -136,41 +136,25 @@ public class SynchronizationMeasurementReminderTask extends AsyncTask<Void, Void
             }
         }
 
-        try {
-            JSONObject jsonObject = new JSONObject(response);
-            boolean hasDeletion = jsonObject.getBoolean("hasDeletion");
-            if (hasDeletion)
-                resCode = 2;
-        }
-        catch (Exception e){
-            Log.e("JSONObject", e.getMessage());
-        }
-
         return resCode;
     }
 
     @Override
     protected void onPostExecute(Integer resCode) {
         if (resCode>0){
-            AccountGeneralUtils.curUser.setSynchronizationTime(new Date());
-            UserLocalUpdateTask userLocalUpdateTask = new UserLocalUpdateTask(2);
-            userLocalUpdateTask.execute(AccountGeneralUtils.curUser);
-            if (typeOfAction == 2){
-                AfterSynchronizationDeletionTask afterSynchronizationDeletionTask = new AfterSynchronizationDeletionTask(
-                        2,
-                        dataForDeletion.getReminderId(),
-                        dataForDeletion.getCurDateStr()
-                );
-                afterSynchronizationDeletionTask.execute();
-            }
+            AfterSynchronizationDeletionTask afterSynchronizationDeletionTask = new AfterSynchronizationDeletionTask(
+                    typeOfReminder==1?3:4
+            );
+            afterSynchronizationDeletionTask.setReminderId(reminderId);
+            afterSynchronizationDeletionTask.execute();
         }
     }
 
-    public DataForDeletion getDataForDeletion() {
-        return dataForDeletion;
+    public UUID getReminderId() {
+        return reminderId;
     }
 
-    public void setDataForDeletion(DataForDeletion dataForDeletion) {
-        this.dataForDeletion = dataForDeletion;
+    public void setReminderId(UUID reminderId) {
+        this.reminderId = reminderId;
     }
 }
