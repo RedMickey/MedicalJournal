@@ -50,4 +50,10 @@ public class WeekScheduleService {
     public void deleteAllByIds(List<UUID> uuidList){
         uuidList.forEach(id -> weekScheduleRepository.deleteById(id));
     }
+
+    public List<WeekSchedule> getWeekSchedulesForSynchronization(
+            Timestamp synchronizationTimestamp, Integer userId){
+        return weekScheduleRepository.getWeekSchedulesForSynchronization(
+                synchronizationTimestamp, userId);
+    }
 }

@@ -5,6 +5,7 @@ import com.example.michel.rest_api.repositories.MeasurementReminderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.UUID;
 
@@ -32,5 +33,11 @@ public class MeasurementReminderService {
 
     public void deleteAllByIds(List<UUID> uuidList){
         uuidList.forEach(id -> measurementReminderRepository.deleteById(id));
+    }
+
+    public List<MeasurementReminder> getMeasurementRemindersForSynchronization(
+            Timestamp synchronizationTimestamp, Integer userId){
+        return measurementReminderRepository.getMeasurementRemindersBySynchTimeGreaterThanEqualAndUserIdEquals(
+                synchronizationTimestamp, userId);
     }
 }

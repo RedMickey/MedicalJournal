@@ -5,6 +5,7 @@ import com.example.michel.rest_api.repositories.CycleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.UUID;
 
@@ -34,4 +35,7 @@ public class CycleService {
         uuidList.forEach(id -> cycleRepository.deleteById(id));
     }
 
+    public List<Cycle> getCycleDBEntriesForSynchronization(Timestamp synchronizationTimestamp, Integer userId){
+        return cycleRepository.getCycleDBEntriesForSynchronization(synchronizationTimestamp, userId);
+    }
 }

@@ -5,6 +5,7 @@ import com.example.michel.rest_api.repositories.ReminderTimeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.UUID;
 
@@ -32,5 +33,11 @@ public class ReminderTimeService {
 
     public void deleteAllByIds(List<UUID> uuidList){
         uuidList.forEach(id -> reminderTimeRepository.deleteById(id));
+    }
+
+    public List<ReminderTime> getReminderTimeForSynchronization(
+            Timestamp synchronizationTimestamp, Integer userId){
+        return reminderTimeRepository.getReminderTimeForSynchronization(
+                synchronizationTimestamp, userId);
     }
 }

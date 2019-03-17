@@ -8,8 +8,18 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
+import java.util.Date;
+
 @Service
 public class UserService {
     @Autowired
     private UserRepository userRepository;
+
+    @Transactional
+    public Date updateUserSynchronizationTime(Integer userId){
+        Timestamp synchronizationTimestamp = new Timestamp(new Date().getTime());
+        userRepository.updateUserSynchronizationTime(userId, synchronizationTimestamp);
+        return synchronizationTimestamp;
+    }
 }

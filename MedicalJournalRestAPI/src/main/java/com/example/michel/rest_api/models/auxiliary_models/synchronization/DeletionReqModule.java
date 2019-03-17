@@ -13,4 +13,5 @@ public class DeletionReqModule {
     private List<UUID> reminderTimeIds;
     private List<UUID> weekScheduleIds;
     private int type;
+    private int userId;
 }

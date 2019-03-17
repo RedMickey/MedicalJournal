@@ -4,7 +4,10 @@ import com.example.michel.rest_api.models.PillReminderEntry;
 import com.example.michel.rest_api.repositories.PillReminderEntryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.UUID;
 
@@ -36,5 +39,14 @@ public class PillReminderEntryService {
 
     public void deleteAllByIds(List<UUID> uuidList){
         uuidList.forEach(id -> pillReminderEntryRepository.deleteById(id));
+    }
+
+    @Transactional
+    public List<PillReminderEntry> getPillReminderEntriesForSynchronization(
+            Timestamp synchronizationTimestamp, Integer userId){
+        List<PillReminderEntry> pillReminderEntries = pillReminderEntryRepository
+                .getPillReminderEntriesForSynchronization( synchronizationTimestamp, userId);
+        pillReminderEntries.forEach(pre -> pre.setReminderTime(new Time(pre.getReminderDate().getTime())));
+        return pillReminderEntries;
     }
 }

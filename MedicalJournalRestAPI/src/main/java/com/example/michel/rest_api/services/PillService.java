@@ -5,6 +5,7 @@ import com.example.michel.rest_api.repositories.PillRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 @Service
@@ -27,5 +28,9 @@ public class PillService {
             }
         }
         return hasDeletion;
+    }
+
+     public List<Pill> getPillsForSynchronization(Timestamp synchronizationTimestamp, Integer userId){
+        return pillRepository.getPillsForSynchronization(synchronizationTimestamp, userId);
     }
 }
