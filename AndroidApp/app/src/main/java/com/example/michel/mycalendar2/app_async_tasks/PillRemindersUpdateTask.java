@@ -165,7 +165,7 @@ public class PillRemindersUpdateTask extends AsyncTask<CycleAndPillComby, Void, 
         /*PillNotificationsCreationTask nct = new PillNotificationsCreationTask();
         nct.execute(appContext);*/
         if (AccountGeneralUtils.curUser.getId()!=1) {
-            SynchronizationPillReminderTask synchronizationPillReminderTask = new SynchronizationPillReminderTask(appContext, 2);
+            SynchronizationPillReminderTask synchronizationPillReminderTask = new SynchronizationPillReminderTask(appContext);
             synchronizationPillReminderTask.execute();
         }
     }

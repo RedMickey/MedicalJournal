@@ -14,23 +14,21 @@ import java.util.List;
 import java.util.UUID;
 
 public class AfterSynchronizationDeletionTask extends AsyncTask<Void, Void, Integer> {
-    private int type;
+    private List<Integer> deletionTypes;
     private UUID reminderId;
-    private String curDateStr;
 
-    public AfterSynchronizationDeletionTask(int type){
-        this.type = type;
+    public AfterSynchronizationDeletionTask(List<Integer> deletionTypes){
+        this.deletionTypes = deletionTypes;
     }
 
-    public AfterSynchronizationDeletionTask(int type, UUID reminderId, String curDateStr){
-        this.type = type;
+    public AfterSynchronizationDeletionTask(List<Integer> deletionTypes, UUID reminderId){
+        this.deletionTypes = deletionTypes;
         this.reminderId = reminderId;
-        this.curDateStr = curDateStr;
     }
 
     @Override
     protected Integer doInBackground(Void... voids) {
-        DatabaseAdapter dbAdapter = new DatabaseAdapter();
+        /*DatabaseAdapter dbAdapter = new DatabaseAdapter();
         ReminderTimeDao reminderTimeDao = new ReminderTimeDao(dbAdapter.open().getDatabase());
         PillReminderDao pillReminderDao = null;
         MeasurementReminderDao measurementReminderDao = null;
@@ -81,20 +79,59 @@ public class AfterSynchronizationDeletionTask extends AsyncTask<Void, Void, Inte
                     measurementReminderDao.deleteMeasurementReminderAfterSynchronization();
                     break;
         }
+        dbAdapter.close();*/
+
+        DatabaseAdapter dbAdapter = new DatabaseAdapter();
+        ReminderTimeDao reminderTimeDao = new ReminderTimeDao(dbAdapter.open().getDatabase());
+        PillReminderDao pillReminderDao = new PillReminderDao(dbAdapter.getDatabase());;
+        MeasurementReminderDao measurementReminderDao = new MeasurementReminderDao(dbAdapter.getDatabase());;
+        CycleDao cycleDao = new CycleDao(dbAdapter.getDatabase());;
+
+        for (int t: deletionTypes) {
+            switch (t){
+                case 1: // deletePillReminderEntries
+                    pillReminderDao.deletePillReminderEntriesAfterSynchronization();
+                    break;
+                case 2: // deleteMeasurementReminderEntries
+                    measurementReminderDao.deleteMeasurementReminderEntriesAfterSynchronization();
+                    break;
+                case 3: // deleteReminderTime
+                    reminderTimeDao.deleteReminderTimeAfterSynchronization();
+                    break;
+                case 4: // deleteWeekSchedules
+                    cycleDao.deleteWeekSchedulesAfterSynchronization();
+                    break;
+                case 5: // deleteCycles
+                    cycleDao.deleteCyclesAfterSynchronizationCascade();
+                    break;
+                case 6: // deletePillReminder
+                    pillReminderDao.deletePillReminderAfterSynchronization();
+                    break;
+                case 7: // deleteMeasurementReminder
+                    measurementReminderDao.deleteMeasurementReminderAfterSynchronization();
+                    break;
+                default:
+                    pillReminderDao.deletePillReminderEntriesAfterSynchronization();
+                    measurementReminderDao.deleteMeasurementReminderEntriesAfterSynchronization();
+                    reminderTimeDao.deleteReminderTimeAfterSynchronization();
+                    cycleDao.deleteWeekSchedulesAfterSynchronization();
+                    cycleDao.deleteCyclesAfterSynchronizationCascade();
+                    pillReminderDao.deletePillReminderAfterSynchronization();
+                    measurementReminderDao.deleteMeasurementReminderAfterSynchronization();
+                    break;
+            }
+        }
+
         dbAdapter.close();
 
         return null;
-    }
-
-    public void setType(int type) {
-        this.type = type;
     }
 
     public void setReminderId(UUID reminderId) {
         this.reminderId = reminderId;
     }
 
-    public void setCurDateStr(String curDateStr) {
-        this.curDateStr = curDateStr;
+    public void setDeletionTypes(List<Integer> deletionTypes) {
+        this.deletionTypes = deletionTypes;
     }
 }

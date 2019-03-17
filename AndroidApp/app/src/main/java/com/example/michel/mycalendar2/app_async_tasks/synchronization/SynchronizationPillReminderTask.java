@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.example.michel.mycalendar2.activities.R;
 import com.example.michel.mycalendar2.app_async_tasks.UserLocalUpdateTask;
 import com.example.michel.mycalendar2.authentication.AccountGeneralUtils;
 import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
@@ -14,6 +15,7 @@ import com.example.michel.mycalendar2.dao.ReminderTimeDao;
 import com.example.michel.mycalendar2.models.synchronization.PillReminderReqModule;
 import com.example.michel.mycalendar2.models.synchronization.WeekScheduleDB;
 import com.example.michel.mycalendar2.utils.DateTypeAdapter;
+import com.example.michel.mycalendar2.utils.SynchronizationUtils;
 import com.example.michel.mycalendar2.utils.utilModels.DataForDeletion;
 import com.google.gson.GsonBuilder;
 
@@ -24,6 +26,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -34,11 +37,13 @@ public class SynchronizationPillReminderTask extends AsyncTask<Void, Void, Integ
     private AccountManager accountManager;
     private int typeOfAction;
     private DataForDeletion dataForDeletion;
+    private List<Integer> deletionTypes;
 
-    public SynchronizationPillReminderTask(Context context, int typeOfAction){
+    public SynchronizationPillReminderTask(Context context){
         this.context = context;
         accountManager = AccountManager.get(context);
-        this.typeOfAction = typeOfAction;
+        this.typeOfAction = 2;
+        deletionTypes = new ArrayList<>();
     }
 
     @Override
@@ -67,6 +72,16 @@ public class SynchronizationPillReminderTask extends AsyncTask<Void, Void, Integ
 
         databaseAdapter.close();
 
+        if (SynchronizationUtils.containsDeletionMarks(pillReminderReqModule.getPillReminderEntryDBList()))
+            deletionTypes.add(1);
+        if (SynchronizationUtils.containsDeletionMarks(pillReminderReqModule.getReminderTimeDBList()))
+            deletionTypes.add(3);
+        if (SynchronizationUtils.containsDeletionMarks(pillReminderReqModule.getWeekScheduleDBList()))
+            deletionTypes.add(4);
+        if (SynchronizationUtils.containsDeletionMarks(pillReminderReqModule.getCycleDBList()))
+            deletionTypes.add(5);
+        if (SynchronizationUtils.containsDeletionMarks(pillReminderReqModule.getPillReminderDBList()))
+            deletionTypes.add(6);
 
         String response = "";
         String JSONStr = new GsonBuilder().registerTypeAdapter(Date.class,new DateTypeAdapter())
@@ -75,7 +90,8 @@ public class SynchronizationPillReminderTask extends AsyncTask<Void, Void, Integ
 
         while (requestAttempts<2){
             try {
-                URL url = new URL("http://192.168.0.181:8090/synchronization/synchronizePillReminderModules");
+                URL url = new URL(context.getResources().getString(R.string.server_address) +
+                        "/synchronization/synchronizePillReminderModules");
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
                 conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
@@ -157,11 +173,9 @@ public class SynchronizationPillReminderTask extends AsyncTask<Void, Void, Integ
             AccountGeneralUtils.curUser.setSynchronizationTime(new Date());
             UserLocalUpdateTask userLocalUpdateTask = new UserLocalUpdateTask(2);
             userLocalUpdateTask.execute(AccountGeneralUtils.curUser);
-            if (typeOfAction == 2){
+            if (deletionTypes.size()>0){
                 AfterSynchronizationDeletionTask afterSynchronizationDeletionTask = new AfterSynchronizationDeletionTask(
-                        1,
-                        dataForDeletion.getReminderId(),
-                        dataForDeletion.getCurDateStr()
+                        deletionTypes, dataForDeletion.getReminderId()
                 );
                 afterSynchronizationDeletionTask.execute();
             }

@@ -46,7 +46,8 @@ public class PostSignInTask extends AsyncTask<String, Void, Integer> {
         String response = "";
 
         try {
-            URL url = new URL("http://192.168.0.181:8090/user/getUserByEmail");
+            URL url = new URL(context.getResources().getString(R.string.server_address) +
+                    "/user/getUserByEmail");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
             conn.setRequestMethod("POST");

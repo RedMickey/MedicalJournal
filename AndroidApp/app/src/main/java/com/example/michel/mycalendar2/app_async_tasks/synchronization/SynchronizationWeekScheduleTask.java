@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.example.michel.mycalendar2.activities.R;
 import com.example.michel.mycalendar2.app_async_tasks.UserLocalUpdateTask;
 import com.example.michel.mycalendar2.authentication.AccountGeneralUtils;
 import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
@@ -56,7 +57,8 @@ public class SynchronizationWeekScheduleTask extends AsyncTask<Void, Void, Integ
 
             while (requestAttempts<2){
                 try {
-                    URL url = new URL("http://192.168.0.181:8090/synchronization/synchronizeWeekSchedules");
+                    URL url = new URL(context.getResources().getString(R.string.server_address) +
+                            "/synchronization/synchronizeWeekSchedules");
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
                     conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");

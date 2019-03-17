@@ -50,7 +50,7 @@ public class OneTimeMeasurementReminderInsertionTask extends AsyncTask<Measureme
     protected void onPostExecute(Void aVoid) {
         if (AccountGeneralUtils.curUser.getId()!=1){
             SynchronizationMeasurementReminderTask synchronizationMeasurementReminderTask = new
-                    SynchronizationMeasurementReminderTask(DatabaseAdapter.AppContext, 1);
+                    SynchronizationMeasurementReminderTask(DatabaseAdapter.AppContext);
             synchronizationMeasurementReminderTask.execute();
         }
     }

@@ -111,7 +111,7 @@ public class PillRemindersInsertionTask extends AsyncTask<CycleAndPillComby, Voi
         nct.execute(appContext);
 
         if (AccountGeneralUtils.curUser.getId()!=1) {
-            SynchronizationPillReminderTask synchronizationPillReminderTask = new SynchronizationPillReminderTask(appContext, 1);
+            SynchronizationPillReminderTask synchronizationPillReminderTask = new SynchronizationPillReminderTask(appContext);
             synchronizationPillReminderTask.execute();
         }
     }

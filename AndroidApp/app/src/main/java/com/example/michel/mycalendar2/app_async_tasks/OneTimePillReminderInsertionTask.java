@@ -41,7 +41,7 @@ public class OneTimePillReminderInsertionTask extends AsyncTask<PillReminderDBIn
     @Override
     protected void onPostExecute(Void aVoid) {
         if (AccountGeneralUtils.curUser.getId()!=1) {
-            SynchronizationPillReminderTask synchronizationPillReminderTask = new SynchronizationPillReminderTask(DatabaseAdapter.AppContext, 1);
+            SynchronizationPillReminderTask synchronizationPillReminderTask = new SynchronizationPillReminderTask(DatabaseAdapter.AppContext);
             synchronizationPillReminderTask.execute();
         }
     }

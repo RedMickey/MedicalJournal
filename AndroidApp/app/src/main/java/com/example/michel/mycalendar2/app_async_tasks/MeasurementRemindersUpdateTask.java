@@ -161,7 +161,7 @@ public class MeasurementRemindersUpdateTask extends AsyncTask<CycleAndMeasuremen
         mnct.execute(appContext);*/
         if (AccountGeneralUtils.curUser.getId()!=1){
             SynchronizationMeasurementReminderTask synchronizationMeasurementReminderTask = new
-                    SynchronizationMeasurementReminderTask(appContext, 2);
+                    SynchronizationMeasurementReminderTask(appContext);
             synchronizationMeasurementReminderTask.setDataForDeletion(dataForDeletion);
             synchronizationMeasurementReminderTask.execute();
         }

@@ -75,6 +75,8 @@
     <string name="def_user_email">def@email</string>
     <string name="def_username">Я</string>
 
+    <string name="server_address">http://192.168.0.181:8090</string>
+
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Пароль</string>

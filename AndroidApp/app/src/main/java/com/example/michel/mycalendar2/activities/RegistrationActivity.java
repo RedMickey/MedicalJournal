@@ -100,13 +100,13 @@ public class RegistrationActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
+        //int id = item.getItemId();
 
         switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
                 return true;
-            case R.id.log_out:
+            case R.id.submit:
                 createAndSendSignUpRequest();
                 return true;
             default:

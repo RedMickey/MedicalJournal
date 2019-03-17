@@ -65,7 +65,8 @@ public class UserSignUpTask extends AsyncTask<User, Void, User> {
         String response = "";
 
         try {
-            URL url = new URL("http://192.168.0.181:8090/user/sign-up");
+            URL url = new URL(registrationActivity.getResources().getString(R.string.server_address) +
+                    "/user/sign-up");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
             conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");

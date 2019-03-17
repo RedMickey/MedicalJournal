@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.example.michel.mycalendar2.activities.R;
 import com.example.michel.mycalendar2.app_async_tasks.UserLocalUpdateTask;
 import com.example.michel.mycalendar2.authentication.AccountGeneralUtils;
 import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
@@ -15,6 +16,7 @@ import com.example.michel.mycalendar2.dao.ReminderTimeDao;
 import com.example.michel.mycalendar2.models.synchronization.BeforeDeletionReqModule;
 import com.example.michel.mycalendar2.models.synchronization.MeasurementReminderReqModule;
 import com.example.michel.mycalendar2.utils.DateTypeAdapter;
+import com.example.michel.mycalendar2.utils.SynchronizationUtils;
 import com.google.gson.GsonBuilder;
 
 import java.io.BufferedReader;
@@ -22,7 +24,9 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -32,11 +36,13 @@ public class BeforeDeletionSynchronizationTask extends AsyncTask<Void, Void, Int
     private AccountManager accountManager;
     private int typeOfReminder;
     private UUID reminderId;
+    private List<Integer> deletionTypes;
 
     public BeforeDeletionSynchronizationTask(Context context, int typeOfReminder){
         this.context = context;
         accountManager = AccountManager.get(context);
         this.typeOfReminder = typeOfReminder;
+        deletionTypes = new ArrayList<>();
     }
 
     @Override
@@ -57,10 +63,32 @@ public class BeforeDeletionSynchronizationTask extends AsyncTask<Void, Void, Int
         if (typeOfReminder==1){
             beforeDeletionReqModule.setReminderIds(pillReminderDao.getMarkedForDeletionPillReminderIds());
             beforeDeletionReqModule.setReminderEntriesIds(pillReminderDao.getMarkedForDeletionPillReminderEntryIds());
+
+            if (beforeDeletionReqModule.getReminderEntriesIds().size()>0)
+                deletionTypes.add(1);
+            if (beforeDeletionReqModule.getReminderTimeIds().size()>0)
+                deletionTypes.add(3);
+            if (beforeDeletionReqModule.getWeekScheduleIds().size()>0)
+                deletionTypes.add(4);
+            if (beforeDeletionReqModule.getCycleIds().size()>0)
+                deletionTypes.add(5);
+            if (beforeDeletionReqModule.getReminderIds().size()>0)
+                deletionTypes.add(6);
         }
         else{
             beforeDeletionReqModule.setReminderIds(measurementReminderDao.getMarkedForDeletionMeasurementReminderIds());
             beforeDeletionReqModule.setReminderEntriesIds(measurementReminderDao.getMarkedForDeletionMeasurementReminderEntryIds());
+
+            if (beforeDeletionReqModule.getReminderEntriesIds().size()>0)
+                deletionTypes.add(2);
+            if (beforeDeletionReqModule.getReminderTimeIds().size()>0)
+                deletionTypes.add(3);
+            if (beforeDeletionReqModule.getWeekScheduleIds().size()>0)
+                deletionTypes.add(4);
+            if (beforeDeletionReqModule.getCycleIds().size()>0)
+                deletionTypes.add(5);
+            if (beforeDeletionReqModule.getReminderIds().size()>0)
+                deletionTypes.add(7);
         }
 
         databaseAdapter.close();
@@ -73,7 +101,8 @@ public class BeforeDeletionSynchronizationTask extends AsyncTask<Void, Void, Int
 
         while (requestAttempts<2){
             try {
-                URL url = new URL("http://192.168.0.181:8090/synchronization/synchronizeDeletion");
+                URL url = new URL(  context.getResources().getString(R.string.server_address) +
+                        "/synchronization/synchronizeDeletion");
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
                 conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
@@ -143,7 +172,7 @@ public class BeforeDeletionSynchronizationTask extends AsyncTask<Void, Void, Int
     protected void onPostExecute(Integer resCode) {
         if (resCode>0){
             AfterSynchronizationDeletionTask afterSynchronizationDeletionTask = new AfterSynchronizationDeletionTask(
-                    typeOfReminder==1?3:4
+                    deletionTypes
             );
             afterSynchronizationDeletionTask.setReminderId(reminderId);
             afterSynchronizationDeletionTask.execute();
