@@ -15,7 +15,7 @@ public class PillReminderEntryDB extends SynchModel {
     private Date reminderDate;
     private UUID idPillReminder;
     private Date reminderTime;
-    //private Integer isOneTime;
+    private Integer isOneTime;
 
     public PillReminderEntryDB(Date synchTime, int changeType, UUID idPillReminderEntry,
                                int isDone, Date reminderDate, UUID idPillReminder,

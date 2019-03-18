@@ -12,8 +12,7 @@ import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
 import com.example.michel.mycalendar2.dao.CycleDao;
 import com.example.michel.mycalendar2.dao.PillReminderDao;
 import com.example.michel.mycalendar2.dao.ReminderTimeDao;
-import com.example.michel.mycalendar2.models.synchronization.PillReminderReqModule;
-import com.example.michel.mycalendar2.models.synchronization.WeekScheduleDB;
+import com.example.michel.mycalendar2.models.synchronization.ReminderSynchronizationReqModule;
 import com.example.michel.mycalendar2.utils.DateTypeAdapter;
 import com.example.michel.mycalendar2.utils.SynchronizationUtils;
 import com.example.michel.mycalendar2.utils.utilModels.DataForDeletion;
@@ -26,6 +25,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -38,6 +39,7 @@ public class SynchronizationPillReminderTask extends AsyncTask<Void, Void, Integ
     private int typeOfAction;
     private DataForDeletion dataForDeletion;
     private List<Integer> deletionTypes;
+    private Date synchronizationTimestamp;
 
     public SynchronizationPillReminderTask(Context context){
         this.context = context;
@@ -49,49 +51,50 @@ public class SynchronizationPillReminderTask extends AsyncTask<Void, Void, Integ
     @Override
     protected Integer doInBackground(Void... voids) {
         int resCode = 1;
-        PillReminderReqModule pillReminderReqModule = new PillReminderReqModule();
-        pillReminderReqModule.setType(typeOfAction);
+        ReminderSynchronizationReqModule reminderSynchronizationReqModule = new ReminderSynchronizationReqModule();
+        reminderSynchronizationReqModule.setType(typeOfAction);
+        reminderSynchronizationReqModule.setUserId(AccountGeneralUtils.curUser.getId());
 
         DatabaseAdapter databaseAdapter = new DatabaseAdapter();
         CycleDao cycleDao = new CycleDao(databaseAdapter.open().getDatabase());
         PillReminderDao pillReminderDao = new PillReminderDao(databaseAdapter.getDatabase());
         ReminderTimeDao reminderTimeDao = new ReminderTimeDao(databaseAdapter.getDatabase());
 
-        pillReminderReqModule.setCycleDBList(cycleDao
+        reminderSynchronizationReqModule.setCycleDBList(cycleDao
                 .getCycleDBEntriesForSynchronization(AccountGeneralUtils.curUser.getSynchronizationTime()));
-        pillReminderReqModule.setWeekScheduleDBList(cycleDao
+        reminderSynchronizationReqModule.setWeekScheduleDBList(cycleDao
                 .getWeekScheduleDBEntriesForSynchronization(AccountGeneralUtils.curUser.getSynchronizationTime()));
-        pillReminderReqModule.setPillDBList(pillReminderDao
+        reminderSynchronizationReqModule.setPillDBList(pillReminderDao
                 .getPillDBEntriesForSynchronization(AccountGeneralUtils.curUser.getSynchronizationTime()));
-        pillReminderReqModule.setPillReminderDBList(pillReminderDao
+        reminderSynchronizationReqModule.setPillReminderDBList(pillReminderDao
                 .getPillReminderDBEntriesForSynchronization(AccountGeneralUtils.curUser.getSynchronizationTime()));
-        pillReminderReqModule.setPillReminderEntryDBList(pillReminderDao
+        reminderSynchronizationReqModule.setPillReminderEntryDBList(pillReminderDao
                 .getPillReminderEntryDBEntriesForSynchronization(AccountGeneralUtils.curUser.getSynchronizationTime()));
-        pillReminderReqModule.setReminderTimeDBList(reminderTimeDao
+        reminderSynchronizationReqModule.setReminderTimeDBList(reminderTimeDao
                 .getReminderTimeDBEntriesForSynchronization(AccountGeneralUtils.curUser.getSynchronizationTime()));
 
         databaseAdapter.close();
 
-        if (SynchronizationUtils.containsDeletionMarks(pillReminderReqModule.getPillReminderEntryDBList()))
+        if (SynchronizationUtils.containsDeletionMarks(reminderSynchronizationReqModule.getPillReminderEntryDBList()))
             deletionTypes.add(1);
-        if (SynchronizationUtils.containsDeletionMarks(pillReminderReqModule.getReminderTimeDBList()))
+        if (SynchronizationUtils.containsDeletionMarks(reminderSynchronizationReqModule.getReminderTimeDBList()))
             deletionTypes.add(3);
-        if (SynchronizationUtils.containsDeletionMarks(pillReminderReqModule.getWeekScheduleDBList()))
+        if (SynchronizationUtils.containsDeletionMarks(reminderSynchronizationReqModule.getWeekScheduleDBList()))
             deletionTypes.add(4);
-        if (SynchronizationUtils.containsDeletionMarks(pillReminderReqModule.getCycleDBList()))
+        if (SynchronizationUtils.containsDeletionMarks(reminderSynchronizationReqModule.getCycleDBList()))
             deletionTypes.add(5);
-        if (SynchronizationUtils.containsDeletionMarks(pillReminderReqModule.getPillReminderDBList()))
+        if (SynchronizationUtils.containsDeletionMarks(reminderSynchronizationReqModule.getPillReminderDBList()))
             deletionTypes.add(6);
 
         String response = "";
         String JSONStr = new GsonBuilder().registerTypeAdapter(Date.class,new DateTypeAdapter())
-                .create().toJson(pillReminderReqModule);
+                .create().toJson(reminderSynchronizationReqModule);
         int requestAttempts = 0;
 
         while (requestAttempts<2){
             try {
                 URL url = new URL(context.getResources().getString(R.string.server_address) +
-                        "/synchronization/synchronizePillReminderModules");
+                        "/synchronization/synchronizeReminderReqModules");
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
                 conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
@@ -157,6 +160,17 @@ public class SynchronizationPillReminderTask extends AsyncTask<Void, Void, Integ
         try {
             JSONObject jsonObject = new JSONObject(response);
             boolean hasDeletion = jsonObject.getBoolean("hasDeletion");
+
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+            try {
+                synchronizationTimestamp = dateFormat.parse(
+                        jsonObject.getString("synchronizationTimestamp")
+                );
+            } catch (ParseException e) {
+                e.printStackTrace();
+                synchronizationTimestamp = new Date();
+            }
+
             if (hasDeletion)
                 resCode = 2;
         }
@@ -170,7 +184,7 @@ public class SynchronizationPillReminderTask extends AsyncTask<Void, Void, Integ
     @Override
     protected void onPostExecute(Integer resCode) {
         if (resCode>0){
-            AccountGeneralUtils.curUser.setSynchronizationTime(new Date());
+            AccountGeneralUtils.curUser.setSynchronizationTime(synchronizationTimestamp);
             UserLocalUpdateTask userLocalUpdateTask = new UserLocalUpdateTask(2);
             userLocalUpdateTask.execute(AccountGeneralUtils.curUser);
             if (deletionTypes.size()>0){

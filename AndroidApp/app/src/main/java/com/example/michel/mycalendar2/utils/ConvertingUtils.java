@@ -29,8 +29,16 @@ public class ConvertingUtils {
             sb.append(String.format("%02x", b));
     }*/
 
-    public static String convertDateToString(Date date){
+    public static String convertDateToString(Date date, int param){
         String pattern = "yyyy-MM-dd HH:mm:ss";
+        switch (param){
+            case 2:
+                pattern = "HH:mm:ss";
+                break;
+            case 3:
+                pattern = "yyyy-MM-dd";
+                break;
+        }
         SimpleDateFormat df = new SimpleDateFormat(pattern);
         return df.format(date);
     }

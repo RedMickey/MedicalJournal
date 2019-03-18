@@ -24,9 +24,23 @@ public class DateTypeAdapter extends TypeAdapter<Date> {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
             try {
                 Date parsedDate = dateFormat.parse(dateStr);
-                return new Date(parsedDate.getTime());
+                return parsedDate;
             }catch (Exception e){
-                return new Date(0);
+                SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+                try {
+                    Date parsedTime = timeFormat.parse(dateStr);
+                    return parsedTime;
+                }
+                catch (Exception e2){
+                    SimpleDateFormat onlyDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                    try {
+                        Date parsedOnlyDate = onlyDateFormat.parse(dateStr);
+                        return parsedOnlyDate;
+                    }
+                    catch (Exception e3){
+                        return null;
+                    }
+                }
             }
         }
         else

@@ -93,7 +93,7 @@ public class ReminderTimeDao {
     //****************************************************************Synchronization*******************************************************************
     public List<ReminderTimeDB> getReminderTimeDBEntriesForSynchronization(Date date){
         ArrayList<ReminderTimeDB> reminderTimeDBList = new ArrayList<>();
-        String dateStr = ConvertingUtils.convertDateToString(date);
+        String dateStr = ConvertingUtils.convertDateToString(date, 1);
         String userIdStr = String.valueOf(AccountGeneralUtils.curUser.getId());
         String rawQuery = "select rt._id_reminder_time, rt.reminder_time, rt._id_pill_reminder, rt._id_measurement_reminder, rt.synch_time, rt.change_type " +
                 "from reminder_time rt inner join pill_reminders pr on rt._id_pill_reminder=pr._id_pill_reminder " +
@@ -172,6 +172,22 @@ public class ReminderTimeDao {
 
     public void deleteReminderTimeAfterSynchronization(){
         database.delete("reminder_time", "change_type = 3", null);
+    }
+
+    public void insertOrReplaceReminderTimeAfterSynchronization(List<ReminderTimeDB> reminderTimeDBList){
+        for (ReminderTimeDB rt: reminderTimeDBList) {
+            ContentValues reminderTimeValues = new ContentValues();
+            reminderTimeValues.put("_id_reminder_time", ConvertingUtils.convertUUIDToBytes(rt.getIdReminderTime()));
+            reminderTimeValues.put("reminder_time", ConvertingUtils.convertDateToString(rt.getReminderTime(), 2));
+            reminderTimeValues.put("_id_pill_reminder",
+                    rt.getIdPillReminder() == null ? null : ConvertingUtils.convertUUIDToBytes(rt.getIdPillReminder()));
+            reminderTimeValues.put("_id_measurement_reminder",
+                    rt.getIdMeasurementReminder() == null ? null : ConvertingUtils.convertUUIDToBytes(rt.getIdMeasurementReminder()));
+            reminderTimeValues.put("synch_time", ConvertingUtils.convertDateToString(rt.getSynchTime(), 1));
+            reminderTimeValues.put("change_type", rt.getChangeType());
+            database.insertWithOnConflict("reminder_time", null,
+                    reminderTimeValues, SQLiteDatabase.CONFLICT_REPLACE);
+        }
     }
 
     //************************************************************Bebore_deletion************************************************************

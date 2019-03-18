@@ -85,7 +85,7 @@ public class AfterSynchronizationDeletionTask extends AsyncTask<Void, Void, Inte
         ReminderTimeDao reminderTimeDao = new ReminderTimeDao(dbAdapter.open().getDatabase());
         PillReminderDao pillReminderDao = new PillReminderDao(dbAdapter.getDatabase());;
         MeasurementReminderDao measurementReminderDao = new MeasurementReminderDao(dbAdapter.getDatabase());;
-        CycleDao cycleDao = new CycleDao(dbAdapter.getDatabase());;
+        CycleDao cycleDao = new CycleDao(dbAdapter.getDatabase());
 
         for (int t: deletionTypes) {
             switch (t){

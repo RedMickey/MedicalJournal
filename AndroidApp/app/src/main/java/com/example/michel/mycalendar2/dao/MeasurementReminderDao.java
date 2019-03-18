@@ -589,7 +589,7 @@ public class MeasurementReminderDao {
     //**************************************************************Synchronization************************************************************
     public List<MeasurementReminderDB> getMeasurementReminderDBEntriesForSynchronization(Date date){
         ArrayList<MeasurementReminderDB> measurementReminderDBList = new ArrayList<>();
-        String dateStr = ConvertingUtils.convertDateToString(date);
+        String dateStr = ConvertingUtils.convertDateToString(date, 1);
         String userIdStr = String.valueOf(AccountGeneralUtils.curUser.getId());
         String rawQuery = "select * " +
                 "from measurement_reminders mr " +
@@ -652,7 +652,7 @@ public class MeasurementReminderDao {
 
     public List<MeasurementReminderEntryDB> getMeasurementReminderEntryDBEntriesForSynchronization(Date date){
         ArrayList<MeasurementReminderEntryDB> measurementReminderEntryDBList = new ArrayList<>();
-        String dateStr = ConvertingUtils.convertDateToString(date);
+        String dateStr = ConvertingUtils.convertDateToString(date, 1);
         String userIdStr = String.valueOf(AccountGeneralUtils.curUser.getId());
         String rawQuery = "select mre._id_measur_remind_entry, mre.value1, mre.value2, mre._id_measurement_reminder, mre.is_done, mre.reminder_date, " +
                 "mre.reminder_time, mre.synch_time, mre.change_type " +
@@ -745,6 +745,52 @@ public class MeasurementReminderDao {
 
     public void deleteMeasurementReminderAfterSynchronization() {
         database.delete("measurement_reminders", "change_type = 3", null);
+    }
+
+    public void insertOrReplaceMeasurementReminderEntriesAfterSynchronization(
+            List<MeasurementReminderEntryDB> measurementReminderEntryDBList){
+        for (MeasurementReminderEntryDB mre: measurementReminderEntryDBList) {
+            ContentValues measurementReminderEntryTableValues = new ContentValues();
+            measurementReminderEntryTableValues.put("_id_measur_remind_entry",
+                    ConvertingUtils.convertUUIDToBytes(mre.getIdMeasurRemindEntry()));
+            measurementReminderEntryTableValues.put("value1", mre.getValue1());
+            measurementReminderEntryTableValues.put("value2", mre.getValue2());
+            measurementReminderEntryTableValues.put("_id_measurement_reminder",
+                    ConvertingUtils.convertUUIDToBytes(mre.getIdMeasurementReminder()));
+            measurementReminderEntryTableValues.put("is_done", mre.getIsDone());
+            measurementReminderEntryTableValues.put("reminder_time",
+                    ConvertingUtils.convertDateToString(mre.getReminderTime(), 2));
+            measurementReminderEntryTableValues.put("reminder_date",
+                    ConvertingUtils.convertDateToString(mre.getReminderDate(), 3));
+            measurementReminderEntryTableValues.put("is_one_time", mre.getIsOneTime());
+            measurementReminderEntryTableValues.put("synch_time", ConvertingUtils.convertDateToString(mre.getSynchTime(), 1));
+            measurementReminderEntryTableValues.put("change_type", mre.getChangeType());
+            database.insertWithOnConflict("measurement_reminder_entries", null,
+                    measurementReminderEntryTableValues, SQLiteDatabase.CONFLICT_REPLACE);
+        }
+    }
+
+    public void insertOrReplaceMeasurementRemindersAfterSynchronization(
+            List<MeasurementReminderDB> measurementReminderDBList){
+        for (MeasurementReminderDB mr: measurementReminderDBList) {
+            ContentValues measurementReminderTableValues = new ContentValues();
+            measurementReminderTableValues.put("_id_measurement_reminder",
+                    ConvertingUtils.convertUUIDToBytes(mr.getIdMeasurementReminder()));
+            measurementReminderTableValues.put("_id_measurement_type", mr.getIdMeasurementType());
+            measurementReminderTableValues.put("start_date", ConvertingUtils.convertDateToString(mr.getStartDate(), 3));
+            measurementReminderTableValues.put("_id_cycle", mr.getIdCycle() == null ? null : ConvertingUtils.convertUUIDToBytes(mr.getIdCycle()));
+            measurementReminderTableValues.put("_id_having_meals_type", mr.getIdHavingMealsType());
+            measurementReminderTableValues.put("having_meals_time", mr.getHavingMealsTime());
+            measurementReminderTableValues.put("annotation", mr.getAnnotation());
+            measurementReminderTableValues.put("IsActive", mr.getIsActive());
+            measurementReminderTableValues.put("times_a_day", mr.getTimesADay());
+            measurementReminderTableValues.put("is_one_time", mr.getIsOneTime());
+            measurementReminderTableValues.put("synch_time", ConvertingUtils.convertDateToString(mr.getSynchTime(), 1));
+            measurementReminderTableValues.put("change_type", mr.getChangeType());
+            measurementReminderTableValues.put("_id_user", mr.getUserId());
+            database.insertWithOnConflict("measurement_reminders", null,
+                    measurementReminderTableValues, SQLiteDatabase.CONFLICT_REPLACE);
+        }
     }
 
     //************************************************************Bebore_deletion************************************************************

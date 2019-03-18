@@ -21,7 +21,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.sql.Date;
+import java.util.Date;
 import java.sql.Timestamp;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -110,10 +110,13 @@ public class PostSignInTask extends AsyncTask<String, Void, Integer> {
 
         DatabaseAdapter databaseAdapter = new DatabaseAdapter();
         UserDao userDao = new UserDao(databaseAdapter.open().getDatabase());
-        if (!userDao.ifUserExists(user.getEmail())){
+        Date synchronizationTimestamp = userDao.ifUserExists(user.getEmail());
+        if (synchronizationTimestamp == null){
+            user.setSynchronizationTime(new Date(10000));
             userDao.insertUser(user);
         }
         else {
+            user.setSynchronizationTime(synchronizationTimestamp);
             userDao.updateUser(user, 0);
         }
         databaseAdapter.close();

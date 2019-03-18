@@ -469,7 +469,7 @@ public class PillReminderDao {
     //********************************************************************Synchronization***************************************************************
     public List<PillDB> getPillDBEntriesForSynchronization(Date date){
         ArrayList<PillDB> pillDBList = new ArrayList<>();
-        String dateStr = ConvertingUtils.convertDateToString(date);
+        String dateStr = ConvertingUtils.convertDateToString(date, 1);
         String userIdStr = String.valueOf(AccountGeneralUtils.curUser.getId());
         String rawQuery = "select  pl._id_pill, pl.pill_name, pl.pill_description, pl.synch_time, pl.change_type " +
                 "from pills pl inner join pill_reminders pr on pl._id_pill=pr._id_pill " +
@@ -496,7 +496,7 @@ public class PillReminderDao {
 
     public List<PillReminderDB> getPillReminderDBEntriesForSynchronization(Date date){
         ArrayList<PillReminderDB> pillReminderDBList = new ArrayList<>();
-        String dateStr = ConvertingUtils.convertDateToString(date);
+        String dateStr = ConvertingUtils.convertDateToString(date, 1);
         String userIdStr = String.valueOf(AccountGeneralUtils.curUser.getId());
         String rawQuery = "select * " +
                 "from pill_reminders pr " +
@@ -561,7 +561,7 @@ public class PillReminderDao {
 
     public List<PillReminderEntryDB> getPillReminderEntryDBEntriesForSynchronization(Date date){
         ArrayList<PillReminderEntryDB> pillReminderEntryDBList = new ArrayList<>();
-        String dateStr = ConvertingUtils.convertDateToString(date);
+        String dateStr = ConvertingUtils.convertDateToString(date, 1);
         String userIdStr = String.valueOf(AccountGeneralUtils.curUser.getId());
         String rawQuery = "select pre._id_pill_reminder_entry, pre.is_done, pre.reminder_date, pre._id_pill_reminder, pre.reminder_time, " +
                 "pre.synch_time, pre.change_type " +
@@ -650,6 +650,62 @@ public class PillReminderDao {
 
     public void deletePillReminderAfterSynchronization(){
         database.delete("pill_reminders", "change_type = 3", null);
+    }
+
+    public void insertOrReplacePillsAfterSynchronization(List<PillDB> pillDBList){
+        for (PillDB pill: pillDBList) {
+            ContentValues pillTableValues = new ContentValues();
+            pillTableValues.put("_id_pill", ConvertingUtils.convertUUIDToBytes(pill.getIdPill()));
+            pillTableValues.put("pill_name", pill.getPillName());
+            pillTableValues.put("pill_description", pill.getPillDescription());
+            pillTableValues.put("synch_time", ConvertingUtils.convertDateToString(pill.getSynchTime(), 1));
+            pillTableValues.put("change_type", pill.getChangeType());
+            database.insertWithOnConflict("pills", null, pillTableValues,
+                    SQLiteDatabase.CONFLICT_REPLACE);
+        }
+    }
+
+    public void insertOrReplacePillReminderEntriesAfterSynchronization(
+            List<PillReminderEntryDB> pillReminderEntryDBList){
+        for (PillReminderEntryDB pre: pillReminderEntryDBList) {
+            ContentValues pillReminderEntryTableValues = new ContentValues();
+            pillReminderEntryTableValues.put("_id_pill_reminder_entry",
+                    ConvertingUtils.convertUUIDToBytes(pre.getIdPillReminderEntry()));
+            pillReminderEntryTableValues.put("is_done", pre.getIsDone());
+            pillReminderEntryTableValues.put("reminder_date",
+                    ConvertingUtils.convertDateToString(pre.getReminderDate(), 3));
+            pillReminderEntryTableValues.put("_id_pill_reminder", ConvertingUtils.convertUUIDToBytes(pre.getIdPillReminder()));
+            pillReminderEntryTableValues.put("reminder_time",
+                    ConvertingUtils.convertDateToString(pre.getReminderTime(), 2));
+            pillReminderEntryTableValues.put("synch_time", ConvertingUtils.convertDateToString(pre.getSynchTime(), 1));
+            pillReminderEntryTableValues.put("change_type", pre.getChangeType());
+            database.insertWithOnConflict("pill_reminder_entries", null,
+                    pillReminderEntryTableValues, SQLiteDatabase.CONFLICT_REPLACE);
+        }
+    }
+
+    public void insertOrReplacePillRemindersAfterSynchronization(
+            List<PillReminderDB> pillReminderDBList){
+        for (PillReminderDB pr: pillReminderDBList) {
+            ContentValues pillReminderTableValues = new ContentValues();
+            pillReminderTableValues.put("_id_pill_reminder", ConvertingUtils.convertUUIDToBytes(pr.getIdPillReminder()));
+            pillReminderTableValues.put("_id_pill", ConvertingUtils.convertUUIDToBytes(pr.getIdPill()));
+            pillReminderTableValues.put("pill_count", pr.getPillCount());
+            pillReminderTableValues.put("_id_pill_count_type", pr.getIdPillCountType());
+            pillReminderTableValues.put("start_date", ConvertingUtils.convertDateToString(pr.getStartDate(), 3));
+            pillReminderTableValues.put("_id_cycle", pr.getIdCycle() == null ? null : ConvertingUtils.convertUUIDToBytes(pr.getIdCycle()));
+            pillReminderTableValues.put("_id_having_meals_type", pr.getIdHavingMealsType());
+            pillReminderTableValues.put("having_meals_time", pr.getHavingMealsTime());
+            pillReminderTableValues.put("annotation", pr.getAnnotation());
+            pillReminderTableValues.put("IsActive", pr.getIsActive());
+            pillReminderTableValues.put("times_a_day", pr.getTimesADay());
+            pillReminderTableValues.put("is_one_time", pr.getIsOneTime());
+            pillReminderTableValues.put("synch_time", ConvertingUtils.convertDateToString(pr.getSynchTime(), 1));
+            pillReminderTableValues.put("change_type", pr.getChangeType());
+            pillReminderTableValues.put("_id_user", pr.getUserId());
+            database.insertWithOnConflict("pill_reminders", null,
+                    pillReminderTableValues, SQLiteDatabase.CONFLICT_REPLACE);
+        }
     }
 
     //************************************************************Bebore_deletion************************************************************

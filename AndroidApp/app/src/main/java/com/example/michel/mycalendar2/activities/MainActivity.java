@@ -22,11 +22,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.michel.mycalendar2.app_async_tasks.MeasurementNotificationsCreationTask;
 import com.example.michel.mycalendar2.app_async_tasks.PillNotificationsCreationTask;
 import com.example.michel.mycalendar2.app_async_tasks.PostSignInTask;
 import com.example.michel.mycalendar2.app_async_tasks.SetUpCurrentUserTask;
+import com.example.michel.mycalendar2.app_async_tasks.synchronization.GettingDataFromServerTask;
 import com.example.michel.mycalendar2.authentication.AccountGeneralUtils;
 import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
 import com.example.michel.mycalendar2.calendarview.utils.DatabaseHelper;
@@ -214,10 +216,25 @@ public class MainActivity extends AppCompatActivity
             case R.id.action_settings:
                 return true;
             case R.id.synchronize:
+                synchronizeDataWithServer();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void synchronizeDataWithServer(){
+        if (AccountGeneralUtils.curUser.getId()!=1){
+            GettingDataFromServerTask gettingDataFromServerTask = new GettingDataFromServerTask(
+                    this
+            );
+            gettingDataFromServerTask.execute();
+        }
+        else {
+            Toast.makeText(this, "Войдите в учетную запись", Toast.LENGTH_SHORT)
+                    .show();
+        }
+
     }
 
     @SuppressWarnings("StatementWithEmptyBody")

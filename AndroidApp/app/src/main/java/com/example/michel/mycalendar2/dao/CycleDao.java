@@ -141,7 +141,7 @@ public class CycleDao {
     //************************************************************Synchronization*************************************************************
     public List<CycleDB> getCycleDBEntriesForSynchronization(Date date){
         ArrayList<CycleDB> cycleDBArrayList = new ArrayList<>();
-        String dateStr = ConvertingUtils.convertDateToString(date);
+        String dateStr = ConvertingUtils.convertDateToString(date,1);
         String userIdStr = String.valueOf(AccountGeneralUtils.curUser.getId());
         String rawQuery = "select cl._id_cycle, cl.period, cl.period_DM_type, cl.once_a_period, cl.once_a_period_DM_type, cl._id_week_schedule, " +
                 "cl._id_cycling_type, cl.change_type, cl.synch_time " +
@@ -222,7 +222,7 @@ public class CycleDao {
 
     public List<WeekScheduleDB> getWeekScheduleDBEntriesForSynchronization(Date date){
         ArrayList<WeekScheduleDB> weekScheduleDBArrayList = new ArrayList<>();
-        String dateStr = ConvertingUtils.convertDateToString(date);
+        String dateStr = ConvertingUtils.convertDateToString(date,1);
         String userIdStr = String.valueOf(AccountGeneralUtils.curUser.getId());
         String rawQuery = "select ws.mon, ws.tue, ws.wed, ws.thu, ws.fri, ws.sat, ws.sun, ws._id_week_schedule, ws.change_type, ws.synch_time " +
                 "from week_schedules ws inner join cycles cl on ws._id_week_schedule=cl._id_week_schedule inner join pill_reminders pr on cl._id_cycle=pr._id_cycle " +
@@ -296,6 +296,41 @@ public class CycleDao {
         cursor.close();
 
         return uuidList;
+    }
+
+    public void insertOrReplaceWeekSchedulesAfterSynchronization(List<WeekScheduleDB> weekScheduleDBList){
+        for (WeekScheduleDB ws: weekScheduleDBList) {
+            ContentValues weekScheduleTableValues = new ContentValues();
+            weekScheduleTableValues.put("mon", ws.getMon());
+            weekScheduleTableValues.put("tue", ws.getTue());
+            weekScheduleTableValues.put("wed", ws.getWed());
+            weekScheduleTableValues.put("thu", ws.getTue());
+            weekScheduleTableValues.put("fri", ws.getFri());
+            weekScheduleTableValues.put("sat", ws.getSat());
+            weekScheduleTableValues.put("sun", ws.getSun());
+            weekScheduleTableValues.put("_id_week_schedule", ConvertingUtils.convertUUIDToBytes(ws.getIdWeekSchedule()));
+            weekScheduleTableValues.put("synch_time", ConvertingUtils.convertDateToString(ws.getSynchTime(), 1));
+            weekScheduleTableValues.put("change_type", ws.getChangeType());
+            database.insertWithOnConflict("week_schedules", null, weekScheduleTableValues,
+                    SQLiteDatabase.CONFLICT_REPLACE);
+        }
+    }
+
+    public void insertOrReplaceCyclesAfterSynchronization(List<CycleDB> cycleDBList){
+        for (CycleDB cycle: cycleDBList) {
+            ContentValues cycleTableValues = new ContentValues();
+            cycleTableValues.put("_id_cycle", ConvertingUtils.convertUUIDToBytes(cycle.getIdCycle()));
+            cycleTableValues.put("period", cycle.getPeriod());
+            cycleTableValues.put("period_DM_type", cycle.getPeriodDmType());
+            cycleTableValues.put("once_a_period", cycle.getOnceAPeriod());
+            cycleTableValues.put("once_a_period_DM_type", cycle.getOnceAPeriodDmType());
+            cycleTableValues.put("_id_week_schedule",
+                    cycle.getIdWeekSchedule() == null ? null : ConvertingUtils.convertUUIDToBytes(cycle.getIdWeekSchedule()));
+            cycleTableValues.put("_id_cycling_type", cycle.getIdCyclingType());
+            cycleTableValues.put("synch_time", ConvertingUtils.convertDateToString(cycle.getSynchTime(), 1));
+            cycleTableValues.put("change_type", cycle.getChangeType());
+            database.insertWithOnConflict("cycles", null, cycleTableValues, SQLiteDatabase.CONFLICT_REPLACE);
+        }
     }
 
     public void deleteWeekSchedulesAfterSynchronization(){

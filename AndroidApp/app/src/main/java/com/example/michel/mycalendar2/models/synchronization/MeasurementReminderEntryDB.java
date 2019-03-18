@@ -17,7 +17,7 @@ public class MeasurementReminderEntryDB extends SynchModel {
     private int isDone;
     private Date reminderTime;
     private Date reminderDate;
-    //private Integer isOneTime;
+    private Integer isOneTime;
 
     public MeasurementReminderEntryDB(Date synchTime, int changeType, UUID idMeasurRemindEntry,
                                       Double value1, Double value2, UUID idMeasurementReminder,

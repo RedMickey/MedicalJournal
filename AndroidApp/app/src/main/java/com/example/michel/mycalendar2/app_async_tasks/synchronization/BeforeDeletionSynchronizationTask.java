@@ -14,16 +14,18 @@ import com.example.michel.mycalendar2.dao.MeasurementReminderDao;
 import com.example.michel.mycalendar2.dao.PillReminderDao;
 import com.example.michel.mycalendar2.dao.ReminderTimeDao;
 import com.example.michel.mycalendar2.models.synchronization.BeforeDeletionReqModule;
-import com.example.michel.mycalendar2.models.synchronization.MeasurementReminderReqModule;
 import com.example.michel.mycalendar2.utils.DateTypeAdapter;
-import com.example.michel.mycalendar2.utils.SynchronizationUtils;
 import com.google.gson.GsonBuilder;
+
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -37,6 +39,7 @@ public class BeforeDeletionSynchronizationTask extends AsyncTask<Void, Void, Int
     private int typeOfReminder;
     private UUID reminderId;
     private List<Integer> deletionTypes;
+    private Date synchronizationTimestamp;
 
     public BeforeDeletionSynchronizationTask(Context context, int typeOfReminder){
         this.context = context;
@@ -50,6 +53,7 @@ public class BeforeDeletionSynchronizationTask extends AsyncTask<Void, Void, Int
         int resCode = 1;
         BeforeDeletionReqModule beforeDeletionReqModule = new BeforeDeletionReqModule();
         beforeDeletionReqModule.setType(typeOfReminder);
+        beforeDeletionReqModule.setUserId(AccountGeneralUtils.curUser.getId());
 
         DatabaseAdapter databaseAdapter = new DatabaseAdapter();
         CycleDao cycleDao = new CycleDao(databaseAdapter.open().getDatabase());
@@ -156,13 +160,27 @@ public class BeforeDeletionSynchronizationTask extends AsyncTask<Void, Void, Int
 
             }
             catch(Exception e){
-
                 resCode = -2;
                 //Log.e("URL", e.getMessage());
                 Log.e("URL", String.valueOf(-2));
-                //return users[0];
                 //return new String("\"Exception\": \"" + e.getMessage()+"\"");
             }
+        }
+
+        try {
+            JSONObject jsonObject = new JSONObject(response);
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+            try {
+                synchronizationTimestamp = dateFormat.parse(
+                        jsonObject.getString("synchronizationTimestamp")
+                );
+            } catch (ParseException e) {
+                e.printStackTrace();
+                synchronizationTimestamp = new Date();
+            }
+        }
+        catch (Exception e){
+            Log.e("JSONObject", e.getMessage());
         }
 
         return resCode;
@@ -171,6 +189,10 @@ public class BeforeDeletionSynchronizationTask extends AsyncTask<Void, Void, Int
     @Override
     protected void onPostExecute(Integer resCode) {
         if (resCode>0){
+            AccountGeneralUtils.curUser.setSynchronizationTime(synchronizationTimestamp);
+            UserLocalUpdateTask userLocalUpdateTask = new UserLocalUpdateTask(2);
+            userLocalUpdateTask.execute(AccountGeneralUtils.curUser);
+
             AfterSynchronizationDeletionTask afterSynchronizationDeletionTask = new AfterSynchronizationDeletionTask(
                     deletionTypes
             );

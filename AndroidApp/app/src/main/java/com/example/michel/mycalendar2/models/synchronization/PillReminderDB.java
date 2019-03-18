@@ -20,7 +20,7 @@ public class PillReminderDB extends SynchModel {
     private String annotation;
     private int isActive;
     private int timesADay;
-    //private Integer isOneTime;
+    private Integer isOneTime;
     private int userId;
 
     public PillReminderDB(Date synchTime, int changeType, UUID idPillReminder,

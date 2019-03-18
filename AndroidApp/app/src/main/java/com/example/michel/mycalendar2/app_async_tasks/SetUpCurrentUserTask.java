@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.example.michel.mycalendar2.activities.MainActivity;
 import com.example.michel.mycalendar2.activities.R;
+import com.example.michel.mycalendar2.app_async_tasks.synchronization.GettingDataFromServerTask;
 import com.example.michel.mycalendar2.authentication.AccountGeneralUtils;
 import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
 import com.example.michel.mycalendar2.dao.UserDao;
@@ -91,6 +92,10 @@ public class SetUpCurrentUserTask extends AsyncTask<Void, Void, Integer> {
                 ((TextView) mainActivity.getNavigationView().findViewById(R.id.username_tv)).setText(user.getName());
                 ((TextView) mainActivity.getNavigationView().findViewById(R.id.profile_config_tv)).setText("Редактировать профиль");
             }
+            GettingDataFromServerTask gettingDataFromServerTask = new GettingDataFromServerTask(
+                    context
+            );
+            gettingDataFromServerTask.execute();
         }
         else{
             AccountGeneralUtils.curUser = new User();

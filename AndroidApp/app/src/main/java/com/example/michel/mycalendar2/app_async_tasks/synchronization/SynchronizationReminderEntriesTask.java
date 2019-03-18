@@ -13,14 +13,19 @@ import com.example.michel.mycalendar2.dao.MeasurementReminderDao;
 import com.example.michel.mycalendar2.dao.PillReminderDao;
 import com.example.michel.mycalendar2.models.synchronization.MeasurementReminderEntryDB;
 import com.example.michel.mycalendar2.models.synchronization.PillReminderEntryDB;
+import com.example.michel.mycalendar2.models.synchronization.ReminderEntriesReqModule;
 import com.example.michel.mycalendar2.utils.DateTypeAdapter;
 import com.google.gson.GsonBuilder;
+
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -33,6 +38,7 @@ public class SynchronizationReminderEntriesTask extends AsyncTask<Void, Void, In
     private AccountManager accountManager;
     private int type;
     private UUID id;
+    private Date synchronizationTimestamp;
 
     public SynchronizationReminderEntriesTask(Context context, int type){
         this.context = context;
@@ -49,36 +55,38 @@ public class SynchronizationReminderEntriesTask extends AsyncTask<Void, Void, In
 
     @Override
     protected Integer doInBackground(Void... voids) {
-        List<PillReminderEntryDB> pillReminderEntryDBList = new ArrayList<>();
-        List<MeasurementReminderEntryDB> measurementReminderEntryDBList = new ArrayList<>();
+        //List<PillReminderEntryDB> pillReminderEntryDBList = new ArrayList<>();
+        //List<MeasurementReminderEntryDB> measurementReminderEntryDBList = new ArrayList<>();
 
         int resCode = 1;
-        String controllerURL = "";
+        //String controllerURL = "";
         String JSONStr = "";
 
         DatabaseAdapter databaseAdapter = new DatabaseAdapter();
         MeasurementReminderDao measurementReminderDao = new MeasurementReminderDao(
                 databaseAdapter.open().getDatabase());
         PillReminderDao pillReminderDao = new PillReminderDao(databaseAdapter.getDatabase());
+        ReminderEntriesReqModule reminderEntriesReqModule = new ReminderEntriesReqModule();
+        reminderEntriesReqModule.setUserId(AccountGeneralUtils.curUser.getId());
 
         switch (type){
             case 1:
-                controllerURL = "synchronizePillReminderEntry";
+                //controllerURL = "synchronizePillReminderEntry";
                 PillReminderEntryDB pillReminderEntryDBBuf = pillReminderDao.getPillReminderEntryDBForSynchronizationById(id);
                 if (pillReminderEntryDBBuf != null)
-                    pillReminderEntryDBList.add(pillReminderEntryDBBuf);
+                    reminderEntriesReqModule.getPillReminderEntryDBList().add(pillReminderEntryDBBuf);
 
-                JSONStr = new GsonBuilder().registerTypeAdapter(Date.class,new DateTypeAdapter())
-                        .create().toJson(pillReminderEntryDBBuf);
+                /*JSONStr = new GsonBuilder().registerTypeAdapter(Date.class,new DateTypeAdapter())
+                        .create().toJson(pillReminderEntryDBBuf);*/
                 break;
             case 2:
-                controllerURL = "synchronizeMeasurementReminderEntry";
+                //controllerURL = "synchronizeMeasurementReminderEntry";
                 MeasurementReminderEntryDB measurementReminderEntryDBBuf = measurementReminderDao.getMeasurementReminderEntryDBForSynchronizationById(id);
                 if (measurementReminderEntryDBBuf != null)
-                    measurementReminderEntryDBList.add(measurementReminderEntryDBBuf);
+                    reminderEntriesReqModule.getMeasurementReminderEntryDBList().add(measurementReminderEntryDBBuf);
 
-                JSONStr = new GsonBuilder().registerTypeAdapter(Date.class,new DateTypeAdapter())
-                        .create().toJson(measurementReminderEntryDBBuf);
+                /*JSONStr = new GsonBuilder().registerTypeAdapter(Date.class,new DateTypeAdapter())
+                        .create().toJson(measurementReminderEntryDBBuf);*/
                 break;
             /*default:
                 pillReminderEntryDBList = new ArrayList<>();
@@ -88,15 +96,18 @@ public class SynchronizationReminderEntriesTask extends AsyncTask<Void, Void, In
 
         databaseAdapter.close();
 
+        JSONStr = new GsonBuilder().registerTypeAdapter(Date.class,new DateTypeAdapter())
+                .create().toJson(reminderEntriesReqModule);
         String response = "";
 
-        if (pillReminderEntryDBList.size() > 0 || measurementReminderEntryDBList.size() > 0){
+        if (reminderEntriesReqModule.getPillReminderEntryDBList().size() > 0 ||
+                reminderEntriesReqModule.getMeasurementReminderEntryDBList().size() > 0){
             int requestAttempts = 0;
 
             while (requestAttempts<2){
                 try {
                     URL url = new URL(context.getResources().getString(R.string.server_address) +
-                            "/synchronization/" + controllerURL);
+                            "/synchronization/synchronizeReminderEntries");
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
                     conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
@@ -154,9 +165,24 @@ public class SynchronizationReminderEntriesTask extends AsyncTask<Void, Void, In
                     resCode = -2;
                     //Log.e("URL", e.getMessage());
                     Log.e("URL", String.valueOf(-2));
-                    //return users[0];
                     //return new String("\"Exception\": \"" + e.getMessage()+"\"");
                 }
+            }
+
+            try {
+                JSONObject jsonObject = new JSONObject(response);
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+                try {
+                    synchronizationTimestamp = dateFormat.parse(
+                            jsonObject.getString("synchronizationTimestamp")
+                    );
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    synchronizationTimestamp = new Date();
+                }
+            }
+            catch (Exception e){
+                Log.e("JSONObject", e.getMessage());
             }
         }
         else {
@@ -169,7 +195,7 @@ public class SynchronizationReminderEntriesTask extends AsyncTask<Void, Void, In
     @Override
     protected void onPostExecute(Integer resCode) {
         if (resCode>0){
-            AccountGeneralUtils.curUser.setSynchronizationTime(new Date());
+            AccountGeneralUtils.curUser.setSynchronizationTime(synchronizationTimestamp);
             UserLocalUpdateTask userLocalUpdateTask = new UserLocalUpdateTask(2);
             userLocalUpdateTask.execute(AccountGeneralUtils.curUser);
         }

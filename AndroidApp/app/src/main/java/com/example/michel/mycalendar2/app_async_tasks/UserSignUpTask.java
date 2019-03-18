@@ -136,7 +136,7 @@ public class UserSignUpTask extends AsyncTask<User, Void, User> {
     protected void onPostExecute(User updatedUser) {
         progressDialog.dismiss();
         if (updatedUser.getId()>0){
-            Toast.makeText(registrationActivity.getApplicationContext(), "Регистрация успешно завершена", Toast.LENGTH_LONG).show();
+            Toast.makeText(registrationActivity.getApplicationContext(), "Регистрация успешно завершена", Toast.LENGTH_SHORT).show();
             UserInsertionTask uit = new UserInsertionTask();
             uit.execute(updatedUser);
             Intent data = new Intent();

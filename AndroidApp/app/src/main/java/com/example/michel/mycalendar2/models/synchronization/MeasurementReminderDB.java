@@ -20,7 +20,7 @@ public class MeasurementReminderDB extends SynchModel {
     private String annotation;
     private int isActive;
     private int timesADay;
-    //private Integer isOneTime;
+    private Integer isOneTime;
     private int userId;
 
     public MeasurementReminderDB(Date synchTime, int changeType, UUID idMeasurementReminder,

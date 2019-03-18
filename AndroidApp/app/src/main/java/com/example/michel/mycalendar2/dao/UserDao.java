@@ -25,7 +25,7 @@ public class UserDao {
     public int insertUser(User user){
         ContentValues userValues = new ContentValues();
         userValues.put("_id_user", user.getId());
-        userValues.put("synchronization_time", ConvertingUtils.convertDateToString(user.getSynchronizationTime()));
+        userValues.put("synchronization_time", ConvertingUtils.convertDateToString(user.getSynchronizationTime(),1));
         userValues.put("name", user.getName());
         userValues.put("surname", user.getSurname());
         userValues.put("email", user.getEmail());
@@ -78,17 +78,20 @@ public class UserDao {
         return users;
     }
 
-    public boolean ifUserExists(String userEmail){
-        boolean ifExists = true;
+    public Date ifUserExists(String userEmail){
+        //boolean ifExists = true;
+        Date synchronizationTimestamp = null;
 
         String rawQuery = "select * FROM user WHERE email = ?";
         Cursor cursor = database.rawQuery(rawQuery, new String[]{userEmail});
-        if(cursor.getCount()<=0){
-            ifExists = false;
+        if(cursor.moveToFirst()){
+            //ifExists = false;
+            synchronizationTimestamp = ConvertingUtils.convertStringToDate(
+                    cursor.getString(cursor.getColumnIndex("synchronization_time")));
         }
         cursor.close();
 
-        return ifExists;
+        return synchronizationTimestamp;
     }
 
     public void updateUser(User user, int type){
@@ -96,7 +99,7 @@ public class UserDao {
         switch (type){
             case 0:
                 userValues.put("_id_user", user.getId());
-                userValues.put("synchronization_time", ConvertingUtils.convertDateToString(user.getSynchronizationTime()));
+                userValues.put("synchronization_time", ConvertingUtils.convertDateToString(user.getSynchronizationTime(), 1));
                 userValues.put("name", user.getName());
                 userValues.put("surname", user.getSurname());
                 userValues.put("email", user.getEmail());
@@ -105,14 +108,14 @@ public class UserDao {
                 userValues.put("role_id", user.getRoleId());
                 userValues.put("is_current", user.getIsCurrent());
                 userValues.put("synchronization_time", ConvertingUtils.convertDateToString(
-                        user.getSynchronizationTime()));
+                        user.getSynchronizationTime(), 1));
                 break;
             case 1:
                 userValues.put("is_current", user.getIsCurrent());
                 break;
             case 2:
                 userValues.put("synchronization_time", ConvertingUtils.convertDateToString(
-                        user.getSynchronizationTime()));
+                        user.getSynchronizationTime(), 1));
                 break;
         }
 
