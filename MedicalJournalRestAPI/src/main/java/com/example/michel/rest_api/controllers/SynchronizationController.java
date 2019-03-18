@@ -1,8 +1,6 @@
 package com.example.michel.rest_api.controllers;
 
-import com.example.michel.rest_api.models.MeasurementReminderEntry;
-import com.example.michel.rest_api.models.PillReminderEntry;
-import com.example.michel.rest_api.models.WeekSchedule;
+import com.example.michel.rest_api.models.*;
 import com.example.michel.rest_api.models.auxiliary_models.synchronization.*;
 import com.example.michel.rest_api.models.measurement.MeasurementReminderEntryF;
 import com.example.michel.rest_api.services.*;
@@ -52,32 +50,6 @@ public class SynchronizationController {
         return null;
     }
 
-    /*
-    @PostMapping(value = "/synchronizePillReminderModules", produces = "application/json")
-    public Map synchronizePillReminderModules(@RequestBody PillReminderReqModule req){
-        List<Boolean> hasDeletion = new ArrayList<>();
-        hasDeletion.add(weekScheduleService.updateOrDelete(req.getWeekScheduleDBList()));
-        hasDeletion.add(cycleService.updateOrDelete(req.getCycleDBList()));
-        hasDeletion.add(pillService.updateOrDelete(req.getPillDBList()));
-        hasDeletion.add(pillReminderService.updateOrDelete(req.getPillReminderDBList()));
-        hasDeletion.add(reminderTimeService.updateOrDelete(req.getReminderTimeDBList()));
-        hasDeletion.add(pillReminderEntryService.updateOrDelete(req.getPillReminderEntryDBList()));
-
-        return Collections.singletonMap("hasDeletion", hasDeletion.contains(true));
-    }
-
-    @PostMapping(value = "/synchronizeMeasurementReminderReqModules", produces = "application/json")
-    public Map synchronizeMeasurementReminderReqModules(@RequestBody MeasurementReminderReqModule req){
-        List<Boolean> hasDeletion = new ArrayList<>();
-        hasDeletion.add(weekScheduleService.updateOrDelete(req.getWeekScheduleDBList()));
-        hasDeletion.add(cycleService.updateOrDelete(req.getCycleDBList()));
-        hasDeletion.add(measurementReminderService.updateOrDelete(req.getMeasurementReminderDBList()));
-        hasDeletion.add(reminderTimeService.updateOrDelete(req.getReminderTimeDBList()));
-        hasDeletion.add(measurementReminderEntryService.updateOrDelete(req.getMeasurementReminderEntryDBList()));
-
-        return Collections.singletonMap("hasDeletion", hasDeletion.contains(true));
-    }*/
-
     @PostMapping(value = "/synchronizeReminderReqModules", produces = "application/json")
     public SynchronizationReminderResp synchronizeMeasurementReminderReqModules(@RequestBody ReminderSynchronizationReqModule req){
         List<Boolean> hasDeletion = new ArrayList<>();
@@ -115,20 +87,6 @@ public class SynchronizationController {
         return Collections.singletonMap("synchronizationTimestamp", synchronizationTimestamp);
     }
 
-    /*@PostMapping(value = "/synchronizeMeasurementReminderEntry", produces = "application/json")
-    public Map synchronizeMeasurementReminderEntry(@RequestBody MeasurementReminderEntry req){
-        measurementReminderEntryService.save(req);
-
-        return null;
-    }
-
-    @PostMapping(value = "/synchronizePillReminderEntry", produces = "application/json")
-    public Map synchronizePillReminderEntry(@RequestBody PillReminderEntry req){
-        pillReminderEntryService.save(req);
-
-        return null;
-    }*/
-
     @PostMapping(value = "/synchronizeReminderEntries", produces = "application/json")
     public Map synchronizeReminderEntries(@RequestBody ReminderEntriesReqModule req){
         pillReminderEntryService.saveAll(req.getPillReminderEntryDBList());
@@ -139,30 +97,52 @@ public class SynchronizationController {
     }
 
     @PostMapping(value = "/getAllDataForSynchronization", produces = "application/json")
-    public ReminderSynchronizationReqModule getAllDataForSynchronization(@RequestBody SynchronizationReq req){
+    public ReminderSynchronizationReqModule[] getAllDataForSynchronization(@RequestBody SynchronizationReq req){
         Timestamp oldSynchronizationTimestamp = new Timestamp(req.getSynchronizationTimestamp().getTime());
-        ReminderSynchronizationReqModule reminderSynchronizationReqModule = new ReminderSynchronizationReqModule();
+        ReminderSynchronizationReqModule rsrmUpAndIn = new ReminderSynchronizationReqModule();
+        ReminderSynchronizationReqModule rsrmDel = new ReminderSynchronizationReqModule();
 
-        reminderSynchronizationReqModule.setCycleDBList(cycleService
-                .getCycleDBEntriesForSynchronization(oldSynchronizationTimestamp, req.getUserId()));
-        reminderSynchronizationReqModule.setMeasurementReminderDBList(measurementReminderService
-                .getMeasurementRemindersForSynchronization(oldSynchronizationTimestamp, req.getUserId()));
-        reminderSynchronizationReqModule.setMeasurementReminderEntryDBList(measurementReminderEntryService
-                .getMeasurementReminderEntriesForSynchronization(oldSynchronizationTimestamp, req.getUserId()));
-        reminderSynchronizationReqModule.setWeekScheduleDBList(weekScheduleService
-                .getWeekSchedulesForSynchronization(oldSynchronizationTimestamp, req.getUserId()));
-        reminderSynchronizationReqModule.setReminderTimeDBList(reminderTimeService
-                .getReminderTimeForSynchronization(oldSynchronizationTimestamp, req.getUserId()));
-        reminderSynchronizationReqModule.setPillDBList(pillService
-                .getPillsForSynchronization(oldSynchronizationTimestamp, req.getUserId()));
-        reminderSynchronizationReqModule.setPillReminderDBList(pillReminderService
-                .getPillRemindersForSynchronization(oldSynchronizationTimestamp, req.getUserId()));
-        reminderSynchronizationReqModule.setPillReminderEntryDBList(pillReminderEntryService
-                .getPillReminderEntriesForSynchronization(oldSynchronizationTimestamp, req.getUserId()));
+        Map<Boolean, List<Cycle>> cyclesMap = cycleService
+                .getSeparatedCycleDBEntriesForSynchronization(oldSynchronizationTimestamp, req.getUserId());
+        Map<Boolean, List<MeasurementReminder>> measurementRemindersMap = measurementReminderService
+                .getSeparatedMeasurementRemindersForSynchronization(oldSynchronizationTimestamp, req.getUserId());
+        Map<Boolean, List<MeasurementReminderEntry>> measurementReminderEntriesMap = measurementReminderEntryService
+                .getSeparatedMeasurementReminderEntriesForSynchronization(oldSynchronizationTimestamp, req.getUserId());
+        Map<Boolean, List<WeekSchedule>> weekSchedulesMap = weekScheduleService
+                .getSeparatedWeekSchedulesForSynchronization(oldSynchronizationTimestamp, req.getUserId());
+        Map<Boolean, List<ReminderTime>> reminderTimeMap = reminderTimeService
+                .getSeparatedReminderTimeForSynchronization(oldSynchronizationTimestamp, req.getUserId());
+        Map<Boolean, List<Pill>> pillsMap = pillService
+                .getSeparatedPillsForSynchronization(oldSynchronizationTimestamp, req.getUserId());
+        Map<Boolean, List<PillReminder>> pillRemindersMap = pillReminderService
+                .getSeparatedPillRemindersForSynchronization(oldSynchronizationTimestamp, req.getUserId());
+        Map<Boolean, List<PillReminderEntry>> pillReminderEntriesMap = pillReminderEntryService
+                .getSeparatedPillReminderEntriesForSynchronization(oldSynchronizationTimestamp, req.getUserId());
 
-        reminderSynchronizationReqModule.setSynchronizationTimestamp(
-                userService.updateUserSynchronizationTime(req.getUserId())
-        );
-        return reminderSynchronizationReqModule;
+        rsrmUpAndIn.setCycleDBList(cyclesMap.get(true));
+        rsrmUpAndIn.setMeasurementReminderDBList(measurementRemindersMap.get(true));
+        rsrmUpAndIn.setMeasurementReminderEntryDBList(measurementReminderEntriesMap.get(true));
+        rsrmUpAndIn.setWeekScheduleDBList(weekSchedulesMap.get(true));
+        rsrmUpAndIn.setReminderTimeDBList(reminderTimeMap.get(true));
+        rsrmUpAndIn.setPillDBList(pillsMap.get(true));
+        rsrmUpAndIn.setPillReminderDBList(pillRemindersMap.get(true));
+        rsrmUpAndIn.setPillReminderEntryDBList(pillReminderEntriesMap.get(true));
+
+        rsrmDel.setCycleDBList(cyclesMap.get(false));
+        rsrmDel.setMeasurementReminderDBList(measurementRemindersMap.get(false));
+        rsrmDel.setMeasurementReminderEntryDBList(measurementReminderEntriesMap.get(false));
+        rsrmDel.setWeekScheduleDBList(weekSchedulesMap.get(false));
+        rsrmDel.setReminderTimeDBList(reminderTimeMap.get(false));
+        rsrmDel.setPillDBList(pillsMap.get(false));
+        rsrmDel.setPillReminderDBList(pillRemindersMap.get(false));
+        rsrmDel.setPillReminderEntryDBList(pillReminderEntriesMap.get(false));
+
+        Date synchronizationTimestamp = userService.updateUserSynchronizationTime(req.getUserId());
+        rsrmUpAndIn.setSynchronizationTimestamp(synchronizationTimestamp);
+        rsrmDel.setSynchronizationTimestamp(synchronizationTimestamp);
+
+        return new ReminderSynchronizationReqModule[]{
+                rsrmUpAndIn, rsrmDel
+        };
     }
 }

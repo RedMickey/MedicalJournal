@@ -7,7 +7,9 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class ReminderTimeService {
@@ -39,5 +41,13 @@ public class ReminderTimeService {
             Timestamp synchronizationTimestamp, Integer userId){
         return reminderTimeRepository.getReminderTimeForSynchronization(
                 synchronizationTimestamp, userId);
+    }
+
+    public Map<Boolean, List<ReminderTime>> getSeparatedReminderTimeForSynchronization(
+            Timestamp synchronizationTimestamp, Integer userId){
+        List<ReminderTime> reminderTimeList = reminderTimeRepository.getReminderTimeForSynchronization(
+                synchronizationTimestamp, userId);
+        return reminderTimeList.stream().collect(Collectors
+                .partitioningBy(rt -> rt.getChangeType()<3));
     }
 }

@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class PillService {
@@ -32,5 +34,12 @@ public class PillService {
 
      public List<Pill> getPillsForSynchronization(Timestamp synchronizationTimestamp, Integer userId){
         return pillRepository.getPillsForSynchronization(synchronizationTimestamp, userId);
+    }
+
+    public Map<Boolean, List<Pill>> getSeparatedPillsForSynchronization(
+            Timestamp synchronizationTimestamp, Integer userId){
+        List<Pill> pillList = pillRepository.getPillsForSynchronization(synchronizationTimestamp, userId);
+        return pillList.stream().collect(Collectors
+                .partitioningBy(p -> p.getChangeType()<3));
     }
 }

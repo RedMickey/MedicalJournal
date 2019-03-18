@@ -7,7 +7,9 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class CycleService {
@@ -37,5 +39,12 @@ public class CycleService {
 
     public List<Cycle> getCycleDBEntriesForSynchronization(Timestamp synchronizationTimestamp, Integer userId){
         return cycleRepository.getCycleDBEntriesForSynchronization(synchronizationTimestamp, userId);
+    }
+
+    public Map<Boolean, List<Cycle>> getSeparatedCycleDBEntriesForSynchronization(
+            Timestamp synchronizationTimestamp, Integer userId){
+        List<Cycle> cycleList = cycleRepository.getCycleDBEntriesForSynchronization(synchronizationTimestamp, userId);
+        return cycleList.stream().collect(Collectors
+                .partitioningBy(c -> c.getChangeType()<3));
     }
 }

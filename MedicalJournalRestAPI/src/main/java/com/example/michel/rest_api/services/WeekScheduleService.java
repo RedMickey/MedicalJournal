@@ -10,7 +10,9 @@ import org.springframework.stereotype.Service;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class WeekScheduleService {
@@ -55,5 +57,13 @@ public class WeekScheduleService {
             Timestamp synchronizationTimestamp, Integer userId){
         return weekScheduleRepository.getWeekSchedulesForSynchronization(
                 synchronizationTimestamp, userId);
+    }
+
+    public Map<Boolean, List<WeekSchedule>> getSeparatedWeekSchedulesForSynchronization(
+            Timestamp synchronizationTimestamp, Integer userId){
+        List<WeekSchedule> weekScheduleList = weekScheduleRepository.getWeekSchedulesForSynchronization(
+                synchronizationTimestamp, userId);
+        return weekScheduleList.stream().collect(Collectors
+                .partitioningBy(ws -> ws.getChangeType()<3));
     }
 }

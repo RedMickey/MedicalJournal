@@ -9,7 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class PillReminderEntryService {
@@ -48,5 +50,14 @@ public class PillReminderEntryService {
                 .getPillReminderEntriesForSynchronization( synchronizationTimestamp, userId);
         pillReminderEntries.forEach(pre -> pre.setReminderTime(new Time(pre.getReminderDate().getTime())));
         return pillReminderEntries;
+    }
+
+    @Transactional
+    public Map<Boolean, List<PillReminderEntry>> getSeparatedPillReminderEntriesForSynchronization(
+            Timestamp synchronizationTimestamp, Integer userId){
+        List<PillReminderEntry> pillReminderEntries = pillReminderEntryRepository
+                .getPillReminderEntriesForSynchronization( synchronizationTimestamp, userId);
+        return pillReminderEntries.parallelStream().peek(pre -> pre.setReminderTime(new Time(pre.getReminderDate().getTime())))
+                .collect(Collectors.partitioningBy(pre -> pre.getChangeType()<3));
     }
 }
