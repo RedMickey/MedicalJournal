@@ -45,8 +45,8 @@ public class TasksViewCreationTask extends AsyncTask<DateData, Void, PillAndMeas
         DatabaseAdapter databaseAdapter = new DatabaseAdapter();
         PillReminderDao pillReminderDao = new PillReminderDao(databaseAdapter.open().getDatabase());
         MeasurementReminderDao measurementReminderDao = new MeasurementReminderDao(databaseAdapter.getDatabase());
-        List<PillReminderEntry> pillReminderEntries = pillReminderDao.getPillReminderEntriesByDate(dateData[0]);
-        List<MeasurementReminderEntry> measurementReminderEntries = measurementReminderDao.getMeasurementReminderEntriesByDate(dateData[0]);
+        List<PillReminderEntry> pillReminderEntries = pillReminderDao.getPillReminderEntriesByDate(dateData[0], -1);
+        List<MeasurementReminderEntry> measurementReminderEntries = measurementReminderDao.getMeasurementReminderEntriesByDate(dateData[0], -1);
         databaseAdapter.close();
 
         return new PillAndMeasurementReminderEntries(pillReminderEntries, measurementReminderEntries);

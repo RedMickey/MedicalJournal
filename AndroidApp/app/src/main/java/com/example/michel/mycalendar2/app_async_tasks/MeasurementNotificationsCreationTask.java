@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.example.michel.mycalendar2.authentication.AccountGeneralUtils;
 import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
 import com.example.michel.mycalendar2.calendarview.data.DateData;
 import com.example.michel.mycalendar2.dao.MeasurementReminderDao;
@@ -22,15 +23,24 @@ import static android.content.Context.ALARM_SERVICE;
 
 public class MeasurementNotificationsCreationTask extends AsyncTask<Context, Void, Void> {
     private int type;
+    private int userId;
 
     public MeasurementNotificationsCreationTask(int type){
         super();
         this.type = type;
+        this.userId = AccountGeneralUtils.curUser.getId();
+    }
+
+    public MeasurementNotificationsCreationTask(int type, int userId){
+        super();
+        this.type = type;
+        this.userId = userId;
     }
 
     public MeasurementNotificationsCreationTask(){
         super();
         this.type = 0;
+        this.userId = AccountGeneralUtils.curUser.getId();
     }
 
     @Override
@@ -41,20 +51,20 @@ public class MeasurementNotificationsCreationTask extends AsyncTask<Context, Voi
         Calendar cal = Calendar.getInstance();
 
         List<MeasurementReminderEntry> todayMeasurementReminderEntries = measurementReminderDao.getMeasurementReminderEntriesByDate(new DateData(
-                cal.get(Calendar.YEAR), cal.get(Calendar.MONTH)+1, cal.get(Calendar.DAY_OF_MONTH)
-        ));
+                cal.get(Calendar.YEAR), cal.get(Calendar.MONTH)+1, cal.get(Calendar.DAY_OF_MONTH)), userId
+        );
 
 
         cal.add(Calendar.DAY_OF_MONTH, -1);
         List<MeasurementReminderEntry> yesterdayMeasurementReminderEntries = measurementReminderDao.getMeasurementReminderEntriesByDate(new DateData(
-                cal.get(Calendar.YEAR), cal.get(Calendar.MONTH)+1, cal.get(Calendar.DAY_OF_MONTH)
-        ));
+                cal.get(Calendar.YEAR), cal.get(Calendar.MONTH)+1, cal.get(Calendar.DAY_OF_MONTH)), userId
+        );
 
 
         cal.add(Calendar.DAY_OF_MONTH,2);
         List<MeasurementReminderEntry> tomorrowMeasurementReminderEntries = measurementReminderDao.getMeasurementReminderEntriesByDate(new DateData(
-                cal.get(Calendar.YEAR), cal.get(Calendar.MONTH)+1, cal.get(Calendar.DAY_OF_MONTH)
-        ));
+                cal.get(Calendar.YEAR), cal.get(Calendar.MONTH)+1, cal.get(Calendar.DAY_OF_MONTH)), userId
+        );
 
 
         switch (type){
@@ -110,5 +120,9 @@ public class MeasurementNotificationsCreationTask extends AsyncTask<Context, Voi
                 }
             }
         }
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 }

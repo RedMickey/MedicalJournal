@@ -17,6 +17,8 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.michel.mycalendar2.app_async_tasks.MeasurementNotificationsCreationTask;
+import com.example.michel.mycalendar2.app_async_tasks.PillNotificationsCreationTask;
 import com.example.michel.mycalendar2.app_async_tasks.UserGlobalUpdateTask;
 import com.example.michel.mycalendar2.app_async_tasks.UserLocalUpdateTask;
 import com.example.michel.mycalendar2.app_async_tasks.UserSignUpTask;
@@ -93,9 +95,21 @@ public class UserActivity extends AppCompatActivity {
                 AccountGeneralUtils.curUser.setIsCurrent(0);
                 UserLocalUpdateTask userUpdateTask = new UserLocalUpdateTask(1);
                 userUpdateTask.execute(AccountGeneralUtils.curUser);
+                // cancel previous user notifications
+                MeasurementNotificationsCreationTask preMnct = new MeasurementNotificationsCreationTask(
+                        1, AccountGeneralUtils.curUser.getId());
+                preMnct.execute(this);
+                PillNotificationsCreationTask prePnct = new PillNotificationsCreationTask(
+                        1, AccountGeneralUtils.curUser.getId());
+                prePnct.execute(this);
                 AccountGeneralUtils.curUser = new User();
                 AccountGeneralUtils.curToken = null;
                 AccountGeneralUtils.curAccount = null;
+                // set up notification for default user
+                MeasurementNotificationsCreationTask newMnct = new MeasurementNotificationsCreationTask(2);
+                newMnct.execute(this);
+                PillNotificationsCreationTask newPnct = new PillNotificationsCreationTask(2);
+                newPnct.execute(this);
                 Intent data = new Intent();
                 data.putExtra("is_log_out",true);
                 setResult(RESULT_OK, data);

@@ -297,12 +297,19 @@ public class PillReminderDao {
         return (int)count;
     }
 
-    public List<PillReminderEntry> getPillReminderEntriesByDate(DateData date){
+    public List<PillReminderEntry> getPillReminderEntriesByDate(DateData date, int userId){
         ArrayList<PillReminderEntry> pillReminderEntries = new ArrayList<>();
+        String userIdStr;
+        if (userId<0){
+            userIdStr = String.valueOf(AccountGeneralUtils.curUser.getId());
+        }
+        else {
+            userIdStr = String.valueOf(userId);
+        }
         String rawQuery = "select pre._id_pill_reminder_entry, pre.is_done, pr._id_having_meals_type, pre.reminder_time, pr.having_meals_time, pr.pill_count, pct.type_name, pre.reminder_date, pi.pill_name" +
                 " from pill_reminder_entries pre inner join pill_reminders pr on pre._id_pill_reminder=pr._id_pill_reminder inner join pills pi on pi._id_pill=pr._id_pill inner join pill_count_types pct on" +
                 " pr._id_pill_count_type=pct._id_pill_count_type where pre.reminder_date=? and (pr.IsActive=1 or pre.is_done=1) and pre.change_type<3 and pr._id_user=? ORDER BY pre.is_done";
-        Cursor cursor = database.rawQuery(rawQuery, new String[]{date.getDateString(), String.valueOf(AccountGeneralUtils.curUser.getId())});
+        Cursor cursor = database.rawQuery(rawQuery, new String[]{date.getDateString(), userIdStr});
         Calendar calendar = Calendar.getInstance();
         if(cursor.moveToFirst()){
             do{

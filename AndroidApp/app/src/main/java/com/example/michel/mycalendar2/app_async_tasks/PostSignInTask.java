@@ -121,7 +121,7 @@ public class PostSignInTask extends AsyncTask<String, Void, Integer> {
         }
         databaseAdapter.close();
 
-        SetUpCurrentUserTask setUpCurrentUserTask = new SetUpCurrentUserTask(context);
+        SetUpCurrentUserTask setUpCurrentUserTask = new SetUpCurrentUserTask(mainActivity);
         setUpCurrentUserTask.setAuthToken(strings[0]);
         setUpCurrentUserTask.setUser(user);
         setUpCurrentUserTask.execute();

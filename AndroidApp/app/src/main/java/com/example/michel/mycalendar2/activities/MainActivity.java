@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity
     private int preFragmentId = -1;
     private NavigationView navigationView;
     private MainActivity mainActivity;
+    private String curFragmentTag = "MAIN_FRAGMENT";
 
     private DatabaseHelper databaseHelper;
     @Override
@@ -71,7 +72,7 @@ public class MainActivity extends AppCompatActivity
         MainFragment mainFragment = MainFragment.newInstance();
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
-                .add(R.id.frame_container, mainFragment, "MAIN_FRAGMENT")
+                .add(R.id.frame_container, mainFragment, curFragmentTag)
                 .commit();
 
         toolbarLinearLayout1 = (LinearLayout)findViewById(R.id.toolbar_linear_layout1);
@@ -145,7 +146,7 @@ public class MainActivity extends AppCompatActivity
 
             databaseAdapter.close();
 
-            SetUpCurrentUserTask setUpCurrentUserTask = new SetUpCurrentUserTask(getBaseContext());
+            SetUpCurrentUserTask setUpCurrentUserTask = new SetUpCurrentUserTask(this);
             setUpCurrentUserTask.execute();
 
             SharedPreferences settings = getSharedPreferences("MedicalJournalSettings", MODE_PRIVATE);
@@ -174,14 +175,15 @@ public class MainActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            Fragment mainFragment = (MainFragment)getSupportFragmentManager().findFragmentByTag("MAIN_FRAGMENT");
+            curFragmentTag = "MAIN_FRAGMENT";
+            Fragment mainFragment = (MainFragment)getSupportFragmentManager().findFragmentByTag(curFragmentTag);
             if (mainFragment == null || !mainFragment.isVisible()) {
                 preFragmentId = -1;
                 checkToolBarLinearLayoutVisibility(0);
                 MainFragment mainFragmentNew = MainFragment.newInstance();
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 fragmentManager.beginTransaction()
-                        .add(R.id.frame_container, mainFragmentNew, "MAIN_FRAGMENT")
+                        .add(R.id.frame_container, mainFragmentNew, curFragmentTag)
                         .commit();
                 //Toast.makeText(this,"here",Toast.LENGTH_SHORT).show();
                 navigationView.getMenu().getItem(0).setChecked(true);
@@ -249,16 +251,19 @@ public class MainActivity extends AppCompatActivity
             Fragment newFragment;
             switch (id) {
                 case R.id.nav_medicines:
+                    curFragmentTag = "REMINDER_FRAGMENT";
                     newFragment = ReminderFragment.newInstance();
                     checkToolBarLinearLayoutVisibility(0);
                     break;
                 case R.id.nav_history:
+                    curFragmentTag = "HISTORY_FRAGMENT";
                     newFragment = HistoryFragment.newInstance();
                     activeAppBarLayoutDragCallback();
                     checkToolBarLinearLayoutVisibility(1);
                     toolbarLinearLayout1.setVisibility(View.VISIBLE);
                     break;
                 case R.id.nav_statistic:
+                    curFragmentTag = "STATISTIC_FRAGMENT";
                     newFragment = StatisticListFragment.newInstance();
                     activeAppBarLayoutDragCallback();
                     checkToolBarLinearLayoutVisibility(1);
@@ -267,19 +272,21 @@ public class MainActivity extends AppCompatActivity
                 case R.id.nav_main:
                     newFragment = null;
                     isMainFrame = 1;
-                    Fragment mainFragment = (MainFragment)getSupportFragmentManager().findFragmentByTag("MAIN_FRAGMENT");
+                    curFragmentTag = "MAIN_FRAGMENT";
+                    Fragment mainFragment = (MainFragment)getSupportFragmentManager().findFragmentByTag(curFragmentTag);
                     if (mainFragment == null || !mainFragment.isVisible()) {
                         preFragmentId = -1;
                         checkToolBarLinearLayoutVisibility(0);
                         MainFragment mainFragmentNew = MainFragment.newInstance();
                         FragmentManager fragmentManager = getSupportFragmentManager();
                         fragmentManager.beginTransaction()
-                                .add(R.id.frame_container, mainFragmentNew, "MAIN_FRAGMENT")
+                                .add(R.id.frame_container, mainFragmentNew, curFragmentTag)
                                 .commit();
                     }
                     break;
                 default:
                     //intent = new Intent(this, AddTreatmentActivity.class);
+                    curFragmentTag = "REMINDER_FRAGMENT";
                     newFragment = ReminderFragment.newInstance();
             }
 
@@ -288,7 +295,7 @@ public class MainActivity extends AppCompatActivity
             //fragmentManager.beginTransaction().replace(R.id.flContent, fragment).addToBackStack(null).commit();
             if (isMainFrame!=1){
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.frame_container, newFragment);
+                transaction.replace(R.id.frame_container, newFragment, curFragmentTag);
                 //transaction.addToBackStack(null);
                 transaction.commit();
             }
@@ -350,12 +357,13 @@ public class MainActivity extends AppCompatActivity
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         //Toast.makeText(this,"newIntent", Toast.LENGTH_SHORT).show();
-        Fragment mainFragment = (MainFragment)getSupportFragmentManager().findFragmentByTag("MAIN_FRAGMENT");
+        curFragmentTag = "MAIN_FRAGMENT";
+        Fragment mainFragment = (MainFragment)getSupportFragmentManager().findFragmentByTag(curFragmentTag);
         if (mainFragment == null || !mainFragment.isVisible()) {
             MainFragment mainFragmentNew = MainFragment.newInstance();
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction()
-                    .replace(R.id.frame_container, mainFragmentNew, "MAIN_FRAGMENT")
+                    .replace(R.id.frame_container, mainFragmentNew, curFragmentTag)
                     .commit();
             //Toast.makeText(this,"here",Toast.LENGTH_SHORT).show();
         }
@@ -367,6 +375,12 @@ public class MainActivity extends AppCompatActivity
             if (resultCode == RESULT_OK) {
                 String accountName = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
                 String authtoken = data.getStringExtra(AccountManager.KEY_AUTHTOKEN);
+                MeasurementNotificationsCreationTask mnct = new MeasurementNotificationsCreationTask(
+                        1, 1);
+                mnct.execute(this);
+                PillNotificationsCreationTask pnct = new PillNotificationsCreationTask(
+                        1, 1);
+                pnct.execute(this);
                 PostSignInTask postSignInTask = new PostSignInTask(mainActivity);
                 postSignInTask.execute(authtoken, accountName);
             }
@@ -377,6 +391,7 @@ public class MainActivity extends AppCompatActivity
                 if (isLogOut){
                     ((TextView) getNavigationView().findViewById(R.id.username_tv)).setText(getResources().getText(R.string.def_username));
                     ((TextView) getNavigationView().findViewById(R.id.profile_config_tv)).setText("Создать Профиль");
+                    updateCurFragment(1);
                 }
                 else {
                     ((TextView) getNavigationView().findViewById(R.id.username_tv)).setText(AccountGeneralUtils.curUser.getName());
@@ -385,7 +400,44 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    public void updateCurFragment(int commitType){
+        Fragment newFragment;
+        switch (curFragmentTag){
+            case "REMINDER_FRAGMENT":
+                newFragment = ReminderFragment.newInstance();
+                break;
+            case "HISTORY_FRAGMENT":
+                newFragment = HistoryFragment.newInstance();
+                break;
+            case "STATISTIC_FRAGMENT":
+                newFragment = StatisticListFragment.newInstance();
+                break;
+            case "MAIN_FRAGMENT":
+                newFragment = MainFragment.newInstance();
+                break;
+            default:
+                newFragment = MainFragment.newInstance();
+                break;
+        }
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.frame_container, newFragment, curFragmentTag);
+        if (commitType == 0){
+            transaction.commit();
+        }
+        else {
+            transaction.commitAllowingStateLoss();
+        }
+    }
+
     public NavigationView getNavigationView() {
         return navigationView;
+    }
+
+    public String getCurFragmentTag() {
+        return curFragmentTag;
+    }
+
+    public void setCurFragmentTag(String curFragmentTag) {
+        this.curFragmentTag = curFragmentTag;
     }
 }

@@ -93,10 +93,6 @@
             android:label="@string/title_activity_registration" />
         <activity android:name=".UserActivity" />
 
-        <service
-            android:name="com.example.michel.mycalendar2.services.SynchronizationService"
-            android:enabled="true"
-            android:exported="true"></service>
     </application>
 
 </manifest>

@@ -91,11 +91,11 @@ public class SetUpCurrentUserTask extends AsyncTask<Void, Void, Integer> {
             if (mainActivity!=null){
                 ((TextView) mainActivity.getNavigationView().findViewById(R.id.username_tv)).setText(user.getName());
                 ((TextView) mainActivity.getNavigationView().findViewById(R.id.profile_config_tv)).setText("Редактировать профиль");
+                GettingDataFromServerTask gettingDataFromServerTask = new GettingDataFromServerTask(
+                        mainActivity
+                );
+                gettingDataFromServerTask.execute();
             }
-            GettingDataFromServerTask gettingDataFromServerTask = new GettingDataFromServerTask(
-                    context
-            );
-            gettingDataFromServerTask.execute();
         }
         else{
             AccountGeneralUtils.curUser = new User();

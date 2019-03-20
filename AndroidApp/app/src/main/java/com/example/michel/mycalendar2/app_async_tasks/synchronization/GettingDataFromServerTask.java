@@ -3,10 +3,15 @@ package com.example.michel.mycalendar2.app_async_tasks.synchronization;
 import android.accounts.AccountManager;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.michel.mycalendar2.activities.MainActivity;
 import com.example.michel.mycalendar2.activities.R;
+import com.example.michel.mycalendar2.app_async_tasks.MeasurementNotificationsCreationTask;
+import com.example.michel.mycalendar2.app_async_tasks.PillNotificationsCreationTask;
 import com.example.michel.mycalendar2.app_async_tasks.UserLocalUpdateTask;
 import com.example.michel.mycalendar2.authentication.AccountGeneralUtils;
 import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
@@ -14,6 +19,10 @@ import com.example.michel.mycalendar2.dao.CycleDao;
 import com.example.michel.mycalendar2.dao.MeasurementReminderDao;
 import com.example.michel.mycalendar2.dao.PillReminderDao;
 import com.example.michel.mycalendar2.dao.ReminderTimeDao;
+import com.example.michel.mycalendar2.main_fragments.HistoryFragment;
+import com.example.michel.mycalendar2.main_fragments.MainFragment;
+import com.example.michel.mycalendar2.main_fragments.ReminderFragment;
+import com.example.michel.mycalendar2.main_fragments.StatisticListFragment;
 import com.example.michel.mycalendar2.models.synchronization.ReminderSynchronizationReqModule;
 import com.example.michel.mycalendar2.utils.DateTypeAdapter;
 import com.google.gson.GsonBuilder;
@@ -38,6 +47,7 @@ public class GettingDataFromServerTask extends AsyncTask<Void, Void, Integer> {
     private Context context;
     private AccountManager accountManager;
     private Date synchronizationTimestamp;
+    private MainActivity mainActivity;
 
     @Data
     class SynchronizationReq {
@@ -47,6 +57,12 @@ public class GettingDataFromServerTask extends AsyncTask<Void, Void, Integer> {
 
     public GettingDataFromServerTask(Context context){
         this.context = context;
+        accountManager = AccountManager.get(context);
+    }
+
+    public GettingDataFromServerTask(MainActivity mainActivity){
+        this.context = mainActivity.getBaseContext();
+        this.mainActivity = mainActivity;
         accountManager = AccountManager.get(context);
     }
 
@@ -142,8 +158,8 @@ public class GettingDataFromServerTask extends AsyncTask<Void, Void, Integer> {
 
             DatabaseAdapter dbAdapter = new DatabaseAdapter();
             ReminderTimeDao reminderTimeDao = new ReminderTimeDao(dbAdapter.open().getDatabase());
-            PillReminderDao pillReminderDao = new PillReminderDao(dbAdapter.getDatabase());;
-            MeasurementReminderDao measurementReminderDao = new MeasurementReminderDao(dbAdapter.getDatabase());;
+            PillReminderDao pillReminderDao = new PillReminderDao(dbAdapter.getDatabase());
+            MeasurementReminderDao measurementReminderDao = new MeasurementReminderDao(dbAdapter.getDatabase());
             CycleDao cycleDao = new CycleDao(dbAdapter.getDatabase());
 
             cycleDao.insertOrReplaceWeekSchedulesAfterSynchronization(
@@ -164,6 +180,15 @@ public class GettingDataFromServerTask extends AsyncTask<Void, Void, Integer> {
                     reminderSynchronizationReqModule[0].getMeasurementReminderEntryDBList());
 
             dbAdapter.close();
+
+            if (reminderSynchronizationReqModule[0].getMeasurementReminderEntryDBList().size()>0){
+                MeasurementNotificationsCreationTask mnct = new MeasurementNotificationsCreationTask();
+                mnct.execute(context);
+            }
+            if (reminderSynchronizationReqModule[0].getPillReminderEntryDBList().size()>0){
+                PillNotificationsCreationTask pnct = new PillNotificationsCreationTask();
+                pnct.execute(context);
+            }
         }
 
         return resCode;
@@ -176,6 +201,9 @@ public class GettingDataFromServerTask extends AsyncTask<Void, Void, Integer> {
             UserLocalUpdateTask userLocalUpdateTask = new UserLocalUpdateTask(2);
             userLocalUpdateTask.execute(AccountGeneralUtils.curUser);
             Toast.makeText(context, "Синхронизовано", Toast.LENGTH_SHORT).show();
+            if (mainActivity != null){
+                mainActivity.updateCurFragment(0);
+            }
         }
         else {
             Toast.makeText(context, "Ошибка синхронизации", Toast.LENGTH_SHORT).show();

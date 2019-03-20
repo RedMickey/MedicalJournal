@@ -415,14 +415,21 @@ public class MeasurementReminderDao {
                 new String[]{idMeasurementReminder.toString().replace("-", "")});
     }
 
-    public List<MeasurementReminderEntry> getMeasurementReminderEntriesByDate(DateData date){
+    public List<MeasurementReminderEntry> getMeasurementReminderEntriesByDate(DateData date, int userId){
         ArrayList<MeasurementReminderEntry> measurementReminderEntry = new ArrayList<>();
+        String userIdStr;
+        if (userId<0){
+            userIdStr = String.valueOf(AccountGeneralUtils.curUser.getId());
+        }
+        else {
+            userIdStr = String.valueOf(userId);
+        }
         String rawQuery = "select mre._id_measur_remind_entry, mr._id_measurement_type, mvt.type_value_name, mt.type_name, mre.value1, mre.value2, mre.is_done, mr._id_having_meals_type," +
                 " mre.reminder_time, mr.having_meals_time, mre.reminder_date " +
                 " from measurement_reminder_entries mre inner join measurement_reminders mr on mre._id_measurement_reminder=mr._id_measurement_reminder inner join measurement_types mt on" +
                 " mr._id_measurement_type=mt._id_measurement_type inner join measurement_value_types mvt on mt._id_measur_value_type=mvt._id_measur_value_type where mre.reminder_date=? and" +
                 " (mr.IsActive=1 or mre.is_done=1) and mre.change_type<3 and mr._id_user=? ORDER BY mre.is_done";
-        Cursor cursor = database.rawQuery(rawQuery, new String[]{date.getDateString(), String.valueOf(AccountGeneralUtils.curUser.getId())});
+        Cursor cursor = database.rawQuery(rawQuery, new String[]{date.getDateString(), userIdStr});
         Calendar calendar = Calendar.getInstance();
         if(cursor.moveToFirst()){
             do{
