@@ -76,31 +76,7 @@ public class RemindersController {
         return measurementTypeFList;
     }
 
-    /*@PostMapping(value = "/synchronizeTest", produces = "application/json")
-    public List<PillReminderEntry> synchronizeTest(){
-        Calendar cal = Calendar.getInstance();
-        cal.set(2019, 2, 17, 12, 00);
-        return pillReminderEntryService.getPillReminderEntriesForSynchronization(43,
-                new Timestamp(cal.getTimeInMillis()));
-    }*/
-
-    /*@PostMapping(value = "/synchronizeTest2", produces = "application/json")
-    public List<PillReminder> synchronizeTest2(){
-        Calendar cal = Calendar.getInstance();
-        cal.set(2019, 2, 13, 12, 00);
-        return pillReminderService.getPillRemindersForSynchronization(
-                new Timestamp(cal.getTimeInMillis()), 43);
-    }
-
-    @PostMapping(value = "/synchronizeTest3", produces = "application/json")
-    public List<Cycle> synchronizeTest3(){
-        Calendar cal = Calendar.getInstance();
-        cal.set(2019, 2, 17, 12, 00);
-        return cycleService.getCycleDBEntriesForSynchronization(
-                new Timestamp(cal.getTimeInMillis()), 43);
-    }
-
-    @PostMapping(value = "/synchronizeTest4", produces = "application/json")
+    /*@PostMapping(value = "/synchronizeTest4", produces = "application/json")
     public List<WeekSchedule> synchronizeTest4(){
         Calendar cal = Calendar.getInstance();
         cal.set(2019, 2, 15, 18, 00);

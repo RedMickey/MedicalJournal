@@ -34,7 +34,8 @@ public class PillReminderEntryFDao implements IPillReminderEntryFDao {
 
     @Override
     public int updateIsDonePillReminderEntry(UpdatePillReminderBody updatePillReminderBody) {
-        String sql = "UPDATE pill_reminder_entry SET reminder_date = ?, is_done = ? WHERE _id_pill_reminder_entry = ?";
+        String sql = "UPDATE pill_reminder_entry SET reminder_date = ?, is_done = ?, change_type = ?, synch_time = ? " +
+                "WHERE _id_pill_reminder_entry = ?";
         byte[] uuid = ByteBuffer.allocate(16).putLong(updatePillReminderBody.getId().getMostSignificantBits())
                 .putLong(updatePillReminderBody.getId().getLeastSignificantBits()).array();
 
@@ -42,8 +43,11 @@ public class PillReminderEntryFDao implements IPillReminderEntryFDao {
             @Override
             public void setValues(PreparedStatement preparedStatement) throws SQLException {
                 preparedStatement.setTimestamp(1, new Timestamp(updatePillReminderBody.getDate().getTime()));
-                preparedStatement.setBytes(3, uuid);
                 preparedStatement.setInt(2, updatePillReminderBody.getIsDone());
+                preparedStatement.setInt(3, 2);
+                preparedStatement.setTimestamp(4, new Timestamp(new Date().getTime()));
+                preparedStatement.setBytes(5, uuid);
+
             }
         });
     }

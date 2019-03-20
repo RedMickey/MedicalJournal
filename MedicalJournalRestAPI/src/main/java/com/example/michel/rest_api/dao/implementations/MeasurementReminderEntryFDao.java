@@ -36,7 +36,8 @@ public class MeasurementReminderEntryFDao implements IMeasurementReminderEntryFD
 
     @Override
     public int updateIsDoneMeasurementReminderEntry(UpdateMeasurementReminderBody updateMeasurementReminderBody) {
-        String sql = "UPDATE measurement_reminder_entry SET reminder_date = ?, is_done = ?, value1 = ?, value2 = ? WHERE _id_measur_remind_entry = ?";
+        String sql = "UPDATE measurement_reminder_entry SET reminder_date = ?, is_done = ?, value1 = ?, value2 = ?, change_type = ?, synch_time = ? " +
+                "WHERE _id_measur_remind_entry = ?";
         byte[] uuid = ByteBuffer.allocate(16).putLong(updateMeasurementReminderBody.getId().getMostSignificantBits())
                 .putLong(updateMeasurementReminderBody.getId().getLeastSignificantBits()).array();
 
@@ -47,7 +48,9 @@ public class MeasurementReminderEntryFDao implements IMeasurementReminderEntryFD
                 preparedStatement.setInt(2, updateMeasurementReminderBody.getIsDone());
                 preparedStatement.setDouble(3, updateMeasurementReminderBody.getValue1());
                 preparedStatement.setDouble(4, updateMeasurementReminderBody.getValue2());
-                preparedStatement.setBytes(5, uuid);
+                preparedStatement.setInt(5, 2);
+                preparedStatement.setTimestamp(6, new Timestamp(new Date().getTime()));
+                preparedStatement.setBytes(7, uuid);
             }
         });
     }
