@@ -1,11 +1,14 @@
 package com.example.michel.rest_api.services;
 
 import com.example.michel.rest_api.models.Cycle;
+import com.example.michel.rest_api.models.auxiliary_models.CycleDBInsertEntry;
 import com.example.michel.rest_api.repositories.CycleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -46,5 +49,21 @@ public class CycleService {
         List<Cycle> cycleList = cycleRepository.getCycleDBEntriesForSynchronization(synchronizationTimestamp, userId);
         return cycleList.stream().collect(Collectors
                 .partitioningBy(c -> c.getChangeType()<3));
+    }
+
+    @Transactional
+    public void updateAndMarkAsDeleted(List<UUID> uuidList) {
+        Timestamp synchronizationTimestamp = new Timestamp(new Date().getTime());
+        uuidList.forEach(id -> cycleRepository.updateAndMarkAsDeletedById(id, synchronizationTimestamp));
+    }
+
+    public UUID createAndSaveCycle(CycleDBInsertEntry cycleDBInsertEntry){
+        UUID id = UUID.randomUUID();
+        Cycle cycle = new Cycle(id, cycleDBInsertEntry.getPeriod(),
+                cycleDBInsertEntry.getPeriodDMType(), cycleDBInsertEntry.getOnceAPeriod(),
+                cycleDBInsertEntry.getOnceAPeriodDMType(), cycleDBInsertEntry.getIdWeekSchedule(),
+                cycleDBInsertEntry.getIdCyclingType(), new Timestamp(new Date().getTime()), 1);
+        cycleRepository.save(cycle);
+        return id;
     }
 }

@@ -1,6 +1,7 @@
 package com.example.michel.rest_api.repositories;
 
 import com.example.michel.rest_api.models.Pill;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -18,4 +19,10 @@ public interface PillRepository extends CrudRepository<Pill, UUID> {
             nativeQuery = true)
     List<Pill> getPillsForSynchronization(
             @Param("timestamp") java.sql.Timestamp synchronizationTimestamp, @Param("userId") Integer userId);
+
+    @Modifying
+    @Query(
+            value = "UPDATE pill SET synch_time = :timestamp, change_type = 3 WHERE _id_pill = :id",
+            nativeQuery = true)
+    void updateAndMarkAsDeletedById(@Param("id") UUID id, @Param("timestamp") Timestamp synchronizationTimestamp);
 }

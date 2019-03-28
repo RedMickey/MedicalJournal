@@ -1,6 +1,8 @@
 package com.example.michel.rest_api.models;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.sql.Time;
@@ -11,6 +13,8 @@ import java.util.UUID;
 
 @Entity
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "measurement_reminder_entry", schema = "medical_journal", catalog = "")
 public class MeasurementReminderEntry {
     @Id

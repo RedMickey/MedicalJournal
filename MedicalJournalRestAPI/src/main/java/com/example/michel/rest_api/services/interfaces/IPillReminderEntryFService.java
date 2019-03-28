@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface IPillReminderEntryFService {
 
-    public List<PillReminderEntryF> getPillReminderEntriesByDate(Date date);
+    public List<PillReminderEntryF> getPillReminderEntriesByDate(Date date, int userId);
 
     public int updateIsDonePillReminderEntry(UpdatePillReminderBody updatePillReminderBody);
 }

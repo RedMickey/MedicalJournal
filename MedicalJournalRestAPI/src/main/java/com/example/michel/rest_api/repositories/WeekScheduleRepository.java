@@ -1,6 +1,7 @@
 package com.example.michel.rest_api.repositories;
 
 import com.example.michel.rest_api.models.WeekSchedule;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -24,4 +25,12 @@ public interface WeekScheduleRepository extends CrudRepository<WeekSchedule, UUI
             nativeQuery = true)
     List<WeekSchedule> getWeekSchedulesForSynchronization(
             @Param("timestamp") Timestamp synchronizationTimestamp, @Param("userId") Integer userId);
+
+    @Modifying
+    @Query(
+            value = "UPDATE week_schedule SET synch_time = :timestamp, change_type = 3 WHERE _id_week_schedule = :id",
+            nativeQuery = true)
+    void updateAndMarkAsDeletedById(@Param("id") UUID id, @Param("timestamp") Timestamp synchronizationTimestamp);
+
+    WeekSchedule getByIdWeekScheduleEqualsAndChangeTypeLessThanEqual(UUID id, int changeType);
 }

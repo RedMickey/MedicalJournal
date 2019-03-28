@@ -1,6 +1,7 @@
 package com.example.michel.rest_api.repositories;
 
 import com.example.michel.rest_api.models.Cycle;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -24,4 +25,10 @@ public interface CycleRepository extends CrudRepository<Cycle, UUID> {
             nativeQuery = true)
     List<Cycle> getCycleDBEntriesForSynchronization(
             @Param("timestamp") Timestamp synchronizationTimestamp, @Param("userId") Integer userId);
+
+    @Modifying
+    @Query(
+            value = "UPDATE cycle SET synch_time = :timestamp, change_type = 3 WHERE _id_cycle = :id",
+            nativeQuery = true)
+    void updateAndMarkAsDeletedById(@Param("id") UUID id, @Param("timestamp") Timestamp synchronizationTimestamp);
 }

@@ -15,7 +15,7 @@ public class MeasurementReminderFService implements IMeasurementReminderFService
     private MeasurementReminderFDao measurementReminderFDao;
 
     @Override
-    public List<MeasurementReminderF> getAllMeasurementRemindersF() {
-        return measurementReminderFDao.getAllMeasurementRemindersF();
+    public List<MeasurementReminderF> getAllMeasurementRemindersF(int userId) {
+        return measurementReminderFDao.getAllMeasurementRemindersF(userId);
     }
 }

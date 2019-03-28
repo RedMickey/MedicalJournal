@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface IMeasurementReminderEntryFDao {
 
-    public List<MeasurementReminderEntryF> getMeasurementReminderEntriesByDate(Date date);
+    public List<MeasurementReminderEntryF> getMeasurementReminderEntriesByDate(Date date, int userId);
 
     public int updateIsDoneMeasurementReminderEntry(UpdateMeasurementReminderBody updateMeasurementReminderBody);
 }

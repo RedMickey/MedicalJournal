@@ -19,8 +19,8 @@ public class PillReminderEntryFService implements IPillReminderEntryFService {
     private IPillReminderEntryFDao pillReminderEntryFDao;*/
 
     @Override
-    public List<PillReminderEntryF> getPillReminderEntriesByDate(Date date) {
-       List<PillReminderEntryF> pillReminderEntryFList = pillReminderEntryFDao.getPillReminderEntriesByDate(date);
+    public List<PillReminderEntryF> getPillReminderEntriesByDate(Date date, int userId) {
+       List<PillReminderEntryF> pillReminderEntryFList = pillReminderEntryFDao.getPillReminderEntriesByDate(date, userId);
        pillReminderEntryFList.sort((o1, o2) ->
                o1.getDate().compareTo(o2.getDate()));
        return pillReminderEntryFList;

@@ -1,6 +1,8 @@
 package com.example.michel.rest_api.models;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.sql.Date;
@@ -10,6 +12,8 @@ import java.util.UUID;
 
 @Entity
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "pill_reminder", schema = "medical_journal", catalog = "")
 public class PillReminder {
     @Id

@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface IMeasurementReminderFService {
 
-    public List<MeasurementReminderF> getAllMeasurementRemindersF();
+    public List<MeasurementReminderF> getAllMeasurementRemindersF(int userId);
 }

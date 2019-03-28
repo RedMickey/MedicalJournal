@@ -4,8 +4,11 @@ import com.example.michel.rest_api.models.ReminderTime;
 import com.example.michel.rest_api.repositories.ReminderTimeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Time;
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -49,5 +52,41 @@ public class ReminderTimeService {
                 synchronizationTimestamp, userId);
         return reminderTimeList.stream().collect(Collectors
                 .partitioningBy(rt -> rt.getChangeType()<3));
+    }
+
+    public Date[] getReminderTimeDateArrByReminderId(UUID reminderId, int reminderType){
+        if (reminderType == 1){
+            List<ReminderTime> reminderTimeList = reminderTimeRepository
+                    .getAllByIdPillReminderEqualsAndChangeTypeLessThanEqual(
+                    reminderId, 3);
+            return reminderTimeList.stream().map(reminderTime -> reminderTime.getReminderTime()).toArray(Date[]::new);
+        }
+        else {
+            List<ReminderTime> reminderTimeList = reminderTimeRepository
+                    .getAllByIdMeasurementReminderEqualsAndChangeTypeLessThanEqual(
+                            reminderId, 3);
+            return reminderTimeList.stream().map(reminderTime -> reminderTime.getReminderTime()).toArray(Date[]::new);
+        }
+    }
+
+    @Transactional
+    public void updateAndMarkAsDeleted(List<UUID> uuidList) {
+        Timestamp synchronizationTimestamp = new Timestamp(new Date().getTime());
+        uuidList.forEach(id -> reminderTimeRepository.updateAndMarkAsDeletedById(id, synchronizationTimestamp));
+    }
+
+    public UUID createAndSavePillReminder(Date reminderTime, UUID reminderId, int type){
+        UUID id = UUID.randomUUID();
+        ReminderTime reminderTimeEntry = new ReminderTime();
+        reminderTimeEntry.setIdReminderTime(id);
+        reminderTimeEntry.setReminderTime(new Time(reminderTime.getTime()));
+        if (type == 1)
+            reminderTimeEntry.setIdPillReminder(reminderId);
+        else
+            reminderTimeEntry.setIdMeasurementReminder(reminderId);
+        reminderTimeEntry.setSynchTime(new Timestamp(new Date().getTime()));
+        reminderTimeEntry.setChangeType(1);
+        reminderTimeRepository.save(reminderTimeEntry);
+        return id;
     }
 }

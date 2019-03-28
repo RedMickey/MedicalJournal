@@ -1,6 +1,8 @@
 package com.example.michel.rest_api;
 
 import com.example.michel.rest_api.security.JwtConfig;
+import com.example.michel.rest_api.utils.CalculationUtils;
+import com.example.michel.rest_api.utils.ConvertingUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -21,8 +23,20 @@ public class AdditionalConfiguration {
         return new JwtConfig();
     }
 
-    @PostConstruct
+    @Bean
+    public ConvertingUtils convertingUtils()
+    {
+        return new ConvertingUtils();
+    }
+
+    @Bean
+    public CalculationUtils calculationUtils()
+    {
+        return new CalculationUtils();
+    }
+
+    /*@PostConstruct
     public void init(){
         TimeZone.setDefault(TimeZone.getTimeZone("UTC"));   // It will set UTC timezone
-    }
+    }*/
 }

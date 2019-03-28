@@ -8,9 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Time;
 import java.sql.Timestamp;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -59,5 +57,66 @@ public class PillReminderEntryService {
                 .getPillReminderEntriesForSynchronization( synchronizationTimestamp, userId);
         return pillReminderEntries.parallelStream().peek(pre -> pre.setReminderTime(new Time(pre.getReminderDate().getTime())))
                 .collect(Collectors.partitioningBy(pre -> pre.getChangeType()<3));
+    }
+
+    @Transactional
+    public void updateAndMarkAsDeleted(List<UUID> uuidList) {
+        Timestamp synchronizationTimestamp = new Timestamp(new Date().getTime());
+        uuidList.forEach(id -> pillReminderEntryRepository.updateAndMarkAsDeletedById(id, synchronizationTimestamp));
+    }
+
+    public UUID createAndSavePillReminderEntry(Date reminderDate, UUID idPillReminder, int isOneTime){
+        UUID id = UUID.randomUUID();
+        PillReminderEntry pillReminderEntry = new PillReminderEntry(id,
+                0, reminderDate, idPillReminder, null, isOneTime,
+                new Timestamp(new Date().getTime()), 1);
+        pillReminderEntryRepository.save(pillReminderEntry);
+        return id;
+    }
+
+    public void createAndSavePillReminderEntries(Date startDate, Date[] reminderDates, int IdCyclingType, int perDayCount, UUID idPillReminder,
+        int interDayCount, boolean[] weekSchedule){
+        Calendar cal = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
+        cal.setTime(startDate);
+        cal.set(Calendar.HOUR, 0);
+        cal.set(Calendar.SECOND, 0);
+        switch (IdCyclingType){
+            case 1:
+                for(int i=0; i<perDayCount;i++){
+                    for (int j=0; j<reminderDates.length; j++){
+                        cal2.setTime(reminderDates[j]);
+                        cal.set(Calendar.HOUR, cal2.get(Calendar.HOUR));
+                        cal.set(Calendar.MINUTE, cal2.get(Calendar.MINUTE));
+                        createAndSavePillReminderEntry(cal.getTime(), idPillReminder, 0);
+                    }
+                    cal.add(Calendar.DATE, 1);
+                }
+                break;
+            case 2:
+                for(int i=0; i<perDayCount;i++){
+                    if(weekSchedule[cal.get(Calendar.DAY_OF_WEEK)-1]){
+                        for (int j=0; j<reminderDates.length; j++){
+                            cal2.setTime(reminderDates[j]);
+                            cal.set(Calendar.HOUR, cal2.get(Calendar.HOUR));
+                            cal.set(Calendar.MINUTE, cal2.get(Calendar.MINUTE));
+                            createAndSavePillReminderEntry(cal.getTime(), idPillReminder, 0);
+                        }
+                    }
+                    cal.add(Calendar.DATE, 1);
+                }
+                break;
+            case 3:
+                for(int i=0; i<perDayCount;i+=interDayCount){
+                    for (int j=0; j<reminderDates.length; j++){
+                        cal2.setTime(reminderDates[j]);
+                        cal.set(Calendar.HOUR, cal2.get(Calendar.HOUR));
+                        cal.set(Calendar.MINUTE, cal2.get(Calendar.MINUTE));
+                        createAndSavePillReminderEntry(cal.getTime(), idPillReminder, 0);
+                    }
+                    cal.add(Calendar.DATE, interDayCount);
+                }
+                break;
+        }
     }
 }

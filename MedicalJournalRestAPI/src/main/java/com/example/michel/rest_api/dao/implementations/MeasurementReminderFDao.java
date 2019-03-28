@@ -18,12 +18,13 @@ public class MeasurementReminderFDao implements IMeasurementReminderFDao {
     private JdbcTemplate jdbcTemplate;
 
     @Override
-    public List<MeasurementReminderF> getAllMeasurementRemindersF() {
+    public List<MeasurementReminderF> getAllMeasurementRemindersF(int userId) {
         String sql = "select  mr.start_date, mr.is_active, cl.period, mr.times_a_day, mt.type_name, mr._id_having_meals_type, cl.period_DM_type, " +
-                "(select COUNT(*) from measurement_reminder_entry mre where mre._id_measurement_reminder=mr._id_measurement_reminder and mre.is_done=0 ) " +
-                "as count_left, mr._id_measurement_reminder, mr._id_measurement_type " +
-                "from measurement_reminder mr inner join cycle cl on mr._id_cycle=cl._id_cycle inner join measurement_type mt on mr._id_measurement_type=mt._id_measurement_type ORDER BY mr.is_active DESC";
+                "(select COUNT(*) from measurement_reminder_entry mre where mre._id_measurement_reminder=mr._id_measurement_reminder and mre.is_done=0 and mre.change_type<3 " +
+                "and mr.user_id=?) as count_left, mr._id_measurement_reminder, mr._id_measurement_type " +
+                "from measurement_reminder mr inner join cycle cl on mr._id_cycle=cl._id_cycle inner join measurement_type mt on mr._id_measurement_type=mt._id_measurement_type " +
+                "where mr.change_type<3 and mr.user_id=? ORDER BY mr.is_active DESC";
 
-        return jdbcTemplate.query(sql, new MeasurementReminderFRowMapper());
+        return jdbcTemplate.query(sql, new MeasurementReminderFRowMapper(), new Object[]{userId, userId});
     }
 }

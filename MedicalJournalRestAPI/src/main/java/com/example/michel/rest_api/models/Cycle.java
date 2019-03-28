@@ -1,6 +1,8 @@
 package com.example.michel.rest_api.models;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -12,6 +14,8 @@ import java.util.UUID;
 
 @Entity
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Cycle {
     @Id
     @Column(name = "_id_cycle")

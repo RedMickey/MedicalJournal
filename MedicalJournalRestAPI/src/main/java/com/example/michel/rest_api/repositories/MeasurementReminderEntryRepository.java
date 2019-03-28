@@ -1,6 +1,7 @@
 package com.example.michel.rest_api.repositories;
 
 import com.example.michel.rest_api.models.MeasurementReminderEntry;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -19,4 +20,10 @@ public interface MeasurementReminderEntryRepository extends CrudRepository<Measu
             nativeQuery = true)
     List<MeasurementReminderEntry> getMeasurementReminderEntriesForSynchronization(
             @Param("timestamp") Timestamp synchronizationTimestamp, @Param("userId") Integer userId);
+
+    @Modifying
+    @Query(
+            value = "UPDATE measurement_reminder_entry SET synch_time = :timestamp, change_type = 3 WHERE _id_measur_remind_entry = :id",
+            nativeQuery = true)
+    void updateAndMarkAsDeletedById(@Param("id") UUID id, @Param("timestamp") Timestamp synchronizationTimestamp);
 }

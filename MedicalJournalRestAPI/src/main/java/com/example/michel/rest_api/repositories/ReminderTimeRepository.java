@@ -1,6 +1,7 @@
 package com.example.michel.rest_api.repositories;
 
 import com.example.michel.rest_api.models.ReminderTime;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -22,4 +23,14 @@ public interface ReminderTimeRepository extends CrudRepository<ReminderTime, UUI
             nativeQuery = true)
     List<ReminderTime> getReminderTimeForSynchronization(
             @Param("timestamp") Timestamp synchronizationTimestamp, @Param("userId") Integer userId);
+
+    @Modifying
+    @Query(
+            value = "UPDATE reminder_time SET synch_time = :timestamp, change_type = 3 WHERE _id_reminder_time = :id",
+            nativeQuery = true)
+    void updateAndMarkAsDeletedById(@Param("id") UUID id, @Param("timestamp") Timestamp synchronizationTimestamp);
+
+    List<ReminderTime> getAllByIdPillReminderEqualsAndChangeTypeLessThanEqual(UUID idReminder, int changeType);
+
+    List<ReminderTime> getAllByIdMeasurementReminderEqualsAndChangeTypeLessThanEqual(UUID idReminder, int changeType);
 }

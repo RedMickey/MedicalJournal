@@ -29,14 +29,14 @@ public class TodayReminderController {
     @PostMapping(value = "/getPillReminders", produces = "application/json")
     public List<PillReminderEntryF> getPillReminders(@RequestBody Map<String, Date> req){
         Date date = req.get("date");
-        List<PillReminderEntryF> pillReminderEntryFList = pillReminderEntryFService.getPillReminderEntriesByDate(date);
+        List<PillReminderEntryF> pillReminderEntryFList = pillReminderEntryFService.getPillReminderEntriesByDate(date, 43);
         return pillReminderEntryFList;
     }
 
     @PostMapping(value = "/getMeasurementReminders", produces = "application/json")
     public List<MeasurementReminderEntryF> getMeasurementReminders(@RequestBody Map<String, Date> req){
         Date date = req.get("date");
-        List<MeasurementReminderEntryF> measurementReminderEntryFList = measurementReminderEntryFService.getMeasurementReminderEntriesByDate(date);
+        List<MeasurementReminderEntryF> measurementReminderEntryFList = measurementReminderEntryFService.getMeasurementReminderEntriesByDate(date, 43);
         return measurementReminderEntryFList;
     }
 

@@ -26,12 +26,14 @@ public class MeasurementReminderEntryFDao implements IMeasurementReminderEntryFD
     private JdbcTemplate jdbcTemplate;
 
     @Override
-    public List<MeasurementReminderEntryF> getMeasurementReminderEntriesByDate(Date date) {
-        String sql = "select mre._id_measur_remind_entry, mr._id_measurement_type, mvt.type_value_name, mt.type_name, mre.value1, mre.value2, mre.is_done, mr._id_having_meals_type, mre.reminder_time, mr.having_meals_time, mre.reminder_date " +
-                " from measurement_reminder_entry mre inner join measurement_reminder mr on mre._id_measurement_reminder=mr._id_measurement_reminder inner join measurement_type mt on mr._id_measurement_type=mt._id_measurement_type " +
-                " inner join measurement_value_type mvt on mt._id_measur_value_type=mvt._id_measur_value_type where DATE(mre.reminder_date)=DATE(?) and (mr.is_active=1 or mre.is_done=1) ORDER BY mre.is_done";
+    public List<MeasurementReminderEntryF> getMeasurementReminderEntriesByDate(Date date, int userId) {
+        String sql = "select mre._id_measur_remind_entry, mr._id_measurement_type, mvt.type_value_name, mt.type_name, mre.value1, mre.value2, mre.is_done, mr._id_having_meals_type," +
+                " mre.reminder_time, mr.having_meals_time, mre.reminder_date" +
+                " from measurement_reminder_entry mre inner join measurement_reminder mr on mre._id_measurement_reminder=mr._id_measurement_reminder inner join measurement_type mt on" +
+                " mr._id_measurement_type=mt._id_measurement_type inner join measurement_value_type mvt on mt._id_measur_value_type=mvt._id_measur_value_type where DATE(mre.reminder_date)=DATE(?)" +
+                " and (mr.is_active=1 or mre.is_done=1) and mre.change_type<3 and mr.user_id=? ORDER BY mre.is_done";
 
-        return jdbcTemplate.query(sql, new MeasurementReminderEntryFRowMapper(), date);
+        return jdbcTemplate.query(sql, new MeasurementReminderEntryFRowMapper(), new Object[]{date, userId});
     }
 
     @Override

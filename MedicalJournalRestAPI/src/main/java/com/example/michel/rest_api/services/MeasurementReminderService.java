@@ -4,8 +4,10 @@ import com.example.michel.rest_api.models.MeasurementReminder;
 import com.example.michel.rest_api.repositories.MeasurementReminderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -50,5 +52,11 @@ public class MeasurementReminderService {
                 synchronizationTimestamp, userId);
         return measurementReminderList.stream().collect(Collectors
                 .partitioningBy(mr -> mr.getChangeType()<3));
+    }
+
+    @Transactional
+    public void updateAndMarkAsDeleted(List<UUID> uuidList) {
+        Timestamp synchronizationTimestamp = new Timestamp(new Date().getTime());
+        uuidList.forEach(id -> measurementReminderRepository.updateAndMarkAsDeletedById(id, synchronizationTimestamp));
     }
 }

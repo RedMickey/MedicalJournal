@@ -17,8 +17,8 @@ public class MeasurementReminderEntryFService implements IMeasurementReminderEnt
     private MeasurementReminderEntryFDao measurementReminderEntryFDao;
 
     @Override
-    public List<MeasurementReminderEntryF> getMeasurementReminderEntriesByDate(Date date) {
-        List<MeasurementReminderEntryF> measurementReminderEntryFList = measurementReminderEntryFDao.getMeasurementReminderEntriesByDate(date);
+    public List<MeasurementReminderEntryF> getMeasurementReminderEntriesByDate(Date date, int userId) {
+        List<MeasurementReminderEntryF> measurementReminderEntryFList = measurementReminderEntryFDao.getMeasurementReminderEntriesByDate(date, userId);
         measurementReminderEntryFList.sort((o1, o2) ->
                 o1.getDate().compareTo(o2.getDate()));
         return measurementReminderEntryFList;
