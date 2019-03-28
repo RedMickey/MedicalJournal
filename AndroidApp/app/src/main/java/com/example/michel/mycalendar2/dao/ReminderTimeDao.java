@@ -72,6 +72,11 @@ public class ReminderTimeDao {
                     new String[]{idReminder.toString().replace("-", "")});
     }
 
+    public void deleteReminderTimeById(UUID idReminderTime){
+        database.delete("reminder_time", "lower(hex(_id_reminder_time)) = ?",
+                new String[]{idReminderTime.toString().replace("-", "")});
+    }
+
     public UUID insertReminderTime(String reminderTime, UUID reminderId, Integer reminderType){
         UUID reminderTimeId = UUID.randomUUID();
         ContentValues reminderTimeValues = new ContentValues();
@@ -172,6 +177,11 @@ public class ReminderTimeDao {
 
     public void deleteReminderTimeAfterSynchronization(){
         database.delete("reminder_time", "change_type = 3", null);
+    }
+
+    public void deleteReminderTimeEntries(List<ReminderTimeDB> reminderTimeDBList){
+        for(ReminderTimeDB rt: reminderTimeDBList)
+            deleteReminderTimeById(rt.getIdReminderTime());
     }
 
     public void insertOrReplaceReminderTimeAfterSynchronization(List<ReminderTimeDB> reminderTimeDBList){

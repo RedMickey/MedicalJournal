@@ -386,6 +386,11 @@ public class MeasurementReminderDao {
                 new String[]{idMeasurementReminder.toString().replace("-", "")});
     }
 
+    public void deleteMeasurementReminderEntryById(UUID id){
+        database.delete("measurement_reminder_entries", "lower(hex(_id_measur_remind_entry)) = ?",
+                new String[]{id.toString().replace("-", "")});
+    }
+
     public UUID updateMeasurementReminder(UUID idMeasurementReminder,
                                           String startDate, UUID idCycle, @Nullable Integer idHavingMealsType,
                                           @Nullable Integer havingMealsTime, String annotation, Integer isActive, Integer times_aDay
@@ -752,6 +757,16 @@ public class MeasurementReminderDao {
 
     public void deleteMeasurementReminderAfterSynchronization() {
         database.delete("measurement_reminders", "change_type = 3", null);
+    }
+
+    public void deleteMeasurementReminderEntries(List<MeasurementReminderEntryDB> measurementReminderEntryDBList) {
+        for (MeasurementReminderEntryDB mre: measurementReminderEntryDBList)
+            deleteMeasurementReminderEntryById(mre.getIdMeasurRemindEntry());
+    }
+
+    public void deleteMeasurementReminders(List<MeasurementReminderDB> measurementReminderDBList) {
+        for (MeasurementReminderDB mr: measurementReminderDBList)
+            deleteMeasurementReminderById(mr.getIdMeasurementReminder());
     }
 
     public void insertOrReplaceMeasurementReminderEntriesAfterSynchronization(

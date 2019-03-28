@@ -162,6 +162,16 @@ public class GettingDataFromServerTask extends AsyncTask<Void, Void, Integer> {
             MeasurementReminderDao measurementReminderDao = new MeasurementReminderDao(dbAdapter.getDatabase());
             CycleDao cycleDao = new CycleDao(dbAdapter.getDatabase());
 
+            pillReminderDao.deletePillReminderEntries(reminderSynchronizationReqModule[1].getPillReminderEntryDBList());
+            measurementReminderDao.deleteMeasurementReminderEntries(
+                    reminderSynchronizationReqModule[1].getMeasurementReminderEntryDBList());
+            reminderTimeDao.deleteReminderTimeEntries(reminderSynchronizationReqModule[1].getReminderTimeDBList());
+            cycleDao.deleteWeekSchedules(reminderSynchronizationReqModule[1].getWeekScheduleDBList());
+            cycleDao.deleteCycles(reminderSynchronizationReqModule[1].getCycleDBList());
+            pillReminderDao.deletePillReminders(reminderSynchronizationReqModule[1].getPillReminderDBList());
+            measurementReminderDao.deleteMeasurementReminders(
+                    reminderSynchronizationReqModule[1].getMeasurementReminderDBList());
+
             cycleDao.insertOrReplaceWeekSchedulesAfterSynchronization(
                     reminderSynchronizationReqModule[0].getWeekScheduleDBList());
             cycleDao.insertOrReplaceCyclesAfterSynchronization(

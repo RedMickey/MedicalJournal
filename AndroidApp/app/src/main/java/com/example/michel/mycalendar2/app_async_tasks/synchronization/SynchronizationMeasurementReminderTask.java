@@ -156,8 +156,6 @@ public class SynchronizationMeasurementReminderTask extends AsyncTask<Void, Void
 
         try {
             JSONObject jsonObject = new JSONObject(response);
-            boolean hasDeletion = jsonObject.getBoolean("hasDeletion");
-
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
             try {
                 synchronizationTimestamp = dateFormat.parse(
@@ -167,9 +165,6 @@ public class SynchronizationMeasurementReminderTask extends AsyncTask<Void, Void
                 e.printStackTrace();
                 synchronizationTimestamp = new Date();
             }
-
-            if (hasDeletion)
-                resCode = 2;
         }
         catch (Exception e){
             Log.e("JSONObject", e.getMessage());

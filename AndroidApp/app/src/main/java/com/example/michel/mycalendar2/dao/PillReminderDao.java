@@ -468,6 +468,11 @@ public class PillReminderDao {
                 new String[]{idPillReminder.toString().replace("-", "")});
     }
 
+    public void deletePillReminderEntryById(UUID id){
+        database.delete("pill_reminder_entries", "lower(hex(_id_pill_reminder_entry)) = ?",
+                new String[]{id.toString().replace("-", "")});
+    }
+
     public void deletePillReminderById(UUID idPillReminder){
         database.delete("pill_reminders", "lower(hex(_id_pill_reminder)) = ?",
                 new String[]{idPillReminder.toString().replace("-", "")});
@@ -657,6 +662,17 @@ public class PillReminderDao {
 
     public void deletePillReminderAfterSynchronization(){
         database.delete("pill_reminders", "change_type = 3", null);
+    }
+
+    public void deletePillReminderEntries(List<PillReminderEntryDB> pillReminderEntryDBList){
+        for(PillReminderEntryDB pre: pillReminderEntryDBList){
+            deletePillReminderEntryById(pre.getIdPillReminderEntry());
+        }
+    }
+
+    public void deletePillReminders(List<PillReminderDB> pillReminderDBList){
+        for (PillReminderDB pr: pillReminderDBList)
+            deletePillReminderById(pr.getIdPillReminder());
     }
 
     public void insertOrReplacePillsAfterSynchronization(List<PillDB> pillDBList){

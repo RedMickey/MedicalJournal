@@ -148,14 +148,12 @@ public class BeforeDeletionSynchronizationTask extends AsyncTask<Void, Void, Int
                     AccountGeneralUtils.updateTokenSync(accountManager);
                     if (requestAttempts==2){
                         resCode = -3;
-                        //return users[0];
                     }
                 }
                 else {
                     Log.e("RC", "Exception: " + responseCode);
                     requestAttempts = 2;
                     resCode = -1;
-                    //return users[0];
                 }
 
             }
@@ -163,7 +161,6 @@ public class BeforeDeletionSynchronizationTask extends AsyncTask<Void, Void, Int
                 resCode = -2;
                 //Log.e("URL", e.getMessage());
                 Log.e("URL", String.valueOf(-2));
-                //return new String("\"Exception\": \"" + e.getMessage()+"\"");
             }
         }
 

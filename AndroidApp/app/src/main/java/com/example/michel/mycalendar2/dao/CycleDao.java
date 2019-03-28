@@ -341,6 +341,16 @@ public class CycleDao {
         database.delete("cycles", "change_type = 3", null);
     }
 
+    public void deleteWeekSchedules(List<WeekScheduleDB> weekScheduleDBList){
+        for(WeekScheduleDB ws: weekScheduleDBList)
+            deleteWeekScheduleByIdCascade(ws.getIdWeekSchedule());
+    }
+
+    public void deleteCycles(List<CycleDB> cycleDBList){
+        for(CycleDB c: cycleDBList)
+            deleteCycleByIdCascade(c.getIdCycle());
+    }
+
     //************************************************************Bebore_deletion************************************************************
     public void updateBeforeDeletionWeekScheduleById(UUID idWeekSchedule){
         ContentValues weekScheduleTableValues = new ContentValues();

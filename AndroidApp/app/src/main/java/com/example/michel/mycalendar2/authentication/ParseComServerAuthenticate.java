@@ -21,7 +21,7 @@ public class ParseComServerAuthenticate implements ServerAuthenticate {
         String authtoken = null;
 
         try {
-            URL url = new URL("http://192.168.0.181:8090/login");
+            URL url = new URL("http://10.0.2.2:8090/login");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
             conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
