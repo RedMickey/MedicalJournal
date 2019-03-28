@@ -13,8 +13,10 @@ const routes: Routes = [
   { path: 'today', component: TodayComponent },
   { path: 'pills', component: PillsComponent },
   { path: 'pills/add', component: AddPillComponent },
+  { path: 'pills/course/:id', component: AddPillComponent },
   { path: 'measurements', component: MeasurementsComponent },
   { path: 'measurements/add', component: AddMeasurementComponent },
+  { path: 'measurements/course/:id', component: AddMeasurementComponent },
 ];
 
 @NgModule({

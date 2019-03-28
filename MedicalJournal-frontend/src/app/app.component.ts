@@ -21,6 +21,8 @@ export class AppComponent {
       this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/additional_icons/ruler.svg'))
       .addSvgIcon('thermometer', 
       this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/additional_icons/thermometer1.svg'))
+      .addSvgIcon('porridge', 
+      this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/additional_icons/porridge.svg'))
     }
 
   title = 'MedicalJournal-frontend';

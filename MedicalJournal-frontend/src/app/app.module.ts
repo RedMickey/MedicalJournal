@@ -63,6 +63,7 @@ import { MeasurementReminderListItemComponent } from './measurements/measurement
 import { ChoosingMeasurementTypeDialogComponent } from './measurements/choosing-measurement-type-dialog/choosing-measurement-type-dialog.component';
 import { AddMeasurementComponent } from './measurements/add-measurement/add-measurement.component';
 import { AddPillComponent } from './pills/add-pill/add-pill.component';
+import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
 
 registerLocaleData(localeRu, 'ru');
 
@@ -93,6 +94,7 @@ registerLocaleData(localeRu, 'ru');
     FormsModule, 
     ReactiveFormsModule,
     EcoFabSpeedDialModule,
+    NgxMaterialTimepickerModule,
     
     MatListModule,
     MatToolbarModule,

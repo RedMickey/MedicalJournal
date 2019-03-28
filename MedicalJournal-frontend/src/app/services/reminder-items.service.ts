@@ -6,6 +6,8 @@ import { catchError, map, tap } from 'rxjs/operators';
 import { PillReminder } from '../models/PillReminder';
 import { MeasurementReminder } from '../models/MeasurementReminder';
 import { MeasurementType } from '../models/MeasurementType';
+import { CycleDBInsertEntry } from '../models/CycleDBInsertEntry';
+import { PillReminderCourse } from '../models/PillReminderCourse';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -43,6 +45,32 @@ export class ReminderItemsService {
         catchError(this.handleError<MeasurementType[]>(' getMeasurementTypes', []))
       );
   }
+
+  createPillReminderCourse(pillReminderCourse: PillReminderCourse,
+     cycleDBEntry: CycleDBInsertEntry): Observable<any> {
+      return this.http.post(this.ReminderItemsUrl + "/createPillReminderCourse", 
+      {
+        "cycleDBInsertEntry": cycleDBEntry,
+        "pillReminderCourse": pillReminderCourse
+      },
+      httpOptions)
+    .pipe(
+      catchError(this.handleError<any>('createPillReminderCourse'))
+    );
+  }
+
+  getPillReminderCourse(pillReminderId: String): Observable<any> {
+     return this.http.post<{pillReminderCourse: PillReminderCourse; 
+                            cycleDBInsertEntry: CycleDBInsertEntry}>
+     (this.ReminderItemsUrl + "/getPillReminderCourse", 
+     {
+       "pillReminderId": pillReminderId
+     },
+     httpOptions)
+   .pipe(
+     catchError(this.handleError<any>('getPillReminderCourse'))
+   );
+ }
 
   /**
    * Handle Http operation that failed.

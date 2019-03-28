@@ -16,6 +16,10 @@
     margin: 3px;
 }
 
+.img-icon{
+    width: 35px;
+}
+
 mat-expansion-panel{
     background: inherit !important;
     border: 0 !important;
@@ -24,4 +28,11 @@ mat-expansion-panel{
 
 .sp-period-w{
     width: 40px;
+}
+
+.fab-button{
+    margin: 1.1em;
+    position: fixed;
+    bottom: 0;
+    right: 0;
 }
