@@ -7,6 +7,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,4 +27,21 @@ public interface MeasurementReminderEntryRepository extends CrudRepository<Measu
             value = "UPDATE measurement_reminder_entry SET synch_time = :timestamp, change_type = 3 WHERE _id_measur_remind_entry = :id",
             nativeQuery = true)
     void updateAndMarkAsDeletedById(@Param("id") UUID id, @Param("timestamp") Timestamp synchronizationTimestamp);
+
+    @Modifying
+    @Query(
+            value = "UPDATE measurement_reminder_entry SET synch_time = :timestamp, change_type = 3 WHERE " +
+                    "_id_measurement_reminder = :idMeasurementReminder",
+            nativeQuery = true)
+    void updateAndMarkAsDeletedByMeasurementReminderId(@Param("idMeasurementReminder") UUID idMeasurementReminder,
+                                                @Param("timestamp") Timestamp synchronizationTimestamp);
+
+    @Modifying
+    @Query(
+            value = "UPDATE measurement_reminder_entry SET synch_time = :timestamp, change_type = 3 WHERE DATE(reminder_date) >= " +
+                    "DATE(:reminderDate) and _id_measurement_reminder = :idMeasurementReminder and is_done = 0",
+            nativeQuery = true)
+    void updateAndMarkAsDeletedAfterDate(@Param("timestamp") Timestamp synchronizationTimestamp,
+                                         @Param("reminderDate")Date reminderDate,
+                                         @Param("idMeasurementReminder")UUID idMeasurementReminder);
 }

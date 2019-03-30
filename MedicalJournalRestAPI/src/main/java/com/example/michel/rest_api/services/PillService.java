@@ -59,4 +59,8 @@ public class PillService {
         pillRepository.save(pill);
         return id;
     }
+
+    public Pill getPillByPillReminderId(UUID idPillReminder){
+        return pillRepository.getPillByPillReminderId(idPillReminder);
+    }
 }

@@ -1,6 +1,6 @@
 package com.example.michel.rest_api.services.interfaces;
 
-import com.example.michel.rest_api.models.auxiliary_models.UpdatePillReminderBody;
+import com.example.michel.rest_api.models.auxiliary_models.request_bodies.UpdatePillReminderBody;
 import com.example.michel.rest_api.models.pill.PillReminderEntryF;
 
 import java.util.Date;

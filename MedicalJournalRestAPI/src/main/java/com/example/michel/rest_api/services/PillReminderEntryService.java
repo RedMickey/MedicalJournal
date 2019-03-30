@@ -86,7 +86,7 @@ public class PillReminderEntryService {
                 for(int i=0; i<perDayCount;i++){
                     for (int j=0; j<reminderDates.length; j++){
                         cal2.setTime(reminderDates[j]);
-                        cal.set(Calendar.HOUR, cal2.get(Calendar.HOUR));
+                        cal.set(Calendar.HOUR_OF_DAY, cal2.get(Calendar.HOUR_OF_DAY));
                         cal.set(Calendar.MINUTE, cal2.get(Calendar.MINUTE));
                         createAndSavePillReminderEntry(cal.getTime(), idPillReminder, 0);
                     }
@@ -98,7 +98,7 @@ public class PillReminderEntryService {
                     if(weekSchedule[cal.get(Calendar.DAY_OF_WEEK)-1]){
                         for (int j=0; j<reminderDates.length; j++){
                             cal2.setTime(reminderDates[j]);
-                            cal.set(Calendar.HOUR, cal2.get(Calendar.HOUR));
+                            cal.set(Calendar.HOUR_OF_DAY, cal2.get(Calendar.HOUR_OF_DAY));
                             cal.set(Calendar.MINUTE, cal2.get(Calendar.MINUTE));
                             createAndSavePillReminderEntry(cal.getTime(), idPillReminder, 0);
                         }
@@ -110,7 +110,7 @@ public class PillReminderEntryService {
                 for(int i=0; i<perDayCount;i+=interDayCount){
                     for (int j=0; j<reminderDates.length; j++){
                         cal2.setTime(reminderDates[j]);
-                        cal.set(Calendar.HOUR, cal2.get(Calendar.HOUR));
+                        cal.set(Calendar.HOUR_OF_DAY, cal2.get(Calendar.HOUR_OF_DAY));
                         cal.set(Calendar.MINUTE, cal2.get(Calendar.MINUTE));
                         createAndSavePillReminderEntry(cal.getTime(), idPillReminder, 0);
                     }
@@ -118,5 +118,17 @@ public class PillReminderEntryService {
                 }
                 break;
         }
+    }
+
+    @Transactional
+    public void updateAndMarkAsDeletedAfterDate(Date reminderDate, UUID idPillReminder){
+        pillReminderEntryRepository.updateAndMarkAsDeletedAfterDate(new Timestamp(new Date().getTime()),
+                reminderDate, idPillReminder);
+    }
+
+    @Transactional
+    public void updateAndMarkAsDeletedByPillReminderId(UUID idPillReminder){
+        pillReminderEntryRepository.updateAndMarkAsDeletedByPillReminderId(idPillReminder,
+                new Timestamp(new Date().getTime()));
     }
 }

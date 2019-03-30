@@ -2,7 +2,7 @@ package com.example.michel.rest_api.dao.implementations;
 
 import com.example.michel.rest_api.dao.interfaces.IPillReminderEntryFDao;
 import com.example.michel.rest_api.mappers.PillReminderEntryFRowMapper;
-import com.example.michel.rest_api.models.auxiliary_models.UpdatePillReminderBody;
+import com.example.michel.rest_api.models.auxiliary_models.request_bodies.UpdatePillReminderBody;
 import com.example.michel.rest_api.models.pill.PillReminderEntryF;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;

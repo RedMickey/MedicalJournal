@@ -1,8 +1,7 @@
 package com.example.michel.rest_api.services;
 
 import com.example.michel.rest_api.dao.implementations.MeasurementReminderEntryFDao;
-import com.example.michel.rest_api.dao.implementations.PillReminderEntryFDao;
-import com.example.michel.rest_api.models.auxiliary_models.UpdateMeasurementReminderBody;
+import com.example.michel.rest_api.models.auxiliary_models.request_bodies.UpdateMeasurementReminderBody;
 import com.example.michel.rest_api.models.measurement.MeasurementReminderEntryF;
 import com.example.michel.rest_api.services.interfaces.IMeasurementReminderEntryFService;
 import org.springframework.beans.factory.annotation.Autowired;

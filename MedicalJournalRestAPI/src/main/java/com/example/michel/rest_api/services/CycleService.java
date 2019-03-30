@@ -57,6 +57,11 @@ public class CycleService {
         uuidList.forEach(id -> cycleRepository.updateAndMarkAsDeletedById(id, synchronizationTimestamp));
     }
 
+    @Transactional
+    public void updateAndMarkAsDeletedById(UUID idCycle){
+        cycleRepository.updateAndMarkAsDeletedById(idCycle, new Timestamp(new Date().getTime()));
+    }
+
     public UUID createAndSaveCycle(CycleDBInsertEntry cycleDBInsertEntry){
         UUID id = UUID.randomUUID();
         Cycle cycle = new Cycle(id, cycleDBInsertEntry.getPeriod(),
@@ -65,5 +70,13 @@ public class CycleService {
                 cycleDBInsertEntry.getIdCyclingType(), new Timestamp(new Date().getTime()), 1);
         cycleRepository.save(cycle);
         return id;
+    }
+
+    public void updateCycleById(CycleDBInsertEntry cycleDBInsertEntry){
+        Cycle cycle = new Cycle(cycleDBInsertEntry.getIdCycle(), cycleDBInsertEntry.getPeriod(),
+                cycleDBInsertEntry.getPeriodDMType(), cycleDBInsertEntry.getOnceAPeriod(),
+                cycleDBInsertEntry.getOnceAPeriodDMType(), cycleDBInsertEntry.getIdWeekSchedule(),
+                cycleDBInsertEntry.getIdCyclingType(), new Timestamp(new Date().getTime()), 2);
+        cycleRepository.save(cycle);
     }
 }

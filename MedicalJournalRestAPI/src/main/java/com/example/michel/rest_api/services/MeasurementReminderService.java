@@ -1,6 +1,7 @@
 package com.example.michel.rest_api.services;
 
 import com.example.michel.rest_api.models.MeasurementReminder;
+import com.example.michel.rest_api.models.measurement.MeasurementReminderCourse;
 import com.example.michel.rest_api.repositories.MeasurementReminderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -58,5 +59,32 @@ public class MeasurementReminderService {
     public void updateAndMarkAsDeleted(List<UUID> uuidList) {
         Timestamp synchronizationTimestamp = new Timestamp(new Date().getTime());
         uuidList.forEach(id -> measurementReminderRepository.updateAndMarkAsDeletedById(id, synchronizationTimestamp));
+    }
+
+    @Transactional
+    public void updateAndMarkAsDeletedById(UUID idMeasurementReminder){
+        measurementReminderRepository.updateAndMarkAsDeletedById(idMeasurementReminder, new Timestamp(new Date().getTime()));
+    }
+
+    public UUID createAndSaveMeasurementReminder(MeasurementReminderCourse mrc, int isOnetime){
+        UUID id = UUID.randomUUID();
+        MeasurementReminder mr = new MeasurementReminder(id,
+                mrc.getIdMeasurementType(), new java.sql.Date(mrc.getStartDate().getTime()),
+                mrc.getIdCycle(), mrc.getIdHavingMealsType(), mrc.getHavingMealsTime(),
+                mrc.getAnnotation(), mrc.getIsActive(), mrc.getReminderTimes().length,
+                isOnetime, 43, new Timestamp(new Date().getTime()), 1
+        );
+        measurementReminderRepository.save(mr);
+        return id;
+    }
+
+    public void updateMeasurementReminderById(MeasurementReminderCourse mrc, int isOnetime){
+        MeasurementReminder mr = new MeasurementReminder(mrc.getIdMeasurementReminder(),
+                mrc.getIdMeasurementType(), new java.sql.Date(mrc.getStartDate().getTime()),
+                mrc.getIdCycle(), mrc.getIdHavingMealsType(), mrc.getHavingMealsTime(),
+                mrc.getAnnotation(), mrc.getIsActive(), mrc.getReminderTimes().length,
+                isOnetime, 43, new Timestamp(new Date().getTime()), 2
+        );
+        measurementReminderRepository.save(mr);
     }
 }

@@ -1,4 +1,4 @@
-package com.example.michel.rest_api.models.auxiliary_models;
+package com.example.michel.rest_api.models.auxiliary_models.request_bodies;
 
 import lombok.Data;
 

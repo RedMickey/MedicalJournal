@@ -25,4 +25,11 @@ public interface PillRepository extends CrudRepository<Pill, UUID> {
             value = "UPDATE pill SET synch_time = :timestamp, change_type = 3 WHERE _id_pill = :id",
             nativeQuery = true)
     void updateAndMarkAsDeletedById(@Param("id") UUID id, @Param("timestamp") Timestamp synchronizationTimestamp);
+
+    @Query(
+            value = "select  pl._id_pill, pl.pill_name, pl.pill_description, pl.synch_time, pl.change_type " +
+                    "from pill pl inner join pill_reminder pr on pl._id_pill=pr._id_pill " +
+                    "where pr._id_pill_reminder = :idPillReminder and pl.change_type<3",
+            nativeQuery = true)
+    Pill getPillByPillReminderId(@Param("idPillReminder") UUID idPillReminder);
 }

@@ -1,7 +1,7 @@
 package com.example.michel.rest_api.controllers;
 
-import com.example.michel.rest_api.models.auxiliary_models.UpdateMeasurementReminderBody;
-import com.example.michel.rest_api.models.auxiliary_models.UpdatePillReminderBody;
+import com.example.michel.rest_api.models.auxiliary_models.request_bodies.UpdateMeasurementReminderBody;
+import com.example.michel.rest_api.models.auxiliary_models.request_bodies.UpdatePillReminderBody;
 import com.example.michel.rest_api.models.measurement.MeasurementReminderEntryF;
 import com.example.michel.rest_api.models.pill.PillReminderEntryF;
 import com.example.michel.rest_api.services.MeasurementReminderEntryFService;

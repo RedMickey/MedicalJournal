@@ -51,6 +51,21 @@ public class WeekScheduleService {
         return id;
     }
 
+    public void updateWeekScheduleById(boolean[] weekScheduleArr, UUID weekScheduleId){
+        int[] intWeekSchedule = convertingUtils.boolArrToIntArr(weekScheduleArr);
+        WeekSchedule weekSchedule = new WeekSchedule(weekScheduleId,
+                intWeekSchedule[0],
+                intWeekSchedule[1],
+                intWeekSchedule[2],
+                intWeekSchedule[3],
+                intWeekSchedule[4],
+                intWeekSchedule[5],
+                intWeekSchedule[6],
+                new Timestamp(new Date().getTime()),
+                2);
+        weekScheduleRepository.save(weekSchedule);
+    }
+
     public Iterable<WeekSchedule> saveAll(List<WeekSchedule> weekSchedules){
         return weekScheduleRepository.saveAll(weekSchedules);
     }
@@ -90,6 +105,11 @@ public class WeekScheduleService {
     public void updateAndMarkAsDeleted(List<UUID> uuidList) {
         Timestamp synchronizationTimestamp = new Timestamp(new Date().getTime());
         uuidList.forEach(id -> weekScheduleRepository.updateAndMarkAsDeletedById(id, synchronizationTimestamp));
+    }
+
+    @Transactional
+    public void updateAndMarkAsDeletedById(UUID idWeekSchedule){
+        weekScheduleRepository.updateAndMarkAsDeletedById(idWeekSchedule, new Timestamp(new Date().getTime()));
     }
 
     public boolean[] getWeekScheduleAsBoolArrById(UUID id){

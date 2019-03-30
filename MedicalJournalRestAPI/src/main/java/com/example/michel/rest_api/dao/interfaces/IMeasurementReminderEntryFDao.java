@@ -1,6 +1,6 @@
 package com.example.michel.rest_api.dao.interfaces;
 
-import com.example.michel.rest_api.models.auxiliary_models.UpdateMeasurementReminderBody;
+import com.example.michel.rest_api.models.auxiliary_models.request_bodies.UpdateMeasurementReminderBody;
 import com.example.michel.rest_api.models.measurement.MeasurementReminderEntryF;
 
 import java.util.Date;

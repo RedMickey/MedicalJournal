@@ -30,7 +30,21 @@ public interface ReminderTimeRepository extends CrudRepository<ReminderTime, UUI
             nativeQuery = true)
     void updateAndMarkAsDeletedById(@Param("id") UUID id, @Param("timestamp") Timestamp synchronizationTimestamp);
 
-    List<ReminderTime> getAllByIdPillReminderEqualsAndChangeTypeLessThanEqual(UUID idReminder, int changeType);
+    List<ReminderTime> getAllByIdPillReminderEqualsAndChangeTypeLessThan(UUID idReminder, int changeType);
 
-    List<ReminderTime> getAllByIdMeasurementReminderEqualsAndChangeTypeLessThanEqual(UUID idReminder, int changeType);
+    List<ReminderTime> getAllByIdMeasurementReminderEqualsAndChangeTypeLessThan(UUID idReminder, int changeType);
+
+    @Modifying
+    @Query(
+            value = "UPDATE reminder_time SET synch_time = :timestamp, change_type = 3 WHERE _id_pill_reminder = :idPillReminder",
+            nativeQuery = true)
+    void updateAndMarkAsDeletedByPillReminderId(@Param("timestamp") Timestamp synchronizationTimestamp,
+                                                @Param("idPillReminder") UUID idPillReminder);
+
+    @Modifying
+    @Query(
+            value = "UPDATE reminder_time SET synch_time = :timestamp, change_type = 3 WHERE _id_measurement_reminder = :idMeasurementReminder",
+            nativeQuery = true)
+    void updateAndMarkAsDeletedByMeasurementReminderId(@Param("timestamp") Timestamp synchronizationTimestamp,
+                                                       @Param("idMeasurementReminder") UUID idMeasurementReminder);
 }

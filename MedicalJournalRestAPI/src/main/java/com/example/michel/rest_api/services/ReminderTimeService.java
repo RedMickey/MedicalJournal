@@ -57,13 +57,13 @@ public class ReminderTimeService {
     public Date[] getReminderTimeDateArrByReminderId(UUID reminderId, int reminderType){
         if (reminderType == 1){
             List<ReminderTime> reminderTimeList = reminderTimeRepository
-                    .getAllByIdPillReminderEqualsAndChangeTypeLessThanEqual(
+                    .getAllByIdPillReminderEqualsAndChangeTypeLessThan(
                     reminderId, 3);
             return reminderTimeList.stream().map(reminderTime -> reminderTime.getReminderTime()).toArray(Date[]::new);
         }
         else {
             List<ReminderTime> reminderTimeList = reminderTimeRepository
-                    .getAllByIdMeasurementReminderEqualsAndChangeTypeLessThanEqual(
+                    .getAllByIdMeasurementReminderEqualsAndChangeTypeLessThan(
                             reminderId, 3);
             return reminderTimeList.stream().map(reminderTime -> reminderTime.getReminderTime()).toArray(Date[]::new);
         }
@@ -75,7 +75,7 @@ public class ReminderTimeService {
         uuidList.forEach(id -> reminderTimeRepository.updateAndMarkAsDeletedById(id, synchronizationTimestamp));
     }
 
-    public UUID createAndSavePillReminder(Date reminderTime, UUID reminderId, int type){
+    public UUID createAndSaveReminderTime(Date reminderTime, UUID reminderId, int type){
         UUID id = UUID.randomUUID();
         ReminderTime reminderTimeEntry = new ReminderTime();
         reminderTimeEntry.setIdReminderTime(id);
@@ -88,5 +88,15 @@ public class ReminderTimeService {
         reminderTimeEntry.setChangeType(1);
         reminderTimeRepository.save(reminderTimeEntry);
         return id;
+    }
+
+    @Transactional
+    public void updateAndMarkAsDeletedByReminderId(UUID reminderId, int type) {
+        if (type == 1)
+            reminderTimeRepository.updateAndMarkAsDeletedByPillReminderId(
+                    new Timestamp(new Date().getTime()), reminderId);
+        else
+            reminderTimeRepository.updateAndMarkAsDeletedByMeasurementReminderId(
+                    new Timestamp(new Date().getTime()), reminderId);
     }
 }
