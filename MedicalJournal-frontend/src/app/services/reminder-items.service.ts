@@ -8,6 +8,7 @@ import { MeasurementReminder } from '../models/MeasurementReminder';
 import { MeasurementType } from '../models/MeasurementType';
 import { CycleDBInsertEntry } from '../models/CycleDBInsertEntry';
 import { PillReminderCourse } from '../models/PillReminderCourse';
+import { MeasurementReminderCourse } from '../models/MeasurementReminderCourse';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -46,21 +47,44 @@ export class ReminderItemsService {
       );
   }
 
-  createPillReminderCourse(pillReminderCourse: PillReminderCourse,
-     cycleDBEntry: CycleDBInsertEntry): Observable<any> {
-      return this.http.post(this.ReminderItemsUrl + "/createPillReminderCourse", 
+  sendPillReminderCourse(pillReminderCourse: PillReminderCourse,
+     cycleDBEntry: CycleDBInsertEntry, type: number): Observable<any> {
+      let path = "";
+      if (type == 1)
+        path = "/createPillReminderCourse";
+      else
+        path = "/updatePillReminderCourse"
+      return this.http.post(this.ReminderItemsUrl + path, 
       {
         "cycleDBInsertEntry": cycleDBEntry,
         "pillReminderCourse": pillReminderCourse
       },
       httpOptions)
     .pipe(
-      catchError(this.handleError<any>('createPillReminderCourse'))
+      catchError(this.handleError<any>('sendPillReminderCourse'))
+    );
+  }
+
+  sendMeasurementReminderCourse(measurementReminderCourse: MeasurementReminderCourse,
+     cycleDBEntry: CycleDBInsertEntry, type: number): Observable<any> {
+      let path = "";
+      if (type == 1)
+        path = "/createMeasurementReminderCourse";
+      else
+        path = "/updateMeasurementReminderCourse"
+      return this.http.post(this.ReminderItemsUrl + path, 
+      {
+        "cycleDBInsertEntry": cycleDBEntry,
+        "measurementReminderCourse": measurementReminderCourse
+      },
+      httpOptions)
+    .pipe(
+      catchError(this.handleError<any>('sendMeasurementReminderCourse'))
     );
   }
 
   getPillReminderCourse(pillReminderId: String): Observable<any> {
-     return this.http.post<{pillReminderCourse: PillReminderCourse; 
+    return this.http.post<{pillReminderCourse: PillReminderCourse; 
                             cycleDBInsertEntry: CycleDBInsertEntry}>
      (this.ReminderItemsUrl + "/getPillReminderCourse", 
      {
@@ -70,7 +94,34 @@ export class ReminderItemsService {
    .pipe(
      catchError(this.handleError<any>('getPillReminderCourse'))
    );
- }
+  }
+
+  getMeasurementReminderCourse(measurementReminderId: String): Observable<any> {
+    return this.http.post<{measurementReminderCourse: MeasurementReminderCourse; 
+                           cycleDBInsertEntry: CycleDBInsertEntry}>
+     (this.ReminderItemsUrl + "/getMeasurementReminderCourse", 
+     {
+       "measurementReminderId": measurementReminderId
+     },
+     httpOptions)
+   .pipe(
+     catchError(this.handleError<any>('getMeasurementReminderCourse'))
+   );
+  }
+
+ deleteReminderCourse(deletionReqBody: any): Observable<any> {
+  return this.http.post(this.ReminderItemsUrl + "/deleteReminderCourse", 
+    {
+      "idReminder": deletionReqBody.idReminder,
+      "idCycle": deletionReqBody.idCycle,
+      "idWeekSchedule": deletionReqBody.idWeekSchedule,
+      "courseType": deletionReqBody.courseType
+    },
+    httpOptions)
+  .pipe(
+    catchError(this.handleError<any>('deleteReminderCourse'))
+  );
+}
 
   /**
    * Handle Http operation that failed.

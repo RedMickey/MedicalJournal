@@ -20,6 +20,11 @@ export class PillsComponent implements OnInit {
       });
   }
 
+  ngAfterViewInit() {
+    let numberSpan = document.querySelector('.bar-title');
+      numberSpan.textContent = "Медикаменты";
+  }
+
   /*public addPillReminder(event: any) {
     console.log(event);
   }*/

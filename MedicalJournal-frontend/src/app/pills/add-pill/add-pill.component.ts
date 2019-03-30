@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef } from '@angular/core';
 import {FormControl, FormGroupDirective, NgForm, Validators} from '@angular/forms';
 import { ISelect } from '../../models/ISelect';
 import {MatDatepickerInputEvent} from '@angular/material/datepicker';
@@ -73,6 +73,14 @@ export class AddPillComponent implements OnInit {
     private router: Router) {
     this.startDate = new Date();
    }
+
+  ngAfterViewInit() {
+    let numberSpan = document.querySelector('.bar-title');
+    if (this.pillReminderId)
+      numberSpan.textContent = "Редактировать курс лекарств";
+    else
+      numberSpan.textContent = "Добавить курс лекрств";
+  }
 
   change(): void{
     this.opened = !this.opened;
@@ -283,16 +291,33 @@ export class AddPillComponent implements OnInit {
 
       console.log(cdbie);
       console.log(prc);
+      let type = 1;
       if (this.pillReminderId){
-        console.log("nooo");
+        prc.idPillReminder = this.pillReminderId;
+        prc.idCycle = this.cycleId;
+        cdbie.idCycle = this.cycleId;
+        cdbie.idWeekSchedule = this.weekScheduleId;
+        type = 2;
       }
-      else{
-        this.reminderItemsService.createPillReminderCourse(prc, cdbie)
-          .subscribe(() => {
-            console.log("done");
-            //this.router.navigate(['/pills']);
-          });
-      }
+      this.reminderItemsService.sendPillReminderCourse(prc, cdbie, type)
+        .subscribe(() => {
+          console.log("done");
+          //this.router.navigate(['/pills']);
+        });
+  }
+
+  deleteCourse(): void{
+    let deletionReqBody = {
+      idReminder: this.pillReminderId,
+      idCycle: this.cycleId,
+      idWeekSchedule: this.weekScheduleId,
+      courseType: 1
+    }
+    this.reminderItemsService.deleteReminderCourse(deletionReqBody)
+      .subscribe(() => {
+        console.log("done");
+        this.router.navigate(['/pills']);
+      });
   }
 
 }

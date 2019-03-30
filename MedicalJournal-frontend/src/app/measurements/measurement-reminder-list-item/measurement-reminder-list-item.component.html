@@ -1,4 +1,7 @@
-<a routerLink="#" class="link-card">
+<a [routerLink]="['./course', measurementReminderItem.id]" 
+  [queryParams]="{'idMT': measurementReminderItem.idMeasurementType,
+                  'typeName': measurementReminderItem.measurementTypeName}"
+  class="link-card">
   <mat-card>
     <div fxLayout="row">
       <div fxFlex="" fxLayoutAlign="start center">

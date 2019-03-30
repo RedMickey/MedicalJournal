@@ -242,4 +242,8 @@
   <button mat-fab class="fab-button" (click)="submit()">
     <mat-icon>check</mat-icon>
   </button>
+  <button mat-fab color="primary" class="fab-button" style="margin: 1.1em 6.15em 1.1em 1.1em"
+    *ngIf="pillReminderId" (click)="deleteCourse()">
+    <mat-icon>delete</mat-icon>
+  </button>
 </div>

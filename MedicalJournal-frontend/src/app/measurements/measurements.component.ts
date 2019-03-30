@@ -44,6 +44,11 @@ export class MeasurementsComponent implements OnInit {
     });
   }
 
+  ngAfterViewInit() {
+    let numberSpan = document.querySelector('.bar-title');
+      numberSpan.textContent = "Измерения";
+  }
+
   public addMeasurementReminder(event: any) {
     const bottomSheetRef = this.dialog.open(ChoosingMeasurementTypeDialogComponent, {
       data: { measurementTypes: this.measurementTypes },

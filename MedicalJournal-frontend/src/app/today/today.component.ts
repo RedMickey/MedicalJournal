@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { PillReminderEntry } from '../models/PillReminderEntry';
 import { MeasurementReminderEntry } from '../models/MeasurementReminderEntry';
 import { ReminderEntriesService } from '../services/reminder-entries.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-today',
@@ -15,7 +16,8 @@ export class TodayComponent implements OnInit {
   pillReminderEntries: PillReminderEntry[];
   measurementReminderEntries: MeasurementReminderEntry[];
 
-  constructor(private reminderEntryService: ReminderEntriesService) {
+  constructor(private reminderEntryService: ReminderEntriesService,
+      private router: Router) {
     //this.today = new Date();
    }
 
@@ -35,6 +37,11 @@ export class TodayComponent implements OnInit {
           pillCountType: "drop", isDone: 1, date: new Date,
           isLate: true, id: 1, havingMealsType: null}
     ];*/
+  }
+
+  ngAfterViewInit() {
+    let numberSpan = document.querySelector('.bar-title');
+      numberSpan.textContent = "Сегодня";
   }
 
   getPillReminderEntriesByDate (date: Date): void{
@@ -71,7 +78,25 @@ export class TodayComponent implements OnInit {
   }
 
   public doAction(event: any) {
-    console.log(event);
+    switch(event){
+      case "pillCrs":
+        this.router.navigate(['/pills/add']);
+        break;
+      case "pillOnce":
+
+        break;
+      case "measCrs":
+
+        break;
+      case "measOnce":
+
+        break;
+      default:
+        console.log(event);
+        break;
+    }
+
+    
   }
 
 }
