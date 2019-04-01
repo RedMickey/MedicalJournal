@@ -16,3 +16,7 @@
 .having-meals-type-pretext{
     margin-right: 7px;
 }
+
+a{
+    cursor: pointer;
+}

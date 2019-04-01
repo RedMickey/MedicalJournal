@@ -1,6 +1,7 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { PillReminder } from '../../models/PillReminder';
 import { UtilsService } from '../../services/utils.service';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-pill-reminder-list-item',
@@ -9,13 +10,19 @@ import { UtilsService } from '../../services/utils.service';
 })
 export class PillReminderListItemComponent implements OnInit {
   @Input() pillReminderItem: PillReminder;
+  @Input() linkWorkable: boolean;
+  @Input() index: number;
+
+  @Output() onSelected = new EventEmitter<number>();
 
   // fields
   havingMealsTypePretext: string;
   timesADayStr: string;
   isActiveStr: string = "Активен";
 
-  constructor(private utilsService: UtilsService) { }
+  constructor(private utilsService: UtilsService,
+    private router: Router,
+    private route: ActivatedRoute) { }
 
   ngOnInit() {
     this.havingMealsTypePretext = this.utilsService.createHavingMealsTypePretext(
@@ -35,6 +42,13 @@ export class PillReminderListItemComponent implements OnInit {
   checkLastDigitOn234(x: number): boolean{
     let buf = x%10;
     return (buf>1&&buf<5)?true:false;
+  }
+
+  onLinkClicked(){
+    if (this.linkWorkable)
+      this.router.navigate(['./course', this.pillReminderItem.id], { relativeTo: this.route });
+    else
+      this.onSelected.emit(this.index);
   }
 
 }

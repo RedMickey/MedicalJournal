@@ -9,9 +9,14 @@ import {MatBottomSheet, MatBottomSheetRef} from '@angular/material';
 })
 export class ChoosingMeasurementTypeDialogComponent implements OnInit {
 
+  linkURL = "/measurements/add";
+
   constructor(@Inject(MAT_BOTTOM_SHEET_DATA) public data: any,
     private bottomSheetRef: MatBottomSheetRef<ChoosingMeasurementTypeDialogComponent>) {
     console.log(this.data);
+    console.log(this.data.isOneTime);
+    if (this.data.isOneTime)
+      this.linkURL = "/measurements/addOneTime"
    }
 
   ngOnInit() {

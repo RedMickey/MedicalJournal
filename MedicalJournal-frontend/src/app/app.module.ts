@@ -64,6 +64,9 @@ import { ChoosingMeasurementTypeDialogComponent } from './measurements/choosing-
 import { AddMeasurementComponent } from './measurements/add-measurement/add-measurement.component';
 import { AddPillComponent } from './pills/add-pill/add-pill.component';
 import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
+import { AddOneTimeMeasurementComponent } from './measurements/add-one-time-measurement/add-one-time-measurement.component';
+import { AddOneTimePillComponent } from './pills/add-one-time-pill/add-one-time-pill.component';
+import { ChoosingPillReminderDialogComponent } from './pills/add-one-time-pill/choosing-pill-reminder-dialog/choosing-pill-reminder-dialog.component';
 
 registerLocaleData(localeRu, 'ru');
 
@@ -80,7 +83,10 @@ registerLocaleData(localeRu, 'ru');
     MeasurementReminderListItemComponent,
     ChoosingMeasurementTypeDialogComponent,
     AddMeasurementComponent,
-    AddPillComponent
+    AddPillComponent,
+    AddOneTimeMeasurementComponent,
+    AddOneTimePillComponent,
+    ChoosingPillReminderDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -133,6 +139,7 @@ registerLocaleData(localeRu, 'ru');
   entryComponents: [
     MeasurementDialogComponent,
     ChoosingMeasurementTypeDialogComponent,
+    ChoosingPillReminderDialogComponent,
   ],
   providers: [
     ReminderEntriesService

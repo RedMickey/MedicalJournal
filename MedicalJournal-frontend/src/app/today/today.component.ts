@@ -3,6 +3,10 @@ import { PillReminderEntry } from '../models/PillReminderEntry';
 import { MeasurementReminderEntry } from '../models/MeasurementReminderEntry';
 import { ReminderEntriesService } from '../services/reminder-entries.service';
 import { Router } from '@angular/router';
+import {MatBottomSheet, MatBottomSheetRef} from '@angular/material';
+import { ChoosingMeasurementTypeDialogComponent } from '../measurements/choosing-measurement-type-dialog/choosing-measurement-type-dialog.component';
+import { MeasurementType } from '../models/MeasurementType';
+import { ReminderItemsService } from '../services/reminder-items.service';
 
 @Component({
   selector: 'app-today',
@@ -15,9 +19,12 @@ export class TodayComponent implements OnInit {
 
   pillReminderEntries: PillReminderEntry[];
   measurementReminderEntries: MeasurementReminderEntry[];
+  measurementTypes: MeasurementType[];
 
   constructor(private reminderEntryService: ReminderEntriesService,
-      private router: Router) {
+      private router: Router,
+      private reminderItemsService: ReminderItemsService,
+      public dialog: MatBottomSheet) {
     //this.today = new Date();
    }
 
@@ -37,6 +44,19 @@ export class TodayComponent implements OnInit {
           pillCountType: "drop", isDone: 1, date: new Date,
           isLate: true, id: 1, havingMealsType: null}
     ];*/
+    this.reminderItemsService.getMeasurementTypes()
+      .subscribe(measurementTypes => {this.measurementTypes = measurementTypes;
+        this.measurementTypes.forEach(measurementType => {
+          switch(measurementType.idMeasurementType){
+            case 1:
+            measurementType.iconName = "thermometer";
+              break;
+            case 2:
+            measurementType.iconName = "tonometer";
+              break;
+          }
+        });
+      });
   }
 
   ngAfterViewInit() {
@@ -83,13 +103,19 @@ export class TodayComponent implements OnInit {
         this.router.navigate(['/pills/add']);
         break;
       case "pillOnce":
-
+        this.router.navigate(['/pills/addOneTime']);
         break;
       case "measCrs":
-
+        const bottomSheetRef = this.dialog.open(ChoosingMeasurementTypeDialogComponent, {
+          data: { measurementTypes: this.measurementTypes,
+                  isOneTime: false },
+        });
         break;
       case "measOnce":
-
+        const bottomSheetRef2 = this.dialog.open(ChoosingMeasurementTypeDialogComponent, {
+          data: { measurementTypes: this.measurementTypes,
+                  isOneTime: true },
+        });
         break;
       default:
         console.log(event);

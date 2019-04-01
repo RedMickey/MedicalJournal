@@ -1,7 +1,6 @@
-.date-pick{
+.date-pick-padding{
     padding-left: 6px !important;
     padding-right: 6px !important;
-    text-align: start;
 }
 
 .radio-button-mp{
@@ -27,8 +26,8 @@ mat-expansion-panel{
     box-shadow: none !important;
 }
 
-.sp-period-w{
-    width: 40px;
+.area-w-60{
+    width: 60px;
 }
 
 .fab-button{

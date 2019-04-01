@@ -40,7 +40,6 @@ export class MeasurementsComponent implements OnInit {
             break;
         }
       });
-    //console.log(measurementTypes);
     });
   }
 
@@ -51,7 +50,8 @@ export class MeasurementsComponent implements OnInit {
 
   public addMeasurementReminder(event: any) {
     const bottomSheetRef = this.dialog.open(ChoosingMeasurementTypeDialogComponent, {
-      data: { measurementTypes: this.measurementTypes },
+      data: { measurementTypes: this.measurementTypes,
+              isOneTime: false },
     });
   }
 }

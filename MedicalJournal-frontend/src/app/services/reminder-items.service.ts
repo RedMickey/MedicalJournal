@@ -109,19 +109,44 @@ export class ReminderItemsService {
    );
   }
 
- deleteReminderCourse(deletionReqBody: any): Observable<any> {
-  return this.http.post(this.ReminderItemsUrl + "/deleteReminderCourse", 
+  deleteReminderCourse(deletionReqBody: any): Observable<any> {
+    return this.http.post(this.ReminderItemsUrl + "/deleteReminderCourse", 
+      {
+        "idReminder": deletionReqBody.idReminder,
+        "idCycle": deletionReqBody.idCycle,
+        "idWeekSchedule": deletionReqBody.idWeekSchedule,
+        "courseType": deletionReqBody.courseType
+      },
+      httpOptions)
+    .pipe(
+      catchError(this.handleError<any>('deleteReminderCourse'))
+    );
+  }
+
+  sendOneTimeMeasurementReminderEntry(measurementReminderCourse: MeasurementReminderCourse,
+    value1: number, value2: number): Observable<any> {
+    return this.http.post(this.ReminderItemsUrl + "/createOneTimeMeasurementReminderEntry", 
     {
-      "idReminder": deletionReqBody.idReminder,
-      "idCycle": deletionReqBody.idCycle,
-      "idWeekSchedule": deletionReqBody.idWeekSchedule,
-      "courseType": deletionReqBody.courseType
+      "measurementReminderCourse": measurementReminderCourse,
+      "value1": value1,
+      "value2": value2
     },
     httpOptions)
-  .pipe(
-    catchError(this.handleError<any>('deleteReminderCourse'))
-  );
-}
+    .pipe(
+      catchError(this.handleError<any>('sendOneTimeMeasurementReminderEntry'))
+    );
+  }
+
+sendOneTimePillReminderEntry(pillReminderCourse: PillReminderCourse): Observable<any> {
+  return this.http.post(this.ReminderItemsUrl + "/createOneTimePillReminderEntry", 
+    {
+      "pillReminderCourse": pillReminderCourse
+    },
+    httpOptions)
+    .pipe(
+      catchError(this.handleError<any>('sendOneTimePillReminderEntry'))
+    );
+  }
 
   /**
    * Handle Http operation that failed.

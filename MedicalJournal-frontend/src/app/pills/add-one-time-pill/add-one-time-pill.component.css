@@ -4,6 +4,11 @@
     text-align: start;
 }
 
+.course-pick{
+    padding-left: 1px !important;
+    padding-right: 0px !important;
+}
+
 .radio-button-mp{
     margin-top: 5px;
     margin-bottom: 5px;
@@ -11,6 +16,10 @@
 
 .ml-44{
     margin-left: 44px;
+}
+
+.area-w-60{
+    width: 60px;
 }
 
 .m-3{

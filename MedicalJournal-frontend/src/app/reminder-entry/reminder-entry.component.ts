@@ -57,6 +57,7 @@ export class ReminderEntryComponent implements OnInit {
         dialogRef.afterClosed().subscribe(result => {
           console.log(result);
           if (result.isAdd){
+            this.reminderEntry.isLate = false;
             this.reminderEntry.value1 = result.value1;
             this.reminderEntry.value2 = result.value2;
             this.reminderPropertyStr = this.setUpReminderCountType();

@@ -88,7 +88,7 @@ export class AddMeasurementComponent implements OnInit {
   }
 
   reminderTimeEntries: string[] = [
-    String(new Date().getHours()) + ":00" 
+    new Date().toTimeString().substring(0, 5) 
   ]
 
   doseTypes: ISelect[] = [
@@ -118,7 +118,7 @@ export class AddMeasurementComponent implements OnInit {
 
   addReminderTimeEntry(): void{
     this.reminderTimeEntries.push(
-      String(new Date().getHours()) + ":00"
+      new Date().toTimeString().substring(0, 5)
     );
     console.log(this.reminderTimeEntries);
   }
@@ -271,21 +271,21 @@ export class AddMeasurementComponent implements OnInit {
         );
     });
 
-      console.log(cdbie);
-      console.log(mrc);
-      let type = 1;
-      if (this.measurementReminderId){
-        mrc.idMeasurementReminder = this.measurementReminderId;
-        mrc.idCycle = this.cycleId;
-        cdbie.idCycle = this.cycleId;
-        cdbie.idWeekSchedule = this.weekScheduleId;
-        type = 2;
-      }
-      this.reminderItemsService.sendMeasurementReminderCourse(mrc, cdbie, type)
-        .subscribe(() => {
-          console.log("done");
-          //this.router.navigate(['/measurements']);
-        });
+    console.log(cdbie);
+    console.log(mrc);
+    let type = 1;
+    if (this.measurementReminderId){
+      mrc.idMeasurementReminder = this.measurementReminderId;
+      mrc.idCycle = this.cycleId;
+      cdbie.idCycle = this.cycleId;
+      cdbie.idWeekSchedule = this.weekScheduleId;
+      type = 2;
+    }
+    this.reminderItemsService.sendMeasurementReminderCourse(mrc, cdbie, type)
+      .subscribe(() => {
+        console.log("done");
+        this.router.navigate(['/measurements']);
+      });
   }
 
   deleteCourse(): void{

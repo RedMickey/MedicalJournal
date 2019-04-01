@@ -87,7 +87,7 @@ export class AddPillComponent implements OnInit {
   }
 
   reminderTimeEntries: string[] = [
-    String(new Date().getHours()) + ":00" 
+    new Date().toTimeString().substring(0, 5)
   ]
 
   doseTypes: ISelect[] = [
@@ -119,7 +119,7 @@ export class AddPillComponent implements OnInit {
 
   addReminderTimeEntry(): void{
     this.reminderTimeEntries.push(
-      String(new Date().getHours()) + ":00"
+      new Date().toTimeString().substring(0, 5)
     );
     console.log(this.reminderTimeEntries);
   }
@@ -283,6 +283,8 @@ export class AddPillComponent implements OnInit {
       prc.annotation = this.annotation;
       prc.isActive = Number(this.isActiveIndicator);
       prc.reminderTimes = new Array();
+
+      console.log(this.reminderTimeEntries);
       this.reminderTimeEntries.forEach(item => {
         prc.reminderTimes.push(
           new Date("1970-01-01T" + item + ":00")
@@ -302,7 +304,7 @@ export class AddPillComponent implements OnInit {
       this.reminderItemsService.sendPillReminderCourse(prc, cdbie, type)
         .subscribe(() => {
           console.log("done");
-          //this.router.navigate(['/pills']);
+          this.router.navigate(['/pills']);
         });
   }
 
