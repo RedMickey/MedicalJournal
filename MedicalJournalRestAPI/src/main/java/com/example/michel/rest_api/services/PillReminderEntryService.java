@@ -65,10 +65,10 @@ public class PillReminderEntryService {
         uuidList.forEach(id -> pillReminderEntryRepository.updateAndMarkAsDeletedById(id, synchronizationTimestamp));
     }
 
-    public UUID createAndSavePillReminderEntry(Date reminderDate, UUID idPillReminder, int isOneTime){
+    public UUID createAndSavePillReminderEntry(Date reminderDate, UUID idPillReminder, int isDone, int isOneTime){
         UUID id = UUID.randomUUID();
         PillReminderEntry pillReminderEntry = new PillReminderEntry(id,
-                0, reminderDate, idPillReminder, null, isOneTime,
+                isDone, reminderDate, idPillReminder, null, isOneTime,
                 new Timestamp(new Date().getTime()), 1);
         pillReminderEntryRepository.save(pillReminderEntry);
         return id;
@@ -88,7 +88,7 @@ public class PillReminderEntryService {
                         cal2.setTime(reminderDates[j]);
                         cal.set(Calendar.HOUR_OF_DAY, cal2.get(Calendar.HOUR_OF_DAY));
                         cal.set(Calendar.MINUTE, cal2.get(Calendar.MINUTE));
-                        createAndSavePillReminderEntry(cal.getTime(), idPillReminder, 0);
+                        createAndSavePillReminderEntry(cal.getTime(), idPillReminder, 0,0);
                     }
                     cal.add(Calendar.DATE, 1);
                 }
@@ -100,7 +100,7 @@ public class PillReminderEntryService {
                             cal2.setTime(reminderDates[j]);
                             cal.set(Calendar.HOUR_OF_DAY, cal2.get(Calendar.HOUR_OF_DAY));
                             cal.set(Calendar.MINUTE, cal2.get(Calendar.MINUTE));
-                            createAndSavePillReminderEntry(cal.getTime(), idPillReminder, 0);
+                            createAndSavePillReminderEntry(cal.getTime(), idPillReminder, 0,0);
                         }
                     }
                     cal.add(Calendar.DATE, 1);
@@ -112,7 +112,7 @@ public class PillReminderEntryService {
                         cal2.setTime(reminderDates[j]);
                         cal.set(Calendar.HOUR_OF_DAY, cal2.get(Calendar.HOUR_OF_DAY));
                         cal.set(Calendar.MINUTE, cal2.get(Calendar.MINUTE));
-                        createAndSavePillReminderEntry(cal.getTime(), idPillReminder, 0);
+                        createAndSavePillReminderEntry(cal.getTime(), idPillReminder, 0,0);
                     }
                     cal.add(Calendar.DATE, interDayCount);
                 }

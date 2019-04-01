@@ -75,6 +75,17 @@ public class MeasurementReminderEntryService {
         return id;
     }
 
+    public UUID createAndSaveMeasurementReminderEntry(Date reminderDate, UUID idMeasurementReminder, double value1,
+                                                      double value2, int isOneTime){
+        UUID id = UUID.randomUUID();
+        MeasurementReminderEntry mre = new MeasurementReminderEntry(id,
+                value1, value2, idMeasurementReminder, 1, null,
+                reminderDate, isOneTime, new Timestamp(new Date().getTime()), 1
+        );
+        measurementReminderEntryRepository.save(mre);
+        return id;
+    }
+
     public void createAndSaveMeasurementReminderEntries(Date startDate, Date[] reminderDates, int IdCyclingType, int perDayCount, UUID idMeasurementReminder,
                                                  int interDayCount, boolean[] weekSchedule){
         Calendar cal = Calendar.getInstance();

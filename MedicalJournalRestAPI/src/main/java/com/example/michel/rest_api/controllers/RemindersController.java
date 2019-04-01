@@ -5,9 +5,11 @@ import com.example.michel.rest_api.models.auxiliary_models.CycleAndMeasurementCo
 import com.example.michel.rest_api.models.auxiliary_models.CycleAndPillComby;
 import com.example.michel.rest_api.models.auxiliary_models.MeasurementTypeF;
 import com.example.michel.rest_api.models.auxiliary_models.request_bodies.DeletionReminderCourseBody;
+import com.example.michel.rest_api.models.auxiliary_models.request_bodies.OneTimeMeasEntryBody;
 import com.example.michel.rest_api.models.auxiliary_models.synchronization.ReminderSynchronizationReqModule;
 import com.example.michel.rest_api.models.auxiliary_models.synchronization.SynchronizationReq;
 import com.example.michel.rest_api.models.measurement.MeasurementReminderF;
+import com.example.michel.rest_api.models.pill.PillReminderCourse;
 import com.example.michel.rest_api.models.pill.PillReminderF;
 import com.example.michel.rest_api.services.*;
 import com.example.michel.rest_api.utils.CalculationUtils;
@@ -170,6 +172,15 @@ public class RemindersController {
         return cycleAndPillComby;
     }
 
+    @PostMapping(value = "/createOneTimePillReminderEntry", produces = "application/json")
+    public void createOneTimePillReminderEntry(@RequestBody Map<String, PillReminderCourse> req){
+        PillReminderCourse prc = req.get("pillReminderCourse");
+        UUID pillId = pillService.createAndSavePill(prc.getPillName(), "");
+        UUID prId = pillReminderService.createAndSavePillReminder(prc, pillId, 1);
+        pillReminderEntryService.createAndSavePillReminderEntry(prc.getStartDate(), prId,
+                1,1);
+    }
+
     /*******************************************************************Measurement_Reminder*****************************************************************/
     @PostMapping(value = "/createMeasurementReminderCourse", produces = "application/json")
     public void createMeasurementReminderCourse(@RequestBody CycleAndMeasurementComby req){
@@ -246,6 +257,14 @@ public class RemindersController {
                             .getCycleDBInsertEntry().getIdWeekSchedule()));
 
         return cycleAndMeasurementComby;
+    }
+
+    @PostMapping(value = "/createOneTimeMeasurementReminderEntry", produces = "application/json")
+    public void createOneTimeMeasurementReminderEntry(@RequestBody OneTimeMeasEntryBody req){
+        UUID mrId = measurementReminderService.createAndSaveMeasurementReminder(req.getMeasurementReminderCourse(), 1);
+        measurementReminderEntryService.createAndSaveMeasurementReminderEntry(
+                req.getMeasurementReminderCourse().getStartDate(), mrId,
+                req.getValue1(), req.getValue2(), 1);
     }
 
 
