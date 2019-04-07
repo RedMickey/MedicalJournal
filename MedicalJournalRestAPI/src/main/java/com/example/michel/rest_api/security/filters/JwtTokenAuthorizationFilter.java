@@ -1,5 +1,6 @@
-package com.example.michel.rest_api.security;
+package com.example.michel.rest_api.security.filters;
 
+import com.example.michel.rest_api.security.JwtConfig;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -43,7 +44,7 @@ public class JwtTokenAuthorizationFilter extends OncePerRequestFilter {
         try {	// exceptions might be thrown in creating the claims if for example the token is expired
 
             Claims claims = Jwts.parser()
-                    .setSigningKey(jwtConfig.getSecret().getBytes())
+                    .setSigningKey(jwtConfig.getAccessSecret().getBytes())
                     .parseClaimsJws(token)
                     .getBody();
 

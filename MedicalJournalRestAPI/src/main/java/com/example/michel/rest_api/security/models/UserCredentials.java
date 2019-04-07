@@ -1,4 +1,4 @@
-package com.example.michel.rest_api.security;
+package com.example.michel.rest_api.security.models;
 
 import lombok.Data;
 
@@ -6,6 +6,4 @@ import lombok.Data;
 public class UserCredentials {
     private String username;
     private String password;
-    private Integer id;
-    private String role;
 }

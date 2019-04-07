@@ -29,11 +29,11 @@ public class UserController {
 
     @CrossOrigin(origins = "http://localhost:4000")
     @PostMapping(value = "/test1", produces = "application/json")
-    public List<WeekSchedule> test1(@RequestBody Map<String, Integer> req){
+    public Map<String, Integer> test1(){
 
-        List<WeekSchedule> l = weekScheduleRepository.findAll();
+        //List<WeekSchedule> l = weekScheduleRepository.findAll();
 
-        return l;
+        return Collections.singletonMap("test", 1);
     }
 
     /*@CrossOrigin(origins = "http://localhost:4000")

@@ -19,6 +19,9 @@ public class JwtConfig {
     @Value("${security.jwt.expiration:#{10*24*60*60}}")
     private int expiration;
 
-    @Value("${security.jwt.secret:JwtSecretKey}")
-    private String secret;
+    @Value("${security.jwt.accessSecret:JwtSecretKey}")
+    private String accessSecret;
+
+    @Value("${security.jwt.refreshSecret:RefreshJwtSecretKey}")
+    private String refreshSecret;
 }
