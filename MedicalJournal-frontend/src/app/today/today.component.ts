@@ -3,7 +3,7 @@ import { PillReminderEntry } from '../models/PillReminderEntry';
 import { MeasurementReminderEntry } from '../models/MeasurementReminderEntry';
 import { ReminderEntriesService } from '../services/reminder-entries.service';
 import { Router } from '@angular/router';
-import {MatBottomSheet, MatBottomSheetRef} from '@angular/material';
+import { MatBottomSheet, MatBottomSheetRef } from '@angular/material';
 import { ChoosingMeasurementTypeDialogComponent } from '../measurements/choosing-measurement-type-dialog/choosing-measurement-type-dialog.component';
 import { MeasurementType } from '../models/MeasurementType';
 import { ReminderItemsService } from '../services/reminder-items.service';

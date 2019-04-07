@@ -73,6 +73,13 @@ html, body{
     margin: 10px 20px 20px;
 }
 
+.abs-container{
+    position: absolute;
+    top: 56px;
+    bottom: 0;
+    width: 100%; 
+}
+
 .link-non-deco, .link-card{
     text-decoration: none;
 }
@@ -84,6 +91,10 @@ html, body{
 
 .w-100p{
     width: 100%;
+}
+
+.h-100p{
+    height: 100%;
 }
 
 .error{

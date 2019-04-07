@@ -1,0 +1,78 @@
+<div class="abs-container">
+    <div fxFlexFill fxlayout="column" fxLayoutAlign="center center">
+      <div>
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>Регистрация</mat-card-title>
+          </mat-card-header>
+          <mat-card-content >
+            <div fxlayout="column">
+              <div fxlayout="row">
+                <div fxFlex="30%">
+                    <img src="assets/additional_icons/ic_profile_man.png">
+                </div>
+                <div fxFlex style="margin-left:15px;" fxLayout="column" fxLayoutAlign="space-around start">
+                  <mat-form-field class="w-100p">
+                    <input matInput placeholder="Ваше имя">
+                    <!--<mat-error *ngIf="formControls['dayIntPerFormControl'].hasError('required')">
+                      Введите значение
+                    </mat-error>
+                    <mat-error *ngIf="formControls['dayIntPerFormControl'].hasError('pattern')">
+                      Недопустимое значение
+                    </mat-error>-->
+                  </mat-form-field>
+                  <mat-form-field class="w-100p">
+                    <input matInput placeholder="Ваше фамилия">
+                    <!--<mat-error *ngIf="formControls['dayIntPerFormControl'].hasError('required')">
+                      Введите значение
+                    </mat-error>
+                    <mat-error *ngIf="formControls['dayIntPerFormControl'].hasError('pattern')">
+                      Недопустимое значение
+                    </mat-error>-->
+                  </mat-form-field>
+                </div>
+              </div>
+              <div fxlayout="row" class="mt-10">
+                <div fxFlex>
+                  <mat-form-field>
+                    <mat-label>Ваш пол</mat-label>
+                    <mat-select [(value)]="selectedGenderType">
+                      <mat-option *ngFor="let genderType of genderTypes" [value]="genderType.value">
+                        {{genderType.viewValue}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div fxFlex>
+                  <mat-form-field>
+                    <mat-label>Год рождения</mat-label>
+                    <mat-select [(value)]="selectedYear">
+                      <mat-option *ngFor="let year of years" [value]="year.value">
+                        {{year.viewValue}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>          
+              <mat-form-field class="w-100p">
+                <input matInput placeholder="Введите ваш email" [formControl]="email" required>
+                <mat-error *ngIf="email.invalid">{{getEmailErrorMessage()}}</mat-error>
+              </mat-form-field>       
+              <mat-form-field class="w-100p">
+                <input matInput placeholder="Введите ваш пароль" [type]="hidePassword ? 'password' : 'text'">
+                <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+                </button>
+              </mat-form-field>           
+            </div>
+          </mat-card-content>
+          <mat-card-actions>
+            <div fxLayout="row" fxLayoutAlign="space-between center" >
+              <button mat-raised-button color="primary">Зарегистрироваться</button>
+              <button mat-button color="primary" (click)="backClicked()">Отмена</button>
+            </div>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+    </div>
+  </div>

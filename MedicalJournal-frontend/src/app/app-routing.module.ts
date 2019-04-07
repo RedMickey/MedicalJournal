@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 
 import { RouterModule, Routes } from '@angular/router';
 
+import { LoginComponent } from './authentication/login/login.component';
+import { RegistrationComponent } from './authentication/registration/registration.component';
 import { TodayComponent } from './today/today.component';
 import { PillsComponent } from './pills/pills.component';
 import { AddPillComponent } from './pills/add-pill/add-pill.component';
@@ -21,6 +23,8 @@ const routes: Routes = [
   { path: 'measurements/add', component: AddMeasurementComponent },
   { path: 'measurements/addOneTime', component: AddOneTimeMeasurementComponent },
   { path: 'measurements/course/:id', component: AddMeasurementComponent },
+  { path: 'login', component: LoginComponent },
+  { path: 'registration', component: RegistrationComponent },
 ];
 
 @NgModule({
