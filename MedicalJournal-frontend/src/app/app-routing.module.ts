@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-
 import { RouterModule, Routes } from '@angular/router';
 
 import { LoginComponent } from './authentication/login/login.component';
@@ -11,18 +10,31 @@ import { MeasurementsComponent } from './measurements/measurements.component';
 import { AddMeasurementComponent } from './measurements/add-measurement/add-measurement.component';
 import { AddOneTimeMeasurementComponent } from './measurements/add-one-time-measurement/add-one-time-measurement.component';
 import { AddOneTimePillComponent } from './pills/add-one-time-pill/add-one-time-pill.component';
+import { AuthGuard } from './guards/auth.guard';
+import { UserComponent } from './authentication/user/user.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/today', pathMatch: 'full' },
-  { path: 'today', component: TodayComponent },
-  { path: 'pills', component: PillsComponent },
-  { path: 'pills/add', component: AddPillComponent },
-  { path: 'pills/addOneTime', component: AddOneTimePillComponent },
-  { path: 'pills/course/:id', component: AddPillComponent },
-  { path: 'measurements', component: MeasurementsComponent },
-  { path: 'measurements/add', component: AddMeasurementComponent },
-  { path: 'measurements/addOneTime', component: AddOneTimeMeasurementComponent },
-  { path: 'measurements/course/:id', component: AddMeasurementComponent },
+  { path: 'today', component: TodayComponent,
+    canActivate: [AuthGuard] },
+  { path: 'pills', component: PillsComponent,
+    canActivate: [AuthGuard] },
+  { path: 'pills/add', component: AddPillComponent,
+    canActivate: [AuthGuard] },
+  { path: 'pills/addOneTime', component: AddOneTimePillComponent,
+    canActivate: [AuthGuard] },
+  { path: 'pills/course/:id', component: AddPillComponent,
+    canActivate: [AuthGuard] },
+  { path: 'measurements', component: MeasurementsComponent,
+    canActivate: [AuthGuard] },
+  { path: 'measurements/add', component: AddMeasurementComponent,
+    canActivate: [AuthGuard] },
+  { path: 'measurements/addOneTime', component: AddOneTimeMeasurementComponent,
+    canActivate: [AuthGuard] },
+  { path: 'measurements/course/:id', component: AddMeasurementComponent,
+    canActivate: [AuthGuard] },
+  { path: 'user', component: UserComponent,
+    canActivate: [AuthGuard] },
   { path: 'login', component: LoginComponent },
   { path: 'registration', component: RegistrationComponent },
 ];

@@ -2,7 +2,8 @@ import { Component, ViewChild, ElementRef } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-//import { Router } from '@angular/router';
+import { AuthService } from '../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-main-nav',
@@ -19,12 +20,23 @@ export class MainNavComponent {
       map(result => result.matches)
     );
 
-  constructor(private breakpointObserver: BreakpointObserver) {
+  user: any;
+
+  constructor(private breakpointObserver: BreakpointObserver,
+    private authService: AuthService,
+    private router: Router) {
+      //this.user = this.authService.currentUserValue;
+      this.authService.currentUser.subscribe(x => this.user = x);
     /*router.events.subscribe((val) => {
       console.log(val);
     });*/
   }
-   
+
+  logout(){
+    this.authService.logout();
+    this.router.navigate(['/login']);
+  }
+
   onNavLinkClicked(directionType){
     /*switch(directionType){
       case 1:

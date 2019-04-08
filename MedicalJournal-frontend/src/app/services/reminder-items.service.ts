@@ -9,6 +9,7 @@ import { MeasurementType } from '../models/MeasurementType';
 import { CycleDBInsertEntry } from '../models/CycleDBInsertEntry';
 import { PillReminderCourse } from '../models/PillReminderCourse';
 import { MeasurementReminderCourse } from '../models/MeasurementReminderCourse';
+import { AuthService } from './auth.service';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -20,12 +21,20 @@ const httpOptions = {
 export class ReminderItemsService {
   private ReminderItemsUrl = 'http://localhost:8090/reminders';  // URL to web api
 
+  user: any;
+
   constructor(
-    private http: HttpClient) { }
+    private http: HttpClient,
+    private authService: AuthService) { 
+      //this.user = this.authService.currentUserValue;
+      this.authService.currentUser.subscribe(x => this.user = x);
+    }
   
   /*  */
   getAllPillReminders (): Observable<PillReminder[]> {
-    return this.http.post<PillReminder[]>(this.ReminderItemsUrl + "/getAllPillReminders", httpOptions)
+    return this.http.post<PillReminder[]>(this.ReminderItemsUrl + "/getAllPillReminders", 
+      { "userId": this.user.userId },
+      httpOptions)
       .pipe(
         catchError(this.handleError<PillReminder[]>(' getAllPillReminders', []))
       );
@@ -33,7 +42,9 @@ export class ReminderItemsService {
 
   /*  */
   getAllMeasurementReminders (): Observable<MeasurementReminder[]> {
-    return this.http.post<MeasurementReminder[]>(this.ReminderItemsUrl + "/getAllMeasurementReminders", httpOptions)
+    return this.http.post<MeasurementReminder[]>(this.ReminderItemsUrl + "/getAllMeasurementReminders",
+      { "userId": this.user.userId },
+      httpOptions)
       .pipe(
         catchError(this.handleError<MeasurementReminder[]>(' getAllMeasurementReminders', []))
       );
@@ -57,7 +68,8 @@ export class ReminderItemsService {
       return this.http.post(this.ReminderItemsUrl + path, 
       {
         "cycleDBInsertEntry": cycleDBEntry,
-        "pillReminderCourse": pillReminderCourse
+        "pillReminderCourse": pillReminderCourse,
+        "userId": this.user.userId
       },
       httpOptions)
     .pipe(
@@ -75,7 +87,8 @@ export class ReminderItemsService {
       return this.http.post(this.ReminderItemsUrl + path, 
       {
         "cycleDBInsertEntry": cycleDBEntry,
-        "measurementReminderCourse": measurementReminderCourse
+        "measurementReminderCourse": measurementReminderCourse,
+        "userId": this.user.userId
       },
       httpOptions)
     .pipe(
@@ -85,10 +98,12 @@ export class ReminderItemsService {
 
   getPillReminderCourse(pillReminderId: String): Observable<any> {
     return this.http.post<{pillReminderCourse: PillReminderCourse; 
-                            cycleDBInsertEntry: CycleDBInsertEntry}>
+                            cycleDBInsertEntry: CycleDBInsertEntry,
+                            userId: number}>
      (this.ReminderItemsUrl + "/getPillReminderCourse", 
      {
-       "pillReminderId": pillReminderId
+       "entryUuid": pillReminderId,
+       "userId": this.user.userId
      },
      httpOptions)
    .pipe(
@@ -98,10 +113,12 @@ export class ReminderItemsService {
 
   getMeasurementReminderCourse(measurementReminderId: String): Observable<any> {
     return this.http.post<{measurementReminderCourse: MeasurementReminderCourse; 
-                           cycleDBInsertEntry: CycleDBInsertEntry}>
+                            cycleDBInsertEntry: CycleDBInsertEntry,
+                            userId: number}>
      (this.ReminderItemsUrl + "/getMeasurementReminderCourse", 
      {
-       "measurementReminderId": measurementReminderId
+       "entryUuid": measurementReminderId,
+       "userId": this.user.userId
      },
      httpOptions)
    .pipe(
@@ -115,7 +132,8 @@ export class ReminderItemsService {
         "idReminder": deletionReqBody.idReminder,
         "idCycle": deletionReqBody.idCycle,
         "idWeekSchedule": deletionReqBody.idWeekSchedule,
-        "courseType": deletionReqBody.courseType
+        "courseType": deletionReqBody.courseType,
+        "userId": this.user.userId
       },
       httpOptions)
     .pipe(
@@ -129,7 +147,8 @@ export class ReminderItemsService {
     {
       "measurementReminderCourse": measurementReminderCourse,
       "value1": value1,
-      "value2": value2
+      "value2": value2,
+      "userId": this.user.userId
     },
     httpOptions)
     .pipe(
@@ -138,6 +157,7 @@ export class ReminderItemsService {
   }
 
 sendOneTimePillReminderEntry(pillReminderCourse: PillReminderCourse): Observable<any> {
+  pillReminderCourse.userId = this.user.userId;
   return this.http.post(this.ReminderItemsUrl + "/createOneTimePillReminderEntry", 
     {
       "pillReminderCourse": pillReminderCourse

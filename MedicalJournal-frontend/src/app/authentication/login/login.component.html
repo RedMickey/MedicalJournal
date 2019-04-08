@@ -29,6 +29,9 @@
                   <button mat-button>Забыли?</button>
                 </div>
               </div>
+            </div>
+            <div *ngIf="hasReqError" class="error">
+              Неверный Email или пароль.
             </div>         
           </div>
         </mat-card-content>

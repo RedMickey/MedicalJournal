@@ -13,16 +13,13 @@
                 </div>
                 <div fxFlex style="margin-left:15px;" fxLayout="column" fxLayoutAlign="space-around start">
                   <mat-form-field class="w-100p">
-                    <input matInput placeholder="Ваше имя">
-                    <!--<mat-error *ngIf="formControls['dayIntPerFormControl'].hasError('required')">
+                    <input matInput placeholder="Ваше имя" [formControl]="formControls['userNameFormControl']" required>
+                    <mat-error *ngIf="formControls['userNameFormControl'].hasError('required')">
                       Введите значение
                     </mat-error>
-                    <mat-error *ngIf="formControls['dayIntPerFormControl'].hasError('pattern')">
-                      Недопустимое значение
-                    </mat-error>-->
                   </mat-form-field>
                   <mat-form-field class="w-100p">
-                    <input matInput placeholder="Ваше фамилия">
+                    <input matInput placeholder="Ваше фамилия" [formControl]="formControls['userSurnameFormControl']">
                     <!--<mat-error *ngIf="formControls['dayIntPerFormControl'].hasError('required')">
                       Введите значение
                     </mat-error>
@@ -55,14 +52,18 @@
                 </div>
               </div>          
               <mat-form-field class="w-100p">
-                <input matInput placeholder="Введите ваш email" [formControl]="email" required>
-                <mat-error *ngIf="email.invalid">{{getEmailErrorMessage()}}</mat-error>
+                <input matInput placeholder="Введите ваш email" [formControl]="formControls['emailFormControl']" required>
+                <mat-error *ngIf="formControls['emailFormControl'].invalid">{{getEmailErrorMessage()}}</mat-error>
               </mat-form-field>       
               <mat-form-field class="w-100p">
-                <input matInput placeholder="Введите ваш пароль" [type]="hidePassword ? 'password' : 'text'">
+                <input matInput placeholder="Введите ваш пароль" [type]="hidePassword ? 'password' : 'text'" 
+                  [formControl]="formControls['passwordFormControl']" required>
                 <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
                 <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
                 </button>
+                <mat-error *ngIf="formControls['passwordFormControl'].hasError('required')">
+                  Введите значение
+                </mat-error>
               </mat-form-field>           
             </div>
           </mat-card-content>

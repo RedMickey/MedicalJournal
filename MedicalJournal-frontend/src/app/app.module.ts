@@ -9,7 +9,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { TodayComponent } from './today/today.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ReminderEntryComponent } from './reminder-entry/reminder-entry.component';
-import { HttpClientModule } from "@angular/common/http";
+import { HttpClientModule, HttpClient, HTTP_INTERCEPTORS } from "@angular/common/http";
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {EcoFabSpeedDialModule} from '@ecodev/fab-speed-dial';
 import { MatButtonModule, 
@@ -70,11 +70,10 @@ import { ChoosingPillReminderDialogComponent } from './pills/add-one-time-pill/c
 import { LoginComponent } from './authentication/login/login.component';
 import { RegistrationComponent } from './authentication/registration/registration.component';
 import { UserComponent } from './authentication/user/user.component';
-//import { JwtModule } from '@auth0/angular-jwt';
+//import { JwtInterceptor } from './authentication/jwt.interceptor';
+import { RefreshTokenInterceptor } from './authentication/refresh-token.interceptor';
 
-//import { Router } from '@angular/router';
-//import { JwtHelperService } from '@auth0/angular-jwt';
-//import { AuthService } from './services/auth.service';
+//import { JwtModule } from '@auth0/angular-jwt';
 
 registerLocaleData(localeRu, 'ru');
 
@@ -146,14 +145,6 @@ registerLocaleData(localeRu, 'ru');
     MatTabsModule,
     MatTooltipModule,
     MatTreeModule,
-
-    /*JwtModule.forRoot({
-      config: {
-        tokenGetter: tokenGetter,
-        whitelistedDomains: ['localhost:4000'],
-        blacklistedRoutes: ['example.com/examplebadroute/']
-      }
-    })*/
   ],
   entryComponents: [
     MeasurementDialogComponent,
@@ -162,56 +153,10 @@ registerLocaleData(localeRu, 'ru');
   ],
   providers: [
     ReminderEntriesService,
-    //AuthService,
+    //{ provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: RefreshTokenInterceptor, multi: true },
+    
   ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
-
-/*function getAccessToken(router: Router, authService: AuthService): Promise<string> {
-
-  let jwtHelper = new JwtHelperService();
-  
-  let accessToken = localStorage.getItem('access_token');
-  
-  if (accessToken == '' || !accessToken || accessToken == undefined || accessToken == null) {
-      router.navigate(['./admin/login']);
-      return;
-  }
-  
-  if (jwtHelper.isTokenExpired(accessToken)) {
-  
-      let waitPeriod = (!refreshTokenService.wait);
-  
-      refreshTokenService.wait = true;
-  
-      return new Promise((resolve, reject) => {
-  
-          if (waitPeriod) {
-              refreshTokenService.refreshToken(accessToken).subscribe((res: any) => {
-                  res = res.json();
-  
-                  if (res.token) {
-                      localStorage.setItem('JWToken', res.token);
-                      resolve(res.token);
-                      refreshTokenService.wait = false;
-                  } else {
-                      localStorage.removeItem('JWToken');
-                      router.navigate(['./admin/login']);
-                  }
-  
-              });
-          } else {
-              let interval = setInterval(function () {
-                  if(refreshTokenService.wait == false) {
-                      resolve(localStorage.getItem('JWToken'));
-                      clearInterval(interval);
-                  }
-              }, 500);
-          }
-  
-      });
-  } else {
-      return Promise.resolve(accessToken);
-  }
-}*/

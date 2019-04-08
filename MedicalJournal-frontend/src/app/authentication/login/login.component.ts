@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import {FormControl, Validators} from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
+import { catchError } from 'rxjs/operators';
+import { of, Observable } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -11,12 +14,16 @@ export class LoginComponent implements OnInit {
 
   hidePassword = true;
 
+  hasReqError: boolean = false;
+
   emailFormControl = new FormControl('', [Validators.required, Validators.email]);
   passwordFormControl = new FormControl('', [Validators.required,]);
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService,
+    private router: Router) { }
 
   ngOnInit() {
+    //console.log(localStorage.getItem("access_token"));
   }
 
   getEmailErrorMessage() {
@@ -36,8 +43,24 @@ export class LoginComponent implements OnInit {
     }
     
     console.log("gfg");
+
     this.authService.login(this.emailFormControl.value, this.passwordFormControl.value)
-      .subscribe(response => console.log(response));
+      .pipe(
+        catchError(err => {
+          console.log(err);
+          return Observable.throw(err);})
+      )
+      .subscribe(response => {
+        console.log(response)
+        if (response === undefined)
+          this.hasReqError = true;
+        else
+          {
+            this.hasReqError = false;
+            this.router.navigate(["/today"]);
+          }
+      },
+        err => console.log("fdfs"));
   }
 
 }

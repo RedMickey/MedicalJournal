@@ -10,4 +10,5 @@ export class PillReminderCourse{
     annotation: string;
     isActive: number;
     reminderTimes: Date[];
+    userId: number;
 }

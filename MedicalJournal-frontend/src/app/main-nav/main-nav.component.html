@@ -4,7 +4,10 @@
       [mode]="(isHandset$ | async) ? 'over' : 'side'"
       [opened]="!(isHandset$ | async)">
     <mat-toolbar color="primary">
-      <a class="username" routerLink="/login">User</a>
+      <a class="username" routerLink="/login" *ngIf="!user; else unset">User</a>
+      <ng-template #unset>  
+        <a class="username" routerLink="/user">{{user.userName}}</a>
+      </ng-template> 
     </mat-toolbar>
     <mat-nav-list>
       <a mat-list-item (click)="onNavLinkClicked(1)" routerLink="/today">Сегодня</a>
@@ -24,7 +27,8 @@
       </button>
       <span #barTitle class="bar-title">Сегодня</span>
       <span class="spacer"></span>
-      <a>Выйти</a>
+      <a *ngIf="authService.loggedIn()" (click)="logout()"
+        style="cursor: pointer;">Выйти</a>
     </mat-toolbar>
     <!-- Add Content Here -->
     <router-outlet></router-outlet>

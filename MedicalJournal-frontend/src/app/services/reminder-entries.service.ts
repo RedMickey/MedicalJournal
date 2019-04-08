@@ -7,6 +7,8 @@ import { catchError, map, tap } from 'rxjs/operators';
 import { PillReminderEntry } from '../models/PillReminderEntry';
 import { MeasurementReminderEntry } from '../models/MeasurementReminderEntry';
 
+import { AuthService } from './auth.service';
+
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
 };
@@ -17,12 +19,23 @@ export class ReminderEntriesService {
 
   private ReminderEntriesUrl = 'http://localhost:8090/today';  // URL to web api
 
+  user: any;
+
   constructor(
-    private http: HttpClient) { }
+    private http: HttpClient,
+    private authService: AuthService) {
+      //this.user = this.authService.currentUserValue;
+      this.authService.currentUser.subscribe(x => this.user = x);
+     }
 
   /** POST PillReminderEntries by date from the server */
   getPillReminderEntriesByDate (date: Date): Observable<PillReminderEntry[]> {
-    return this.http.post<PillReminderEntry[]>(this.ReminderEntriesUrl + "/getPillReminders", {"date": date}, httpOptions)
+    return this.http.post<PillReminderEntry[]>(this.ReminderEntriesUrl + "/getPillReminders", 
+      {
+        "date": date,
+        "userId": this.user.userId
+      },
+      httpOptions)
       .pipe(
         catchError(this.handleError<PillReminderEntry[]>(' getPillReminderEntriesByDate', []))
       );
@@ -30,7 +43,12 @@ export class ReminderEntriesService {
 
   /** POST MeasurementReminderEntries by date from the server */
   getMeasurementReminderEntriesByDate (date: Date): Observable<MeasurementReminderEntry[]> {
-    return this.http.post<MeasurementReminderEntry[]>(this.ReminderEntriesUrl + "/getMeasurementReminders", {"date": date}, httpOptions)
+    return this.http.post<MeasurementReminderEntry[]>(this.ReminderEntriesUrl + "/getMeasurementReminders", 
+      {
+        "date": date,
+        "userId": this.user.userId
+      },
+      httpOptions)
       .pipe(
         catchError(this.handleError<MeasurementReminderEntry[]>(' getMeasurementReminderEntriesByDate', []))
       );
