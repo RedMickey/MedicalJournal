@@ -1,5 +1,6 @@
 package com.example.michel.rest_api.controllers;
 
+import com.example.michel.rest_api.models.auxiliary_models.request_bodies.DateBody;
 import com.example.michel.rest_api.models.auxiliary_models.request_bodies.UpdateMeasurementReminderBody;
 import com.example.michel.rest_api.models.auxiliary_models.request_bodies.UpdatePillReminderBody;
 import com.example.michel.rest_api.models.measurement.MeasurementReminderEntryF;
@@ -27,16 +28,17 @@ public class TodayReminderController {
     private MeasurementReminderEntryFService measurementReminderEntryFService;
 
     @PostMapping(value = "/getPillReminders", produces = "application/json")
-    public List<PillReminderEntryF> getPillReminders(@RequestBody Map<String, Date> req){
-        Date date = req.get("date");
-        List<PillReminderEntryF> pillReminderEntryFList = pillReminderEntryFService.getPillReminderEntriesByDate(date, 43);
+    public List<PillReminderEntryF> getPillReminders(@RequestBody DateBody req){
+        Date date = req.getDate();
+        List<PillReminderEntryF> pillReminderEntryFList = pillReminderEntryFService.getPillReminderEntriesByDate(date, req.getUserId());
         return pillReminderEntryFList;
     }
 
     @PostMapping(value = "/getMeasurementReminders", produces = "application/json")
-    public List<MeasurementReminderEntryF> getMeasurementReminders(@RequestBody Map<String, Date> req){
-        Date date = req.get("date");
-        List<MeasurementReminderEntryF> measurementReminderEntryFList = measurementReminderEntryFService.getMeasurementReminderEntriesByDate(date, 43);
+    public List<MeasurementReminderEntryF> getMeasurementReminders(@RequestBody DateBody req){
+        Date date = req.getDate();
+        List<MeasurementReminderEntryF> measurementReminderEntryFList = measurementReminderEntryFService
+                .getMeasurementReminderEntriesByDate(date, req.getUserId());
         return measurementReminderEntryFList;
     }
 

@@ -66,26 +66,26 @@ public class PillReminderService {
         pillReminderRepository.updateAndMarkAsDeletedById(idPillReminder, new Timestamp(new Date().getTime()));
     }
 
-    public UUID createAndSavePillReminder(PillReminderCourse pillReminderCourse, UUID pillId, int isOnetime){
+    public UUID createAndSavePillReminder(PillReminderCourse pillReminderCourse, UUID pillId, int isOnetime, int userId){
         UUID id = UUID.randomUUID();
         PillReminder pillReminder = new PillReminder(id,
                 pillId, pillReminderCourse.getPillCount(), pillReminderCourse.getIdPillCountType(),
                 new java.sql.Date(pillReminderCourse.getStartDate().getTime()), pillReminderCourse.getIdCycle(),
                 pillReminderCourse.getIdHavingMealsType(), pillReminderCourse.getHavingMealsTime(),
                 pillReminderCourse.getAnnotation(), pillReminderCourse.getIsActive(),
-                pillReminderCourse.getReminderTimes().length, isOnetime, 43,
+                pillReminderCourse.getReminderTimes().length, isOnetime, userId,
                 new Timestamp(new Date().getTime()), 1);
         pillReminderRepository.save(pillReminder);
         return id;
     }
 
-    public void updatePillReminderById(PillReminderCourse pillReminderCourse, UUID pillId, int isOnetime){
+    public void updatePillReminderById(PillReminderCourse pillReminderCourse, UUID pillId, int isOnetime, int userId){
         PillReminder pillReminder = new PillReminder(pillReminderCourse.getIdPillReminder(),
                 pillId, pillReminderCourse.getPillCount(), pillReminderCourse.getIdPillCountType(),
                 new java.sql.Date(pillReminderCourse.getStartDate().getTime()), pillReminderCourse.getIdCycle(),
                 pillReminderCourse.getIdHavingMealsType(), pillReminderCourse.getHavingMealsTime(),
                 pillReminderCourse.getAnnotation(), pillReminderCourse.getIsActive(),
-                pillReminderCourse.getReminderTimes().length, isOnetime, 43,
+                pillReminderCourse.getReminderTimes().length, isOnetime, userId,
                 new Timestamp(new Date().getTime()), 2);
         pillReminderRepository.save(pillReminder);
     }

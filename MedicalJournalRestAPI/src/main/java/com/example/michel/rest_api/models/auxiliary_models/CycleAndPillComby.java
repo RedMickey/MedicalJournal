@@ -7,4 +7,5 @@ import lombok.Data;
 public class CycleAndPillComby {
     private CycleDBInsertEntry cycleDBInsertEntry;
     private PillReminderCourse pillReminderCourse;
+    private Integer userId;
 }

@@ -5,10 +5,7 @@ import lombok.Data;
 import java.util.UUID;
 
 @Data
-public class DeletionReminderCourseBody {
-    private UUID idReminder;
-    private UUID idCycle;
-    private UUID idWeekSchedule;
-    private int courseType;
+public class UUIDBody {
+    private UUID entryUuid;
     private Integer userId;
 }

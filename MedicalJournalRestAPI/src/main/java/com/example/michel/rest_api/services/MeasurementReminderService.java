@@ -66,24 +66,24 @@ public class MeasurementReminderService {
         measurementReminderRepository.updateAndMarkAsDeletedById(idMeasurementReminder, new Timestamp(new Date().getTime()));
     }
 
-    public UUID createAndSaveMeasurementReminder(MeasurementReminderCourse mrc, int isOnetime){
+    public UUID createAndSaveMeasurementReminder(MeasurementReminderCourse mrc, int isOnetime, int userId){
         UUID id = UUID.randomUUID();
         MeasurementReminder mr = new MeasurementReminder(id,
                 mrc.getIdMeasurementType(), new java.sql.Date(mrc.getStartDate().getTime()),
                 mrc.getIdCycle(), mrc.getIdHavingMealsType(), mrc.getHavingMealsTime(),
                 mrc.getAnnotation(), mrc.getIsActive(), mrc.getReminderTimes().length,
-                isOnetime, 43, new Timestamp(new Date().getTime()), 1
+                isOnetime, userId, new Timestamp(new Date().getTime()), 1
         );
         measurementReminderRepository.save(mr);
         return id;
     }
 
-    public void updateMeasurementReminderById(MeasurementReminderCourse mrc, int isOnetime){
+    public void updateMeasurementReminderById(MeasurementReminderCourse mrc, int isOnetime, int userId){
         MeasurementReminder mr = new MeasurementReminder(mrc.getIdMeasurementReminder(),
                 mrc.getIdMeasurementType(), new java.sql.Date(mrc.getStartDate().getTime()),
                 mrc.getIdCycle(), mrc.getIdHavingMealsType(), mrc.getHavingMealsTime(),
                 mrc.getAnnotation(), mrc.getIsActive(), mrc.getReminderTimes().length,
-                isOnetime, 43, new Timestamp(new Date().getTime()), 2
+                isOnetime, userId, new Timestamp(new Date().getTime()), 2
         );
         measurementReminderRepository.save(mr);
     }

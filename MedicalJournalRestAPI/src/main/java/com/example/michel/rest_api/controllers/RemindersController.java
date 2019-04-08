@@ -6,6 +6,7 @@ import com.example.michel.rest_api.models.auxiliary_models.CycleAndPillComby;
 import com.example.michel.rest_api.models.auxiliary_models.MeasurementTypeF;
 import com.example.michel.rest_api.models.auxiliary_models.request_bodies.DeletionReminderCourseBody;
 import com.example.michel.rest_api.models.auxiliary_models.request_bodies.OneTimeMeasEntryBody;
+import com.example.michel.rest_api.models.auxiliary_models.request_bodies.UUIDBody;
 import com.example.michel.rest_api.models.auxiliary_models.synchronization.ReminderSynchronizationReqModule;
 import com.example.michel.rest_api.models.auxiliary_models.synchronization.SynchronizationReq;
 import com.example.michel.rest_api.models.measurement.MeasurementReminderF;
@@ -65,14 +66,15 @@ public class RemindersController {
     private CalculationUtils calculationUtils;
 
     @PostMapping(value = "/getAllPillReminders", produces = "application/json")
-    public List<PillReminderF> getAllPillReminders(){
-        List<PillReminderF> pillReminderFList = pillReminderFService.getAllPillRemindersF(43);
+    public List<PillReminderF> getAllPillReminders(@RequestBody Map<String, Integer> req){
+        List<PillReminderF> pillReminderFList = pillReminderFService.getAllPillRemindersF(req.get("userId"));
         return pillReminderFList;
     }
 
     @PostMapping(value = "/getAllMeasurementReminders", produces = "application/json")
-    public List<MeasurementReminderF> getAllMeasurementReminders(){
-        List<MeasurementReminderF> measurementReminderFList = measurementReminderFService.getAllMeasurementRemindersF(43);
+    public List<MeasurementReminderF> getAllMeasurementReminders(@RequestBody Map<String, Integer> req){
+        List<MeasurementReminderF> measurementReminderFList = measurementReminderFService
+                .getAllMeasurementRemindersF(req.get("userId"));
         return measurementReminderFList;
     }
 
@@ -100,7 +102,7 @@ public class RemindersController {
         UUID cyId = cycleService.createAndSaveCycle(req.getCycleDBInsertEntry());
         UUID pillId = pillService.createAndSavePill(req.getPillReminderCourse().getPillName(), "");
         req.getPillReminderCourse().setIdCycle(cyId);
-        UUID prId = pillReminderService.createAndSavePillReminder(req.getPillReminderCourse(), pillId, 0);
+        UUID prId = pillReminderService.createAndSavePillReminder(req.getPillReminderCourse(), pillId, 0, req.getUserId());
 
         for(int i=0; i<req.getPillReminderCourse().getReminderTimes().length; i++)
             reminderTimeService.createAndSaveReminderTime(req.getPillReminderCourse().getReminderTimes()[i],
@@ -136,7 +138,7 @@ public class RemindersController {
         {
             pillId = pillService.createAndSavePill(req.getPillReminderCourse().getPillName(), "");
         }
-        pillReminderService.updatePillReminderById(req.getPillReminderCourse(), pillId, 0);
+        pillReminderService.updatePillReminderById(req.getPillReminderCourse(), pillId, 0, req.getUserId());
         pillReminderEntryService.updateAndMarkAsDeletedAfterDate(new Date(), req.getPillReminderCourse().getIdPillReminder());
         reminderTimeService.updateAndMarkAsDeletedByReminderId(req.getPillReminderCourse().getIdPillReminder(), 1);
 
@@ -159,9 +161,9 @@ public class RemindersController {
     }
 
     @PostMapping(value = "/getPillReminderCourse", produces = "application/json")
-    public CycleAndPillComby getPillReminderCourse(@RequestBody Map<String, UUID> req){
-        UUID prId = req.get("pillReminderId");
-        CycleAndPillComby cycleAndPillComby = pillReminderFService.getCycleAndPillCombyByID(prId, 43);
+    public CycleAndPillComby getPillReminderCourse(@RequestBody UUIDBody req){
+        UUID prId = req.getEntryUuid();
+        CycleAndPillComby cycleAndPillComby = pillReminderFService.getCycleAndPillCombyByID(prId, req.getUserId());
         cycleAndPillComby.getPillReminderCourse().setReminderTimes(reminderTimeService
                 .getReminderTimeDateArrByReminderId(prId , 1));
         if (cycleAndPillComby.getCycleDBInsertEntry().getIdWeekSchedule() != null)
@@ -176,7 +178,7 @@ public class RemindersController {
     public void createOneTimePillReminderEntry(@RequestBody Map<String, PillReminderCourse> req){
         PillReminderCourse prc = req.get("pillReminderCourse");
         UUID pillId = pillService.createAndSavePill(prc.getPillName(), "");
-        UUID prId = pillReminderService.createAndSavePillReminder(prc, pillId, 1);
+        UUID prId = pillReminderService.createAndSavePillReminder(prc, pillId, 1, prc.getUserId());
         pillReminderEntryService.createAndSavePillReminderEntry(prc.getStartDate(), prId,
                 1,1);
     }
@@ -190,7 +192,7 @@ public class RemindersController {
         }
         UUID cyId = cycleService.createAndSaveCycle(req.getCycleDBInsertEntry());
         req.getMeasurementReminderCourse().setIdCycle(cyId);
-        UUID mrId = measurementReminderService.createAndSaveMeasurementReminder(req.getMeasurementReminderCourse(), 0);
+        UUID mrId = measurementReminderService.createAndSaveMeasurementReminder(req.getMeasurementReminderCourse(), 0, req.getUserId());
 
         for(int i=0; i<req.getMeasurementReminderCourse().getReminderTimes().length; i++)
             reminderTimeService.createAndSaveReminderTime(req.getMeasurementReminderCourse().getReminderTimes()[i],
@@ -220,7 +222,7 @@ public class RemindersController {
                 req.getCycleDBInsertEntry().setIdWeekSchedule(wsId);
             }
         }
-        measurementReminderService.updateMeasurementReminderById(req.getMeasurementReminderCourse(), 0);
+        measurementReminderService.updateMeasurementReminderById(req.getMeasurementReminderCourse(), 0, req.getUserId());
         cycleService.updateCycleById(req.getCycleDBInsertEntry());
         measurementReminderEntryService.updateAndMarkAsDeletedAfterDate(new Date(),
                 req.getMeasurementReminderCourse().getIdMeasurementReminder());
@@ -246,9 +248,9 @@ public class RemindersController {
     }
 
     @PostMapping(value = "/getMeasurementReminderCourse", produces = "application/json")
-    public CycleAndMeasurementComby getMeasurementReminderCourse(@RequestBody Map<String, UUID> req){
-        UUID mrId = req.get("measurementReminderId");
-        CycleAndMeasurementComby cycleAndMeasurementComby = measurementReminderFService.getCycleAndMeasurementCombyById(mrId, 43);
+    public CycleAndMeasurementComby getMeasurementReminderCourse(@RequestBody UUIDBody req){
+        UUID mrId = req.getEntryUuid();
+        CycleAndMeasurementComby cycleAndMeasurementComby = measurementReminderFService.getCycleAndMeasurementCombyById(mrId, req.getUserId());
         cycleAndMeasurementComby.getMeasurementReminderCourse().setReminderTimes(reminderTimeService
                 .getReminderTimeDateArrByReminderId(mrId , 2));
         if (cycleAndMeasurementComby.getCycleDBInsertEntry().getIdWeekSchedule() != null)
@@ -261,7 +263,7 @@ public class RemindersController {
 
     @PostMapping(value = "/createOneTimeMeasurementReminderEntry", produces = "application/json")
     public void createOneTimeMeasurementReminderEntry(@RequestBody OneTimeMeasEntryBody req){
-        UUID mrId = measurementReminderService.createAndSaveMeasurementReminder(req.getMeasurementReminderCourse(), 1);
+        UUID mrId = measurementReminderService.createAndSaveMeasurementReminder(req.getMeasurementReminderCourse(), 1, req.getUserId());
         measurementReminderEntryService.createAndSaveMeasurementReminderEntry(
                 req.getMeasurementReminderCourse().getStartDate(), mrId,
                 req.getValue1(), req.getValue2(), 1);

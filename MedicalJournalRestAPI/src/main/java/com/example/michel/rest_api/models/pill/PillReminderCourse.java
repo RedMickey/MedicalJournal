@@ -16,4 +16,5 @@ public class PillReminderCourse {
     private String annotation;
     private Integer isActive;
     private Date[] reminderTimes;
+    private Integer userId;
 }

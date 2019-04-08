@@ -7,4 +7,5 @@ import lombok.Data;
 public class CycleAndMeasurementComby {
     private CycleDBInsertEntry cycleDBInsertEntry;
     private MeasurementReminderCourse measurementReminderCourse;
+    private Integer userId;
 }
