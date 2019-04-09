@@ -73,6 +73,7 @@ public class UserController {
     public User signUp(@RequestBody User user){
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         User insertedUser = userRepository.save(user);
+        insertedUser.setPassword("");
         return insertedUser;
     }
 
