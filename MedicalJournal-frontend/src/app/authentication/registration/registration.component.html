@@ -64,12 +64,15 @@
                 <mat-error *ngIf="formControls['passwordFormControl'].hasError('required')">
                   Введите значение
                 </mat-error>
-              </mat-form-field>           
+              </mat-form-field>
+              <div *ngIf="hasReqError" class="error">
+                Пользователь с таким email адресом уже существует.
+              </div>             
             </div>
           </mat-card-content>
           <mat-card-actions>
             <div fxLayout="row" fxLayoutAlign="space-between center" >
-              <button mat-raised-button color="primary">Зарегистрироваться</button>
+              <button mat-raised-button color="primary" (click)="submit()">Зарегистрироваться</button>
               <button mat-button color="primary" (click)="backClicked()">Отмена</button>
             </div>
           </mat-card-actions>

@@ -4,6 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../environments/environment.prod';
 import { Observable, of, BehaviorSubject } from 'rxjs';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { User } from '../models/User';
 
 @Injectable({
   providedIn: 'root'
@@ -71,6 +72,15 @@ export class AuthService {
     }),
       catchError(this.handleError<any>('refreshToken'))
     );
+  }
+
+  register(user: User){
+    return this.http.post<User>("http://localhost:8090/user/sign-up", 
+        user,
+      )
+      .pipe(
+        catchError(this.handleError<any>('register'))
+      );
   }
 
   public loggedIn(): boolean{

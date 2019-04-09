@@ -41,8 +41,6 @@ export class LoginComponent implements OnInit {
       this.passwordFormControl.markAsTouched();
       return;
     }
-    
-    console.log("gfg");
 
     this.authService.login(this.emailFormControl.value, this.passwordFormControl.value)
       .pipe(
@@ -59,8 +57,7 @@ export class LoginComponent implements OnInit {
             this.hasReqError = false;
             this.router.navigate(["/today"]);
           }
-      },
-        err => console.log("fdfs"));
+      });
   }
 
 }

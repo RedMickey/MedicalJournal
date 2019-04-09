@@ -16,9 +16,9 @@ export class RefreshTokenInterceptor implements HttpInterceptor {
 
     private addTokenToRequest(request: HttpRequest<any>) : HttpRequest<any> {
         let accessToken = this.authService.getAccessToken(); 
-
+        
         if (accessToken && !(request.url.includes("refreshToken") ||
-            request.url.includes("login"))) {
+            request.url.includes("login")||request.url.includes("sign-up"))) {
             request = request.clone({
                 setHeaders: { 
                     Authorization: `Bearer ${accessToken}`
@@ -38,7 +38,8 @@ export class RefreshTokenInterceptor implements HttpInterceptor {
             // So we verify url and we throw an error if it's the case
             if (
                 request.url.includes("refreshToken") ||
-                request.url.includes("login")
+                request.url.includes("login") ||
+                request.url.includes("sign-up")
             ) {
                 // We do another check to see if refresh token failed
                 // In this case we want to logout user and to redirect it to login page
