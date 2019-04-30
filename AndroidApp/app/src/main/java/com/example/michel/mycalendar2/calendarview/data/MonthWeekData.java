@@ -59,7 +59,7 @@ public class MonthWeekData {
         weekIndex = calendar.get(Calendar.DAY_OF_WEEK);
 //        if (calendar.get(Calendar.MONTH) == 11)
 //            weekIndex--;
-        preNumber = weekIndex - 1;
+        preNumber = weekIndex - 2;
         afterNumber = 42 - calendar.getActualMaximum(Calendar.DAY_OF_MONTH) - preNumber;
 //        Log.e("initMonthParams", " weekIndex:" + weekIndex);
 //        Log.e("initMonthParams", " preNumber:" + preNumber);
@@ -145,7 +145,7 @@ public class MonthWeekData {
 
         DayData addDate;
         weekIndex = calendar.get(Calendar.DAY_OF_WEEK);
-        calendar.add(Calendar.DATE, -weekIndex + 1);
+        calendar.add(Calendar.DATE, -weekIndex + 2);
         for (int i = 0; i < 7; i++) {
             addDate = new DayData(new DateData(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH)));
             weekContent.add(addDate);

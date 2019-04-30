@@ -23,6 +23,7 @@ public class SetUpCurrentUserTask extends AsyncTask<Void, Void, Integer> {
     private String authToken = null;
     private User user = null;
     private MainActivity mainActivity = null;
+    private boolean notificationsCreationWorkable = false;
 
     public SetUpCurrentUserTask(){
 
@@ -101,6 +102,13 @@ public class SetUpCurrentUserTask extends AsyncTask<Void, Void, Integer> {
             AccountGeneralUtils.curUser = new User();
             Toast.makeText(context, "An error has occurred", Toast.LENGTH_LONG).show();
         }
+        if (notificationsCreationWorkable){
+            PillNotificationsCreationTask pnct = new PillNotificationsCreationTask();
+            pnct.execute(mainActivity.getApplicationContext());
+
+            MeasurementNotificationsCreationTask mnct = new MeasurementNotificationsCreationTask();
+            mnct.execute(mainActivity.getApplicationContext());
+        }
     }
 
     public void setContext(Context context) {
@@ -117,5 +125,9 @@ public class SetUpCurrentUserTask extends AsyncTask<Void, Void, Integer> {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public void setNotificationsCreationWorkable(boolean notificationsCreationWorkable) {
+        this.notificationsCreationWorkable = notificationsCreationWorkable;
     }
 }

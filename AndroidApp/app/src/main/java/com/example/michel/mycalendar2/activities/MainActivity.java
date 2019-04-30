@@ -32,6 +32,7 @@ import com.example.michel.mycalendar2.app_async_tasks.synchronization.GettingDat
 import com.example.michel.mycalendar2.authentication.AccountGeneralUtils;
 import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
 import com.example.michel.mycalendar2.calendarview.utils.DatabaseHelper;
+import com.example.michel.mycalendar2.main_fragments.GoogleFitFragment;
 import com.example.michel.mycalendar2.main_fragments.HistoryFragment;
 import com.example.michel.mycalendar2.main_fragments.MainFragment;
 import com.example.michel.mycalendar2.main_fragments.ReminderFragment;
@@ -44,8 +45,9 @@ import java.util.Calendar;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private int resultSignInCode = 5531;
-    private int resultUserConfigCode = 5532;
+    private final int RESULT_SIGN_IN_CODE = 5531;
+    private final int RESULT_USER_CONFIG_CODE = 5532;
+    private static final int REQUEST_OAUTH_REQUEST_CODE = 5541;
 
     private AppBarLayout appBarLayout;
     private LinearLayout toolbarLinearLayout1;
@@ -102,11 +104,11 @@ public class MainActivity extends AppCompatActivity
                     public void onClick(View v) {
                         if (AccountGeneralUtils.curUser.getId() == 1){
                             Intent intent = new Intent(mainActivity, LoginActivity.class);
-                            mainActivity.startActivityForResult(intent, resultSignInCode);
+                            mainActivity.startActivityForResult(intent, RESULT_SIGN_IN_CODE);
                         }
                         else {
                             Intent intent = new Intent(mainActivity, UserActivity.class);
-                            mainActivity.startActivityForResult(intent, resultUserConfigCode);
+                            mainActivity.startActivityForResult(intent, RESULT_USER_CONFIG_CODE);
                         }
                         //Intent intent = new Intent(mainActivity, UserActivity.class);
                         //mainActivity.startActivity(intent);
@@ -146,9 +148,6 @@ public class MainActivity extends AppCompatActivity
 
             databaseAdapter.close();
 
-            SetUpCurrentUserTask setUpCurrentUserTask = new SetUpCurrentUserTask(this);
-            setUpCurrentUserTask.execute();
-
             SharedPreferences settings = getSharedPreferences("MedicalJournalSettings", MODE_PRIVATE);
             String curDate = settings.getString("cur_date", "0000-00-00");
             Calendar cal = Calendar.getInstance();
@@ -160,11 +159,19 @@ public class MainActivity extends AppCompatActivity
                 editor.putString("cur_date",sdf.format(cal.getTime()));
                 editor.apply();
 
-                PillNotificationsCreationTask pnct = new PillNotificationsCreationTask();
+                SetUpCurrentUserTask setUpCurrentUserTask = new SetUpCurrentUserTask(this);
+                setUpCurrentUserTask.setNotificationsCreationWorkable(true);
+                setUpCurrentUserTask.execute();
+
+                /*PillNotificationsCreationTask pnct = new PillNotificationsCreationTask();
                 pnct.execute(getApplicationContext());
 
                 MeasurementNotificationsCreationTask mnct = new MeasurementNotificationsCreationTask();
-                mnct.execute(getApplicationContext());
+                mnct.execute(getApplicationContext());*/
+            }
+            else {
+                SetUpCurrentUserTask setUpCurrentUserTask = new SetUpCurrentUserTask(this);
+                setUpCurrentUserTask.execute();
             }
         }
     }
@@ -269,6 +276,11 @@ public class MainActivity extends AppCompatActivity
                     checkToolBarLinearLayoutVisibility(1);
                     toolbarLinearLayout2.setVisibility(View.VISIBLE);
                     break;
+                case R.id.nav_google_fit:
+                    curFragmentTag = "GOOGLE_FIT_FRAGMENT";
+                    newFragment = GoogleFitFragment.newInstance();
+                    checkToolBarLinearLayoutVisibility(0);
+                    break;
                 case R.id.nav_main:
                     newFragment = null;
                     isMainFrame = 1;
@@ -371,7 +383,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (requestCode == resultSignInCode) {
+        if (requestCode == RESULT_SIGN_IN_CODE) {
             if (resultCode == RESULT_OK) {
                 String accountName = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
                 String authtoken = data.getStringExtra(AccountManager.KEY_AUTHTOKEN);
@@ -384,8 +396,9 @@ public class MainActivity extends AppCompatActivity
                 PostSignInTask postSignInTask = new PostSignInTask(mainActivity);
                 postSignInTask.execute(authtoken, accountName);
             }
+            return;
         }
-        if (requestCode == resultUserConfigCode) {
+        if (requestCode == RESULT_USER_CONFIG_CODE) {
             if (resultCode == RESULT_OK) {
                 boolean isLogOut = data.getBooleanExtra("is_log_out", false);
                 if (isLogOut){
@@ -397,7 +410,15 @@ public class MainActivity extends AppCompatActivity
                     ((TextView) getNavigationView().findViewById(R.id.username_tv)).setText(AccountGeneralUtils.curUser.getName());
                 }
             }
+            return;
         }
+        /*if (requestCode == REQUEST_OAUTH_REQUEST_CODE){
+            if (resultCode == RESULT_OK){
+                super.onActivityResult(requestCode, resultCode, data);
+            }
+
+        }*/
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     public void updateCurFragment(int commitType){
@@ -405,6 +426,9 @@ public class MainActivity extends AppCompatActivity
         switch (curFragmentTag){
             case "REMINDER_FRAGMENT":
                 newFragment = ReminderFragment.newInstance();
+                break;
+            case "GOOGLE_FIT_FRAGMENT":
+                newFragment = GoogleFitFragment.newInstance();
                 break;
             case "HISTORY_FRAGMENT":
                 newFragment = HistoryFragment.newInstance();
