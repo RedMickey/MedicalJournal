@@ -37,7 +37,25 @@ public class MeasurementTypesListAdapter extends ArrayAdapter<MeasurementType> {
                 ((ImageView) view.findViewById(R.id.measurement_type_iv)).setImageResource(R.drawable.ic_thermometer);
                 break;
             case "Давление":
-                ((ImageView) view.findViewById(R.id.measurement_type_iv)).setImageResource(R.drawable.ic_tonometer);
+                ((ImageView) view.findViewById(R.id.measurement_type_iv)).setImageResource(R.drawable.ic_tonometer2);
+                break;
+            case "Пульс":
+                ((ImageView) view.findViewById(R.id.measurement_type_iv)).setImageResource(R.drawable.ic_pulse);
+                break;
+            case "Уровень сахара в крови":
+                ((ImageView) view.findViewById(R.id.measurement_type_iv)).setImageResource(R.drawable.ic_glucometer);
+                break;
+            case "Вес":
+                ((ImageView) view.findViewById(R.id.measurement_type_iv)).setImageResource(R.drawable.ic_weight);
+                break;
+            case "Сожженные калории":
+                ((ImageView) view.findViewById(R.id.measurement_type_iv)).setImageResource(R.drawable.ic_burning);
+                break;
+            case "Потребленные калории":
+                ((ImageView) view.findViewById(R.id.measurement_type_iv)).setImageResource(R.drawable.ic_food);
+                break;
+            case "Шаги":
+                ((ImageView) view.findViewById(R.id.measurement_type_iv)).setImageResource(R.drawable.ic_footprint);
                 break;
         }
         ((TextView) view.findViewById(R.id.measurement_name)).setText(measurementType.getName());

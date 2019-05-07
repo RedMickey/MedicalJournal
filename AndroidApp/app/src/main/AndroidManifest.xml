@@ -24,7 +24,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name"
+            android:label="@string/main_fragment_title"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -92,7 +92,11 @@
             android:name=".RegistrationActivity"
             android:label="@string/title_activity_registration" />
         <activity android:name=".UserActivity" />
-
+        <activity
+            android:name=".GFitDetailsActivity"
+            android:label="@string/title_activity_gfit_details"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar2" />
     </application>
 
 </manifest>

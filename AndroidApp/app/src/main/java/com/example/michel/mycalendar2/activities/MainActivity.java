@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity
     private int preFragmentId = -1;
     private NavigationView navigationView;
     private MainActivity mainActivity;
+    private Toolbar toolbar;
     private String curFragmentTag = "MAIN_FRAGMENT";
 
     private DatabaseHelper databaseHelper;
@@ -62,7 +63,7 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -193,6 +194,7 @@ public class MainActivity extends AppCompatActivity
                         .add(R.id.frame_container, mainFragmentNew, curFragmentTag)
                         .commit();
                 //Toast.makeText(this,"here",Toast.LENGTH_SHORT).show();
+                toolbar.setTitle(getResources().getString(R.string.main_fragment_title));
                 navigationView.getMenu().getItem(0).setChecked(true);
             }
             else
@@ -261,6 +263,7 @@ public class MainActivity extends AppCompatActivity
                     curFragmentTag = "REMINDER_FRAGMENT";
                     newFragment = ReminderFragment.newInstance();
                     checkToolBarLinearLayoutVisibility(0);
+                    toolbar.setTitle(getResources().getString(R.string.reminder_fragment_title));
                     break;
                 case R.id.nav_history:
                     curFragmentTag = "HISTORY_FRAGMENT";
@@ -268,6 +271,7 @@ public class MainActivity extends AppCompatActivity
                     activeAppBarLayoutDragCallback();
                     checkToolBarLinearLayoutVisibility(1);
                     toolbarLinearLayout1.setVisibility(View.VISIBLE);
+                    toolbar.setTitle(getResources().getString(R.string.history_fragment_title));
                     break;
                 case R.id.nav_statistic:
                     curFragmentTag = "STATISTIC_FRAGMENT";
@@ -275,11 +279,13 @@ public class MainActivity extends AppCompatActivity
                     activeAppBarLayoutDragCallback();
                     checkToolBarLinearLayoutVisibility(1);
                     toolbarLinearLayout2.setVisibility(View.VISIBLE);
+                    toolbar.setTitle(getResources().getString(R.string.statistic_fragment_title));
                     break;
                 case R.id.nav_google_fit:
                     curFragmentTag = "GOOGLE_FIT_FRAGMENT";
                     newFragment = GoogleFitFragment.newInstance();
                     checkToolBarLinearLayoutVisibility(0);
+                    toolbar.setTitle(getResources().getString(R.string.google_fit_fragment_title));
                     break;
                 case R.id.nav_main:
                     newFragment = null;
@@ -294,6 +300,7 @@ public class MainActivity extends AppCompatActivity
                         fragmentManager.beginTransaction()
                                 .add(R.id.frame_container, mainFragmentNew, curFragmentTag)
                                 .commit();
+                        toolbar.setTitle(getResources().getString(R.string.main_fragment_title));
                     }
                     break;
                 default:

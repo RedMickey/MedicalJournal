@@ -12,7 +12,9 @@ import android.widget.LinearLayout;
 import com.example.michel.mycalendar2.activities.MeasurementChartActivity;
 import com.example.michel.mycalendar2.activities.R;
 import com.example.michel.mycalendar2.auxiliary_fragments.StatisticListItemViewHolder;
+import com.example.michel.mycalendar2.models.measurement.MeasurementReminderEntry;
 import com.example.michel.mycalendar2.models.measurement.MeasurementStatEntry;
+import com.example.michel.mycalendar2.utils.ConvertingUtils;
 import com.example.michel.mycalendar2.utils.DBStaticEntries;
 
 import java.util.List;
@@ -54,14 +56,14 @@ public class StatisticListAdapter extends RecyclerView.Adapter<StatisticListItem
 
         String curValueStr = "";
         String standardValueStr = "";
+        String[] curValueAndStandardValueStrs = null;
         switch (mse.getIdMeasurementType()){
             case 1:
                 holder.measurementNameTvRmi.setText(DBStaticEntries.getMeasurementTypeById(1).getName());
                 holder.measurementIvRmi.setImageResource(R.drawable.ic_thermometer);
-                String[] curValueAndStandardValueStrs = createCurValueAndStandardValueStrs(mse);
+                curValueAndStandardValueStrs = createCurValueAndStandardValueStrs(mse);
                 curValueStr = curValueAndStandardValueStrs[0];
                 standardValueStr = curValueAndStandardValueStrs[1];
-
                 break;
             case 2:
                 holder.measurementNameTvRmi.setText(DBStaticEntries.getMeasurementTypeById(2).getName());
@@ -80,6 +82,52 @@ public class StatisticListAdapter extends RecyclerView.Adapter<StatisticListItem
                 if (mse.getStandardValues()[1]!=-10000){
                     standardValueStr+="\n Верхнее: " + String.format("%.1f", mse.getStandardValues()[1]) + " " + mse.getMeasurementValueTypeStr();
                 }
+                break;
+            case 3:
+                holder.measurementNameTvRmi.setText(DBStaticEntries.getMeasurementTypeById(3).getName());
+                holder.measurementIvRmi.setImageResource(R.drawable.ic_pulse);
+                curValueAndStandardValueStrs = createCurValueAndStandardValueStrs(mse);
+                curValueStr = curValueAndStandardValueStrs[0];
+                standardValueStr = curValueAndStandardValueStrs[1];
+                break;
+            case 4:
+                holder.measurementNameTvRmi.setText(DBStaticEntries.getMeasurementTypeById(4).getName());
+                holder.measurementIvRmi.setImageResource(R.drawable.ic_glucometer);
+                curValueAndStandardValueStrs = createCurValueAndStandardValueStrs(mse);
+                curValueStr = curValueAndStandardValueStrs[0];
+                standardValueStr = curValueAndStandardValueStrs[1];
+                break;
+            case 5:
+                holder.measurementNameTvRmi.setText(DBStaticEntries.getMeasurementTypeById(5).getName());
+                holder.measurementIvRmi.setImageResource(R.drawable.ic_weight);
+                curValueAndStandardValueStrs = createCurValueAndStandardValueStrs(mse);
+                curValueStr = curValueAndStandardValueStrs[0];
+                holder.standardValueLayout.setVisibility(View.GONE);
+                //standardValueStr = curValueAndStandardValueStrs[1];
+                break;
+            case 6:
+                holder.measurementNameTvRmi.setText(DBStaticEntries.getMeasurementTypeById(6).getName());
+                holder.measurementIvRmi.setImageResource(R.drawable.ic_burning);
+                curValueAndStandardValueStrs = createCurValueAndStandardValueStrs(mse);
+                curValueStr = curValueAndStandardValueStrs[0];
+                holder.standardValueLayout.setVisibility(View.GONE);
+                //standardValueStr = curValueAndStandardValueStrs[1];
+                break;
+            case 7:
+                holder.measurementNameTvRmi.setText(DBStaticEntries.getMeasurementTypeById(7).getName());
+                holder.measurementIvRmi.setImageResource(R.drawable.ic_food);
+                curValueAndStandardValueStrs = createCurValueAndStandardValueStrs(mse);
+                curValueStr = curValueAndStandardValueStrs[0];
+                holder.standardValueLayout.setVisibility(View.GONE);
+                //standardValueStr = curValueAndStandardValueStrs[1];
+                break;
+            case 8:
+                holder.measurementNameTvRmi.setText(DBStaticEntries.getMeasurementTypeById(8).getName());
+                holder.measurementIvRmi.setImageResource(R.drawable.ic_footprint);
+                curValueAndStandardValueStrs = createCurValueAndStandardValueStrs(mse);
+                curValueStr = curValueAndStandardValueStrs[0];
+                holder.standardValueLayout.setVisibility(View.GONE);
+                //standardValueStr = curValueAndStandardValueStrs[1];
                 break;
         }
 
@@ -137,18 +185,31 @@ public class StatisticListAdapter extends RecyclerView.Adapter<StatisticListItem
         String[] curValueAndStandardValueStrs = new String[]{"", ""};
 
         if (mse.getAverageCurValues()[0]!=-10000){
-            curValueAndStandardValueStrs[0]+=String.format("%.1f", mse.getAverageCurValues()[0]) + " " + mse.getMeasurementValueTypeStr();
+            curValueAndStandardValueStrs[0]+=String.format("%.1f", mse.getAverageCurValues()[0]) + " " +
+                    createCountTypeEnding(mse, mse.getAverageCurValues()[0]);
         }
         if (mse.getAverageCurValues()[1]!=-10000){
-            curValueAndStandardValueStrs[0]+=" - " + String.format("%.1f", mse.getAverageCurValues()[1]) + " " + mse.getMeasurementValueTypeStr();
+            curValueAndStandardValueStrs[0]+=" - " + String.format("%.1f", mse.getAverageCurValues()[1]) + " " +
+                    createCountTypeEnding(mse, mse.getAverageCurValues()[1]);
         }
 
         if (mse.getStandardValues()[0]!=-10000){
-            curValueAndStandardValueStrs[1]+=String.format("%.1f", mse.getStandardValues()[0]) + " " + mse.getMeasurementValueTypeStr();
+            curValueAndStandardValueStrs[1]+=String.format("%.1f", mse.getStandardValues()[0]) + " " +
+                    createCountTypeEnding(mse, mse.getStandardValues()[0]);
         }
         if (mse.getStandardValues()[1]!=-10000){
-            curValueAndStandardValueStrs[1]+=" - " + String.format("%.1f", mse.getStandardValues()[1]) + " " + mse.getMeasurementValueTypeStr();
+            curValueAndStandardValueStrs[1]+=" - " + String.format("%.1f", mse.getStandardValues()[1]) + " " +
+                    createCountTypeEnding(mse, mse.getStandardValues()[1]);
         }
         return curValueAndStandardValueStrs;
+    }
+
+    private String createCountTypeEnding(MeasurementStatEntry mse, double value){
+        switch (mse.getIdMeasurementType()){
+            case 8:
+                return ConvertingUtils.smartEnding((int)value, new String[]{"", "а", "ов"}, mse.getMeasurementValueTypeStr());
+            default:
+                return mse.getMeasurementValueTypeStr();
+        }
     }
 }

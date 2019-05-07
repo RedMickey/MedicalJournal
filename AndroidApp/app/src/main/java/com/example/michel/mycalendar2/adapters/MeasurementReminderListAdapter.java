@@ -59,7 +59,31 @@ public class MeasurementReminderListAdapter extends ArrayAdapter<MeasurementRemi
                 break;
             case 2:
                 measurementNameTV.setText(DBStaticEntries.getMeasurementTypeById(2).getName());
-                measurementTypeIV.setImageResource(R.drawable.ic_tonometer);
+                measurementTypeIV.setImageResource(R.drawable.ic_tonometer2);
+                break;
+            case 3:
+                measurementNameTV.setText(DBStaticEntries.getMeasurementTypeById(3).getName());
+                measurementTypeIV.setImageResource(R.drawable.ic_pulse);
+                break;
+            case 4:
+                measurementNameTV.setText(DBStaticEntries.getMeasurementTypeById(4).getName());
+                measurementTypeIV.setImageResource(R.drawable.ic_glucometer);
+                break;
+            case 5:
+                measurementNameTV.setText(DBStaticEntries.getMeasurementTypeById(5).getName());
+                measurementTypeIV.setImageResource(R.drawable.ic_weight);
+                break;
+            case 6:
+                measurementNameTV.setText(DBStaticEntries.getMeasurementTypeById(6).getName());
+                measurementTypeIV.setImageResource(R.drawable.ic_burning);
+                break;
+            case 7:
+                measurementNameTV.setText(DBStaticEntries.getMeasurementTypeById(7).getName());
+                measurementTypeIV.setImageResource(R.drawable.ic_food);
+                break;
+            case 8:
+                measurementNameTV.setText(DBStaticEntries.getMeasurementTypeById(8).getName());
+                measurementTypeIV.setImageResource(R.drawable.ic_footprint);
                 break;
         }
 

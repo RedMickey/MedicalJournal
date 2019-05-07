@@ -24,6 +24,7 @@ import com.example.michel.mycalendar2.dao.MeasurementReminderDao;
 import com.example.michel.mycalendar2.dao.PillReminderDao;
 import com.example.michel.mycalendar2.models.measurement.MeasurementReminderEntry;
 import com.example.michel.mycalendar2.models.pill.PillReminderEntry;
+import com.example.michel.mycalendar2.utils.ConvertingUtils;
 import com.example.michel.mycalendar2.utils.utilModels.PillAndMeasurementReminderEntries;
 
 import java.text.SimpleDateFormat;
@@ -162,7 +163,25 @@ public class TasksViewCreationTask extends AsyncTask<DateData, Void, PillAndMeas
                         ((ImageView) measurementReminderEntryView.findViewById(R.id.reminder_ic_iv)).setImageResource(R.drawable.ic_thermometer);
                         break;
                     case 2:
-                        ((ImageView) measurementReminderEntryView.findViewById(R.id.reminder_ic_iv)).setImageResource(R.drawable.ic_tonometer);
+                        ((ImageView) measurementReminderEntryView.findViewById(R.id.reminder_ic_iv)).setImageResource(R.drawable.ic_tonometer2);
+                        break;
+                    case 3:
+                        ((ImageView) measurementReminderEntryView.findViewById(R.id.reminder_ic_iv)).setImageResource(R.drawable.ic_pulse);
+                        break;
+                    case 4:
+                        ((ImageView) measurementReminderEntryView.findViewById(R.id.reminder_ic_iv)).setImageResource(R.drawable.ic_glucometer);
+                        break;
+                    case 5:
+                        ((ImageView) measurementReminderEntryView.findViewById(R.id.reminder_ic_iv)).setImageResource(R.drawable.ic_weight);
+                        break;
+                    case 6:
+                        ((ImageView) measurementReminderEntryView.findViewById(R.id.reminder_ic_iv)).setImageResource(R.drawable.ic_burning);
+                        break;
+                    case 7:
+                        ((ImageView) measurementReminderEntryView.findViewById(R.id.reminder_ic_iv)).setImageResource(R.drawable.ic_food);
+                        break;
+                    case 8:
+                        ((ImageView) measurementReminderEntryView.findViewById(R.id.reminder_ic_iv)).setImageResource(R.drawable.ic_footprint);
                         break;
                 }
 
@@ -217,15 +236,45 @@ public class TasksViewCreationTask extends AsyncTask<DateData, Void, PillAndMeas
                             userValue1.setText(mre.getValue1()==-10000?"":String.valueOf(mre.getValue1()));
                             userValue2.setText(mre.getValue2()==-10000?"":String.valueOf(mre.getValue2()));
 
-                            ((TextView) dialogView.findViewById(R.id.value_type_name)).setText(mre.getMeasurementValueTypeName());
-
                             switch (mre.getIdMeasurementType()){
                                 case 1:
                                     ((ImageView) dialogView.findViewById(R.id.reminder_ic_iv)).setImageResource(R.drawable.ic_thermometer);
                                     userValue2.setVisibility(View.GONE);
+                                    ((TextView) dialogView.findViewById(R.id.value_type_name)).setText(mre.getMeasurementValueTypeName());
                                     break;
                                 case 2:
-                                    ((ImageView) dialogView.findViewById(R.id.reminder_ic_iv)).setImageResource(R.drawable.ic_tonometer);
+                                    ((ImageView) dialogView.findViewById(R.id.reminder_ic_iv)).setImageResource(R.drawable.ic_tonometer2);
+                                    ((TextView) dialogView.findViewById(R.id.value_type_name)).setText(mre.getMeasurementValueTypeName());
+                                    break;
+                                case 3:
+                                    ((ImageView) dialogView.findViewById(R.id.reminder_ic_iv)).setImageResource(R.drawable.ic_pulse);
+                                    userValue2.setVisibility(View.GONE);
+                                    ((TextView) dialogView.findViewById(R.id.value_type_name)).setText(mre.getMeasurementValueTypeName());
+                                    break;
+                                case 4:
+                                    ((ImageView) dialogView.findViewById(R.id.reminder_ic_iv)).setImageResource(R.drawable.ic_glucometer);
+                                    userValue2.setVisibility(View.GONE);
+                                    ((TextView) dialogView.findViewById(R.id.value_type_name)).setText(mre.getMeasurementValueTypeName());
+                                    break;
+                                case 5:
+                                    ((ImageView) dialogView.findViewById(R.id.reminder_ic_iv)).setImageResource(R.drawable.ic_weight);
+                                    userValue2.setVisibility(View.GONE);
+                                    ((TextView) dialogView.findViewById(R.id.value_type_name)).setText(mre.getMeasurementValueTypeName());
+                                    break;
+                                case 6:
+                                    ((ImageView) dialogView.findViewById(R.id.reminder_ic_iv)).setImageResource(R.drawable.ic_burning);
+                                    userValue2.setVisibility(View.GONE);
+                                    ((TextView) dialogView.findViewById(R.id.value_type_name)).setText(mre.getMeasurementValueTypeName());
+                                    break;
+                                case 7:
+                                    ((ImageView) dialogView.findViewById(R.id.reminder_ic_iv)).setImageResource(R.drawable.ic_food);
+                                    userValue2.setVisibility(View.GONE);
+                                    ((TextView) dialogView.findViewById(R.id.value_type_name)).setText(mre.getMeasurementValueTypeName());
+                                    break;
+                                case 8:
+                                    ((ImageView) dialogView.findViewById(R.id.reminder_ic_iv)).setImageResource(R.drawable.ic_footprint1b);
+                                    userValue2.setVisibility(View.GONE);
+                                    ((TextView) dialogView.findViewById(R.id.value_type_name)).setText("шагов");
                                     break;
                             }
 
@@ -331,64 +380,28 @@ public class TasksViewCreationTask extends AsyncTask<DateData, Void, PillAndMeas
 
     }
 
-    /*private void openDialog(final MeasurementReminderEntry mre, final TextView reminderTimeTv, final CheckBox isDoneChb){
-        AlertDialog.Builder builder = new AlertDialog.Builder(mView.getContext());
-        LayoutInflater inflater = LayoutInflater.from(mView.getContext());
-
-        View dialogView = inflater.inflate(R.layout.alertdialog_measurement_input_view, null, false);
-
-        final EditText userValue1 = (EditText) dialogView.findViewById(R.id.value1_et);
-        final EditText userValue2 = (EditText) dialogView.findViewById(R.id.value2_et);
-
-        userValue1.setText(mre.getValue1()==-10000?"":String.valueOf(mre.getValue1()));
-
-        ((TextView) dialogView.findViewById(R.id.value_type_name)).setText(mre.getMeasurementValueTypeName());
-
-        switch (mre.getIdMeasurementType()){
-            case 1:
-                ((ImageView) dialogView.findViewById(R.id.reminder_ic_iv)).setImageResource(R.drawable.ic_thermometer);
-                userValue2.setVisibility(View.GONE);
-                break;
-            case 2:
-                ((ImageView) dialogView.findViewById(R.id.reminder_ic_iv)).setImageResource(R.drawable.ic_tonometer);
-                break;
-        }
-
-        builder.setView(dialogView)
-                .setTitle("Давление")
-                .setPositiveButton("Добавить",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog,int id) {
-                                Calendar cal = Calendar.getInstance();
-                                SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-                                String curTime = sdf.format(cal.getTime());
-                                reminderTimeTv.setText(curTime);
-                            }
-                        })
-                .setNegativeButton("Отмена",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog,int id) {
-                                isDoneChb.setChecked(false);
-
-                                dialog.cancel();
-                            }
-                        });
-
-        final AlertDialog dialog = builder.create();
-        dialog.show();
-    }*/
-
     private void setUpReminderCountTypeTv(final TextView reminderCountTypeTv, final MeasurementReminderEntry mre){
         if (mre.getValue1()!=-10000)
         {
             String valueStr = String.valueOf(mre.getValue1());
             if (mre.getValue2()!=-10000)
             {
-                valueStr = valueStr + " - " + String.valueOf(mre.getValue2()) + " " + mre.getMeasurementValueTypeName();
+                valueStr = valueStr + " - " + String.valueOf(mre.getValue2()) + " " +
+                        createCountTypeEnding(mre, mre.getValue2());
+
             }
             else
-                valueStr+= " " + mre.getMeasurementValueTypeName();
+                valueStr+= " " + createCountTypeEnding(mre, mre.getValue1());
             reminderCountTypeTv.setText(valueStr);
+        }
+    }
+
+    private String createCountTypeEnding(MeasurementReminderEntry mre, double value){
+        switch (mre.getIdMeasurementType()){
+            case 8:
+                return ConvertingUtils.smartEnding((int)value, new String[]{"", "а", "ов"}, mre.getMeasurementValueTypeName());
+                default:
+                    return mre.getMeasurementValueTypeName();
         }
     }
 }

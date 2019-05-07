@@ -189,15 +189,44 @@ public class AddOneTimeMeasurementActivity extends AppCompatActivity {
             case 1:
                 ((ImageView) findViewById(R.id.measurement_type_iv1)).setImageResource(R.drawable.ic_thermometer);
                 defineTableRow(0);
-
+                measurementTypeTv.setText(DBStaticEntries.getMeasurementTypeById(measurementTypeId).getMeasurementValueTypeName());
                 break;
             case 2:
-                ((ImageView) findViewById(R.id.measurement_type_iv2)).setImageResource(R.drawable.ic_tonometer);
+                ((ImageView) findViewById(R.id.measurement_type_iv2)).setImageResource(R.drawable.ic_tonometer2);
                 defineTableRow(1);
+                measurementTypeTv.setText(DBStaticEntries.getMeasurementTypeById(measurementTypeId).getMeasurementValueTypeName());
+                break;
+            case 3:
+                ((ImageView) findViewById(R.id.measurement_type_iv1)).setImageResource(R.drawable.ic_pulse);
+                defineTableRow(0);
+                measurementTypeTv.setText(DBStaticEntries.getMeasurementTypeById(measurementTypeId).getMeasurementValueTypeName());
+                break;
+            case 4:
+                ((ImageView) findViewById(R.id.measurement_type_iv1)).setImageResource(R.drawable.ic_glucometer);
+                defineTableRow(0);
+                measurementTypeTv.setText(DBStaticEntries.getMeasurementTypeById(measurementTypeId).getMeasurementValueTypeName());
+                break;
+            case 5:
+                ((ImageView) findViewById(R.id.measurement_type_iv1)).setImageResource(R.drawable.ic_weight);
+                defineTableRow(0);
+                measurementTypeTv.setText(DBStaticEntries.getMeasurementTypeById(measurementTypeId).getMeasurementValueTypeName());
+                break;
+            case 6:
+                ((ImageView) findViewById(R.id.measurement_type_iv1)).setImageResource(R.drawable.ic_burning);
+                defineTableRow(0);
+                measurementTypeTv.setText(DBStaticEntries.getMeasurementTypeById(measurementTypeId).getMeasurementValueTypeName());
+                break;
+            case 7:
+                ((ImageView) findViewById(R.id.measurement_type_iv1)).setImageResource(R.drawable.ic_food);
+                defineTableRow(0);
+                measurementTypeTv.setText(DBStaticEntries.getMeasurementTypeById(measurementTypeId).getMeasurementValueTypeName());
+                break;
+            case 8:
+                ((ImageView) findViewById(R.id.measurement_type_iv1)).setImageResource(R.drawable.ic_footprint1b);
+                defineTableRow(0);
+                measurementTypeTv.setText("шагов");
                 break;
         }
-
-        measurementTypeTv.setText(DBStaticEntries.getMeasurementTypeById(measurementTypeId).getMeasurementValueTypeName());
 
         pickDateButton.setText(setDate(cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.MONTH)+1, cal.get(Calendar.YEAR)));
         pickTimeButton.setText(String.format("%02d:%02d", cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE)));

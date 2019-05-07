@@ -20,16 +20,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.michel.mycalendar2.activities.GFitDetailsActivity;
 import com.example.michel.mycalendar2.activities.R;
-import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.Scopes;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.Scope;
-import com.google.android.gms.fitness.ConfigApi;
 import com.google.android.gms.fitness.Fitness;
 import com.google.android.gms.fitness.FitnessOptions;
 import com.google.android.gms.fitness.data.Bucket;
@@ -49,8 +42,6 @@ import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
 
 import static java.text.DateFormat.getDateInstance;
 import static java.text.DateFormat.getDateTimeInstance;
@@ -105,7 +96,66 @@ public class GoogleFitFragment extends Fragment implements SwipeRefreshLayout.On
 
         //GoogleSignInClient googleSignInClient = GoogleSignIn.getClient(this.getContext(),GoogleSignInOptions.DEFAULT_SIGN_IN);
         //googleSignInClient.signOut();
-        swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_dark,
+
+        indicatorButtons[0].setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), GFitDetailsActivity.class);
+                intent.putExtra("measurementType", 0);
+                startActivity(intent);
+            }
+        });
+        indicatorButtons[1].setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), GFitDetailsActivity.class);
+                intent.putExtra("measurementType", 1);
+                startActivity(intent);
+            }
+        });
+        indicatorButtons[2].setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), GFitDetailsActivity.class);
+                intent.putExtra("measurementType", 2);
+                startActivity(intent);
+            }
+        });
+        indicatorButtons[3].setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), GFitDetailsActivity.class);
+                intent.putExtra("measurementType", 3);
+                startActivity(intent);
+            }
+        });
+        measurementLayouts[0].setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), GFitDetailsActivity.class);
+                intent.putExtra("measurementType", 4);
+                startActivity(intent);
+            }
+        });
+        measurementLayouts[1].setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), GFitDetailsActivity.class);
+                intent.putExtra("measurementType", 5);
+                startActivity(intent);
+            }
+        });
+        measurementLayouts[2].setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), GFitDetailsActivity.class);
+                intent.putExtra("measurementType", 6);
+                startActivity(intent);
+            }
+        });
+
+        swipeRefreshLayout.setColorSchemeResources(
+                android.R.color.holo_blue_dark,
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
@@ -141,14 +191,11 @@ public class GoogleFitFragment extends Fragment implements SwipeRefreshLayout.On
                 //((LinearLayout)mView.findViewById(R.id.google_fit_content_layout)).setVisibility(View.VISIBLE);
                 swipeRefreshLayout.setVisibility(View.VISIBLE);
                 downloadData();
-                //insertAndReadData();
             }
         }
     }
 
     private void downloadData(){
-        //DataReadRequest readRequest = queryFitnessData();
-
         tasksCompletion = 2;
         Calendar cal = Calendar.getInstance();
         Date now = new Date();
@@ -310,7 +357,6 @@ public class GoogleFitFragment extends Fragment implements SwipeRefreshLayout.On
                 );
             }
 
-            //dataSets.get(0).getDataPoints().get(0).getValue(Field.FIELD_STEPS);
             DateFormat dateFormat = getDateTimeInstance();
             for (DataSet dataSet : dataSets) {
                 for (DataPoint dp : dataSet.getDataPoints()) {

@@ -18,6 +18,7 @@ import com.example.michel.mycalendar2.app_async_tasks.MeasurementChartCreationTa
 import com.example.michel.mycalendar2.calendarview.data.DateData;
 import com.example.michel.mycalendar2.calendarview.utils.CalendarUtil;
 import com.example.michel.mycalendar2.models.measurement.MeasurementStatEntry;
+import com.example.michel.mycalendar2.utils.ConvertingUtils;
 import com.github.mikephil.charting.charts.LineChart;
 
 import java.util.Calendar;
@@ -58,9 +59,10 @@ public class MeasurementChartActivity extends AppCompatActivity {
 
         String curValueStr = "";
         String standardValueStr = "";
+        String[] curValueAndStandardValueStrs = null;
         switch (mse.getIdMeasurementType()){
             case 1:
-                String[] curValueAndStandardValueStrs = createCurValueAndStandardValueStrs(mse);
+                curValueAndStandardValueStrs = createCurValueAndStandardValueStrs(mse);
                 curValueStr = curValueAndStandardValueStrs[0];
                 standardValueStr = curValueAndStandardValueStrs[1];
                 break;
@@ -78,6 +80,36 @@ public class MeasurementChartActivity extends AppCompatActivity {
                 if (mse.getStandardValues()[1]!=-10000){
                     standardValueStr+="\n Верхнее: " + String.format("%.1f", mse.getStandardValues()[1]) + " " + mse.getMeasurementValueTypeStr();
                 }
+                break;
+            case 3:
+                curValueAndStandardValueStrs = createCurValueAndStandardValueStrs(mse);
+                curValueStr = curValueAndStandardValueStrs[0];
+                standardValueStr = curValueAndStandardValueStrs[1];
+                break;
+            case 4:
+                curValueAndStandardValueStrs = createCurValueAndStandardValueStrs(mse);
+                curValueStr = curValueAndStandardValueStrs[0];
+                standardValueStr = curValueAndStandardValueStrs[1];
+                break;
+            case 5:
+                curValueAndStandardValueStrs = createCurValueAndStandardValueStrs(mse);
+                curValueStr = curValueAndStandardValueStrs[0];
+                //standardValueStr = curValueAndStandardValueStrs[1];
+                break;
+            case 6:
+                curValueAndStandardValueStrs = createCurValueAndStandardValueStrs(mse);
+                curValueStr = curValueAndStandardValueStrs[0];
+                //standardValueStr = curValueAndStandardValueStrs[1];
+                break;
+            case 7:
+                curValueAndStandardValueStrs = createCurValueAndStandardValueStrs(mse);
+                curValueStr = curValueAndStandardValueStrs[0];
+                //standardValueStr = curValueAndStandardValueStrs[1];
+                break;
+            case 8:
+                curValueAndStandardValueStrs = createCurValueAndStandardValueStrs(mse);
+                curValueStr = curValueAndStandardValueStrs[0];
+                //standardValueStr = curValueAndStandardValueStrs[1];
                 break;
         }
 
@@ -148,17 +180,21 @@ public class MeasurementChartActivity extends AppCompatActivity {
         String[] curValueAndStandardValueStrs = new String[]{"", ""};
 
         if (mse.getAverageCurValues()[0]!=-10000){
-            curValueAndStandardValueStrs[0]+=String.format("%.1f", mse.getAverageCurValues()[0]) + " " + mse.getMeasurementValueTypeStr();
+            curValueAndStandardValueStrs[0]+=String.format("%.1f", mse.getAverageCurValues()[0]) + " " +
+                    createCountTypeEnding(mse, mse.getAverageCurValues()[0]);
         }
         if (mse.getAverageCurValues()[1]!=-10000){
-            curValueAndStandardValueStrs[0]+=" - " + String.format("%.1f", mse.getAverageCurValues()[1]) + " " + mse.getMeasurementValueTypeStr();
+            curValueAndStandardValueStrs[0]+=" - " + String.format("%.1f", mse.getAverageCurValues()[1]) + " " +
+                    createCountTypeEnding(mse, mse.getAverageCurValues()[1]);
         }
 
         if (mse.getStandardValues()[0]!=-10000){
-            curValueAndStandardValueStrs[1]+=String.format("%.1f", mse.getStandardValues()[0]) + " " + mse.getMeasurementValueTypeStr();
+            curValueAndStandardValueStrs[1]+=String.format("%.1f", mse.getStandardValues()[0]) + " " +
+                    createCountTypeEnding(mse, mse.getStandardValues()[0]);
         }
         if (mse.getStandardValues()[1]!=-10000){
-            curValueAndStandardValueStrs[1]+=" - " + String.format("%.1f", mse.getStandardValues()[1]) + " " + mse.getMeasurementValueTypeStr();
+            curValueAndStandardValueStrs[1]+=" - " + String.format("%.1f", mse.getStandardValues()[1]) + " " +
+                    createCountTypeEnding(mse, mse.getStandardValues()[1]);
         }
         return curValueAndStandardValueStrs;
     }
@@ -183,6 +219,15 @@ public class MeasurementChartActivity extends AppCompatActivity {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private String createCountTypeEnding(MeasurementStatEntry mse, double value){
+        switch (mse.getIdMeasurementType()){
+            case 8:
+                return ConvertingUtils.smartEnding((int)value, new String[]{"", "а", "ов"}, mse.getMeasurementValueTypeStr());
+            default:
+                return mse.getMeasurementValueTypeStr();
         }
     }
 }

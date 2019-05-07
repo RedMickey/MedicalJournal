@@ -21,6 +21,7 @@ public class StatisticListItemViewHolder extends RecyclerView.ViewHolder {
     public TextView currentValueTv;
     public TextView standardValueTv;
     public Button moreInfoButton;
+    public LinearLayout standardValueLayout;
 
     public StatisticListItemViewHolder(View itemView) {
         super(itemView);
@@ -35,5 +36,6 @@ public class StatisticListItemViewHolder extends RecyclerView.ViewHolder {
         currentValueTv = (TextView)itemView.findViewById(R.id.current_value_tv);
         standardValueTv = (TextView)itemView.findViewById(R.id.standard_value_tv);
         moreInfoButton = (Button)itemView.findViewById(R.id.more_info_button);
+        standardValueLayout = (LinearLayout)itemView.findViewById(R.id.standard_value_layout);
     }
 }

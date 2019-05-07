@@ -1,6 +1,7 @@
 package com.example.michel.mycalendar2.utils;
 
 import java.nio.ByteBuffer;
+import java.security.InvalidParameterException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -77,5 +78,27 @@ public class ConvertingUtils {
             date = new Date();
         }
         return date;
+    }
+
+    public static String smartEnding(int number, String[] endings, String word) throws InvalidParameterException {
+        if (endings.length<3)
+            throw new InvalidParameterException("Endings array length must be more than 3.");
+        int preLastDigit = number % 100 / 10;
+        if (preLastDigit == 1)
+        {
+            return word + endings[2];
+        }
+
+        switch (number % 10)
+        {
+            case 1:
+                return word + endings[0];
+            case 2:
+            case 3:
+            case 4:
+                return word + endings[1];
+            default:
+                return word + endings[2];
+        }
     }
 }

@@ -96,6 +96,12 @@ public class MeasurementChartCreationTask extends AsyncTask<Integer, Void, List<
 
             switch (idMeasurementType){
                 case 1:
+                case 3:
+                case 4:
+                case 5:
+                case 6:
+                case 7:
+                case 8:
                     labelStr1 = DBStaticEntries.getMeasurementTypeById(idMeasurementType).getName() + "  ";
                     for (float[] dayStatData: measurementData) {
                         dataEntries1.add(new Entry(dayStatData[2], dayStatData[0]));

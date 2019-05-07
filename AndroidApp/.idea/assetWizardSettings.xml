@@ -16,11 +16,26 @@
                             <entry key="actionbar">
                               <value>
                                 <PersistentState>
+                                  <option name="children">
+                                    <map>
+                                      <entry key="image">
+                                        <value>
+                                          <PersistentState>
+                                            <option name="values">
+                                              <map>
+                                                <entry key="trimmed" value="true" />
+                                              </map>
+                                            </option>
+                                          </PersistentState>
+                                        </value>
+                                      </entry>
+                                    </map>
+                                  </option>
                                   <option name="values">
                                     <map>
                                       <entry key="assetType" value="IMAGE" />
-                                      <entry key="imageAsset" value="E:\Downloads\google_fit1.png" />
-                                      <entry key="outputName" value="ic_google_fit_heart" />
+                                      <entry key="imageAsset" value="E:\Downloads\icons8-vegetarian-food-96.png" />
+                                      <entry key="outputName" value="ic_food" />
                                     </map>
                                   </option>
                                 </PersistentState>
