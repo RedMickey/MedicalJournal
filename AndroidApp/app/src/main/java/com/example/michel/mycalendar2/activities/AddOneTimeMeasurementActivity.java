@@ -120,16 +120,37 @@ public class AddOneTimeMeasurementActivity extends AppCompatActivity {
                 reminderTimes[0] = new ReminderTime (pickTimeButton.getText().toString()+":00");
                 measurementReminderDBEntry.setReminderTimes(reminderTimes);
                 measurementReminderDBEntry.setIdMeasurementType(measurementTypeId);
-
                 measurementReminderDBEntry.setIsActive(1);
-                Snackbar.make(view, "ReadyInsert", Snackbar.LENGTH_SHORT)
-                        .setAction("Action", null).show();
 
-                double value1 = Double.parseDouble(valueEt1.getText().toString());
-                double value2 = valueEt2 == null?-10000:Double.parseDouble(valueEt2.getText().toString());
+                double value1 = 0, value2 = 0;
+                try {
+                    value1 = Double.parseDouble(valueEt1.getText().toString());
+                }
+                catch (NumberFormatException ex) {
+                    Log.e("Err", ex.getMessage());
+                    Toast.makeText(view.getContext(), "Введите значения", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                if (valueEt2!=null){
+                    try {
+                        value2 = Double.parseDouble(valueEt2.getText().toString());
+                    }
+                    catch (NumberFormatException ex) {
+                        Log.e("Err", ex.getMessage());
+                        Toast.makeText(view.getContext(), "Введите значения", Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                }
+                else {
+                    value2 = -10000;
+                }
 
                 OneTimeMeasurementReminderInsertionTask otmrit = new OneTimeMeasurementReminderInsertionTask(value1, value2);
                 otmrit.execute(measurementReminderDBEntry);
+
+                /*Snackbar.make(view, "ReadyInsert", Snackbar.LENGTH_SHORT)
+                        .setAction("Action", null).show();*/
+                onBackPressed();
             }
         });
 

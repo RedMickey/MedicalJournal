@@ -66,13 +66,7 @@ public class TasksViewCreationTask extends AsyncTask<DateData, Void, PillAndMeas
         if(pillReminderEntries.size()>0)
         {
             calendar2.setTime(pillReminderEntries.get(0).getDate());
-            /*boolean isToday = calendar2.get(Calendar.DAY_OF_YEAR)<=calendar1.get(Calendar.DAY_OF_YEAR)&&
-                                            calendar2.get(Calendar.YEAR)<=calendar1.get(Calendar.YEAR);*/
-            boolean isToday = false;
-            if (calendar2.get(Calendar.YEAR)<calendar1.get(Calendar.YEAR))
-                isToday = true;
-            else if(calendar2.get(Calendar.DAY_OF_YEAR)<=calendar1.get(Calendar.DAY_OF_YEAR))
-                isToday = true;
+
             for (final PillReminderEntry pre:pillReminderEntries) {
                 View pillReminderEntryView = inflater.inflate(R.layout.pill_reminder_entry, null, false);
                 ((TextView) pillReminderEntryView.findViewById(R.id.reminder_name_tv)).setText(pre.getPillName());
@@ -95,8 +89,12 @@ public class TasksViewCreationTask extends AsyncTask<DateData, Void, PillAndMeas
                 if(pre.isLate())
                     imageTimeExpired.setImageResource(R.drawable.ic_time_expired);
                 CheckBox isDoneChb = (CheckBox) pillReminderEntryView.findViewById(R.id.is_done_chb);
-                if (!isToday)
+
+                if (calendar2.get(Calendar.YEAR)>calendar1.get(Calendar.YEAR))
                     isDoneChb.setEnabled(false);
+                else if(calendar2.get(Calendar.DAY_OF_YEAR)>calendar1.get(Calendar.DAY_OF_YEAR))
+                    isDoneChb.setEnabled(false);
+
                 if(pre.getIsDone()==1)
                     isDoneChb.setChecked(true);
                 isDoneChb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -141,17 +139,6 @@ public class TasksViewCreationTask extends AsyncTask<DateData, Void, PillAndMeas
         if(measurementReminderEntries.size()>0)
         {
             calendar2.setTime(measurementReminderEntries.get(0).getDate());
-            int t1 = calendar2.get(Calendar.DAY_OF_YEAR);
-            int t2 = calendar1.get(Calendar.DAY_OF_YEAR);
-            int u1 =  calendar2.get(Calendar.YEAR);
-            int u2 = calendar1.get(Calendar.YEAR);
-            /*boolean isToday = calendar2.get(Calendar.DAY_OF_YEAR)<=calendar1.get(Calendar.DAY_OF_YEAR)&&
-                                            calendar2.get(Calendar.YEAR)<=calendar1.get(Calendar.YEAR);*/
-            boolean isToday = false;
-            if (calendar2.get(Calendar.YEAR)<calendar1.get(Calendar.YEAR))
-                isToday = true;
-            else if(calendar2.get(Calendar.DAY_OF_YEAR)<=calendar1.get(Calendar.DAY_OF_YEAR))
-                isToday = true;
 
             for (final MeasurementReminderEntry mre:measurementReminderEntries) {
                 View measurementReminderEntryView = inflater.inflate(R.layout.pill_reminder_entry, null, false);
@@ -189,8 +176,6 @@ public class TasksViewCreationTask extends AsyncTask<DateData, Void, PillAndMeas
                 reminderTimeTv.setText(new SimpleDateFormat("HH:mm").format(mre.getDate()));
 
                 final TextView reminderCountTypeTv = (TextView) measurementReminderEntryView.findViewById(R.id.reminder_count_type_tv);
-                if (mre.getIsDone()==1)
-                    setUpReminderCountTypeTv(reminderCountTypeTv, mre);
 
                 switch (mre.getHavingMealsType()){
                     case 1:
@@ -207,17 +192,17 @@ public class TasksViewCreationTask extends AsyncTask<DateData, Void, PillAndMeas
                 if(mre.isLate())
                     imageTimeExpired.setImageResource(R.drawable.ic_time_expired);
                 final CheckBox isDoneChb = (CheckBox) measurementReminderEntryView.findViewById(R.id.is_done_chb);
-                if (!isToday)
-                    isDoneChb.setEnabled(false);
-                if(mre.getIsDone()==1)
-                    isDoneChb.setChecked(true);
 
-                /*isDoneChb.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Toast.makeText(mView.getContext(),"yes",Toast.LENGTH_SHORT).show();
-                    }
-                });*/
+                if (calendar2.get(Calendar.YEAR)>calendar1.get(Calendar.YEAR))
+                    isDoneChb.setEnabled(false);
+                else if(calendar2.get(Calendar.DAY_OF_YEAR)>calendar1.get(Calendar.DAY_OF_YEAR))
+                    isDoneChb.setEnabled(false);
+
+                if(mre.getIsDone()==1){
+                    setUpReminderCountTypeTv(reminderCountTypeTv, mre);
+                    isDoneChb.setChecked(true);
+                }
+
                 isDoneChb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {

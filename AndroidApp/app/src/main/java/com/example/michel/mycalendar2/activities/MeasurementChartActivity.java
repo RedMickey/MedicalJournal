@@ -1,6 +1,7 @@
 package com.example.michel.mycalendar2.activities;
 
 import android.graphics.Color;
+import android.icu.util.LocaleData;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -19,9 +21,11 @@ import com.example.michel.mycalendar2.calendarview.data.DateData;
 import com.example.michel.mycalendar2.calendarview.utils.CalendarUtil;
 import com.example.michel.mycalendar2.models.measurement.MeasurementStatEntry;
 import com.example.michel.mycalendar2.utils.ConvertingUtils;
+import com.example.michel.mycalendar2.utils.DBStaticEntries;
 import com.github.mikephil.charting.charts.LineChart;
 
 import java.util.Calendar;
+import java.util.Date;
 
 public class MeasurementChartActivity extends AppCompatActivity {
     private LineChart chart;
@@ -47,15 +51,26 @@ public class MeasurementChartActivity extends AppCompatActivity {
         Bundle arguments = getIntent().getExtras();
         selfMca = this;
 
+        buttonMonthBefore = (ImageButton) findViewById(R.id.button_month_before);
+        buttonMonthNext = (ImageButton) findViewById(R.id.button_month_next);
+        textViewCurrentDate = (TextView) findViewById(R.id.text_current_date);
+        reminderTimeSpinner = (Spinner) findViewById(R.id.toolbar_reminder_time_spinner);
+        chart = (LineChart) findViewById(R.id.measurement_chart);
+        chart.setNoDataText("Загрузка...");
+
         mse = arguments.getParcelable("mse");
+        calendar = Calendar.getInstance();
         String[] startDateStrArr = mse.getStartDate().split("\\.");
         String[] endDateStrArr = mse.getEndDate().split("\\.");
         startDate = new DateData(Integer.valueOf(startDateStrArr[2]), Integer.valueOf(startDateStrArr[1]), Integer.valueOf(startDateStrArr[0]));
         endDate = new DateData(Integer.valueOf(endDateStrArr[2]), Integer.valueOf(endDateStrArr[1]), Integer.valueOf(endDateStrArr[0]));
 
-        calendar = Calendar.getInstance();
-        calendar.set(Calendar.YEAR, endDate.getYear());
-        calendar.set(Calendar.MONTH, endDate.getMonth()-1);
+        getSupportActionBar().setTitle(DBStaticEntries.getMeasurementTypeById(mse.getIdMeasurementType()).getName());
+        if (!dateBelongsTimePeriod(calendar.getTime(), startDate, endDate)){
+            calendar.set(Calendar.YEAR, endDate.getYear());
+            calendar.set(Calendar.MONTH, endDate.getMonth()-1);
+            buttonMonthNext.setEnabled(false);
+        }
 
         String curValueStr = "";
         String standardValueStr = "";
@@ -94,21 +109,25 @@ public class MeasurementChartActivity extends AppCompatActivity {
             case 5:
                 curValueAndStandardValueStrs = createCurValueAndStandardValueStrs(mse);
                 curValueStr = curValueAndStandardValueStrs[0];
+                ((LinearLayout)findViewById(R.id.standard_value_layout)).setVisibility(View.GONE);
                 //standardValueStr = curValueAndStandardValueStrs[1];
                 break;
             case 6:
                 curValueAndStandardValueStrs = createCurValueAndStandardValueStrs(mse);
                 curValueStr = curValueAndStandardValueStrs[0];
+                ((LinearLayout)findViewById(R.id.standard_value_layout)).setVisibility(View.GONE);
                 //standardValueStr = curValueAndStandardValueStrs[1];
                 break;
             case 7:
                 curValueAndStandardValueStrs = createCurValueAndStandardValueStrs(mse);
                 curValueStr = curValueAndStandardValueStrs[0];
+                ((LinearLayout)findViewById(R.id.standard_value_layout)).setVisibility(View.GONE);
                 //standardValueStr = curValueAndStandardValueStrs[1];
                 break;
             case 8:
                 curValueAndStandardValueStrs = createCurValueAndStandardValueStrs(mse);
                 curValueStr = curValueAndStandardValueStrs[0];
+                ((LinearLayout)findViewById(R.id.standard_value_layout)).setVisibility(View.GONE);
                 //standardValueStr = curValueAndStandardValueStrs[1];
                 break;
         }
@@ -116,14 +135,8 @@ public class MeasurementChartActivity extends AppCompatActivity {
         ((TextView)findViewById(R.id.current_value_tv)).setText(curValueStr);
         ((TextView)findViewById(R.id.standard_value_tv)).setText(standardValueStr);
 
-        chart = (LineChart) findViewById(R.id.measurement_chart);
-        buttonMonthBefore = (ImageButton) findViewById(R.id.button_month_before);
-        buttonMonthNext = (ImageButton) findViewById(R.id.button_month_next);
-        textViewCurrentDate = (TextView) findViewById(R.id.text_current_date);
-        reminderTimeSpinner = (Spinner) findViewById(R.id.toolbar_reminder_time_spinner);
-
         textViewCurrentDate.setText(CalendarUtil.getDateString(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH)+1));
-        buttonMonthNext.setEnabled(false);
+
         if (startDate.getYear() == calendar.get(Calendar.YEAR)&&startDate.getMonth() == (calendar.get(Calendar.MONTH)+1)){
             buttonMonthBefore.setEnabled(false);
         }
@@ -229,5 +242,14 @@ public class MeasurementChartActivity extends AppCompatActivity {
             default:
                 return mse.getMeasurementValueTypeStr();
         }
+    }
+
+    private boolean dateBelongsTimePeriod(Date today, DateData startDD, DateData endDD){
+        Calendar calBuf = Calendar.getInstance();
+        calBuf.set(startDD.getYear(), startDD.getMonth()-1, startDate.getDay());
+        Date startD = calBuf.getTime();
+        calBuf.set(endDD.getYear(), endDD.getMonth()-1, endDD.getDay());
+        Date endD = calBuf.getTime();
+        return !(today.before(startD) || today.after(endD));
     }
 }

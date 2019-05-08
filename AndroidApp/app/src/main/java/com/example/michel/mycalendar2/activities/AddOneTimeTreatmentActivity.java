@@ -157,11 +157,12 @@ public class AddOneTimeTreatmentActivity extends AppCompatActivity {
                 reminderTimes[0] = new ReminderTime (pickTimeButton.getText().toString()+":00");
                 pillReminderDBInsertEntry.setReminderTimes(reminderTimes);
 
-                Snackbar.make(view, "ReadyInsert", Snackbar.LENGTH_SHORT)
-                        .setAction("Action", null).show();
-
                 OneTimePillReminderInsertionTask otprit = new OneTimePillReminderInsertionTask();
                 otprit.execute(pillReminderDBInsertEntry);
+
+                /*Snackbar.make(view, "ReadyInsert", Snackbar.LENGTH_SHORT)
+                        .setAction("Action", null).show();*/
+                onBackPressed();
             }
         });
 

@@ -25,13 +25,14 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 
-public class MeasurementChartCreationTask extends AsyncTask<Integer, Void, List<float[]>> {
+public class MeasurementChartCreationTask extends AsyncTask<Integer, Void, ArrayList<ILineDataSet>> {
     private MeasurementChartActivity view;
     private int dateMonth;
     private int dateYear;
     private int idMeasurementType;
     private String measurementValueTypeStr;
     private UUID idMeasurementStatEntry;
+    private float zeroY;
 
     public MeasurementChartCreationTask(MeasurementChartActivity mca, int idMeasurementType,
                                         String measurementValueTypeStr, UUID idMeasurementStatEntry){
@@ -40,10 +41,11 @@ public class MeasurementChartCreationTask extends AsyncTask<Integer, Void, List<
         this.idMeasurementType = idMeasurementType;
         this.measurementValueTypeStr = measurementValueTypeStr;
         this.idMeasurementStatEntry = idMeasurementStatEntry;
+        zeroY = 30.01f;
     }
 
     @Override
-    protected List<float[]> doInBackground(Integer... integers) {
+    protected ArrayList<ILineDataSet> doInBackground(Integer... integers) {
         DatabaseAdapter databaseAdapter = new DatabaseAdapter();
         MeasurementReminderDao measurementReminderDao = new MeasurementReminderDao(databaseAdapter.open().getDatabase());
         String timeStr1 = "", timeStr2 = "";
@@ -71,22 +73,103 @@ public class MeasurementChartCreationTask extends AsyncTask<Integer, Void, List<
                 break;
         }
 
-        List<float[]> measurementReminderEntryValues = measurementReminderDao.getMeasurementReminderEntriesPerMonth(idMeasurementStatEntry, integers[0],
-                integers[1], type, timeStr1, timeStr2);
-        databaseAdapter.close();
         dateMonth = integers[0];
         dateYear = integers[1];
-        return measurementReminderEntryValues;
+        List<float[]> measurementReminderEntryValues = null;
+
+        int[] daysOfMonth = new int[CalendarUtil.getDaysInMonth(dateMonth-1, dateYear)];
+        List<Entry> zeroEntries = new ArrayList<Entry>();
+        List<Entry> dataEntries1 = new ArrayList<Entry>();
+        List<Entry> dataEntries2 = new ArrayList<Entry>();
+        float zeroY = 30.01f;
+        String labelStr1 = "";
+        String labelStr2 = "";
+
+        switch (idMeasurementType){
+            case 1:
+            case 3:
+            case 4:
+            case 5:
+                measurementReminderEntryValues = measurementReminderDao.getMeasurementReminderEntriesPerMonth(idMeasurementStatEntry, integers[0],
+                        integers[1], type, timeStr1, timeStr2, 1);
+                labelStr1 = DBStaticEntries.getMeasurementTypeById(idMeasurementType).getName() + "  ";
+                for (float[] dayStatData: measurementReminderEntryValues) {
+                    dataEntries1.add(new Entry(dayStatData[2], dayStatData[0]));
+                }
+                if (measurementReminderEntryValues.size()>0)
+                    zeroY = measurementReminderEntryValues.get(0)[0];
+                break;
+            case 6:
+            case 7:
+            case 8:
+                measurementReminderEntryValues = measurementReminderDao.getMeasurementReminderEntriesPerMonth(idMeasurementStatEntry, integers[0],
+                        integers[1], type, timeStr1, timeStr2, 2);
+                labelStr1 = DBStaticEntries.getMeasurementTypeById(idMeasurementType).getName() + "  ";
+                for (float[] dayStatData: measurementReminderEntryValues) {
+                    dataEntries1.add(new Entry(dayStatData[2], dayStatData[0]));
+                }
+                if (measurementReminderEntryValues.size()>0)
+                    zeroY = measurementReminderEntryValues.get(0)[0];
+                break;
+            case 2:
+                measurementReminderEntryValues = measurementReminderDao.getMeasurementReminderEntriesPerMonth(idMeasurementStatEntry, integers[0],
+                        integers[1], type, timeStr1, timeStr2, 1);
+                for (float[] dayStatData: measurementReminderEntryValues) {
+                    dataEntries1.add(new Entry(dayStatData[2], dayStatData[1]));
+                    dataEntries2.add(new Entry(dayStatData[2], dayStatData[0]));
+                }
+                if (measurementReminderEntryValues.size()>0)
+                    zeroY = (measurementReminderEntryValues.get(0)[0]+measurementReminderEntryValues.get(0)[1])/2;
+                labelStr1 = "Верхнее давление  ";
+                labelStr2 = "Нижнее давление  ";
+                break;
+        }
+        databaseAdapter.close();
+        ArrayList<ILineDataSet> dataSets = null;
+        if (measurementReminderEntryValues.size()>0) {
+            zeroY += 0.01f;
+            for (int i = 0; i < daysOfMonth.length; i++) {
+                daysOfMonth[i] = i + 1;
+                zeroEntries.add(new Entry(daysOfMonth[i], zeroY));
+            }
+
+            LineDataSet zeroDataSet = new LineDataSet(zeroEntries, ""); // add entries to dataset
+            zeroDataSet.setLineWidth(2.5f);
+            zeroDataSet.setCircleRadius(3);
+            zeroDataSet.setColors(new int[]{R.color.transparent}, view);
+            zeroDataSet.setCircleColors(new int[]{R.color.transparent}, view);
+            zeroDataSet.setCircleColorHole(ContextCompat.getColor(view, R.color.transparent));
+            zeroDataSet.setDrawValues(false);
+            //zeroDataSet.setDrawHighlightIndicators(false);
+            zeroDataSet.setHighlightEnabled(false);
+
+            LineDataSet dataSet1 = new LineDataSet(dataEntries1, labelStr1); // add entries to dataset
+            dataSet1.setLineWidth(2.5f);
+            dataSet1.setCircleRadius(3);
+            dataSet1.setDrawValues(false);
+
+            LineDataSet dataSet2 = new LineDataSet(dataEntries2, labelStr2); // add entries to dataset
+            dataSet2.setLineWidth(2.5f);
+            dataSet2.setCircleRadius(3);
+            dataSet2.setColors(new int[]{R.color.material_green_200}, view);
+            dataSet2.setCircleColors(new int[]{R.color.material_green_200}, view);
+            dataSet2.setDrawValues(false);
+
+            dataSets = new ArrayList<>();
+            dataSets.add(dataSet1);
+            if (dataEntries2.size() != 0)
+                dataSets.add(dataSet2);
+            dataSets.add(zeroDataSet);
+        }
+        //return measurementReminderEntryValues;
+        return dataSets;
     }
 
     @Override
-    protected void onPostExecute(List<float[]> measurementData) {
+    protected void onPostExecute(ArrayList<ILineDataSet> dataSets) {
         LineChart chart = (LineChart) view.findViewById(R.id.measurement_chart);
-        if (measurementData.size()>0){
-            //Calendar cal = Calendar.getInstance();
-            //cal.set(Calendar.YEAR, dateYear);
-            //cal.set(Calendar.MONTH, dateMonth);
-            int[] daysOfMonth = new int[CalendarUtil.getDaysInMonth(dateMonth-1, dateYear)];
+        if (dataSets!=null){
+            /*int[] daysOfMonth = new int[CalendarUtil.getDaysInMonth(dateMonth-1, dateYear)];
             List<Entry> zeroEntries = new ArrayList<Entry>();
             List<Entry> dataEntries1 = new ArrayList<Entry>();
             List<Entry> dataEntries2 = new ArrayList<Entry>();
@@ -150,7 +233,7 @@ public class MeasurementChartCreationTask extends AsyncTask<Integer, Void, List<
             dataSets.add(dataSet1);
             if (dataEntries2.size() != 0)
                 dataSets.add(dataSet2);
-            dataSets.add(zeroDataSet);
+            dataSets.add(zeroDataSet);*/
 
             // scaling can now only be done on x- and y-axis separately
             chart.setPinchZoom(false);
@@ -160,7 +243,6 @@ public class MeasurementChartCreationTask extends AsyncTask<Integer, Void, List<
             chart.getDescription().setEnabled(false);
 
             chart.getAxisLeft().setDrawGridLines(false);
-
 
             XAxis xAxis = chart.getXAxis();
             xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
@@ -193,6 +275,7 @@ public class MeasurementChartCreationTask extends AsyncTask<Integer, Void, List<
             chart.invalidate(); // refresh
         }
         else {
+            chart.setNoDataText("Нет данных за месяц.");
             chart.clear();
             chart.invalidate();
         }

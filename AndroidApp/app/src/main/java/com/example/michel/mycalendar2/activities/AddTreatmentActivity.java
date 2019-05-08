@@ -226,8 +226,8 @@ public class AddTreatmentActivity extends AppCompatActivity {
 
                 if (getIntent().getExtras() == null) {
                     pillReminderDBInsertEntry.setIsActive(1);
-                    Snackbar.make(view, "ReadyInsert", Snackbar.LENGTH_SHORT)
-                            .setAction("Action", null).show();
+                    /*Snackbar.make(view, "ReadyInsert", Snackbar.LENGTH_SHORT)
+                            .setAction("Action", null).show();*/
                     PillRemindersInsertionTask rct = new PillRemindersInsertionTask(getApplicationContext());
                     rct.execute(new CycleAndPillComby(cycleDBInsertEntry, pillReminderDBInsertEntry));
                 }
@@ -237,13 +237,14 @@ public class AddTreatmentActivity extends AppCompatActivity {
                     cycleDBInsertEntry.setIdCycle(oldPillReminder.getIdCycle());
                     cycleDBInsertEntry.setIdWeekSchedule(idWeekSchedule);
                     pillReminderDBInsertEntry.setIdPillReminder(oldPillReminder.getIdPillReminder());
-                    Snackbar.make(view, "ReadyUpdate", Snackbar.LENGTH_SHORT)
-                            .setAction("Action", null).show();
+                    /*Snackbar.make(view, "ReadyUpdate", Snackbar.LENGTH_SHORT)
+                            .setAction("Action", null).show();*/
                     PillRemindersUpdateTask rut = new PillRemindersUpdateTask(
                             !pillReminderDBInsertEntry.getPillName().equals(oldPillReminder.getPillName()),
                             getApplicationContext());
                     rut.execute(new CycleAndPillComby(cycleDBInsertEntry, pillReminderDBInsertEntry));
                 }
+                onBackPressed();
             }
         });
 

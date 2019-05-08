@@ -126,13 +126,24 @@ public class MeasurementReminderDao {
         return measurementReminders;
     }
 
+    /**
+     *
+     * @param mode: 1 - AVERAGE value; 2 - TOTAL(SUM) value
+     */
     public List<float[]> getMeasurementReminderEntriesPerMonth(UUID idMeasurementReminder, int month, int year, int type,
-                                                               String timeStr1, String timeStr2){
+                                                               String timeStr1, String timeStr2, int mode){
         List<float[]> measurementReminderEntryValues = new ArrayList<float[]>();
         String uuidStr = idMeasurementReminder.toString().replace("-", "");
+        String modeOperator;
+        if (mode == 2){
+            modeOperator = "SUM";
+        }
+        else {
+            modeOperator = "AVG";
+        }
         Cursor cursor;
         if (type == 0){
-            String rawQuery = "select AVG(mre.value1) as avg_value1, AVG(mre.value2) as avg_value2, mre.reminder_date" +
+            String rawQuery = "select "+ modeOperator +"(mre.value1) as gen_value1, "+ modeOperator +"(mre.value2) as gen_value2, mre.reminder_date" +
                     " from measurement_reminder_entries mre inner join measurement_reminders mr on mre._id_measurement_reminder=mr._id_measurement_reminder" +
                     " where mre._id_measurement_reminder = X'"+uuidStr+"' and mre.is_done = 1 and strftime('%m', mre.reminder_date) = ? and strftime('%Y', mre.reminder_date) = ?" +
                     " and mre.reminder_time between ? and ? and mre.change_type<3 and mr._id_user=? GROUP BY mre.reminder_date";
@@ -140,7 +151,7 @@ public class MeasurementReminderDao {
                     timeStr1, timeStr2, String.valueOf(AccountGeneralUtils.curUser.getId())});
         }
         else if (type == 1){
-            String rawQuery = "select AVG(mre.value1) as avg_value1, AVG(mre.value2) as avg_value2, mre.reminder_date" +
+            String rawQuery = "select "+ modeOperator +"(mre.value1) as gen_value1, "+ modeOperator +"(mre.value2) as gen_value2, mre.reminder_date" +
                     " from measurement_reminder_entries mre inner join measurement_reminders mr on mre._id_measurement_reminder=mr._id_measurement_reminder" +
                     " where mre._id_measurement_reminder = X'"+uuidStr+"' and mre.is_done = 1 and strftime('%m', mre.reminder_date) = ? and strftime('%Y', mre.reminder_date) = ?" +
                     " and mre.change_type<3 and mr._id_user=? GROUP BY mre.reminder_date";
@@ -148,7 +159,7 @@ public class MeasurementReminderDao {
                     String.valueOf(AccountGeneralUtils.curUser.getId())});
         }
         else {
-            String rawQuery = "select AVG(mre.value1) as avg_value1, AVG(mre.value2) as avg_value2, mre.reminder_date" +
+            String rawQuery = "select "+ modeOperator +"(mre.value1) as gen_value1, "+ modeOperator +"(mre.value2) as gen_value2, mre.reminder_date" +
                     " from measurement_reminder_entries mre inner join measurement_reminders mr on mre._id_measurement_reminder=mr._id_measurement_reminder" +
                     " where mre._id_measurement_reminder = X'"+uuidStr+"' and mre.is_done = 1 and strftime('%m', mre.reminder_date) = ? and strftime('%Y', mre.reminder_date) = ?" +
                     " and (mre.reminder_time between ? and '00:00:00' or mre.reminder_time between '00:00:00' and ?) and mre.change_type<3 and mr._id_user=? GROUP BY mre.reminder_date";
@@ -157,13 +168,13 @@ public class MeasurementReminderDao {
         }
         if(cursor.moveToFirst()){
             do{
-                float avgValue1 = cursor.getFloat(cursor.getColumnIndex("avg_value1"));
-                float avgValue2 = cursor.getFloat(cursor.getColumnIndex("avg_value2"));
+                float genValue1 = cursor.getFloat(cursor.getColumnIndex("gen_value1"));
+                float genValue2 = cursor.getFloat(cursor.getColumnIndex("gen_value2"));
                 String reminderDateStr = cursor.getString(cursor.getColumnIndex("reminder_date"));
 
                 float dayOfMonth = Float.valueOf(reminderDateStr.split("-")[2]);
                 float[] curMeasurementReminderEntryValuesArr = new float[]{
-                        avgValue1, avgValue2, dayOfMonth
+                        genValue1, genValue2, dayOfMonth
                 };
                 measurementReminderEntryValues.add(curMeasurementReminderEntryValuesArr);
             }

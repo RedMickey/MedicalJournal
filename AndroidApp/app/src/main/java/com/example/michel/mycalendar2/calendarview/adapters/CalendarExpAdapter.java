@@ -21,7 +21,7 @@ import com.example.michel.mycalendar2.calendarview.data.DayData;
 import com.example.michel.mycalendar2.calendarview.data.MarkedDates;
 
 public class CalendarExpAdapter extends ArrayAdapter implements Observer {
-    private ArrayList data;
+    private ArrayList<DayData> data;
     private int cellView = -1;
     private int markView = -1;
 
@@ -42,8 +42,8 @@ public class CalendarExpAdapter extends ArrayAdapter implements Observer {
     }
 
     public DateData findItemInListByDate(DateData dateExample){
-        for (Object dt: data) {
-            DateData buf = ((DayData)dt).getDate();
+        for (DayData dt: data) {
+            DateData buf = dt.getDate();
             if (buf.getDay()==dateExample.getDay()&&buf.getMonth()==dateExample.getMonth()&&buf.getYear()==dateExample.getYear())
                 return buf;
         }
@@ -51,8 +51,8 @@ public class CalendarExpAdapter extends ArrayAdapter implements Observer {
     }
 
     public boolean listContainItemByDate(DateData dateExample){
-        for (Object dt: data) {
-            DateData buf = ((DayData)dt).getDate();
+        for (DayData dt: data) {
+            DateData buf = dt.getDate();
             if (buf.getDay()==dateExample.getDay()&&buf.getMonth()==dateExample.getMonth()&&buf.getYear()==dateExample.getYear())
                 return true;
         }

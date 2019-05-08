@@ -183,8 +183,8 @@ public class AddMeasurementActivity extends AppCompatActivity {
 
                 if (getIntent().getExtras().getString("MeasurementReminderID") == null) {
                     measurementReminderDBEntry.setIsActive(1);
-                    Snackbar.make(view, "ReadyInsert", Snackbar.LENGTH_SHORT)
-                            .setAction("Action", null).show();
+                    /*Snackbar.make(view, "ReadyInsert", Snackbar.LENGTH_SHORT)
+                            .setAction("Action", null).show();*/
                     MeasurementRemindersInsertionTask mrit = new MeasurementRemindersInsertionTask(getApplicationContext());
                     mrit.execute(new CycleAndMeasurementComby(cycleDBInsertEntry, measurementReminderDBEntry));
                 }
@@ -194,12 +194,13 @@ public class AddMeasurementActivity extends AppCompatActivity {
                     cycleDBInsertEntry.setIdCycle(oldMeasurementReminder.getIdCycle());
                     cycleDBInsertEntry.setIdWeekSchedule(idWeekSchedule);
                     measurementReminderDBEntry.setIdMeasurementReminder(oldMeasurementReminder.getIdMeasurementReminder());
-                    Snackbar.make(view, "ReadyUpdate", Snackbar.LENGTH_SHORT)
-                            .setAction("Action", null).show();
+                    /*Snackbar.make(view, "ReadyUpdate", Snackbar.LENGTH_SHORT)
+                            .setAction("Action", null).show();*/
                     MeasurementRemindersUpdateTask mrut = new MeasurementRemindersUpdateTask(
                             getApplicationContext());
                     mrut.execute(new CycleAndMeasurementComby(cycleDBInsertEntry, measurementReminderDBEntry));
                 }
+                onBackPressed();
             }
         });
 
