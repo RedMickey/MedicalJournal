@@ -101,7 +101,7 @@ public class GoogleFitFragment extends Fragment implements SwipeRefreshLayout.On
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), GFitDetailsActivity.class);
-                intent.putExtra("measurementType", 0);
+                intent.putExtra("measurementType", 8);
                 startActivity(intent);
             }
         });
@@ -109,7 +109,7 @@ public class GoogleFitFragment extends Fragment implements SwipeRefreshLayout.On
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), GFitDetailsActivity.class);
-                intent.putExtra("measurementType", 1);
+                intent.putExtra("measurementType", 6);
                 startActivity(intent);
             }
         });
@@ -117,7 +117,7 @@ public class GoogleFitFragment extends Fragment implements SwipeRefreshLayout.On
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), GFitDetailsActivity.class);
-                intent.putExtra("measurementType", 2);
+                intent.putExtra("measurementType", 110);
                 startActivity(intent);
             }
         });
@@ -125,7 +125,7 @@ public class GoogleFitFragment extends Fragment implements SwipeRefreshLayout.On
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), GFitDetailsActivity.class);
-                intent.putExtra("measurementType", 3);
+                intent.putExtra("measurementType", 111);
                 startActivity(intent);
             }
         });
@@ -133,7 +133,7 @@ public class GoogleFitFragment extends Fragment implements SwipeRefreshLayout.On
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), GFitDetailsActivity.class);
-                intent.putExtra("measurementType", 4);
+                intent.putExtra("measurementType", 3);
                 startActivity(intent);
             }
         });
@@ -149,7 +149,7 @@ public class GoogleFitFragment extends Fragment implements SwipeRefreshLayout.On
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), GFitDetailsActivity.class);
-                intent.putExtra("measurementType", 6);
+                intent.putExtra("measurementType", 2);
                 startActivity(intent);
             }
         });
@@ -330,7 +330,52 @@ public class GoogleFitFragment extends Fragment implements SwipeRefreshLayout.On
     }
 
     private void setupLastMeasurementData(DataReadResponse dataReadResult){
-        if (dataReadResult.getDataSets().size() > 0) {
+
+        List<DataSet> dataSets = dataReadResult.getDataSets();
+        DateFormat dateFormat = getDateTimeInstance();
+        for (DataSet dataSet : dataSets) {
+            Log.i("SET", "Data returned for Data type: " + dataSet.getDataType().getName());
+            for (DataPoint dp : dataSet.getDataPoints()) {
+                Log.i("T", "Data point:");
+                Log.i("T", "\tType: " + dp.getDataType().getName());
+                Log.i("T", "\tStart: " + dateFormat.format(dp.getStartTime(TimeUnit.MILLISECONDS)));
+                Log.i("T", "\tEnd: " + dateFormat.format(dp.getEndTime(TimeUnit.MILLISECONDS)));
+                for (Field field : dp.getDataType().getFields()) {
+                    Log.i("V", "\tField: " + field.getName() + " Value: " + dp.getValue(field));
+                }
+            }
+        }
+
+        Date now = new Date();
+        for (DataSet dataSet : dataSets) {
+            if (dataSet.getDataType().equals(DataType.TYPE_HEART_RATE_BPM)&&dataSet.getDataPoints().size()>0){
+                DataPoint dp = dataSet.getDataPoints().get(dataSet.getDataPoints().size()-1);
+                long timeDifference = now.getTime() - dp.getEndTime(TimeUnit.MILLISECONDS);
+                ((TextView)measurementLayouts[0].getChildAt(1)).setText(
+                        createMeasurementString(dp.getValue(Field.FIELD_BPM), null, timeDifference/1000, 3)
+                );
+            }
+            else if (dataSet.getDataType().equals(DataType.TYPE_WEIGHT)&&dataSet.getDataPoints().size()>0){
+                DataPoint dp = dataSet.getDataPoints().get(dataSet.getDataPoints().size()-1);
+                long timeDifference = now.getTime() - dp.getEndTime(TimeUnit.MILLISECONDS);
+                ((TextView)measurementLayouts[1].getChildAt(1)).setText(
+                        createMeasurementString(dp.getValue(Field.FIELD_WEIGHT), null, timeDifference/1000, 3)
+                );
+
+            }
+            else if (dataSet.getDataType().equals(HealthDataTypes.TYPE_BLOOD_PRESSURE)&&dataSet.getDataPoints().size()>0){
+                DataPoint dp = dataSet.getDataPoints().get(dataSet.getDataPoints().size()-1);
+                long timeDifference = now.getTime() - dp.getEndTime(TimeUnit.MILLISECONDS);
+                ((TextView)measurementLayouts[2].getChildAt(1)).setText(
+                        createMeasurementString(dp.getValue(HealthFields.FIELD_BLOOD_PRESSURE_SYSTOLIC),
+                                dp.getValue(HealthFields.FIELD_BLOOD_PRESSURE_DIASTOLIC), timeDifference/1000, 2)
+                );
+            }
+
+
+        }
+
+        /*if (dataReadResult.getDataSets().size() > 0) {
             Log.i("TAG", "Number of returned DataSets is: " + dataReadResult.getDataSets().size());
             Date now = new Date();
             List<DataSet> dataSets = dataReadResult.getDataSets();
@@ -338,14 +383,14 @@ public class GoogleFitFragment extends Fragment implements SwipeRefreshLayout.On
                 DataPoint dp = dataSets.get(0).getDataPoints().get(dataSets.get(0).getDataPoints().size()-1);
                 long timeDifference = now.getTime() - dp.getEndTime(TimeUnit.MILLISECONDS);
                 ((TextView)measurementLayouts[0].getChildAt(1)).setText(
-                        createMeasurementString(dp.getValue(Field.FIELD_BPM), null, timeDifference/1000, 0)
+                        createMeasurementString(dp.getValue(Field.FIELD_BPM), null, timeDifference/1000, 3)
                 );
             }
             if (dataSets.get(1).getDataPoints().size()>0){
                 DataPoint dp = dataSets.get(1).getDataPoints().get(dataSets.get(1).getDataPoints().size()-1);
                 long timeDifference = now.getTime() - dp.getEndTime(TimeUnit.MILLISECONDS);
                 ((TextView)measurementLayouts[1].getChildAt(1)).setText(
-                        createMeasurementString(dp.getValue(Field.FIELD_WEIGHT), null, timeDifference/1000, 1)
+                        createMeasurementString(dp.getValue(Field.FIELD_WEIGHT), null, timeDifference/1000, 5)
                 );
             }
             if (dataSets.get(2).getDataPoints().size()>0){
@@ -356,29 +401,16 @@ public class GoogleFitFragment extends Fragment implements SwipeRefreshLayout.On
                                 dp.getValue(HealthFields.FIELD_BLOOD_PRESSURE_DIASTOLIC), timeDifference/1000, 2)
                 );
             }
-
-            DateFormat dateFormat = getDateTimeInstance();
-            for (DataSet dataSet : dataSets) {
-                for (DataPoint dp : dataSet.getDataPoints()) {
-                    Log.i("T", "Data point:");
-                    Log.i("T", "\tType: " + dp.getDataType().getName());
-                    Log.i("T", "\tStart: " + dateFormat.format(dp.getStartTime(TimeUnit.MILLISECONDS)));
-                    Log.i("T", "\tEnd: " + dateFormat.format(dp.getEndTime(TimeUnit.MILLISECONDS)));
-                    for (Field field : dp.getDataType().getFields()) {
-                        Log.i("V", "\tField: " + field.getName() + " Value: " + dp.getValue(field));
-                    }
-                }
-            }
-        }
+        }*/
     }
 
     private String createMeasurementString(Value value1, Value value2, long endTime, int measType){
         String mvn = "";
         switch (measType){
-            case 0:
+            case 3:
                 mvn = "уд/мин";
                 break;
-            case 1:
+            case 5:
                 mvn = "кг";
                 break;
             case 2:
