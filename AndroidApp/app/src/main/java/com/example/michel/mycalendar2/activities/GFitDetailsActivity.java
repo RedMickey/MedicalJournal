@@ -1,22 +1,32 @@
 package com.example.michel.mycalendar2.activities;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.app.Activity;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.michel.mycalendar2.adapters.GFitDayDetailsListAdapter;
+import com.example.michel.mycalendar2.app_async_tasks.OneTimeMeasurementReminderInsertionTask;
 import com.example.michel.mycalendar2.auxiliary_fragments.ChartMarkerView;
 import com.example.michel.mycalendar2.calendarview.data.DateData;
 import com.example.michel.mycalendar2.calendarview.utils.CalendarUtil;
+import com.example.michel.mycalendar2.models.ReminderTime;
+import com.example.michel.mycalendar2.models.measurement.MeasurementReminderDBEntry;
 import com.example.michel.mycalendar2.utils.ConvertingUtils;
 import com.example.michel.mycalendar2.utils.DBStaticEntries;
 import com.example.michel.mycalendar2.utils.utilModels.MeasurementType;
@@ -27,7 +37,9 @@ import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.fitness.Fitness;
 import com.google.android.gms.fitness.data.Bucket;
@@ -43,6 +55,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -52,7 +65,7 @@ import java.util.concurrent.TimeUnit;
 import static java.text.DateFormat.getDateInstance;
 import static java.text.DateFormat.getDateTimeInstance;
 
-public class GFitDetailsActivity extends AppCompatActivity {
+public class GFitDetailsActivity extends AppCompatActivity implements OnChartValueSelectedListener {
     private int fitMeasurementType;
     private Calendar calendar;
     private LineChart chart;
@@ -65,6 +78,10 @@ public class GFitDetailsActivity extends AppCompatActivity {
     private DateData endDate;
     private ImageButton buttonMonthNext;
     private ImageButton buttonMonthBefore;
+    private float zeroY;
+
+    private List<DataPoint> dataPoints;
+    private GFitDayDetailsListAdapter gFitDayDetailsListAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,12 +99,14 @@ public class GFitDetailsActivity extends AppCompatActivity {
         setupMeasurementData();
         getSupportActionBar().setTitle(measurementName);
 
+        ListView listView = (ListView) findViewById(R.id.gf_daily_detail_list);
         buttonMonthBefore = (ImageButton) findViewById(R.id.button_month_before);
         buttonMonthNext = (ImageButton) findViewById(R.id.button_month_next);
         textViewCurrentDate = (TextView) findViewById(R.id.text_current_date);
         textViewGeneralValue = (TextView) findViewById(R.id.general_value);
         chart = (LineChart) findViewById(R.id.measurement_chart);
         chart.setNoDataText("Загрузка...");
+        chart.setOnChartValueSelectedListener(this);
         buttonMonthNext.setEnabled(false);
 
         calendar = Calendar.getInstance();
@@ -98,10 +117,83 @@ public class GFitDetailsActivity extends AppCompatActivity {
         calendar.set(Calendar.HOUR_OF_DAY, 23);
         calendar.set(Calendar.MINUTE, 59);
 
+        dataPoints = new ArrayList<>();
+        gFitDayDetailsListAdapter = new GFitDayDetailsListAdapter(this, R.layout.gfit_daily_detail_item, dataPoints);
+        listView.setAdapter(gFitDayDetailsListAdapter);
+        if (fitMeasurementType/100 == 0)
+            listView.setOnItemClickListener(createChoosingAdditionModeDialog());
+
         textViewCurrentDate.setText(CalendarUtil.getDateString(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH)+1));
         Log.i("MT", "fitMeasurementType " + String.valueOf(fitMeasurementType));
         downloadMonthData();
-        //downloadDayData();
+        downloadDayData();
+    }
+
+    private AdapterView.OnItemClickListener createChoosingAdditionModeDialog(){
+        return new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
+                LayoutInflater inflater = LayoutInflater.from(view.getContext());
+                final BottomSheetDialog choosingAdditionModeDialog = new BottomSheetDialog(view.getContext());
+                View bottomSheetView = inflater.inflate(R.layout.choosing_addition_mode_dialog_layout, null, false);
+                final DataPoint curDataPoint = gFitDayDetailsListAdapter.getItem(position);
+                ((LinearLayout)bottomSheetView.findViewById(R.id.add_single_measur_ll)).setOnClickListener(
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:00");
+                                MeasurementReminderDBEntry measurementReminderDBEntry = new MeasurementReminderDBEntry();
+                                measurementReminderDBEntry.setStartDate(
+                                        new DateData(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH)+1, calendar.get(Calendar.DAY_OF_MONTH))
+                                );
+                                ReminderTime[] reminderTimes = new ReminderTime[1];
+                                reminderTimes[0] = new ReminderTime (dateFormat.format(new Date(curDataPoint.getEndTime(TimeUnit.MILLISECONDS))));
+                                measurementReminderDBEntry.setReminderTimes(reminderTimes);
+                                measurementReminderDBEntry.setIdMeasurementType(fitMeasurementType);
+                                measurementReminderDBEntry.setIsActive(1);
+                                double value1 = 0, value2 = 0;
+
+                                switch (fitMeasurementType){
+                                    case 2:
+                                        value1 = curDataPoint.getValue(HealthFields.FIELD_BLOOD_PRESSURE_SYSTOLIC).asFloat();
+                                        value2 = curDataPoint.getValue(HealthFields.FIELD_BLOOD_PRESSURE_DIASTOLIC).asFloat();
+                                        break;
+                                    case 6:
+                                        value1 = (int)curDataPoint.getValue(fieldType).asFloat();
+                                        value2 = -10000;
+                                        break;
+                                        default:
+                                            value2 = -10000;
+                                            try {
+                                                value1 = curDataPoint.getValue(fieldType).asFloat();
+                                            }
+                                            catch (IllegalStateException ex){
+                                                value1 = curDataPoint.getValue(fieldType).asInt();
+                                            }
+                                            break;
+                                }
+                                OneTimeMeasurementReminderInsertionTask otmrit = new OneTimeMeasurementReminderInsertionTask(value1, value2);
+                                otmrit.execute(measurementReminderDBEntry);
+                                Toast.makeText(v.getContext(),"Запись добавлена", Toast.LENGTH_SHORT).show();
+                                choosingAdditionModeDialog.dismiss();
+                            }
+                        }
+                );
+                ((LinearLayout)bottomSheetView.findViewById(R.id.add_measur_to_course_ll)).setOnClickListener(
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+
+                                choosingAdditionModeDialog.dismiss();
+                            }
+                        }
+                );
+
+                choosingAdditionModeDialog.setContentView(bottomSheetView);
+                choosingAdditionModeDialog.show();
+            }
+        };
     }
 
     private void downloadMonthData(){
@@ -147,10 +239,12 @@ public class GFitDetailsActivity extends AppCompatActivity {
 
     private void downloadDayData(){
         Calendar cal = Calendar.getInstance();
-        if (cal.get(Calendar.MONTH) != calendar.get(Calendar.MONTH) || cal.get(Calendar.YEAR) != calendar.get(Calendar.YEAR)
-                || cal.get(Calendar.DAY_OF_MONTH) != calendar.get(Calendar.DAY_OF_MONTH)){
+        if (cal.get(Calendar.MONTH) != calendar.get(Calendar.MONTH) || cal.get(Calendar.YEAR) != calendar.get(Calendar.YEAR)){
             cal.setTimeInMillis(calendar.getTimeInMillis());
         }
+        else if (cal.get(Calendar.DAY_OF_MONTH) > calendar.get(Calendar.DAY_OF_MONTH))
+            cal.setTimeInMillis(calendar.getTimeInMillis());
+
         long endTime = cal.getTimeInMillis();
         cal.set(Calendar.HOUR_OF_DAY, 0);
         cal.set(Calendar.MINUTE, 0);
@@ -167,6 +261,7 @@ public class GFitDetailsActivity extends AppCompatActivity {
                             @Override
                             public void onSuccess(DataReadResponse dataReadResponse) {
                                 printData(dataReadResponse);
+                                fillDayDetailsList(dataReadResponse);
                                 //setupGeneralData(dataReadResponse);
                                 //checkTaskCompletion();
                             }
@@ -210,10 +305,12 @@ public class GFitDetailsActivity extends AppCompatActivity {
             case 3:
                 dataType = DataType.TYPE_HEART_RATE_BPM;
                 dataAggregate = DataType.AGGREGATE_HEART_RATE_SUMMARY;
+                fieldType = Field.FIELD_BPM;
                 break;
             case 5:
                 dataType = DataType.TYPE_WEIGHT;
                 dataAggregate = DataType.AGGREGATE_WEIGHT_SUMMARY;
+                fieldType = Field.FIELD_WEIGHT;
                 break;
             case 2:
                 dataType = HealthDataTypes.TYPE_BLOOD_PRESSURE;
@@ -236,48 +333,61 @@ public class GFitDetailsActivity extends AppCompatActivity {
 
         DataType dataType = null;
         DataType dataAggregate = null;
+        int imageResId = 0;
         switch (fitMeasurementType){
             case 8:
                 dataType = DataType.TYPE_STEP_COUNT_DELTA;
                 dataAggregate = DataType.AGGREGATE_STEP_COUNT_DELTA;
+                imageResId = R.drawable.ic_footprint;
                 break;
             case 6:
                 dataType = DataType.TYPE_CALORIES_EXPENDED;
                 dataAggregate = DataType.AGGREGATE_CALORIES_EXPENDED;
+                imageResId = R.drawable.ic_burning;
                 break;
             case 110:
                 dataType = DataType.TYPE_DISTANCE_DELTA;
                 dataAggregate = DataType.AGGREGATE_DISTANCE_DELTA;
+                imageResId = R.drawable.ic_distance;
                 break;
             case 111:
                 dataType = DataType.TYPE_MOVE_MINUTES;
                 dataAggregate = DataType.AGGREGATE_MOVE_MINUTES;
+                imageResId = R.drawable.ic_exercise;
                 break;
             case 3:
                 dataType = DataType.TYPE_HEART_RATE_BPM;
+                imageResId = R.drawable.ic_pulse;
                 break;
             case 5:
                 dataType = DataType.TYPE_WEIGHT;
+                imageResId = R.drawable.ic_weight;
                 break;
             case 2:
                 dataType = HealthDataTypes.TYPE_BLOOD_PRESSURE;
+                imageResId = R.drawable.ic_tonometer2;
                 break;
         }
 
         DataReadRequest readRequest = null;
 
-        if (dataAggregate != null)
+        if (dataAggregate != null){
             readRequest = new DataReadRequest.Builder()
                         //.read(dataType)
                         .aggregate(dataType, dataAggregate)
-                        .bucketByTime(30, TimeUnit.MINUTES)
+                        .bucketByTime(1, TimeUnit.HOURS)
                         .setTimeRange(startTime, endTime, TimeUnit.MILLISECONDS)
                         .build();
-        else
+            setupListAdapter(fieldType, imageResId, true);
+        }
+        else{
             readRequest = new DataReadRequest.Builder()
                     .read(dataType)
                     .setTimeRange(startTime, endTime, TimeUnit.MILLISECONDS)
                     .build();
+            setupListAdapter(fieldType, imageResId, false);
+        }
+
 
         return readRequest;
     }
@@ -290,7 +400,7 @@ public class GFitDetailsActivity extends AppCompatActivity {
             List<Entry> zeroEntries = new ArrayList<Entry>();
             List<Entry> dataEntries1 = new ArrayList<Entry>();
             List<Entry> dataEntries2 = new ArrayList<Entry>();
-            float zeroY = 30.01f;
+            zeroY = 30.01f;
             String labelStr1 = "";
             String labelStr2 = "";
             float generalValue1 = 0;
@@ -476,7 +586,32 @@ public class GFitDetailsActivity extends AppCompatActivity {
         }
     }
 
+    private void fillDayDetailsList(DataReadResponse dataReadResult){
+        dataPoints.clear();
+        if (dataReadResult.getBuckets().size() > 0) {
+            for (Bucket bucket : dataReadResult.getBuckets()) {
+                for(DataPoint dataPoint: bucket.getDataSets().get(0).getDataPoints()){
+                    dataPoints.add(dataPoint);
+                }
+            }
+        } else if (dataReadResult.getDataSets().size() > 0) {
+            for(DataPoint dataPoint: dataReadResult.getDataSets().get(0).getDataPoints()){
+                dataPoints.add(dataPoint);
+            }
+            //dataPoints = dataReadResult.getDataSets().get(0).getDataPoints();
+        }
+        gFitDayDetailsListAdapter.notifyDataSetChanged();
+    }
 
+    private void setupListAdapter(Field field, int imageResId, boolean isTimeInterval){
+        if (gFitDayDetailsListAdapter.getFitMeasurementType() == -1){
+            gFitDayDetailsListAdapter.setFitMeasurementType(fitMeasurementType);
+            gFitDayDetailsListAdapter.setMeasurementValueTypeStr(measurementValueTypeStr);
+            gFitDayDetailsListAdapter.setImageResId(imageResId);
+            gFitDayDetailsListAdapter.setDataField(field);
+            gFitDayDetailsListAdapter.setIsTimeInterval(isTimeInterval);
+        }
+    }
 
     private void printData(DataReadResponse dataReadResult) {
         // [START parse_read_data_result]
@@ -568,6 +703,7 @@ public class GFitDetailsActivity extends AppCompatActivity {
         textViewCurrentDate.setText(CalendarUtil.getDateString(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH)+1));
         textViewGeneralValue.setText("");
         downloadMonthData();
+        downloadDayData();
     }
 
     public void onButtonNextClick(View view) {
@@ -580,5 +716,20 @@ public class GFitDetailsActivity extends AppCompatActivity {
         textViewCurrentDate.setText(CalendarUtil.getDateString(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH)+1));
         textViewGeneralValue.setText("");
         downloadMonthData();
+        downloadDayData();
+    }
+
+    @Override
+    public void onValueSelected(Entry e, Highlight h) {
+        if (e.getY() != zeroY){
+            //Toast.makeText(this, String.valueOf(e.getX()), Toast.LENGTH_SHORT).show();
+            calendar.set(Calendar.DAY_OF_MONTH, (int)e.getX());
+            downloadDayData();
+        }
+    }
+
+    @Override
+    public void onNothingSelected() {
+
     }
 }

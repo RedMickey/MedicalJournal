@@ -71,6 +71,7 @@
     <string name="title_activity_login">Sign in</string>
 
     <string name="title_activity_registration">Регистрация</string>
+    <string name="activity_choosing_measurement_course">Курсы напоминаний</string>
 
     <string name="def_user_email">def@email</string>
     <string name="def_username">Я</string>

@@ -140,6 +140,9 @@ public class MeasurementChartActivity extends AppCompatActivity {
         if (startDate.getYear() == calendar.get(Calendar.YEAR)&&startDate.getMonth() == (calendar.get(Calendar.MONTH)+1)){
             buttonMonthBefore.setEnabled(false);
         }
+        if (endDate.getYear() == calendar.get(Calendar.YEAR)&&endDate.getMonth() == (calendar.get(Calendar.MONTH)+1)){
+            buttonMonthNext.setEnabled(false);
+        }
 
         reminderTimeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -167,8 +170,8 @@ public class MeasurementChartActivity extends AppCompatActivity {
         calendar.add(Calendar.MONTH, -1);
         if (startDate.getYear() == calendar.get(Calendar.YEAR)&&startDate.getMonth() == (calendar.get(Calendar.MONTH)+1)){
             buttonMonthBefore.setEnabled(false);
-            buttonMonthNext.setEnabled(true);
         }
+        buttonMonthNext.setEnabled(true);
         textViewCurrentDate.setText(CalendarUtil.getDateString(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH)+1));
         MeasurementChartCreationTask mcct = new MeasurementChartCreationTask(
                 this, mse.getIdMeasurementType(), mse.getMeasurementValueTypeStr(),
@@ -179,9 +182,10 @@ public class MeasurementChartActivity extends AppCompatActivity {
     public void onButtonNextClick(View view) {
         calendar.add(Calendar.MONTH, 1);
         if (endDate.getYear() == calendar.get(Calendar.YEAR)&&endDate.getMonth() == (calendar.get(Calendar.MONTH)+1)){
-            buttonMonthBefore.setEnabled(true);
+
             buttonMonthNext.setEnabled(false);
         }
+        buttonMonthBefore.setEnabled(true);
         textViewCurrentDate.setText(CalendarUtil.getDateString(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH)+1));
         MeasurementChartCreationTask mcct = new MeasurementChartCreationTask(
                 this, mse.getIdMeasurementType(), mse.getMeasurementValueTypeStr(),

@@ -19,21 +19,23 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <ImageButton
-                android:layout_width="wrap_content"
+                android:layout_width="35dp"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_navigate_before"
                 android:paddingHorizontal="0dp"
                 android:layout_alignParentLeft="true"
                 android:id="@+id/button_month_before"
-                android:onClick="onButtonBeforeClick"/>
+                android:onClick="onButtonBeforeClick"
+                style="@style/Widget.AppCompat.Button.Borderless"/>
             <ImageButton
-                android:layout_width="wrap_content"
+                android:layout_width="35dp"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_navigate_next"
                 android:paddingHorizontal="0dp"
                 android:layout_alignParentRight="true"
                 android:id="@+id/button_month_next"
-                android:onClick="onButtonNextClick"/>
+                android:onClick="onButtonNextClick"
+                style="@style/Widget.AppCompat.Button.Borderless"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

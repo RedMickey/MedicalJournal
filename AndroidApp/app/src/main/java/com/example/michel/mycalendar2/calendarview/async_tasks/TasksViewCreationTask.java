@@ -144,31 +144,40 @@ public class TasksViewCreationTask extends AsyncTask<DateData, Void, PillAndMeas
                 View measurementReminderEntryView = inflater.inflate(R.layout.pill_reminder_entry, null, false);
                 measurementReminderEntryView.setBackgroundColor(mView.getResources().getColor(R.color.meas_remind_ent_bg));
 
+                boolean isInteger = true;
                 ((TextView) measurementReminderEntryView.findViewById(R.id.reminder_name_tv)).setText(mre.getMeasurementTypeName());
                 switch (mre.getIdMeasurementType()){
                     case 1:
                         ((ImageView) measurementReminderEntryView.findViewById(R.id.reminder_ic_iv)).setImageResource(R.drawable.ic_thermometer);
+                        isInteger = false;
                         break;
                     case 2:
                         ((ImageView) measurementReminderEntryView.findViewById(R.id.reminder_ic_iv)).setImageResource(R.drawable.ic_tonometer2);
+                        isInteger = true;
                         break;
                     case 3:
                         ((ImageView) measurementReminderEntryView.findViewById(R.id.reminder_ic_iv)).setImageResource(R.drawable.ic_pulse);
+                        isInteger = true;
                         break;
                     case 4:
                         ((ImageView) measurementReminderEntryView.findViewById(R.id.reminder_ic_iv)).setImageResource(R.drawable.ic_glucometer);
+                        isInteger = false;
                         break;
                     case 5:
                         ((ImageView) measurementReminderEntryView.findViewById(R.id.reminder_ic_iv)).setImageResource(R.drawable.ic_weight);
+                        isInteger = false;
                         break;
                     case 6:
                         ((ImageView) measurementReminderEntryView.findViewById(R.id.reminder_ic_iv)).setImageResource(R.drawable.ic_burning);
+                        isInteger = false;
                         break;
                     case 7:
                         ((ImageView) measurementReminderEntryView.findViewById(R.id.reminder_ic_iv)).setImageResource(R.drawable.ic_food);
+                        isInteger = false;
                         break;
                     case 8:
                         ((ImageView) measurementReminderEntryView.findViewById(R.id.reminder_ic_iv)).setImageResource(R.drawable.ic_footprint);
+                        isInteger = true;
                         break;
                 }
 
@@ -199,7 +208,7 @@ public class TasksViewCreationTask extends AsyncTask<DateData, Void, PillAndMeas
                     isDoneChb.setEnabled(false);
 
                 if(mre.getIsDone()==1){
-                    setUpReminderCountTypeTv(reminderCountTypeTv, mre);
+                    setUpReminderCountTypeTv(reminderCountTypeTv, mre, isInteger);
                     isDoneChb.setChecked(true);
                 }
 
@@ -217,6 +226,7 @@ public class TasksViewCreationTask extends AsyncTask<DateData, Void, PillAndMeas
 
                             final EditText userValue1 = (EditText) dialogView.findViewById(R.id.value1_et);
                             final EditText userValue2 = (EditText) dialogView.findViewById(R.id.value2_et);
+                            final boolean isInteger;
 
                             userValue1.setText(mre.getValue1()==-10000?"":String.valueOf(mre.getValue1()));
                             userValue2.setText(mre.getValue2()==-10000?"":String.valueOf(mre.getValue2()));
@@ -226,41 +236,52 @@ public class TasksViewCreationTask extends AsyncTask<DateData, Void, PillAndMeas
                                     ((ImageView) dialogView.findViewById(R.id.reminder_ic_iv)).setImageResource(R.drawable.ic_thermometer);
                                     userValue2.setVisibility(View.GONE);
                                     ((TextView) dialogView.findViewById(R.id.value_type_name)).setText(mre.getMeasurementValueTypeName());
+                                    isInteger = false;
                                     break;
                                 case 2:
                                     ((ImageView) dialogView.findViewById(R.id.reminder_ic_iv)).setImageResource(R.drawable.ic_tonometer2);
                                     ((TextView) dialogView.findViewById(R.id.value_type_name)).setText(mre.getMeasurementValueTypeName());
+                                    isInteger = true;
                                     break;
                                 case 3:
                                     ((ImageView) dialogView.findViewById(R.id.reminder_ic_iv)).setImageResource(R.drawable.ic_pulse);
                                     userValue2.setVisibility(View.GONE);
                                     ((TextView) dialogView.findViewById(R.id.value_type_name)).setText(mre.getMeasurementValueTypeName());
+                                    isInteger = true;
                                     break;
                                 case 4:
                                     ((ImageView) dialogView.findViewById(R.id.reminder_ic_iv)).setImageResource(R.drawable.ic_glucometer);
                                     userValue2.setVisibility(View.GONE);
                                     ((TextView) dialogView.findViewById(R.id.value_type_name)).setText(mre.getMeasurementValueTypeName());
+                                    isInteger = false;
                                     break;
                                 case 5:
                                     ((ImageView) dialogView.findViewById(R.id.reminder_ic_iv)).setImageResource(R.drawable.ic_weight);
                                     userValue2.setVisibility(View.GONE);
                                     ((TextView) dialogView.findViewById(R.id.value_type_name)).setText(mre.getMeasurementValueTypeName());
+                                    isInteger = false;
                                     break;
                                 case 6:
                                     ((ImageView) dialogView.findViewById(R.id.reminder_ic_iv)).setImageResource(R.drawable.ic_burning);
                                     userValue2.setVisibility(View.GONE);
                                     ((TextView) dialogView.findViewById(R.id.value_type_name)).setText(mre.getMeasurementValueTypeName());
+                                    isInteger = false;
                                     break;
                                 case 7:
                                     ((ImageView) dialogView.findViewById(R.id.reminder_ic_iv)).setImageResource(R.drawable.ic_food);
                                     userValue2.setVisibility(View.GONE);
                                     ((TextView) dialogView.findViewById(R.id.value_type_name)).setText(mre.getMeasurementValueTypeName());
+                                    isInteger = false;
                                     break;
                                 case 8:
                                     ((ImageView) dialogView.findViewById(R.id.reminder_ic_iv)).setImageResource(R.drawable.ic_footprint1b);
                                     userValue2.setVisibility(View.GONE);
                                     ((TextView) dialogView.findViewById(R.id.value_type_name)).setText("шагов");
+                                    isInteger = true;
                                     break;
+                                    default:
+                                        isInteger = true;
+                                        break;
                             }
 
                             builder.setView(dialogView)
@@ -295,7 +316,7 @@ public class TasksViewCreationTask extends AsyncTask<DateData, Void, PillAndMeas
                                                             isDoneChb.setChecked(false);
                                                             return;
                                                         }
-                                                    setUpReminderCountTypeTv(reminderCountTypeTv, mre);
+                                                    setUpReminderCountTypeTv(reminderCountTypeTv, mre, isInteger);
 
                                                     DatabaseAdapter databaseAdapter = new DatabaseAdapter();
                                                     MeasurementReminderDao measurementReminderDao = new MeasurementReminderDao(databaseAdapter.open().getDatabase());
@@ -365,20 +386,24 @@ public class TasksViewCreationTask extends AsyncTask<DateData, Void, PillAndMeas
 
     }
 
-    private void setUpReminderCountTypeTv(final TextView reminderCountTypeTv, final MeasurementReminderEntry mre){
-        if (mre.getValue1()!=-10000)
-        {
-            String valueStr = String.valueOf(mre.getValue1());
+    private void setUpReminderCountTypeTv(final TextView reminderCountTypeTv, final MeasurementReminderEntry mre, boolean isInteger){
+        String valueStr = "";
+        if (isInteger){
             if (mre.getValue2()!=-10000)
             {
-                valueStr = valueStr + " - " + String.valueOf(mre.getValue2()) + " " +
-                        createCountTypeEnding(mre, mre.getValue2());
+                valueStr = String.format("%.0f - %.0f %s", mre.getValue1(), mre.getValue2(),
+                        createCountTypeEnding(mre, mre.getValue2()));
 
             }
             else
-                valueStr+= " " + createCountTypeEnding(mre, mre.getValue1());
-            reminderCountTypeTv.setText(valueStr);
+                valueStr = String.format("%.0f %s", mre.getValue1(),
+                        createCountTypeEnding(mre, mre.getValue1()));
         }
+        else{
+            valueStr = String.format("%.1f %s", mre.getValue1(),
+                    createCountTypeEnding(mre, mre.getValue1()));
+        }
+        reminderCountTypeTv.setText(valueStr);
     }
 
     private String createCountTypeEnding(MeasurementReminderEntry mre, double value){

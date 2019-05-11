@@ -97,6 +97,12 @@
             android:label="@string/title_activity_gfit_details"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar2" />
+        <activity
+            android:name=".ChoosingMeasurementCourseActivity"
+            android:label="@string/activity_choosing_measurement_course"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar2"
+            />
     </application>
 
 </manifest>

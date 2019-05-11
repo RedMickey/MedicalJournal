@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingVertical="10dp">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="19dp"
+        android:textColor="#000"
+        android:text="Добавить в дневник"
+        android:gravity="center_horizontal"
+        android:paddingTop="5dp"
+        android:paddingBottom="10dp"/>
+    <View
+        android:layout_width="130dp"
+        android:layout_height="1dp"
+        android:background="@drawable/line_separator"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginHorizontal="10dp"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingHorizontal="15dp"
+        android:paddingVertical="10dp"
+        style="@style/Base.Widget.AppCompat.Button.Borderless"
+        android:gravity="left"
+        android:id="@+id/add_single_measur_ll">
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:src="@drawable/ic_action_add_d"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="10dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="как единичное измерение"
+            android:textSize="19dp"
+            android:textColor="#000"
+            android:layout_gravity="center_vertical" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingHorizontal="15dp"
+        android:paddingVertical="10dp"
+        style="@style/Base.Widget.AppCompat.Button.Borderless"
+        android:gravity="left"
+        android:id="@+id/add_measur_to_course_ll">
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:src="@drawable/ic_action_add_d"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="10dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="к курсу измерений"
+            android:textSize="19dp"
+            android:textColor="#000"
+            android:layout_gravity="center_vertical" />
+    </LinearLayout>
+
+</LinearLayout>

@@ -69,7 +69,11 @@
 
     <ListView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:id="@+id/gf_daily_detail_list"
+        android:dividerHeight="0dp"
+        android:divider="@null"
+        android:scrollbars="none">
 
     </ListView>
 
