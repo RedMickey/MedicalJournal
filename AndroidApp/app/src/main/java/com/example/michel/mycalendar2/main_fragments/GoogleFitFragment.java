@@ -359,7 +359,7 @@ public class GoogleFitFragment extends Fragment implements SwipeRefreshLayout.On
                 DataPoint dp = dataSet.getDataPoints().get(dataSet.getDataPoints().size()-1);
                 long timeDifference = now.getTime() - dp.getEndTime(TimeUnit.MILLISECONDS);
                 ((TextView)measurementLayouts[1].getChildAt(1)).setText(
-                        createMeasurementString(dp.getValue(Field.FIELD_WEIGHT), null, timeDifference/1000, 3)
+                        createMeasurementString(dp.getValue(Field.FIELD_WEIGHT), null, timeDifference/1000, 5)
                 );
 
             }
@@ -374,49 +374,9 @@ public class GoogleFitFragment extends Fragment implements SwipeRefreshLayout.On
 
 
         }
-
-        /*if (dataReadResult.getDataSets().size() > 0) {
-            Log.i("TAG", "Number of returned DataSets is: " + dataReadResult.getDataSets().size());
-            Date now = new Date();
-            List<DataSet> dataSets = dataReadResult.getDataSets();
-            if (dataSets.get(0).getDataPoints().size()>0){
-                DataPoint dp = dataSets.get(0).getDataPoints().get(dataSets.get(0).getDataPoints().size()-1);
-                long timeDifference = now.getTime() - dp.getEndTime(TimeUnit.MILLISECONDS);
-                ((TextView)measurementLayouts[0].getChildAt(1)).setText(
-                        createMeasurementString(dp.getValue(Field.FIELD_BPM), null, timeDifference/1000, 3)
-                );
-            }
-            if (dataSets.get(1).getDataPoints().size()>0){
-                DataPoint dp = dataSets.get(1).getDataPoints().get(dataSets.get(1).getDataPoints().size()-1);
-                long timeDifference = now.getTime() - dp.getEndTime(TimeUnit.MILLISECONDS);
-                ((TextView)measurementLayouts[1].getChildAt(1)).setText(
-                        createMeasurementString(dp.getValue(Field.FIELD_WEIGHT), null, timeDifference/1000, 5)
-                );
-            }
-            if (dataSets.get(2).getDataPoints().size()>0){
-                DataPoint dp = dataSets.get(2).getDataPoints().get(dataSets.get(2).getDataPoints().size()-1);
-                long timeDifference = now.getTime() - dp.getEndTime(TimeUnit.MILLISECONDS);
-                ((TextView)measurementLayouts[2].getChildAt(1)).setText(
-                        createMeasurementString(dp.getValue(HealthFields.FIELD_BLOOD_PRESSURE_SYSTOLIC),
-                                dp.getValue(HealthFields.FIELD_BLOOD_PRESSURE_DIASTOLIC), timeDifference/1000, 2)
-                );
-            }
-        }*/
     }
 
     private String createMeasurementString(Value value1, Value value2, long endTime, int measType){
-        String mvn = "";
-        switch (measType){
-            case 3:
-                mvn = "уд/мин";
-                break;
-            case 5:
-                mvn = "кг";
-                break;
-            case 2:
-                mvn = "мм рт. ст.";
-                break;
-        }
         String measurementString = "";
         String timeMeasure = "сек.";
         int timeReduction = 0;
@@ -430,12 +390,22 @@ public class GoogleFitFragment extends Fragment implements SwipeRefreshLayout.On
             timeReduction = (int) endTime/(60*60);
             timeMeasure = "ч.";
         }
-        if (value2 == null){
-            measurementString = String.format("%.0f %s • %d %s назад", value1.asFloat(), mvn, timeReduction, timeMeasure);
+        String mvn = "";
+        switch (measType){
+            case 3:
+                mvn = "уд/мин";
+                measurementString = String.format("%.0f %s • %d %s назад", value1.asFloat(), mvn, timeReduction, timeMeasure);
+                break;
+            case 5:
+                mvn = "кг";
+                measurementString = String.format("%.1f %s • %d %s назад", value1.asFloat(), mvn, timeReduction, timeMeasure);
+                break;
+            case 2:
+                mvn = "мм рт. ст.";
+                measurementString = String.format("%.0f/%.0f %s • %d %s назад", value1.asFloat(), value2.asFloat(), mvn, timeReduction, timeMeasure);
+                break;
         }
-        else {
-            measurementString = String.format("%.0f/%.0f %s • %d %s назад", value1.asFloat(), value2.asFloat(), mvn, timeReduction, timeMeasure);
-        }
+
         return measurementString;
     }
 

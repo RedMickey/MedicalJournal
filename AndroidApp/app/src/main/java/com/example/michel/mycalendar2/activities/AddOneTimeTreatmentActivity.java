@@ -204,7 +204,6 @@ public class AddOneTimeTreatmentActivity extends AppCompatActivity {
 
                 View dialogView = inflater.inflate(R.layout.choosing_pill_reminder_dialog_layout, null, false);
 
-
                 builder.setView(dialogView)
                     .setCancelable(true);
                 AlertDialog dialog = builder.create();

@@ -126,6 +126,71 @@ public class MeasurementReminderDao {
         return measurementReminders;
     }
 
+    public List<MeasurementReminder> getMeasurementRemindersByTypeAndDate(int idMeasurementType, Date curDate){
+        List<MeasurementReminder> measurementReminders = new ArrayList<>();
+        SimpleDateFormat dateFormatOld = new SimpleDateFormat("yyyy-MM-dd");
+        String rawQuery = "select  mr.start_date, mr.isActive, cl.period, mr.times_a_day, mr._id_measurement_type, mr._id_having_meals_type, cl.period_DM_type, " +
+                "(select COUNT(*) from measurement_reminder_entries mre where mre._id_measurement_reminder=mr._id_measurement_reminder and mre.is_done=0 and mre.change_type<3 " +
+                "and mr._id_user=? ) as count_left, mr._id_measurement_reminder, mt._id_measur_value_type " +
+                "from measurement_reminders mr inner join cycles cl on mr._id_cycle=cl._id_cycle inner join measurement_types mt on mr._id_measurement_type=mt._id_measurement_type " +
+                "where mr.change_type<3 and mr._id_user=? and mr.isActive=1 and mr._id_measurement_type=? and mr.start_date<=?";
+        String userIdStr = String.valueOf(AccountGeneralUtils.curUser.getId());
+        Cursor cursor = database.rawQuery(rawQuery, new String[]{userIdStr, userIdStr, String.valueOf(idMeasurementType), dateFormatOld.format(curDate)});
+        if(cursor.moveToFirst()){
+            do{
+                Calendar calendar = Calendar.getInstance();
+                calendar.set(Calendar.HOUR_OF_DAY, 23);
+                calendar.set(Calendar.MINUTE, 59);
+                String startDateStr = cursor.getString(cursor.getColumnIndex("start_date"));
+                int period = cursor.getInt(cursor.getColumnIndex("period"));
+                int periodDM_Type = cursor.getInt(cursor.getColumnIndex("period_DM_type"));
+
+                Date startDate;
+                SimpleDateFormat dateFormatNew = new SimpleDateFormat("dd.MM.yyyy");
+                try {
+                    startDate = dateFormatOld.parse(startDateStr);
+                    startDateStr = dateFormatNew.format(startDate);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    startDate = new Date();
+                }
+                String endDateStr = "0";
+                calendar.setTime(startDate);
+                switch (periodDM_Type){
+                    case 1:
+                        calendar.add(Calendar.DATE, period);
+                        break;
+                    case 2:
+                        calendar.add(Calendar.DATE, period*7);
+                        break;
+                    case 3:
+                        calendar.add(Calendar.DATE, period*30);
+                        break;
+                }
+                Date endDate = calendar.getTime();
+                if (!curDate.after(endDate)) {
+                    endDateStr = dateFormatNew.format(calendar.getTime());
+
+                    UUID id = ConvertingUtils.convertBytesToUUID(cursor.getBlob(cursor.getColumnIndex("_id_measurement_reminder")));
+                    int havingMealsType = cursor.getInt(cursor.getColumnIndex("_id_having_meals_type"));
+                    int isActive = cursor.getInt(cursor.getColumnIndex("isActive"));
+                    int countLeft = cursor.getInt(cursor.getColumnIndex("count_left"));
+                    int times_aDay = cursor.getInt(cursor.getColumnIndex("times_a_day"));
+
+                    //int idMeasurementType = cursor.getInt(cursor.getColumnIndex("_id_measurement_type"));
+                    int idMeasurementValueType = cursor.getInt(cursor.getColumnIndex("_id_measur_value_type"));
+
+                    measurementReminders.add(new MeasurementReminder(id, idMeasurementType, havingMealsType,
+                            isActive, times_aDay, startDateStr, endDateStr, countLeft, idMeasurementValueType));
+                }
+            }
+            while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        return measurementReminders;
+    }
+
     /**
      *
      * @param mode: 1 - AVERAGE value; 2 - TOTAL(SUM) value

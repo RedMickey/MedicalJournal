@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
@@ -22,7 +23,10 @@ import android.widget.Toast;
 
 import com.example.michel.mycalendar2.adapters.GFitDayDetailsListAdapter;
 import com.example.michel.mycalendar2.app_async_tasks.OneTimeMeasurementReminderInsertionTask;
+import com.example.michel.mycalendar2.app_async_tasks.synchronization.SynchronizationMeasurementReminderTask;
+import com.example.michel.mycalendar2.authentication.AccountGeneralUtils;
 import com.example.michel.mycalendar2.auxiliary_fragments.ChartMarkerView;
+import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
 import com.example.michel.mycalendar2.calendarview.data.DateData;
 import com.example.michel.mycalendar2.calendarview.utils.CalendarUtil;
 import com.example.michel.mycalendar2.models.ReminderTime;
@@ -137,6 +141,28 @@ public class GFitDetailsActivity extends AppCompatActivity implements OnChartVal
                 final BottomSheetDialog choosingAdditionModeDialog = new BottomSheetDialog(view.getContext());
                 View bottomSheetView = inflater.inflate(R.layout.choosing_addition_mode_dialog_layout, null, false);
                 final DataPoint curDataPoint = gFitDayDetailsListAdapter.getItem(position);
+                final double value1, value2;
+                switch (fitMeasurementType){
+                    case 2:
+                        value1 = curDataPoint.getValue(HealthFields.FIELD_BLOOD_PRESSURE_SYSTOLIC).asFloat();
+                        value2 = curDataPoint.getValue(HealthFields.FIELD_BLOOD_PRESSURE_DIASTOLIC).asFloat();
+                        break;
+                    case 6:
+                        value1 = (int)curDataPoint.getValue(fieldType).asFloat();
+                        value2 = -10000;
+                        break;
+                    default:
+                        value2 = -10000;
+                        double value1Buf = 0;
+                        try {
+                            value1Buf = curDataPoint.getValue(fieldType).asFloat();
+                        }
+                        catch (IllegalStateException ex){
+                            value1Buf = curDataPoint.getValue(fieldType).asInt();
+                        }
+                        value1 = value1Buf;
+                        break;
+                }
                 ((LinearLayout)bottomSheetView.findViewById(R.id.add_single_measur_ll)).setOnClickListener(
                         new View.OnClickListener() {
                             @Override
@@ -151,30 +177,17 @@ public class GFitDetailsActivity extends AppCompatActivity implements OnChartVal
                                 measurementReminderDBEntry.setReminderTimes(reminderTimes);
                                 measurementReminderDBEntry.setIdMeasurementType(fitMeasurementType);
                                 measurementReminderDBEntry.setIsActive(1);
-                                double value1 = 0, value2 = 0;
 
-                                switch (fitMeasurementType){
-                                    case 2:
-                                        value1 = curDataPoint.getValue(HealthFields.FIELD_BLOOD_PRESSURE_SYSTOLIC).asFloat();
-                                        value2 = curDataPoint.getValue(HealthFields.FIELD_BLOOD_PRESSURE_DIASTOLIC).asFloat();
-                                        break;
-                                    case 6:
-                                        value1 = (int)curDataPoint.getValue(fieldType).asFloat();
-                                        value2 = -10000;
-                                        break;
-                                        default:
-                                            value2 = -10000;
-                                            try {
-                                                value1 = curDataPoint.getValue(fieldType).asFloat();
-                                            }
-                                            catch (IllegalStateException ex){
-                                                value1 = curDataPoint.getValue(fieldType).asInt();
-                                            }
-                                            break;
-                                }
                                 OneTimeMeasurementReminderInsertionTask otmrit = new OneTimeMeasurementReminderInsertionTask(value1, value2);
                                 otmrit.execute(measurementReminderDBEntry);
                                 Toast.makeText(v.getContext(),"Запись добавлена", Toast.LENGTH_SHORT).show();
+
+                                if (AccountGeneralUtils.curUser.getId()!=1){
+                                    SynchronizationMeasurementReminderTask synchronizationMeasurementReminderTask = new
+                                            SynchronizationMeasurementReminderTask(DatabaseAdapter.AppContext);
+                                    synchronizationMeasurementReminderTask.execute();
+                                }
+
                                 choosingAdditionModeDialog.dismiss();
                             }
                         }
@@ -183,7 +196,12 @@ public class GFitDetailsActivity extends AppCompatActivity implements OnChartVal
                         new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-
+                                Intent intent = new Intent(v.getContext(), ChoosingMeasurementCourseActivity.class);
+                                intent.putExtra("value1", value1);
+                                intent.putExtra("value2", value2);
+                                intent.putExtra("fitMeasurementType", fitMeasurementType);
+                                intent.putExtra("curDate", curDataPoint.getEndTime(TimeUnit.MILLISECONDS));
+                                startActivity(intent);
 
                                 choosingAdditionModeDialog.dismiss();
                             }
@@ -731,5 +749,16 @@ public class GFitDetailsActivity extends AppCompatActivity implements OnChartVal
     @Override
     public void onNothingSelected() {
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

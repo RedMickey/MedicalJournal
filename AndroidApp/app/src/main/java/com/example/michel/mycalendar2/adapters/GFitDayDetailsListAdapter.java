@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.michel.mycalendar2.activities.R;
+import com.example.michel.mycalendar2.utils.ConvertingUtils;
 import com.google.android.gms.fitness.data.DataPoint;
 import com.google.android.gms.fitness.data.Field;
 import com.google.android.gms.fitness.data.HealthFields;
@@ -71,7 +72,8 @@ public class GFitDayDetailsListAdapter extends ArrayAdapter<DataPoint> {
                     valueTV.setText(String.format("%.0f %s", dataPoint.getValue(dataField).asFloat(), measurementValueTypeStr));
                 }
                 catch (IllegalStateException ex){
-                    valueTV.setText(String.format("%d %s", dataPoint.getValue(dataField).asInt(), measurementValueTypeStr));
+                    valueTV.setText(String.format("%d %s", dataPoint.getValue(dataField).asInt(),
+                            createCountTypeEnding(dataPoint.getValue(dataField).asInt())));
                 }
             }
         }
@@ -90,6 +92,15 @@ public class GFitDayDetailsListAdapter extends ArrayAdapter<DataPoint> {
         }
 
         return view;
+    }
+
+    private String createCountTypeEnding(double value){
+        switch (fitMeasurementType){
+            case 8:
+                return ConvertingUtils.smartEnding((int)value, new String[]{"", "а", "ов"}, measurementValueTypeStr);
+            default:
+                return measurementValueTypeStr;
+        }
     }
 
     public String getMeasurementValueTypeStr() {
