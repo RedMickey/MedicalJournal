@@ -85,6 +85,8 @@ public class LoginActivity extends AppCompatActivity {
 
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        getSupportActionBar().setTitle("Вход");
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email_actv);
 

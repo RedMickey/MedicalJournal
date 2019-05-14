@@ -84,6 +84,7 @@
     <string name="statistic_fragment_title">Статистика</string>
     <string name="main_fragment_title">Дневник здоровья</string>
     <string name="google_fit_fragment_title">Google Fit</string>
+    <string name="settings_fragment_title">Настройки</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>

@@ -14,7 +14,7 @@ public class MarkStyle {
     public static final int TEXT = 5;
     public static final int DEFAULT = 10;
 
-    public static int defaultColor = Color.rgb(0, 148, 243);
+    public static int defaultColor = Color.rgb(0x6a, 0xb7, 0xff);
 
     public static String text;
     public static int textColor;

@@ -278,7 +278,7 @@ public class GFitDetailsActivity extends AppCompatActivity implements OnChartVal
                         new OnSuccessListener<DataReadResponse>() {
                             @Override
                             public void onSuccess(DataReadResponse dataReadResponse) {
-                                printData(dataReadResponse);
+                                //printData(dataReadResponse);
                                 fillDayDetailsList(dataReadResponse);
                                 //setupGeneralData(dataReadResponse);
                                 //checkTaskCompletion();

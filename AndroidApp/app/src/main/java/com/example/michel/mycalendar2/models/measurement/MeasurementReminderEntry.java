@@ -12,6 +12,7 @@ public class MeasurementReminderEntry extends ReminderEntryModel implements Parc
     private double value1;
     private double value2;
     private int idMeasurementType;
+    private int isGfitListening;
     private String measurementTypeName;
     private String measurementValueTypeName;
 
@@ -26,6 +27,21 @@ public class MeasurementReminderEntry extends ReminderEntryModel implements Parc
         this.value1 = value1;
         this.value2 = value2;
         this.measurementTypeName = measurementTypeName;
+        this.isGfitListening = 0;
+    }
+
+    public MeasurementReminderEntry(UUID id, int havingMealsType,
+                                    int idMeasurementType, String measurementValueTypeName, Date date,
+                                    Date havingMealsTime, int isDone, boolean isLate,
+                                    double value1, double value2, String measurementTypeName, int isGfitListening)
+    {
+        super(id, havingMealsType, date, havingMealsTime, isDone, isLate);
+        this.idMeasurementType = idMeasurementType;
+        this.measurementValueTypeName = measurementValueTypeName;
+        this.value1 = value1;
+        this.value2 = value2;
+        this.measurementTypeName = measurementTypeName;
+        this.isGfitListening = isGfitListening;
     }
 
     @Override
@@ -45,6 +61,7 @@ public class MeasurementReminderEntry extends ReminderEntryModel implements Parc
         parcel.writeDouble(value1);
         parcel.writeDouble(value2);
         parcel.writeString(measurementTypeName);
+        parcel.writeInt(isGfitListening);
     }
 
     public MeasurementReminderEntry(Parcel in){
@@ -54,6 +71,7 @@ public class MeasurementReminderEntry extends ReminderEntryModel implements Parc
         this.value1 = in.readDouble();
         this.value2 = in.readDouble();
         this.measurementTypeName = in.readString();
+        this.isGfitListening = in.readInt();
     }
 
     public static final Parcelable.Creator<MeasurementReminderEntry> CREATOR = new Creator<MeasurementReminderEntry>() {
@@ -106,5 +124,13 @@ public class MeasurementReminderEntry extends ReminderEntryModel implements Parc
 
     public void setMeasurementTypeName(String measurementTypeName) {
         this.measurementTypeName = measurementTypeName;
+    }
+
+    public int getIsGfitListening() {
+        return isGfitListening;
+    }
+
+    public void setIsGfitListening(int isGfitListening) {
+        this.isGfitListening = isGfitListening;
     }
 }

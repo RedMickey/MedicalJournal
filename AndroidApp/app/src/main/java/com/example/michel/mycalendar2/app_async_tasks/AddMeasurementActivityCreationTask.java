@@ -11,6 +11,7 @@ import android.widget.GridLayout;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -28,6 +29,7 @@ import com.example.michel.mycalendar2.models.CycleAndPillComby;
 import com.example.michel.mycalendar2.models.CycleDBInsertEntry;
 import com.example.michel.mycalendar2.models.measurement.MeasurementReminderDBEntry;
 import com.example.michel.mycalendar2.utils.DBStaticEntries;
+import com.example.michel.mycalendar2.utils.GFitUtils;
 
 import java.util.UUID;
 
@@ -62,6 +64,12 @@ public class AddMeasurementActivityCreationTask extends AsyncTask<UUID, Void, Cy
 
         ((TextView)view.findViewById(R.id.active_ind_tv_CaddT)).setText((mrdbe.getIsActive()==1?"Активное":"Завершённое"));
         ((Switch)view.findViewById(R.id.switch_active_type)).setChecked((mrdbe.getIsActive()==1?true:false));
+
+        if ((GFitUtils.checkSignedIn(view)||mrdbe.getIsGfitListening()==1)&&view.isGFitSupported()){
+            ((Switch)view.findViewById(R.id.switch_gf_enabled)).setChecked(mrdbe.getIsGfitListening()==1?true:false);
+        }
+        else
+            ((RelativeLayout)view.findViewById(R.id.gfit_setting_layout)).setVisibility(View.GONE);
 
         view.setOldMeasurementReminder(mrdbe);
         view.setIdWeekSchedule(cdbie.getIdWeekSchedule());

@@ -31,7 +31,8 @@ public class OneTimeMeasurementReminderInsertionTask extends AsyncTask<Measureme
                 mrdbe.getStartDate().getDateString(),
                 mrdbe.getIdCycle(), mrdbe.getIdHavingMealsType(),
                 mrdbe.getHavingMealsTime(), mrdbe.getAnnotation(),
-                mrdbe.getIsActive(), mrdbe.getReminderTimes().length,1
+                mrdbe.getIsActive(), mrdbe.getReminderTimes().length,1,
+                mrdbe.getIsGfitListening()
         );
 
         measurementReminderDao.insertMeasurementReminderEntry(

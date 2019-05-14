@@ -18,7 +18,7 @@
             />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="19dp"
             android:textStyle="bold"
@@ -27,6 +27,8 @@
             android:layout_centerVertical="true"
             android:id="@+id/measurement_name_tv_rmi"
             android:layout_toRightOf="@+id/measurement_iv_rmi"
+            android:layout_toLeftOf="@+id/active_ind_iv"
+            android:layout_marginRight="7dp"
             />
 
         <TextView

@@ -54,7 +54,8 @@ public class MeasurementRemindersUpdateTask extends AsyncTask<CycleAndMeasuremen
                 mrdbe.getStartDate().getDateString(),
                 mrdbe.getIdCycle(), mrdbe.getIdHavingMealsType(),
                 mrdbe.getHavingMealsTime(), mrdbe.getAnnotation(),
-                mrdbe.getIsActive(), mrdbe.getReminderTimes().length
+                mrdbe.getIsActive(), mrdbe.getReminderTimes().length,
+                mrdbe.getIsGfitListening()
         );
 
         Calendar cal = Calendar.getInstance();

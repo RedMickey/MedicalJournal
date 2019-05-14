@@ -22,9 +22,10 @@
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="36dp"
+            android:scaleType="fitXY"
             android:contentDescription="@string/nav_header_desc"
-            app:srcCompat="@mipmap/ic_launcher_round" />
+            app:srcCompat="@drawable/ic_weight" />
 
         <LinearLayout
             android:layout_width="match_parent"

@@ -168,9 +168,10 @@ public class DailyHistoryItemsCreationTask extends AsyncTask<DateData, Void, Lis
             TextView taskNote = new TextView(mView.getContext());
             LinearLayout.LayoutParams taskNoteParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT);
-            taskNote.setText("Empty");
+            taskNote.setText("Нет данных");
             taskNote.setLayoutParams(taskNoteParams);
             taskNote.setGravity(Gravity.CENTER);
+            taskNote.setTextSize(17);
             tasksLayout.addView(taskNote);
         }
     }

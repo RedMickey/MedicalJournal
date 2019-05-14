@@ -26,7 +26,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:id="@+id/active_status_layout">
+                android:id="@+id/general_schedule_layout"
+                android:paddingBottom="17dp">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -39,7 +40,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="7dp"
-                    android:paddingBottom="17dp">
+                    android:id="@+id/active_status_layout"
+                    >
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -54,6 +56,29 @@
                         android:layout_alignParentRight="true"
                         android:id="@+id/switch_active_type"
                         android:checked="true"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="7dp"
+                    android:id="@+id/gfit_setting_layout">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Использовать данные Google Fit"
+                        android:textSize="17dp"
+                        android:layout_toLeftOf="@+id/switch_gf_enabled"
+                        android:gravity="left" />
+
+                    <Switch
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:id="@+id/switch_gf_enabled"
+                        android:checked="false"/>
 
                 </RelativeLayout>
 

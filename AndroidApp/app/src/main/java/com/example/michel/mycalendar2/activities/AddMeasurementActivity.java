@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.GridLayout;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -46,6 +47,7 @@ import com.example.michel.mycalendar2.models.CycleDBInsertEntry;
 import com.example.michel.mycalendar2.models.measurement.MeasurementReminderDBEntry;
 import com.example.michel.mycalendar2.models.ReminderTime;
 import com.example.michel.mycalendar2.utils.DBStaticEntries;
+import com.example.michel.mycalendar2.utils.GFitUtils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -181,6 +183,7 @@ public class AddMeasurementActivity extends AppCompatActivity {
                 measurementReminderDBEntry.setReminderTimes(reminderTimes);
                 measurementReminderDBEntry.setIdMeasurementType(measurementTypeId);
 
+                measurementReminderDBEntry.setIsGfitListening(((Switch)findViewById(R.id.switch_gf_enabled)).isChecked()?1:0);
                 if (getIntent().getExtras().getString("MeasurementReminderID") == null) {
                     measurementReminderDBEntry.setIsActive(1);
                     /*Snackbar.make(view, "ReadyInsert", Snackbar.LENGTH_SHORT)
@@ -297,7 +300,10 @@ public class AddMeasurementActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(measurementName);
 
         if (id == null){
-            ((LinearLayout)findViewById(R.id.active_status_layout)).setVisibility(View.GONE);
+            if (!GFitUtils.checkSignedIn(this)||!isGFitSupported())
+                ((LinearLayout)findViewById(R.id.general_schedule_layout)).setVisibility(View.GONE);
+            else
+                ((RelativeLayout)findViewById(R.id.active_status_layout)).setVisibility(View.GONE);
 
             cal = Calendar.getInstance();
             time.add(String.valueOf(cal.get(Calendar.HOUR_OF_DAY))+":00");
@@ -314,7 +320,6 @@ public class AddMeasurementActivity extends AppCompatActivity {
                     this, pickDateButtonDateData, timesOfTakingMedicineAdapter);
             addMeasurementActivityCreationTask.execute(UUID.fromString(id));
         }
-
     }
 
     @Override
@@ -520,4 +525,14 @@ public class AddMeasurementActivity extends AppCompatActivity {
         return index;
     }
 
+    public boolean isGFitSupported(){
+        switch (measurementTypeId){
+            case 1:
+            case 4:
+            case 7:
+                return false;
+                default:
+                    return true;
+        }
+    }
 }

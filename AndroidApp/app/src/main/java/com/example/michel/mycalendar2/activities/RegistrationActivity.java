@@ -44,6 +44,8 @@ public class RegistrationActivity extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        //getSupportActionBar().setTitle("");
+
         birthdayYearSpinner = (Spinner) findViewById(R.id.birthday_year_spinner);
         ArrayList<String> years = new ArrayList<String>();
         int endYear = Calendar.getInstance().get(Calendar.YEAR)-10;

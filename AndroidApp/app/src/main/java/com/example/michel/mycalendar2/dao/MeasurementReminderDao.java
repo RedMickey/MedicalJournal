@@ -38,7 +38,7 @@ public class MeasurementReminderDao {
     public UUID insertMeasurementReminder(int idMeasurementType,
                                           String startDate, @Nullable UUID idCycle, @Nullable Integer idHavingMealsType,
                                           @Nullable Integer havingMealsTime, String annotation, Integer isActive, Integer times_aDay,
-                                          Integer isOneTime){
+                                          Integer isOneTime, int gfitListening){
 
         UUID measurementReminderId = UUID.randomUUID();
         ContentValues measurementReminderTableValues = new ContentValues();
@@ -50,6 +50,7 @@ public class MeasurementReminderDao {
         measurementReminderTableValues.put("having_meals_time", havingMealsTime);
         measurementReminderTableValues.put("annotation", annotation);
         measurementReminderTableValues.put("IsActive", isActive);
+        measurementReminderTableValues.put("gfit_listening", gfitListening);
         measurementReminderTableValues.put("times_a_day", times_aDay);
         measurementReminderTableValues.put("_id_user", AccountGeneralUtils.curUser.getId());
         if (isOneTime==1)
@@ -386,7 +387,7 @@ public class MeasurementReminderDao {
     public CycleAndMeasurementComby getCycleAndMeasurementCombyById(UUID prID){
         String uuidStr = prID.toString().replace("-", "");
         String rawQuery = "select mr._id_measurement_reminder, mr._id_measurement_type, mt._id_measur_value_type, mr.start_date, mr._id_having_meals_type, mr.having_meals_time, mr.annotation, mr.isActive, mr.times_a_day, " +
-                " mr._id_cycle, cl.period, cl.period_DM_type, cl.once_a_period, cl.once_a_period_DM_type, cl._id_cycling_type, cl._id_week_schedule " +
+                " mr._id_cycle, mr.gfit_listening, cl.period, cl.period_DM_type, cl.once_a_period, cl.once_a_period_DM_type, cl._id_cycling_type, cl._id_week_schedule " +
                 " from measurement_reminders mr inner join cycles cl on mr._id_cycle=cl._id_cycle inner join measurement_types mt on mr._id_measurement_type=mt._id_measurement_type " +
                 " where mr.change_type<3 and mr._id_user=? and mr._id_measurement_reminder=X'"+uuidStr+"'";
         Cursor cursor = database.rawQuery(rawQuery, new String[]{String.valueOf(AccountGeneralUtils.curUser.getId())});
@@ -403,6 +404,7 @@ public class MeasurementReminderDao {
                 int havingMealsTime = Math.abs(cursor.getInt(cursor.getColumnIndex("having_meals_time")));
                 String annotation = cursor.getString(cursor.getColumnIndex("annotation"));
                 int isActive = cursor.getInt(cursor.getColumnIndex("isActive"));
+                int gfitListening = cursor.getInt(cursor.getColumnIndex("gfit_listening"));
                 int times_aDay = cursor.getInt(cursor.getColumnIndex("times_a_day"));  // may be deleted
                 ReminderTimeDao reminderTimeDao = new ReminderTimeDao(database);
                 ReminderTime[] reminderTimes = reminderTimeDao.getReminderEntriesTime(idMeasurementReminder, startDateStr, 1);
@@ -420,7 +422,7 @@ public class MeasurementReminderDao {
                 MeasurementReminderDBEntry mrdbe = new MeasurementReminderDBEntry(
                         idMeasurementType, idMeasurementReminder, startDate, idCycle,
                         idHavingMealsType, havingMealsTime, annotation, isActive, reminderTimes,
-                        idMeasurementValueType
+                        idMeasurementValueType, gfitListening
                 );
 
                 int period = cursor.getInt(cursor.getColumnIndex("period"));
@@ -469,7 +471,8 @@ public class MeasurementReminderDao {
 
     public UUID updateMeasurementReminder(UUID idMeasurementReminder,
                                           String startDate, UUID idCycle, @Nullable Integer idHavingMealsType,
-                                          @Nullable Integer havingMealsTime, String annotation, Integer isActive, Integer times_aDay
+                                          @Nullable Integer havingMealsTime, String annotation, Integer isActive,
+                                          Integer times_aDay, int gfitListening
     ){
         ContentValues measurementReminderTableValues = new ContentValues();
         measurementReminderTableValues.put("start_date", startDate);
@@ -478,6 +481,7 @@ public class MeasurementReminderDao {
         measurementReminderTableValues.put("having_meals_time", havingMealsTime);
         measurementReminderTableValues.put("annotation", annotation);
         measurementReminderTableValues.put("IsActive", isActive);
+        measurementReminderTableValues.put("gfit_listening", gfitListening);
         measurementReminderTableValues.put("times_a_day", times_aDay);
         measurementReminderTableValues.put("change_type", 2);
         database.update("measurement_reminders", measurementReminderTableValues,
@@ -506,7 +510,7 @@ public class MeasurementReminderDao {
             userIdStr = String.valueOf(userId);
         }
         String rawQuery = "select mre._id_measur_remind_entry, mr._id_measurement_type, mvt.type_value_name, mt.type_name, mre.value1, mre.value2, mre.is_done, mr._id_having_meals_type," +
-                " mre.reminder_time, mr.having_meals_time, mre.reminder_date " +
+                " mre.reminder_time, mr.having_meals_time, mr.gfit_listening, mre.reminder_date " +
                 " from measurement_reminder_entries mre inner join measurement_reminders mr on mre._id_measurement_reminder=mr._id_measurement_reminder inner join measurement_types mt on" +
                 " mr._id_measurement_type=mt._id_measurement_type inner join measurement_value_types mvt on mt._id_measur_value_type=mvt._id_measur_value_type where mre.reminder_date=? and" +
                 " (mr.IsActive=1 or mre.is_done=1) and mre.change_type<3 and mr._id_user=? ORDER BY mre.is_done";
@@ -523,6 +527,7 @@ public class MeasurementReminderDao {
                 String timeStr = cursor.getString(cursor.getColumnIndex("reminder_time"));
                 int havingMealsType = cursor.getInt(cursor.getColumnIndex("_id_having_meals_type"));
                 int havingMealsTimeStr = cursor.getInt(cursor.getColumnIndex("having_meals_time"));
+                int gfitListening = cursor.getInt(cursor.getColumnIndex("gfit_listening"));
                 int isDone = cursor.getInt(cursor.getColumnIndex("is_done"));
                 String measurementTypeName = cursor.getString(cursor.getColumnIndex("type_name"));
 
@@ -542,7 +547,8 @@ public class MeasurementReminderDao {
 
                 measurementReminderEntry.add(new MeasurementReminderEntry(
                         id, havingMealsType, idMeasurementType, measurementValueTypeName,
-                        reminderDate, havingMealsTime, isDone, isLate, value1, value2, measurementTypeName));
+                        reminderDate, havingMealsTime, isDone, isLate, value1, value2,
+                        measurementTypeName, gfitListening));
             }
             while (cursor.moveToNext());
         }
@@ -554,7 +560,7 @@ public class MeasurementReminderDao {
         String uuidStr = idMeasurementReminder.toString().replace("-", "");
         ArrayList<MeasurementReminderEntry> measurementReminderEntry = new ArrayList<>();
         String rawQuery = "select mre._id_measur_remind_entry, mr._id_measurement_type, mvt.type_value_name, mt.type_name, mre.value1, mre.value2, mre.is_done, mr._id_having_meals_type," +
-                " mre.reminder_time, mr.having_meals_time, mre.reminder_date " +
+                " mre.reminder_time, mr.having_meals_time, mr.gfit_listening, mre.reminder_date " +
                 " from measurement_reminder_entries mre inner join measurement_reminders mr on mre._id_measurement_reminder=mr._id_measurement_reminder inner join measurement_types mt on" +
                 " mr._id_measurement_type=mt._id_measurement_type inner join measurement_value_types mvt on mt._id_measur_value_type=mvt._id_measur_value_type where mre.reminder_date=? and" +
                 " mre._id_measurement_reminder =X'" + uuidStr + "' and (mr.IsActive=1 or mre.is_done=1) and mre.change_type<3 and mr._id_user=? ORDER BY mre.is_done";
@@ -572,6 +578,7 @@ public class MeasurementReminderDao {
                 int havingMealsType = cursor.getInt(cursor.getColumnIndex("_id_having_meals_type"));
                 int havingMealsTimeStr = cursor.getInt(cursor.getColumnIndex("having_meals_time"));
                 int isDone = cursor.getInt(cursor.getColumnIndex("is_done"));
+                int gfitListening = cursor.getInt(cursor.getColumnIndex("gfit_listening"));
                 String measurementTypeName = cursor.getString(cursor.getColumnIndex("type_name"));
 
                 Date reminderDate;
@@ -590,7 +597,8 @@ public class MeasurementReminderDao {
 
                 measurementReminderEntry.add(new MeasurementReminderEntry(
                         id, havingMealsType, idMeasurementType, measurementValueTypeName,
-                        reminderDate, havingMealsTime, isDone, isLate, value1, value2, measurementTypeName));
+                        reminderDate, havingMealsTime, isDone, isLate, value1, value2,
+                        measurementTypeName, gfitListening));
             }
             while (cursor.moveToNext());
         }
@@ -604,7 +612,7 @@ public class MeasurementReminderDao {
         String userIdStr = String.valueOf(AccountGeneralUtils.curUser.getId());
         if (param==0){
             String rawQuery = "select mre._id_measur_remind_entry, mr._id_measurement_type, mvt.type_value_name, mt.type_name, mre.value1, mre.value2, mre.is_done, mr._id_having_meals_type," +
-                    " mre.reminder_time, mr.having_meals_time, mre.reminder_date" +
+                    " mre.reminder_time, mr.having_meals_time, mr.gfit_listening, mre.reminder_date" +
                     " from measurement_reminder_entries mre inner join measurement_reminders mr on mre._id_measurement_reminder=mr._id_measurement_reminder inner join measurement_types mt on" +
                     " mr._id_measurement_type=mt._id_measurement_type inner join measurement_value_types mvt on mt._id_measur_value_type=mvt._id_measur_value_type" +
                     " where mre.reminder_date between ? and ? and (mr.IsActive=1 or mre.is_done=1) and mre.change_type<3 and mr._id_user=? ORDER BY mre.reminder_date DESC, mre.reminder_time DESC";
@@ -613,7 +621,7 @@ public class MeasurementReminderDao {
         }
         else {
             String rawQuery = "select mre._id_measur_remind_entry, mr._id_measurement_type, mvt.type_value_name, mt.type_name, mre.value1, mre.value2, mre.is_done, mr._id_having_meals_type," +
-                    " mre.reminder_time, mr.having_meals_time, mre.reminder_date" +
+                    " mre.reminder_time, mr.having_meals_time, mr.gfit_listening, mre.reminder_date" +
                     " from measurement_reminder_entries mre inner join measurement_reminders mr on mre._id_measurement_reminder=mr._id_measurement_reminder inner join measurement_types mt on" +
                     " mr._id_measurement_type=mt._id_measurement_type inner join measurement_value_types mvt on mt._id_measur_value_type=mvt._id_measur_value_type" +
                     " where mre.reminder_date <= ? and (mr.IsActive=1 or mre.is_done=1) and mre.change_type<3 and mr._id_user=? ORDER BY mre.reminder_date DESC, mre.reminder_time DESC";
@@ -634,6 +642,7 @@ public class MeasurementReminderDao {
                 int havingMealsType = cursor.getInt(cursor.getColumnIndex("_id_having_meals_type"));
                 int havingMealsTimeStr = cursor.getInt(cursor.getColumnIndex("having_meals_time"));
                 int isDone = cursor.getInt(cursor.getColumnIndex("is_done"));
+                int gfitListening = cursor.getInt(cursor.getColumnIndex("gfit_listening"));
                 String measurementTypeName = cursor.getString(cursor.getColumnIndex("type_name"));
 
                 Date reminderDate;
@@ -652,7 +661,8 @@ public class MeasurementReminderDao {
 
                 measurementReminderEntry.add(new MeasurementReminderEntry(
                         id, havingMealsType, idMeasurementType, measurementValueTypeName,
-                        reminderDate, havingMealsTime, isDone, isLate, value1, value2, measurementTypeName));
+                        reminderDate, havingMealsTime, isDone, isLate, value1, value2,
+                        measurementTypeName, gfitListening));
             }
             while (cursor.moveToNext());
         }

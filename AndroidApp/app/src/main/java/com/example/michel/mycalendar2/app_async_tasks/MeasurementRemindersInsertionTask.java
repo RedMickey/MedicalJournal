@@ -47,7 +47,8 @@ public class MeasurementRemindersInsertionTask extends AsyncTask<CycleAndMeasure
                 mrdbe.getStartDate().getDateString(),
                 mrdbe.getIdCycle(), mrdbe.getIdHavingMealsType(),
                 mrdbe.getHavingMealsTime(), mrdbe.getAnnotation(),
-                mrdbe.getIsActive(), mrdbe.getReminderTimes().length, 0
+                mrdbe.getIsActive(), mrdbe.getReminderTimes().length, 0,
+                mrdbe.getIsGfitListening()
         );
 
         for (int i=0; i<mrdbe.getReminderTimes().length; i++){

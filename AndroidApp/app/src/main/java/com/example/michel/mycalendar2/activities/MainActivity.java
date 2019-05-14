@@ -36,6 +36,7 @@ import com.example.michel.mycalendar2.main_fragments.GoogleFitFragment;
 import com.example.michel.mycalendar2.main_fragments.HistoryFragment;
 import com.example.michel.mycalendar2.main_fragments.MainFragment;
 import com.example.michel.mycalendar2.main_fragments.ReminderFragment;
+import com.example.michel.mycalendar2.main_fragments.SettingsFragment;
 import com.example.michel.mycalendar2.main_fragments.StatisticListFragment;
 import com.example.michel.mycalendar2.utils.DBStaticEntries;
 
@@ -45,8 +46,8 @@ import java.util.Calendar;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private final int RESULT_SIGN_IN_CODE = 5531;
-    private final int RESULT_USER_CONFIG_CODE = 5532;
+    private static final int RESULT_SIGN_IN_CODE = 5531;
+    private static final int RESULT_USER_CONFIG_CODE = 5532;
     private static final int REQUEST_OAUTH_REQUEST_CODE = 5541;
 
     private AppBarLayout appBarLayout;
@@ -211,21 +212,9 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        /*int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);*/
-
         switch (item.getItemId()) {
-            case R.id.action_settings:
-                return true;
+            /*case R.id.action_settings:
+                return true;*/
             case R.id.synchronize:
                 synchronizeDataWithServer();
                 return true;
@@ -286,6 +275,12 @@ public class MainActivity extends AppCompatActivity
                     newFragment = GoogleFitFragment.newInstance();
                     checkToolBarLinearLayoutVisibility(0);
                     toolbar.setTitle(getResources().getString(R.string.google_fit_fragment_title));
+                    break;
+                case R.id.nav_settings:
+                    curFragmentTag = "SETTINGS_FRAGMENT";
+                    newFragment = SettingsFragment.newInstance();
+                    checkToolBarLinearLayoutVisibility(0);
+                    toolbar.setTitle(getResources().getString(R.string.settings_fragment_title));
                     break;
                 case R.id.nav_main:
                     newFragment = null;
@@ -437,6 +432,9 @@ public class MainActivity extends AppCompatActivity
             case "GOOGLE_FIT_FRAGMENT":
                 newFragment = GoogleFitFragment.newInstance();
                 break;
+            case "SETTINGS_FRAGMENT":
+                newFragment = SettingsFragment.newInstance();
+                break;
             case "HISTORY_FRAGMENT":
                 newFragment = HistoryFragment.newInstance();
                 break;
@@ -470,5 +468,13 @@ public class MainActivity extends AppCompatActivity
 
     public void setCurFragmentTag(String curFragmentTag) {
         this.curFragmentTag = curFragmentTag;
+    }
+
+    public static int getRESULT_SIGN_IN_CODE() {
+        return RESULT_SIGN_IN_CODE;
+    }
+
+    public static int getRESULT_USER_CONFIG_CODE() {
+        return RESULT_USER_CONFIG_CODE;
     }
 }

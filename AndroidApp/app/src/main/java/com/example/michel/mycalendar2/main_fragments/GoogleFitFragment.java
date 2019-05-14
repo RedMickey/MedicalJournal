@@ -313,19 +313,6 @@ public class GoogleFitFragment extends Fragment implements SwipeRefreshLayout.On
                         dataSets.get(3).getDataPoints().get(0).getValue(Field.FIELD_DURATION)
                         ))
                 );
-
-            /*DateFormat dateFormat = getDateTimeInstance();
-            for (DataSet dataSet : dataReadResult.getBuckets().get(0).getDataSets()) {
-                for (DataPoint dp : dataSet.getDataPoints()) {
-                    Log.i("T", "Data point:");
-                    Log.i("T", "\tType: " + dp.getDataType().getName());
-                    Log.i("T", "\tStart: " + dateFormat.format(dp.getStartTime(TimeUnit.MILLISECONDS)));
-                    Log.i("T", "\tEnd: " + dateFormat.format(dp.getEndTime(TimeUnit.MILLISECONDS)));
-                    for (Field field : dp.getDataType().getFields()) {
-                        Log.i("V", "\tField: " + field.getName() + " Value: " + dp.getValue(field));
-                    }
-                }
-            }*/
         }
     }
 
@@ -371,7 +358,6 @@ public class GoogleFitFragment extends Fragment implements SwipeRefreshLayout.On
                                 dp.getValue(HealthFields.FIELD_BLOOD_PRESSURE_DIASTOLIC), timeDifference/1000, 2)
                 );
             }
-
 
         }
     }

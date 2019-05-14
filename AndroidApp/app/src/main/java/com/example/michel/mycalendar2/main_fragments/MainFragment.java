@@ -308,7 +308,7 @@ public class MainFragment extends Fragment{
                 .create());
         if (fabWithLabelView != null) {
             fabWithLabelView.setSpeedDialActionItem(fabWithLabelView.getSpeedDialActionItemBuilder()
-                    .setFabBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.material_indigo_300,
+                    .setFabBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.colorPrimaryLight,
                             getActivity().getTheme()))
                     .create());
         }

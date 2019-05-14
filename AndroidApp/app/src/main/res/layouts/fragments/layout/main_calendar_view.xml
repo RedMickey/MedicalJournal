@@ -79,7 +79,7 @@
                     android:id="@+id/YYMM_Tv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="#A777BE"
+                    android:background="@color/colorPrimaryLight"
                     android:gravity="center_vertical"
                     android:padding="10dp"
                     android:text="Month"
