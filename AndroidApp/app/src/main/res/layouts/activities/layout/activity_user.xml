@@ -19,12 +19,13 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <ImageView
+            <de.hdodenhof.circleimageview.CircleImageView
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:src="@drawable/ic_profile_man"
-                android:layout_gravity="center_horizontal"
+                android:src="@drawable/avatar2"
                 android:id="@+id/user_profile_icon"
+                android:layout_gravity="center_horizontal"
+                app:civ_circle_background_color="#BCAAA4"
                 />
 
             <View

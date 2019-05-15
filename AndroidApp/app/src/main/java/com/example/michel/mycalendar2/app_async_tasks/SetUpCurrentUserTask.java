@@ -88,7 +88,7 @@ public class SetUpCurrentUserTask extends AsyncTask<Void, Void, Integer> {
     @Override
     protected void onPostExecute(Integer status) {
         if (status > 0){
-            Toast.makeText(context, user.getEmail() + " " + account.name + "\n" + authToken, Toast.LENGTH_LONG).show();
+            //Toast.makeText(context, user.getEmail() + " " + account.name + "\n" + authToken, Toast.LENGTH_LONG).show();
             if (mainActivity!=null){
                 ((TextView) mainActivity.getNavigationView().findViewById(R.id.username_tv)).setText(user.getName());
                 ((TextView) mainActivity.getNavigationView().findViewById(R.id.profile_config_tv)).setText("Редактировать профиль");

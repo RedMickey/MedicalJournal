@@ -186,9 +186,7 @@ public class GoogleFitFragment extends Fragment implements SwipeRefreshLayout.On
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == REQUEST_OAUTH_REQUEST_CODE) {
-                Toast.makeText(this.getContext(),"seccess1!", Toast.LENGTH_LONG).show();
                 ((RelativeLayout)mView.findViewById(R.id.google_fit_login_layout)).setVisibility(View.GONE);
-                //((LinearLayout)mView.findViewById(R.id.google_fit_content_layout)).setVisibility(View.VISIBLE);
                 swipeRefreshLayout.setVisibility(View.VISIBLE);
                 downloadData();
             }

@@ -69,6 +69,7 @@ public class AddOneTimeTreatmentActivity extends AppCompatActivity {
 
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("Добавить лекарство");
 
 // Declaration
 

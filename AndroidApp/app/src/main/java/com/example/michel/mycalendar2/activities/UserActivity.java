@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -27,6 +28,8 @@ import com.example.michel.mycalendar2.models.User;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class UserActivity extends AppCompatActivity {
     private Spinner birthdayYearSpinner;
@@ -65,6 +68,31 @@ public class UserActivity extends AppCompatActivity {
         userSurnameRegEt = (EditText) findViewById(R.id.usersurname_reg_et);
 
         emailEt = (EditText) findViewById(R.id.email_et);
+
+        gendersSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                switch (position){
+                    case 0:
+                        ((CircleImageView)findViewById(R.id.user_profile_icon))
+                                .setImageResource(R.drawable.avatar2);
+                        break;
+                    case 1:
+                        ((CircleImageView)findViewById(R.id.user_profile_icon))
+                                .setImageResource(R.drawable.boy_avatar);
+                        break;
+                    case 2:
+                        ((CircleImageView)findViewById(R.id.user_profile_icon))
+                                .setImageResource(R.drawable.girl_avatar);
+                        break;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         usernameRegEt.setText(AccountGeneralUtils.curUser.getName());
         userSurnameRegEt.setText(AccountGeneralUtils.curUser.getSurname());

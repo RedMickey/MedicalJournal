@@ -12,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.design.widget.NavigationView;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -33,6 +34,7 @@ import com.example.michel.mycalendar2.authentication.AccountGeneralUtils;
 import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
 import com.example.michel.mycalendar2.calendarview.utils.DatabaseHelper;
 import com.example.michel.mycalendar2.main_fragments.GoogleFitFragment;
+import com.example.michel.mycalendar2.main_fragments.HelpFragment;
 import com.example.michel.mycalendar2.main_fragments.HistoryFragment;
 import com.example.michel.mycalendar2.main_fragments.MainFragment;
 import com.example.michel.mycalendar2.main_fragments.ReminderFragment;
@@ -42,6 +44,8 @@ import com.example.michel.mycalendar2.utils.DBStaticEntries;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -282,6 +286,12 @@ public class MainActivity extends AppCompatActivity
                     checkToolBarLinearLayoutVisibility(0);
                     toolbar.setTitle(getResources().getString(R.string.settings_fragment_title));
                     break;
+                case R.id.nav_help:
+                    curFragmentTag = "HELP_FRAGMENT";
+                    newFragment = HelpFragment.newInstance();
+                    checkToolBarLinearLayoutVisibility(0);
+                    toolbar.setTitle(getResources().getString(R.string.help_fragment_title));
+                    break;
                 case R.id.nav_main:
                     newFragment = null;
                     isMainFrame = 1;
@@ -406,10 +416,25 @@ public class MainActivity extends AppCompatActivity
                 if (isLogOut){
                     ((TextView) getNavigationView().findViewById(R.id.username_tv)).setText(getResources().getText(R.string.def_username));
                     ((TextView) getNavigationView().findViewById(R.id.profile_config_tv)).setText("Создать Профиль");
+                    ((CircleImageView)getNavigationView().findViewById(R.id.profile_image)).setImageResource(R.drawable.avatar2);
                     updateCurFragment(1);
                 }
                 else {
                     ((TextView) getNavigationView().findViewById(R.id.username_tv)).setText(AccountGeneralUtils.curUser.getName());
+                    switch (AccountGeneralUtils.curUser.getGenderId()){
+                        case 1:
+                            ((CircleImageView)getNavigationView().findViewById(R.id.profile_image))
+                                    .setImageResource(R.drawable.avatar2);
+                            break;
+                        case 2:
+                            ((CircleImageView)getNavigationView().findViewById(R.id.profile_image))
+                                    .setImageResource(R.drawable.boy_avatar);
+                            break;
+                        case 3:
+                            ((CircleImageView)getNavigationView().findViewById(R.id.profile_image))
+                                    .setImageResource(R.drawable.girl_avatar);
+                            break;
+                    }
                 }
             }
             return;
@@ -431,6 +456,9 @@ public class MainActivity extends AppCompatActivity
                 break;
             case "GOOGLE_FIT_FRAGMENT":
                 newFragment = GoogleFitFragment.newInstance();
+                break;
+            case "HELP_FRAGMENT":
+                newFragment = HelpFragment.newInstance();
                 break;
             case "SETTINGS_FRAGMENT":
                 newFragment = SettingsFragment.newInstance();

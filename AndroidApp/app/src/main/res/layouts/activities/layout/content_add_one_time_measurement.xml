@@ -45,7 +45,7 @@
                             android:layout_width="match_parent"
                             android:id="@+id/value1_et1"
                             android:layout_height="wrap_content"
-                            android:inputType="number"
+                            android:inputType="numberDecimal"
                             android:hint="Значение"
                             android:textSize="17dp"
                             />
@@ -86,7 +86,7 @@
                                 android:layout_width="match_parent"
                                 android:id="@+id/value1_et2"
                                 android:layout_height="wrap_content"
-                                android:inputType="number"
+                                android:inputType="numberDecimal"
                                 android:hint="Значение"
                                 android:textSize="17dp"
                                 />

@@ -329,7 +329,7 @@ public class AddMeasurementActivity extends AppCompatActivity {
                 onBackPressed();
                 return true;
             case R.id.action_delete_ATA:
-                if (getIntent().getExtras() != null){
+                if (oldMeasurementReminder != null){
                     AlertDialog.Builder builder = new AlertDialog.Builder(AddMeasurementActivity.this);
                     builder.setTitle("Удалить данные")
                             .setMessage(R.string.delete_measurement_message)
@@ -417,7 +417,7 @@ public class AddMeasurementActivity extends AppCompatActivity {
         {
             mExpandLayout2.collapse();
             ((RadioGroup)view.getParent()).clearCheck();
-            Toast.makeText(this,"false",Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this,"false",Toast.LENGTH_SHORT).show();
         }
     }
 

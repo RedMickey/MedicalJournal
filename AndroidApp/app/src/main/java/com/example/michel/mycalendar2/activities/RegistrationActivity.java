@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -26,6 +27,8 @@ import com.example.michel.mycalendar2.models.User;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class RegistrationActivity extends AppCompatActivity {
     private Spinner birthdayYearSpinner;
@@ -43,8 +46,6 @@ public class RegistrationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_registration);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        //getSupportActionBar().setTitle("");
 
         birthdayYearSpinner = (Spinner) findViewById(R.id.birthday_year_spinner);
         ArrayList<String> years = new ArrayList<String>();
@@ -82,6 +83,31 @@ public class RegistrationActivity extends AppCompatActivity {
                 else {
                     passwordEt.setTransformationMethod(PasswordTransformationMethod.getInstance());
                 }
+            }
+        });
+
+        gendersSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                switch (position){
+                    case 0:
+                        ((CircleImageView)findViewById(R.id.user_profile_icon))
+                                .setImageResource(R.drawable.avatar2);
+                        break;
+                    case 1:
+                        ((CircleImageView)findViewById(R.id.user_profile_icon))
+                                .setImageResource(R.drawable.boy_avatar);
+                        break;
+                    case 2:
+                        ((CircleImageView)findViewById(R.id.user_profile_icon))
+                                .setImageResource(R.drawable.girl_avatar);
+                        break;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
             }
         });
 

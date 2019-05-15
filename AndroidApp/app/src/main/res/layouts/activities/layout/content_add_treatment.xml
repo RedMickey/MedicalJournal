@@ -366,6 +366,7 @@
                     android:layout_height="wrap_content"
                     android:text="Добавить время"
                     android:textSize="15dp"
+                    android:paddingHorizontal="10dp"
                     android:onClick="add_reminder_time"
                     />
 

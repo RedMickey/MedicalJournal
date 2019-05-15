@@ -26,6 +26,8 @@ import java.sql.Timestamp;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class PostSignInTask extends AsyncTask<String, Void, Integer> {
     private Context context;
     private MainActivity mainActivity = null;
@@ -134,6 +136,20 @@ public class PostSignInTask extends AsyncTask<String, Void, Integer> {
         if (mainActivity!=null){
             ((TextView) mainActivity.getNavigationView().findViewById(R.id.username_tv)).setText(user.getName());
             ((TextView) mainActivity.getNavigationView().findViewById(R.id.profile_config_tv)).setText("Редактировать профиль");
+            switch (AccountGeneralUtils.curUser.getGenderId()){
+                case 1:
+                    ((CircleImageView)mainActivity.getNavigationView().findViewById(R.id.profile_image))
+                            .setImageResource(R.drawable.avatar2);
+                    break;
+                case 2:
+                    ((CircleImageView)mainActivity.getNavigationView().findViewById(R.id.profile_image))
+                            .setImageResource(R.drawable.boy_avatar);
+                    break;
+                case 3:
+                    ((CircleImageView)mainActivity.getNavigationView().findViewById(R.id.profile_image))
+                            .setImageResource(R.drawable.girl_avatar);
+                    break;
+            }
         }
     }
 }

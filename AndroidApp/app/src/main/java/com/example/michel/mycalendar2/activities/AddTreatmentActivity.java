@@ -79,8 +79,7 @@ public class AddTreatmentActivity extends AppCompatActivity {
 
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        //active_ind_tv = (TextView)findViewById(R.id.active_ind_tv_CaddT); // must be deleted
+        getSupportActionBar().setTitle("Добавить лекарство");
 
 // Declaration
 
@@ -430,7 +429,7 @@ public class AddTreatmentActivity extends AppCompatActivity {
             {
                 mExpandLayout2.collapse();
                 ((RadioGroup)view.getParent()).clearCheck();
-                Toast.makeText(this,"false",Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this,"false",Toast.LENGTH_SHORT).show();
             }
     }
 

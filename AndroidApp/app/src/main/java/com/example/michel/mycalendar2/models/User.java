@@ -21,7 +21,7 @@ public class User {
         name = "";
         surname = "";
         genderId = 1;
-        synchronizationTime = new Timestamp(new Date().getTime());
+        synchronizationTime = new Date();
         roleId = 1;
         isCurrent = 0;
     }

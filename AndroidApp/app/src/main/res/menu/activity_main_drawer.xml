@@ -35,6 +35,11 @@
             android:icon="@drawable/ic_menu_manage"
             android:title="Настроки" >
         </item>
+        <item
+            android:id="@+id/nav_help"
+            android:icon="@drawable/ic_help"
+            android:title="Помощь" >
+        </item>
     </group>
 
 </menu>
