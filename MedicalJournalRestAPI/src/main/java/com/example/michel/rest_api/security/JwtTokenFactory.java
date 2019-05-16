@@ -27,9 +27,10 @@ public class JwtTokenFactory {
                         .map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
                 .claim("email", customUserPrincipal.getEmail())
                 .claim("userId", customUserPrincipal.getUserId())
+                .claim("genderId", customUserPrincipal.getGenderId())
                 .setIssuedAt(new Date(now))
                 //.setExpiration(new Date(now + jwtConfig.getExpiration()))  // in milliseconds
-                .setExpiration(new Date(now + 2*60*1000))  // in milliseconds
+                .setExpiration(new Date(now + 60*1000))  // in milliseconds
                 .signWith(SignatureAlgorithm.HS512, jwtConfig.getAccessSecret().getBytes())
                 .compact();
     }

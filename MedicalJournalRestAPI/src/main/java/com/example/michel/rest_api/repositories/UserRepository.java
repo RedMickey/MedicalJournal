@@ -16,6 +16,8 @@ public interface UserRepository extends CrudRepository<User, Integer> {
 
     User findUserByEmail(String userEmail);
 
+    User findUserById(int userId);
+
     @Modifying
     @Query(
             value = "UPDATE user SET synchronization_time = :timestamp WHERE user_id = :id",

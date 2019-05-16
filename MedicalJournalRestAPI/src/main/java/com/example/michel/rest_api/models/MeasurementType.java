@@ -17,8 +17,8 @@ import java.util.Objects;
 public class MeasurementType {
     private int idMeasurementType;
     private String typeName;
-    private double standardMinValue;
-    private double standardMaxValue;
+    private Double standardMinValue;
+    private Double standardMaxValue;
     private int idMeasurValueType;
 
     //private String typeValueName;
@@ -46,11 +46,11 @@ public class MeasurementType {
 
     @Basic
     @Column(name = "standard_min_value")
-    public double getStandardMinValue() {
+    public Double getStandardMinValue() {
         return standardMinValue;
     }
 
-    public void setStandardMinValue(double standardMinValue) {
+    public void setStandardMinValue(Double standardMinValue) {
         this.standardMinValue = standardMinValue;
     }
 
@@ -67,11 +67,11 @@ public class MeasurementType {
 
     @Basic
     @Column(name = "standard_max_value")
-    public double getStandardMaxValue() {
+    public Double getStandardMaxValue() {
         return standardMaxValue;
     }
 
-    public void setStandardMaxValue(double standardMaxValue) {
+    public void setStandardMaxValue(Double standardMaxValue) {
         this.standardMaxValue = standardMaxValue;
     }
 

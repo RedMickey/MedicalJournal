@@ -10,12 +10,14 @@ public class CustomUserPrincipal implements UserDetails {
     private org.springframework.security.core.userdetails.User user;
     private String email;
     private Integer userId;
+    private Integer genderId;
 
     public CustomUserPrincipal(org.springframework.security.core.userdetails.User user, String email,
-                               Integer userId){
+                               Integer userId, Integer genderId){
         this.user = user;
         this.email = email;
         this.userId = userId;
+        this.genderId = genderId;
     }
 
     @Override
@@ -67,5 +69,13 @@ public class CustomUserPrincipal implements UserDetails {
 
     public void setUserId(Integer userId) {
         this.userId = userId;
+    }
+
+    public Integer getGenderId() {
+        return genderId;
+    }
+
+    public void setGenderId(Integer genderId) {
+        this.genderId = genderId;
     }
 }

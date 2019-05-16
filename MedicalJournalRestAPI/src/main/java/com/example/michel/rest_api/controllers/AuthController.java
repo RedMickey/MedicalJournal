@@ -53,7 +53,7 @@ public class AuthController {
 
         CustomUserPrincipal customUserPrincipal = new CustomUserPrincipal(
                 new org.springframework.security.core.userdetails.User(username, "", grantedAuthorities),
-                claims.get("email", String.class), null
+                claims.get("email", String.class), null, null
         );
 
         JwtTokenFactory jwtTokenFactory = new JwtTokenFactory(jwtConfig);

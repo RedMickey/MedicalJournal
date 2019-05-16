@@ -82,11 +82,11 @@ public class SecurityTokenConfig extends WebSecurityConfigurerAdapter {
 
         http.cors().and().csrf().disable().authorizeRequests()
                 .antMatchers(HttpMethod.POST, jwtConfig.getUrl()).permitAll()
-                .antMatchers(HttpMethod.POST, "/user/test1").permitAll()
-                .antMatchers(HttpMethod.POST, "/today/**").permitAll()
+                //.antMatchers(HttpMethod.POST, "/user/test1").permitAll()
+                //.antMatchers(HttpMethod.POST, "/today/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/auth/**").permitAll()
                 //.antMatchers(HttpMethod.POST, "/reminders/**").permitAll()
-                .antMatchers("/user/test3").hasRole("1")
+                //.antMatchers("/user/test3").hasRole("1")
                 // any other requests must be authenticated
                 .anyRequest().authenticated()
                 .and()

@@ -1,12 +1,7 @@
 package com.example.michel.rest_api.controllers;
 
 import com.example.michel.rest_api.models.*;
-import com.example.michel.rest_api.models.pill.PillReminderEntryF;
-import com.example.michel.rest_api.repositories.MeasurementTypeRepository;
 import com.example.michel.rest_api.repositories.UserRepository;
-import com.example.michel.rest_api.repositories.WeekScheduleRepository;
-import com.example.michel.rest_api.services.PillReminderEntryFService;
-import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -24,9 +19,6 @@ public class UserController {
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    @Autowired
-    private WeekScheduleRepository weekScheduleRepository;
-
     @CrossOrigin(origins = "http://localhost:4000")
     @PostMapping(value = "/test1", produces = "application/json")
     public Map<String, Integer> test1(){
@@ -35,16 +27,6 @@ public class UserController {
 
         return Collections.singletonMap("test", 1);
     }
-
-    /*@CrossOrigin(origins = "http://localhost:4000")
-    @PostMapping(value = "/test1", produces = "application/json")
-    public WeekSchedule test1(@RequestBody Map<String, Integer> req){
-
-        WeekSchedule weekSchedule = new WeekSchedule(UUID.randomUUID(), 1, 0, 1, 0, 0, 1, 0);
-        weekScheduleRepository.save(weekSchedule);
-
-        return weekSchedule;
-    }*/
 
     @GetMapping("/test2")
     public String tes2(){
@@ -63,8 +45,21 @@ public class UserController {
         return user;
     }
 
+    @PostMapping("/getUserById")
+    public User getUserById(@RequestBody Map<String, Integer> userId){
+        User user = userRepository.findUserById(userId.get("userId"));
+        user.setPassword("");
+        return user;
+    }
+
     @PostMapping("/updateUser")
-    public Map updateUser(@RequestBody User user){ user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+    public Map updateUser(@RequestBody User user){
+        if (user.getPassword() == null || user.getPassword().equals("")){
+            User userBuf = userRepository.findUserById(user.getId());
+            user.setPassword(userBuf.getPassword());
+        }
+        else
+            user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         userRepository.save(user);
         return Collections.singletonMap("userEmail", user.getEmail());
     }

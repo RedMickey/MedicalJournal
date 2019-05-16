@@ -42,7 +42,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         return new CustomUserPrincipal(
                 new org.springframework.security.core.userdetails.User(user.getName(), user.getPassword(), authorities),
-                user.getEmail(), user.getId()
+                user.getEmail(), user.getId(), user.getGenderId()
         );
     }
 }
