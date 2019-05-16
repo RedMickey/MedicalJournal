@@ -18,6 +18,17 @@
   z-index: 1;
 }
 
+.user-ava{
+  width: 45px;
+  height: 45px;
+  background: #BCAAA4;
+}
+
+.username>div{
+  display: flex; 
+  align-items: center;
+}
+
 .mat-toolbar>a{
   text-decoration: none;
   font: inherit;

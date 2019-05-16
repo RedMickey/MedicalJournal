@@ -72,6 +72,7 @@ import { RegistrationComponent } from './authentication/registration/registratio
 import { UserComponent } from './authentication/user/user.component';
 //import { JwtInterceptor } from './authentication/jwt.interceptor';
 import { RefreshTokenInterceptor } from './authentication/refresh-token.interceptor';
+import { ChangingPasswordDialogComponent } from './authentication/user/changing-password-dialog/changing-password-dialog.component';
 
 //import { JwtModule } from '@auth0/angular-jwt';
 
@@ -96,7 +97,8 @@ registerLocaleData(localeRu, 'ru');
     ChoosingPillReminderDialogComponent,
     LoginComponent,
     RegistrationComponent,
-    UserComponent
+    UserComponent,
+    ChangingPasswordDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -150,6 +152,7 @@ registerLocaleData(localeRu, 'ru');
     MeasurementDialogComponent,
     ChoosingMeasurementTypeDialogComponent,
     ChoosingPillReminderDialogComponent,
+    ChangingPasswordDialogComponent,
   ],
   providers: [
     ReminderEntriesService,

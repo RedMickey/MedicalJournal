@@ -54,6 +54,24 @@ export class TodayComponent implements OnInit {
             case 2:
             measurementType.iconName = "tonometer";
               break;
+            case 3:
+              measurementType.iconName = "pulse";
+              break;
+            case 4:
+              measurementType.iconName = "glucosemeter";
+              break;
+            case 5:
+              measurementType.iconName = "weight";
+              break;
+            case 6:
+              measurementType.iconName = "burning";
+              break;
+            case 7:
+              measurementType.iconName = "diet";
+              break;
+            case 8:
+              measurementType.iconName = "steps";
+              break;
           }
         });
       });

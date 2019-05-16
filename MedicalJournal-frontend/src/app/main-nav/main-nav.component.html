@@ -4,9 +4,19 @@
       [mode]="(isHandset$ | async) ? 'over' : 'side'"
       [opened]="!(isHandset$ | async)">
     <mat-toolbar color="primary">
-      <a class="username" routerLink="/login" *ngIf="!user; else unset">User</a>
+      <a class="username" routerLink="/login" *ngIf="!user; else unset">
+        <div>
+          <img class="user-ava img-circle" src="assets/additional_icons/avatar.png">
+          <span class="ml-10">User</span>
+        </div>
+      </a>
       <ng-template #unset>  
-        <a class="username" routerLink="/user">{{user.userName}}</a>
+        <a class="username" routerLink="/user" >
+          <div>
+            <img class="user-ava img-circle" src="assets/additional_icons/{{avatar_urn}}">
+            <span class="ml-10">{{user.userName}}</span>
+          </div>
+        </a>
       </ng-template> 
     </mat-toolbar>
     <mat-nav-list>

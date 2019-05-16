@@ -39,6 +39,24 @@ export class MeasurementReminderListItemComponent implements OnInit {
       case 2:
       this.iconName = "tonometer";
         break;
+      case 3:
+        this.iconName = "pulse";
+        break;
+      case 4:
+        this.iconName = "glucosemeter";
+        break;
+      case 5:
+        this.iconName = "weight";
+        break;
+      case 6:
+        this.iconName = "burning";
+        break;
+      case 7:
+        this.iconName = "diet";
+        break;
+      case 8:
+        this.iconName = "steps";
+        break;
     }
   }
 

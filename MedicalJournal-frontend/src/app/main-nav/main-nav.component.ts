@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
+import { useAnimation } from '@angular/animations';
 
 @Component({
   selector: 'app-main-nav',
@@ -20,13 +21,31 @@ export class MainNavComponent {
       map(result => result.matches)
     );
 
+  avatar_urn = "avatar.png"; 
   user: any;
 
   constructor(private breakpointObserver: BreakpointObserver,
     private authService: AuthService,
     private router: Router) {
       //this.user = this.authService.currentUserValue;
-      this.authService.currentUser.subscribe(x => this.user = x);
+      this.authService.currentUser.subscribe(x => {
+        this.user = x
+        if (this.user){
+          switch(this.user.genderId) {
+            case 1:
+              this.avatar_urn = "avatar.png";
+              break;
+            case 2:
+              this.avatar_urn = "boy.png";
+              break;
+            case 3:
+              this.avatar_urn = "girl.png";
+              break;
+          }
+        }
+        else
+          this.avatar_urn = "avatar.png";
+      });
     /*router.events.subscribe((val) => {
       console.log(val);
     });*/

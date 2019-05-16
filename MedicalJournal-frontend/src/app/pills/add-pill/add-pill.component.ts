@@ -77,7 +77,7 @@ export class AddPillComponent implements OnInit {
   ngAfterViewInit() {
     let numberSpan = document.querySelector('.bar-title');
     if (this.pillReminderId)
-      numberSpan.textContent = "Редактировать курс лекарств";
+      numberSpan.textContent = "Редактировать курс";
     else
       numberSpan.textContent = "Добавить курс лекрств";
   }

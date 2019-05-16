@@ -205,7 +205,7 @@
     <div fxFlex> 
       <div>
         <div>
-          Медикамент
+          Время приёма
         </div>
         <ul style="padding-left:0px; margin-bottom:0px;">
           <li *ngFor="let item of reminderTimeEntries; let index = index; trackBy:trackByIndex;" 
@@ -213,7 +213,14 @@
             <mat-form-field class="w-100p">
               <input matInput placeholder="Время напоминания" [(ngModel)]="reminderTimeEntries[index]"
               [ngxTimepicker]="picker" [format]="24" readonly>
-              <ngx-material-timepicker #picker></ngx-material-timepicker>
+              <ngx-material-timepicker #picker [cancelBtnTmpl]="cancelBtn"
+                [confirmBtnTmpl]="confirmBtn"></ngx-material-timepicker>
+              <ng-template #cancelBtn>
+                <button mat-button class="timepicker-button">Отмена</button>
+              </ng-template>
+              <ng-template #confirmBtn>
+                <button mat-button class="timepicker-button">Добавить</button>
+              </ng-template>
             </mat-form-field>
             <button mat-icon-button class="date-pick-padding" (click)="deleteReminderTimeEntry(index)">
               <mat-icon>clear</mat-icon>
@@ -232,10 +239,10 @@
       </div>
     </div>
   </div>
-  <button mat-fab class="fab-button" (click)="submit()">
+  <button mat-fab class="fab-button fab-button-text-color" (click)="submit()">
     <mat-icon>check</mat-icon>
   </button>
-  <button mat-fab color="primary" class="fab-button" style="margin: 1.1em 6.15em 1.1em 1.1em"
+  <button mat-fab color="primary" class="fab-button fab-button-text-color" style="margin: 1.1em 6.15em 1.1em 1.1em"
     *ngIf="pillReminderId" (click)="deleteCourse()">
     <mat-icon>delete</mat-icon>
   </button>

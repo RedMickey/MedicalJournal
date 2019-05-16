@@ -119,6 +119,24 @@ export class ReminderEntryComponent implements OnInit {
         case 2:
         this.iconName = "tonometer";
           break;
+        case 3:
+          this.iconName = "pulse";
+          break;
+        case 4:
+          this.iconName = "glucosemeter";
+          break;
+        case 5:
+          this.iconName = "weight";
+          break;
+        case 6:
+          this.iconName = "burning";
+          break;
+        case 7:
+          this.iconName = "diet";
+          break;
+        case 8:
+          this.iconName = "steps";
+          break;
       }
       this.reminderName = this.reminderEntry.measurementTypeName;
       if (this.reminderEntry.isDone == 1)
@@ -140,10 +158,19 @@ export class ReminderEntryComponent implements OnInit {
         " " + this.reminderEntry.measurementValueTypeName;
       }
       else{
-        bufReminderPropertyStr += " " + this.reminderEntry.measurementValueTypeName;
+        bufReminderPropertyStr += " " + this.createCountTypeEnding(this.reminderEntry.value1);
       }
     }
     return bufReminderPropertyStr;
+  }
+
+  createCountTypeEnding(value: number): string{
+    switch (this.reminderEntry.idMeasurementType){
+      case 8:
+        return this.utilsService.declination(value, ["шаг", "шага", "шагов"]);
+        default:
+          return this.reminderEntry.measurementValueTypeName;
+    }
   }
 
 }

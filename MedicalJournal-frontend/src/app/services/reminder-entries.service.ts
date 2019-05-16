@@ -8,6 +8,7 @@ import { PillReminderEntry } from '../models/PillReminderEntry';
 import { MeasurementReminderEntry } from '../models/MeasurementReminderEntry';
 
 import { AuthService } from './auth.service';
+import { environment } from '../../environments/environment.prod';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -17,7 +18,7 @@ const httpOptions = {
 @Injectable()
 export class ReminderEntriesService {
 
-  private ReminderEntriesUrl = 'http://localhost:8090/today';  // URL to web api
+  private ReminderEntriesUrl = environment.APIAddress + '/today';  // URL to web api
 
   user: any;
 

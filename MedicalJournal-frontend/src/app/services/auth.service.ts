@@ -25,6 +25,20 @@ export class AuthService {
     return this.currentUserSubject.value;
   }
 
+  updateCurrentUser(user: User){
+    localStorage.setItem('user', JSON.stringify(
+      {
+        userName: user.name,
+        userId: user.id,
+        genderId: user.genderId
+      }));
+      this.currentUserSubject.next({
+        userName: user.name,
+        userId: user.id,
+        genderId: user.genderId
+      });
+  }
+
   login(email:string, password:string) {
     return this.http.post('http://localhost:8090/login', 
     {
@@ -41,11 +55,13 @@ export class AuthService {
       localStorage.setItem('user', JSON.stringify(
       {
         userName: decoded.sub,
-        userId: decoded.userId
+        userId: decoded.userId,
+        genderId: decoded.genderId
       }));
       this.currentUserSubject.next({
         userName: decoded.sub,
-        userId: decoded.userId
+        userId: decoded.userId,
+        genderId: decoded.genderId
       });
       console.log(decoded);
     }),

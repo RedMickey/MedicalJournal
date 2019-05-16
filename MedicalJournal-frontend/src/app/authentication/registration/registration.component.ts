@@ -14,6 +14,7 @@ import { Router } from '@angular/router';
 export class RegistrationComponent implements OnInit {
 
   hidePassword = true;
+  avatar_urn = "avatar.png";
 
   selectedGenderType = 1;
   selectedYear: number;
@@ -33,6 +34,7 @@ export class RegistrationComponent implements OnInit {
     ]),
     "passwordFormControl": new FormControl('', [
       Validators.required,
+      Validators.minLength(5),
     ])
   };
 
@@ -66,6 +68,20 @@ export class RegistrationComponent implements OnInit {
 
   backClicked(){
     this.location.back();
+  }
+
+  onGenderSelectionChanged(event){
+    switch(event.value) {
+      case 1:
+        this.avatar_urn = "avatar.png";
+        break;
+      case 2:
+        this.avatar_urn = "boy.png";
+        break;
+      case 3:
+        this.avatar_urn = "girl.png";
+        break;
+    }
   }
 
   submit(){
@@ -119,7 +135,6 @@ export class RegistrationComponent implements OnInit {
             });
         }
     });
-
   }
 
 }

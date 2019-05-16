@@ -55,6 +55,11 @@ export class AddOneTimePillComponent implements OnInit {
     this.selectedDoseType = this.doseTypes[0].value; 
   }
 
+  ngAfterViewInit() {
+    let numberSpan = document.querySelector('.bar-title');
+    numberSpan.textContent = "Добавить лекарство";
+  }
+
   havingMealTypeChanged(event): void{
     if (event.value === "2")
       this.mealTypePrefix = "до";

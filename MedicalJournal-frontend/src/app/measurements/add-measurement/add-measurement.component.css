@@ -37,3 +37,8 @@ mat-expansion-panel{
     bottom: 0;
     right: 0;
 }
+
+.timepicker-button{
+    font-weight: bold;
+    color: deepskyblue;
+}
