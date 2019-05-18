@@ -1,0 +1,82 @@
+<div class="reminders-container">
+  <div fxLayout="raw" fxLayout.lt-lg="column" fxFlex>
+    <div fxFlex>
+      <div fxLayout="raw" fxLayoutAlign="start center">
+        <mat-icon class="mr-20" svgIcon={{measurementType.iconName}}></mat-icon> 
+        <mat-form-field class="area-w-60">
+          <input matInput [formControl]="formControls['measValue1FormControl']"
+            placeholder="Значение">
+          <mat-error *ngIf="formControls['measValue1FormControl'].hasError('required')">
+            Введите значение
+          </mat-error>
+          <mat-error *ngIf="formControls['measValue1FormControl'].hasError('pattern')">
+            Недопустимое значение
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field class="area-w-60 ml-10" *ngIf="measurementType.idMeasurementType == '2'">
+          <input matInput [formControl]="formControls['measValue2FormControl']"
+            placeholder="Значение">
+          <mat-error *ngIf="formControls['measValue2FormControl'].hasError('required')">
+            Введите значение
+          </mat-error>
+          <mat-error *ngIf="formControls['measValue2FormControl'].hasError('pattern')">
+            Недопустимое значение
+          </mat-error>
+        </mat-form-field>
+        <span class="ml-5">{{measurementValueName}}</span>
+      </div>
+      <div fxLayout="raw" fxLayoutAlign="start center" class="mb-5">
+        <mat-icon style="font-size:20pt;" class="mr-20">event</mat-icon> 
+        <span class="area-w-60">Дата</span>
+        <input type="hidden" [matDatepicker]="datePicker" (dateInput)="startDateChanged('input', $event)">
+        <button mat-button class="date-pick" (click)="datePicker.open()">{{startDate | date:'d MMMM yyyy':'':'ru'}} г.</button>
+        <mat-datepicker touchUi #datePicker></mat-datepicker> 
+      </div>
+      <div fxLayout="raw" fxLayoutAlign="start center" class="mb-5">
+        <mat-icon class="mr-20" style="font-size:20pt;">alarm</mat-icon> 
+        <span class="area-w-60">Время</span>
+        <input type="hidden" [ngxTimepicker]="timePicker" [format]="24" [(ngModel)]="reminderTime" readonly>
+        <button mat-button class="date-pick" (click)="timePicker.open()">{{reminderTime}}</button>
+        <ngx-material-timepicker #timePicker></ngx-material-timepicker>
+      </div>
+      <div fxLayout="raw" fxLayoutAlign="start center">
+        <mat-icon class="mr-20" svgIcon="porridge"></mat-icon> 
+        <mat-button-toggle-group [(ngModel)]="toggleGroupSelectedMeal"
+          (change)="havingMealTypeChanged($event)">
+          <mat-button-toggle value=1>
+            <mat-icon>not_interested</mat-icon>
+          </mat-button-toggle>
+          <mat-button-toggle value=2>
+            <img class="img-icon" src="assets/additional_icons/icons8_50_21.png">
+          </mat-button-toggle>
+          <mat-button-toggle value=3>
+            <img class="img-icon" src="assets/additional_icons/icons8_50_61.png">
+          </mat-button-toggle>
+          <mat-button-toggle value=4>
+            <img class="img-icon" src="assets/additional_icons/icons8_50_4.png">
+          </mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+      <div class="ml-20" >
+        <mat-expansion-panel [expanded]="toggleGroupSelectedMeal === '2' || toggleGroupSelectedMeal === '4'">
+          <div fxLayout="raw" fxLayoutAlign="start center" class="ml-5">
+            <mat-form-field style="width:50px;">
+              <input matInput [formControl]="formControls['mealTimeFormControl']">
+              <mat-error *ngIf="formControls['mealTimeFormControl'].hasError('required')">
+                Введите значение
+              </mat-error>
+              <mat-error *ngIf="formControls['mealTimeFormControl'].hasError('pattern')">
+                Недопустимое значение
+              </mat-error>
+            </mat-form-field>
+            <span class="ml-20">мин {{mealTypePrefix}} еды</span>
+          </div>
+        </mat-expansion-panel>
+      </div>
+    </div>
+  </div>
+  <button mat-fab class="fab-button fab-button-text-color" (click)="submit()">
+    <mat-icon>check</mat-icon>
+  </button>
+</div>
+

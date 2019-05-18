@@ -1,0 +1,212 @@
+<div class="reminders-container">
+  <div fxLayout="raw" fxLayout.lt-lg="column" fxFlex>
+    <div fxFlex>
+      <div *ngIf="measurementReminderId" class="mb-10">
+        Расписание
+        <div fxLayout="row">
+          <div fxLayoutAlign="start center" fxFlex style="color:gray;">
+            Активное
+          </div>
+          <div fxLayoutAlign="end center" fxFlex>
+            <mat-slide-toggle [(ngModel)]="isActiveIndicator"></mat-slide-toggle>
+          </div>
+        </div>
+      </div>
+      <div fxLayout="raw" fxLayoutAlign="start center">
+        <mat-icon class="mr-20">event</mat-icon> 
+        Начиная с
+        <input type="hidden" [matDatepicker]="datePicker" (dateInput)="startDateChanged('input', $event)">
+        <button mat-button class="date-pick-padding" (click)="datePicker.open()">{{startDate | date:'d MMMM yyyy':'':'ru'}} г.</button>
+        <mat-datepicker touchUi #datePicker></mat-datepicker> 
+      </div>
+      <div class="ml-44" >
+        <div>
+          <mat-radio-group [(ngModel)]="radioGroupSelectedCycle" fxLayout="column">
+            <mat-radio-button class="radio-button-mp" [value]=1>
+              Каждый день
+            </mat-radio-button>
+            <mat-radio-button class="radio-button-mp" [value]=2>
+              По определённыйм дням
+            </mat-radio-button>
+            <mat-radio-button class="radio-button-mp" [value]=3>
+              Дневной интервал
+            </mat-radio-button>
+          </mat-radio-group>
+          
+          <mat-expansion-panel [expanded]="radioGroupSelectedCycle === 1">
+            <div fxLayout="raw" fxLayoutAlign="start center" class="ml-5">
+              <span class="sp-period-w">Период</span>
+              <mat-form-field class="ml-20" style="width:50px;">
+                <input matInput [formControl]="formControls['evrDayFormControl']">
+                <mat-error *ngIf="formControls['evrDayFormControl'].hasError('required')">
+                  Введите значение
+                </mat-error>
+                <mat-error *ngIf="formControls['evrDayFormControl'].hasError('pattern')">
+                  Недопустимое значение
+                </mat-error>
+              </mat-form-field>
+              <mat-form-field style="width: 50px;" class="ml-10">
+                <mat-select [(value)]="selectedDateTypeED">
+                  <mat-option *ngFor="let dateType of dateTypes" [value]="dateType.value">
+                    {{dateType.viewValue}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </mat-expansion-panel>
+          <mat-expansion-panel [expanded]="radioGroupSelectedCycle === 2">
+            <table>
+              <tr align="center">
+                <td>Пн</td>
+                <td>Вт</td>
+                <td>Ср</td>
+                <td>Чт</td>
+                <td>Пт</td>
+                <td>Сб</td>
+                <td>Вс</td>
+              </tr>
+              <tr>
+                <td *ngFor="let item of weekSchedule; let i = index; trackBy:trackByIndex;">
+                  <mat-checkbox [(ngModel)]="weekSchedule[i]" class="m-3"></mat-checkbox>
+                </td>
+              </tr>
+            </table>
+            <div fxLayout="raw" fxLayoutAlign="start center" class="ml-5">
+              <span class="sp-period-w">Период</span>
+              <mat-form-field class="ml-20" style="width:50px;">
+                <input matInput [formControl]="formControls['certDaysFormControl']">
+                <mat-error *ngIf="formControls['certDaysFormControl'].hasError('required')">
+                  Введите значение
+                </mat-error>
+                <mat-error *ngIf="formControls['certDaysFormControl'].hasError('pattern')">
+                  Недопустимое значение
+                </mat-error>
+              </mat-form-field>
+              <mat-form-field style="width: 50px;" class="ml-10">
+                <mat-select [(value)]="selectedDateTypeCD">
+                  <mat-option *ngFor="let dateType of dateTypes" [value]="dateType.value">
+                    {{dateType.viewValue}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </mat-expansion-panel>
+          <mat-expansion-panel [expanded]="radioGroupSelectedCycle === 3">       
+            <div fxLayout="raw" fxLayoutAlign="start center" class="ml-5">
+              <span class="sp-period-w">Раз в</span>
+              <mat-form-field class="ml-20" style="width:50px;">
+                <input matInput [formControl]="formControls['dayIntFormControl']">
+                <mat-error *ngIf="formControls['dayIntFormControl'].hasError('required')">
+                  Введите значение
+                </mat-error>
+                <mat-error *ngIf="formControls['dayIntFormControl'].hasError('pattern')">
+                  Недопустимое значение
+                </mat-error>
+              </mat-form-field>
+              <mat-form-field style="width: 50px;" class="ml-10">
+                <mat-select [(value)]="selectedDateTypeDI">
+                  <mat-option *ngFor="let dateType of dateTypes" [value]="dateType.value">
+                    {{dateType.viewValue}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div fxLayout="raw" fxLayoutAlign="start center" class="ml-5">
+              <span class="sp-period-w">Период</span>
+              <mat-form-field class="ml-20" style="width:50px;">
+                <input matInput [formControl]="formControls['dayIntPerFormControl']">
+                <mat-error *ngIf="formControls['dayIntPerFormControl'].hasError('required')">
+                  Введите значение
+                </mat-error>
+                <mat-error *ngIf="formControls['dayIntPerFormControl'].hasError('pattern')">
+                  Недопустимое значение
+                </mat-error>
+              </mat-form-field>
+              <mat-form-field style="width: 50px;" class="ml-10">
+                <mat-select [(value)]="selectedDateTypeDIP">
+                  <mat-option *ngFor="let dateType of dateTypes" [value]="dateType.value">
+                    {{dateType.viewValue}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </mat-expansion-panel>
+        </div>
+      </div>
+      <div fxLayout="raw" fxLayoutAlign="start center">
+        <mat-icon class="mr-20" svgIcon="porridge"></mat-icon> 
+        <mat-button-toggle-group [(ngModel)]="toggleGroupSelectedMeal"
+          (change)="havingMealTypeChanged($event)">
+          <mat-button-toggle value=1>
+            <mat-icon>not_interested</mat-icon>
+          </mat-button-toggle>
+          <mat-button-toggle value=2>
+            <img class="img-icon" src="assets/additional_icons/icons8_50_21.png">
+          </mat-button-toggle>
+          <mat-button-toggle value=3>
+            <img class="img-icon" src="assets/additional_icons/icons8_50_61.png">
+          </mat-button-toggle>
+          <mat-button-toggle value=4>
+            <img class="img-icon" src="assets/additional_icons/icons8_50_4.png">
+          </mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+      <div class="ml-20" >
+        <mat-expansion-panel [expanded]="toggleGroupSelectedMeal === '2' || toggleGroupSelectedMeal === '4'">
+          <div fxLayout="raw" fxLayoutAlign="start center" class="ml-5">
+            <mat-form-field style="width:50px;">
+              <input matInput [formControl]="formControls['mealTimeFormControl']">
+              <mat-error *ngIf="formControls['mealTimeFormControl'].hasError('required')">
+                Введите значение
+              </mat-error>
+              <mat-error *ngIf="formControls['mealTimeFormControl'].hasError('pattern')">
+                Недопустимое значение
+              </mat-error>
+            </mat-form-field>
+            <span class="ml-20">мин {{mealTypePrefix}} еды</span>
+          </div>
+        </mat-expansion-panel>
+      </div>
+    </div>
+    <div fxFlex="20px" fxShow="false" fxShow.gt-md></div>
+    <div fxFlex> 
+      <div>
+        <div>
+          Время измерения
+        </div>
+        <ul style="padding-left:0px; margin-bottom:0px;">
+          <li *ngFor="let item of reminderTimeEntries; let index = index; trackBy:trackByIndex;" 
+            fxLayout="raw" fxLayoutAlign="start center" style="height: 50px;">
+            <mat-form-field class="w-100p">
+              <input matInput placeholder="Время напоминания" [(ngModel)]="reminderTimeEntries[index]"
+              [ngxTimepicker]="picker" [format]="24" readonly>
+              <ngx-material-timepicker #picker [cancelBtnTmpl]="cancelBtn"></ngx-material-timepicker>
+              <ng-template #cancelBtn>
+                <button mat-button color="primary">Cancel tmpl</button>
+              </ng-template>
+            </mat-form-field>
+            <button mat-icon-button class="date-pick-padding" (click)="deleteReminderTimeEntry(index)">
+              <mat-icon>clear</mat-icon>
+            </button> 
+          </li>
+        </ul>
+        <button mat-raised-button (click)="addReminderTimeEntry()">Добавить время</button>
+      </div>
+      <div class="mt-10">
+        <div>
+          Примечание
+        </div>
+        <mat-form-field class="w-100p">
+          <input matInput placeholder="Любая доп. информация" [(ngModel)]="annotation">
+        </mat-form-field>
+      </div>
+    </div>
+  </div>
+  <button mat-fab class="fab-button fab-button-text-color" (click)="submit()">
+    <mat-icon>check</mat-icon>
+  </button>
+  <button mat-fab color="primary" class="fab-button fab-button-text-color" style="margin: 1.1em 6.15em 1.1em 1.1em"
+    *ngIf="measurementReminderId" (click)="deleteCourse()">
+    <mat-icon>delete</mat-icon>
+  </button>
+</div>

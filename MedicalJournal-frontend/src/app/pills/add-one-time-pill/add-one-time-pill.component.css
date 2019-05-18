@@ -1,0 +1,48 @@
+.date-pick{
+    padding-left: 6px !important;
+    padding-right: 6px !important;
+    text-align: start;
+}
+
+.course-pick{
+    padding-left: 1px !important;
+    padding-right: 0px !important;
+}
+
+.radio-button-mp{
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.ml-44{
+    margin-left: 44px;
+}
+
+.area-w-60{
+    width: 60px;
+}
+
+.m-3{
+    margin: 3px;
+}
+
+.img-icon{
+    width: 35px;
+}
+
+mat-expansion-panel{
+    background: inherit !important;
+    border: 0 !important;
+    box-shadow: none !important;
+}
+
+.sp-period-w{
+    width: 40px;
+}
+
+.fab-button{
+    margin: 1.1em;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+}

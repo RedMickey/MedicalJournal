@@ -1,0 +1,11 @@
+<mat-action-list>
+  <a mat-list-item routerLink="{{linkURL}}" 
+    [queryParams]="{'idMT':measurementType.idMeasurementType,
+                    'typeName': measurementType.typeName,
+                    'iconName': measurementType.iconName}"
+    class="link-non-deco"
+    *ngFor="let measurementType of data.measurementTypes" (click)="openLink($event)"> 
+    <mat-icon svgIcon={{measurementType.iconName}} class="mr-10"></mat-icon> 
+    {{measurementType.typeName}}
+  </a>
+</mat-action-list>

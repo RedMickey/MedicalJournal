@@ -1,0 +1,114 @@
+/* You can add global styles to this file, and also import other style files */
+//@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+
+body{
+    margin: 0;
+}
+
+html, body{
+    height: 100%;
+}
+
+.black-54 {
+    color: rgba(0, 0, 0, 0.54);
+}
+
+.black-87 {
+    color: rgba(0, 0, 0, 0.87);
+}
+
+.app-font, .black-54, .black-87{
+    font-family: 'Roboto';
+}
+
+.p-5{
+    padding: 5px;
+}
+
+.m-5{
+    margin: 5px;
+}
+
+.mr-10{
+    margin-right: 10px;
+}
+
+.mr-5{
+    margin-right: 5px;
+}
+
+.ml-5{
+    margin-left: 5px;
+}
+
+.ml-10{
+    margin-left: 10px;
+}
+
+.ml-20{
+    margin-left: 20px;
+}
+
+.mr-20{
+    margin-right: 20px;
+}
+
+.mt-10{
+    margin-top: 10px;
+}
+
+.mb-10{
+    margin-bottom: 10px;
+}
+
+.mb-5{
+    margin-bottom: 5px;
+}
+
+.font-b{
+    font-weight: bold;
+}
+
+.reminders-container{
+    margin: 10px 20px 20px;
+}
+
+.abs-container{
+    position: absolute;
+    top: 56px;
+    bottom: 0;
+    width: 100%; 
+}
+
+.link-non-deco, .link-card{
+    text-decoration: none;
+}
+
+.link-card{
+    margin-bottom: 3px;
+    display: block;
+}
+
+.w-100p{
+    width: 100%;
+}
+
+.h-100p{
+    height: 100%;
+}
+
+.fab-button-text-color{
+    color: #fafafa !important;
+}
+
+.img-circle {
+    border-radius: 50%;
+}
+
+.error{
+    text-align: center;
+    border-radius: 8px;
+    background: #dd0031;
+    padding: 5px;
+    color: #FFF;
+}

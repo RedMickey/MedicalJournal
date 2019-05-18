@@ -1,0 +1,122 @@
+<div class="abs-container">
+  <div fxFlexFill fxlayout="column" fxLayoutAlign="center center">
+    <div>
+      <mat-card>
+        <!--<mat-card-header>
+          <mat-card-title>Профиль пользователя</mat-card-title>
+        </mat-card-header>-->
+        <mat-card-content >
+          <div fxlayout="column">
+            <!--<div fxlayout="row">
+              <div fxFlex="30%">
+                <img class="user-ava img-circle" src="assets/additional_icons/{{avatar_urn}}">
+              </div>
+              <div fxFlex style="margin-left:15px;" fxLayout="column" fxLayoutAlign="space-around start">
+                <mat-form-field class="w-100p">
+                  <input matInput placeholder="Ваше имя" [formControl]="formControls['userNameFormControl']" required>
+                  <mat-error *ngIf="formControls['userNameFormControl'].hasError('required')">
+                    Введите значение
+                  </mat-error>
+                </mat-form-field>
+                <mat-form-field class="w-100p">
+                  <input matInput placeholder="Ваше фамилия" [formControl]="formControls['userSurnameFormControl']">
+                </mat-form-field>
+              </div>
+            </div>-->
+
+            <div fxlayout="row" fxLayoutAlign="center center">
+              <div fxFlex="20%">
+              </div>
+              <div fxFlex>
+                <div>
+                  <img class="user-ava img-circle" src="assets/additional_icons/{{avatar_urn}}">
+                </div>
+              </div>
+              <div fxFlex="20">
+              </div>
+            </div>
+
+            <!--<div align="center" class="mt-10">
+              <img class="user-ava img-circle" src="assets/additional_icons/{{avatar_urn}}">
+            </div>-->
+            <table class="w-100p" cellpadding="0" style="border-collapse: collapse; border-spacing: 0;">
+              <tr>
+                <td>
+                  <mat-icon style="font-size:20pt; vertical-align: middle;" class="mr-10">person</mat-icon>
+                </td>
+                <td>
+                  <mat-form-field class="w-100p">
+                    <input matInput placeholder="Ваше имя" [formControl]="formControls['userNameFormControl']" required>
+                    <mat-error *ngIf="formControls['userNameFormControl'].hasError('required')">
+                      Введите значение
+                    </mat-error>
+                  </mat-form-field>
+                </td>
+              </tr>
+              <tr>
+                <td></td>
+                <td>
+                  <mat-form-field class="w-100p">
+                    <input matInput placeholder="Ваше фамилия" [formControl]="formControls['userSurnameFormControl']">
+                  </mat-form-field>
+                </td>
+              </tr>
+              <tr>
+                <td></td>
+                <td fxlayout="row">
+                  <div fxFlex class="mr-10">
+                    <mat-form-field style="width: 145px;">
+                      <mat-label>Ваш пол</mat-label>
+                      <mat-select [(value)]="selectedGenderType" (selectionChange)="onGenderSelectionChanged($event)">
+                        <mat-option *ngFor="let genderType of genderTypes" [value]="genderType.value">
+                          {{genderType.viewValue}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div fxFlex>
+                    <mat-form-field style="width: 145px;">
+                      <mat-label>Год рождения</mat-label>
+                      <mat-select [(value)]="selectedYear">
+                        <mat-option *ngFor="let year of years" [value]="year.value">
+                          {{year.viewValue}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <mat-icon style="font-size:20pt; vertical-align: middle;" class="mr-10">email</mat-icon>
+                </td>
+                <td>
+                  <mat-form-field class="w-100p">
+                    <input matInput placeholder="Введите ваш email" [formControl]="formControls['emailFormControl']" required>
+                    <mat-error *ngIf="formControls['emailFormControl'].invalid">{{getEmailErrorMessage()}}</mat-error>
+                  </mat-form-field> 
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <mat-icon style="font-size:20pt; vertical-align: middle;" class="mr-10">lock</mat-icon>
+                </td>
+                <td>
+                  <button class="w-100p password-button" mat-button (click)="changePassword()">Изменить пароль</button>
+                </td>
+              </tr>
+            </table>
+            <div *ngIf="hasReqError" class="error">
+              Пользователь с таким email адресом уже существует.
+            </div>             
+          </div>
+        </mat-card-content>
+        <mat-card-actions>
+          <div fxLayout="row" fxLayoutAlign="center" >
+            <button mat-raised-button color="primary" (click)="submit()">Сохранить изменения</button>
+          </div>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </div>
+</div>

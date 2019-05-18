@@ -1,0 +1,31 @@
+<mat-card>
+  <div fxLayout="row">
+    <div fxFlex="7%" fxLayoutAlign="center center">
+        <mat-checkbox [(ngModel)] = "checked" 
+          (change)="onIsDoneChange($event)"></mat-checkbox>
+      </div>
+      <div fxFlex="7%" fxLayoutAlign="center center" class="p-coll-5">
+        <mat-icon svgIcon={{iconName}}></mat-icon>
+      </div>
+      <div fxFlex="32%" class="p-coll-5">
+        <div>
+          {{ reminderEntry.date | date:'HH:mm' }}
+        </div>
+        <div>
+          {{reminderName}}
+        </div>
+      </div>
+      <div fxFlex="35%" fxLayoutAlign="start center" fxLayout="row wrap" class="p-coll-5">
+        <div *ngIf="checked||type == 0">
+            {{reminderPropertyStr}}
+        </div>
+      </div>
+      <div fxFlex="12%" fxLayout="row wrap" fxLayoutAlign="center center">
+        <span class="having-meals-type-pretext mr-5">{{havingMealsTypePretext}}</span>
+        <mat-icon *ngIf="reminderEntry.havingMealsType" svgIcon="restaurant"></mat-icon>
+      </div>
+      <div fxFlex="7%" fxLayoutAlign="center center">
+        <mat-icon *ngIf="reminderEntry.isLate" color="warn">error_outline</mat-icon>
+      </div>
+  </div>
+</mat-card>

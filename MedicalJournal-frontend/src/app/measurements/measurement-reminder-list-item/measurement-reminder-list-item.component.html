@@ -1,0 +1,41 @@
+<a [routerLink]="['./course', measurementReminderItem.id]" 
+  [queryParams]="{'idMT': measurementReminderItem.idMeasurementType,
+                  'typeName': measurementReminderItem.measurementTypeName}"
+  class="link-card">
+  <mat-card>
+    <div fxLayout="row">
+      <div fxFlex="" fxLayoutAlign="start center">
+          <mat-icon class="mr-5" svgIcon={{iconName}}></mat-icon>
+          <span class="font-b font-size-l">{{measurementReminderItem.measurementTypeName}}</span>
+      </div>
+      <div fxFlex="" fxLayoutAlign="end center">
+        <div class="indicator">
+          <mat-icon style="font-size: 13px;" color="accent" inline=true *ngIf="measurementReminderItem.isActive; else disabledInd">
+            fiber_manual_record
+          </mat-icon>
+          <ng-template #disabledInd>
+            <mat-icon style="font-size: 13px; color:darkgray;" inline=true>fiber_manual_record</mat-icon>
+          </ng-template>
+        </div>
+        {{isActiveStr}}
+      </div>
+    </div>
+    <div fxLayout="row" class="ml-20">
+      <div fxFlex="70%" fxLayout="column" fxLayoutAlign="start start">
+        <div>
+          {{timesADayStr}}
+        </div>
+        <div>
+          с {{measurementReminderItem.startDate}} по {{measurementReminderItem.endDate}}
+        </div>
+      </div>
+      <div fxFlex="30%" fxLayoutAlign="end center" class="">
+        <span class="having-meals-type-pretext">{{havingMealsTypePretext}}</span>
+        <mat-icon *ngIf="measurementReminderItem.havingMealsType" svgIcon="restaurant"></mat-icon>
+      </div>
+    </div>
+    <div class="ml-20">
+      Осталось приёмов: {{measurementReminderItem.numberOfDoingActionLeft}}
+    </div>
+  </mat-card>
+</a>

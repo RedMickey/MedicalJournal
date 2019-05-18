@@ -1,0 +1,14 @@
+<div mat-dialog-content>
+  <div>
+    <button mat-button class="w-100p" style="text-align: start;"
+      (click)="onNoItemSelected()">
+      Без рецепта
+    </button>
+    <mat-list>
+      <app-pill-reminder-list-item *ngFor="let pillReminderItem of pillReminderItems; let index = index;"
+      [pillReminderItem]="pillReminderItem" [linkWorkable]=false [index]=index
+      (onSelected)="onItemSelected($event)">
+      </app-pill-reminder-list-item>
+    </mat-list>
+  </div>
+</div>

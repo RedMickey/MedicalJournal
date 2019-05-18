@@ -1,0 +1,42 @@
+<a (click)="onLinkClicked()"
+  class="link-card">
+  <mat-card>
+    <div fxLayout="row">
+      <div fxFlex="" fxLayoutAlign="start center">
+          <mat-icon class="mr-5" svgIcon="pill"></mat-icon>
+          <span class="font-b font-size-l">{{pillReminderItem.pillName}}</span>
+      </div>
+      <div fxFlex="" fxLayoutAlign="end center">
+        <div class="indicator">
+          <mat-icon style="font-size: 13px;" color="accent" inline=true *ngIf="pillReminderItem.isActive; else disabledInd">
+            fiber_manual_record
+          </mat-icon>
+          <ng-template #disabledInd>
+            <mat-icon style="font-size: 13px; color:darkgray;" inline=true>fiber_manual_record</mat-icon>
+          </ng-template>
+        </div>
+        {{isActiveStr}}
+      </div>
+    </div>
+    <div class="ml-20 font-size-l">
+      {{pillReminderItem.pillCount}} {{pillReminderItem.pillCountType}}
+    </div>
+    <div fxLayout="row" class="ml-20">
+      <div fxFlex="70%" fxLayout="column" fxLayoutAlign="start start">
+        <div>
+          {{timesADayStr}}
+        </div>
+        <div>
+          с {{pillReminderItem.startDate}} по {{pillReminderItem.endDate}}
+        </div>
+      </div>
+      <div fxFlex="30%" fxLayoutAlign="end center" class="">
+        <span class="having-meals-type-pretext">{{havingMealsTypePretext}}</span>
+        <mat-icon *ngIf="pillReminderItem.havingMealsType" svgIcon="restaurant"></mat-icon>
+      </div>
+    </div>
+    <div class="ml-20">
+      Осталось приёмов: {{pillReminderItem.numberOfDoingActionLeft}}
+    </div>
+  </mat-card>
+</a>
