@@ -1,0 +1,400 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.example.michel.mycalendar2.activities.AddTreatmentActivity"
+    android:id="@+id/add_treatment_layout"
+    tools:showIn="@layout/activity_add_treatment">
+
+   <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="20dp"
+            android:paddingHorizontal="15dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:id="@+id/active_status_layout">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Расписание"
+                    android:textSize="17dp"
+                    android:textColor="#000"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="7dp"
+                    android:paddingBottom="17dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Активное"
+                        android:textSize="17dp"
+                        android:layout_alignParentLeft="true"
+                        android:id="@+id/active_ind_tv_CaddT"/>
+
+                    <Switch
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:id="@+id/switch_active_type"
+                        android:checked="true"/>
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Медикамент"
+                android:textSize="17dp"
+                android:textColor="#000"/>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp">
+                <EditText
+                    android:id="@+id/edit_text_medicine_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:hint="Название"
+                    android:textSize="17dp"/>
+            </android.support.design.widget.TextInputLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="5dp">
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content">
+                    <EditText
+                        android:layout_width="100dp"
+                        android:id="@+id/edit_text_dose"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:hint="Доза"
+                        android:textSize="17dp"
+                        />
+                </android.support.design.widget.TextInputLayout>
+                <Spinner
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/dose_type"
+                    android:entries="@array/dose_type"
+                    android:textSize="17dp"
+                    android:layout_marginTop="23dp"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/ic_calendar"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="15dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Начиная с"
+                    android:textSize="17dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="15dp"/>
+
+                <Button
+                    android:layout_width="160dp"
+                    android:id="@+id/pick_start_date_button"
+                    android:layout_height="wrap_content"
+                    android:textSize="15dp"
+                    android:layout_gravity="center_vertical"
+                    android:textColor="#000"
+                    android:textAlignment="textStart"
+                    android:onClick="onPickDate"
+                    style="@style/Base.Widget.AppCompat.Button.Borderless"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="vertical"
+                android:paddingLeft="45dp">
+                <RadioGroup
+                    android:id="@+id/cycle_type"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <RadioButton
+                        android:id="@+id/every_day"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/rb_every_day"
+                        android:checked="true"
+                        android:textSize="17dp"/>
+
+                    <RadioButton
+                        android:id="@+id/specific_days"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/rb_specific_days"
+                        android:textSize="17dp"/>
+
+                    <RadioButton
+                        android:id="@+id/day_interval"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/rb_day_interval"
+                        android:textSize="17dp"/>
+                </RadioGroup>
+
+                <com.example.michel.mycalendar2.expandableLayout.ExpandableRelativeLayout
+                    android:id="@+id/expandableLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:ael_duration="150"
+                    app:ael_interpolator="accelerate"
+                    app:ael_orientation="vertical"
+                    app:ael_defaultChildIndex="0">
+
+                    <include layout="@layout/date_period"
+                        android:id="@+id/every_day_period"/>
+
+                    <include layout="@layout/specific_days_layout"
+                        android:id="@+id/specific_days_layout_id"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:id="@+id/once_a_date_layout">
+
+                            <TextView
+                                android:layout_width="65dp"
+                                android:layout_height="wrap_content"
+                                android:text="Раз в"
+                                android:textSize="17dp"
+                                android:layout_marginRight="20dp"/>
+
+                            <EditText
+                                android:id="@+id/edit_text_day_interval"
+                                android:layout_width="70dp"
+                                android:layout_height="wrap_content"
+                                android:inputType="number"
+                                android:text="10"
+                                android:textSize="17dp"/>
+
+                            <Spinner
+                                android:id="@+id/date_type_di"
+                                android:layout_width="90dp"
+                                android:layout_height="wrap_content"
+                                android:entries="@array/date_type"
+                                android:textSize="17dp" />
+
+                        </LinearLayout>
+
+                        <include layout="@layout/date_period"
+                            android:id="@+id/day_interval_period"/>
+
+                    </LinearLayout>
+                </com.example.michel.mycalendar2.expandableLayout.ExpandableRelativeLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="vertical">
+                <!--android:paddingLeft="36dp"-->
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_porridge"
+                        android:layout_marginRight="14dp"
+                        android:layout_gravity="center_vertical"
+                        />
+
+                    <RadioGroup
+                        android:id="@+id/regarding_meals"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <ToggleButton
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_weight="1"
+                            android:id="@+id/before_meals"
+                            android:textOn=""
+                            android:textOff=""
+                            android:onClick="onToggleTB"
+                            android:checked="false"
+                            android:layout_marginRight="13dp"
+                            android:background="@drawable/radiobutton_before_meals_selector"/>
+
+                        <ToggleButton
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_weight="1"
+                            android:id="@+id/with_meals"
+                            android:textOn=""
+                            android:textOff=""
+                            android:checked="false"
+                            android:onClick="onToggleTB"
+                            android:layout_marginRight="13dp"
+                            android:background="@drawable/radiobutton_with_meals_selector"/>
+
+                        <ToggleButton
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_weight="1"
+                            android:id="@+id/after_meals"
+                            android:textOn=""
+                            android:textOff=""
+                            android:onClick="onToggleTB"
+                            android:checked="false"
+                            android:background="@drawable/radiobutton_after_meals_selector"/>
+
+                    </RadioGroup>
+                </LinearLayout>
+
+                <com.example.michel.mycalendar2.expandableLayout.ExpandableRelativeLayout
+                    android:id="@+id/expandableLayout2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:ael_duration="150"
+                    app:ael_interpolator="accelerate"
+                    app:ael_orientation="vertical"
+                    app:ael_expanded="false"
+                    android:paddingLeft="45dp"
+                    >
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <EditText
+                            android:id="@+id/count_of_minutes"
+                            android:layout_width="70dp"
+                            android:layout_height="wrap_content"
+                            android:inputType="number"
+                            android:text="10"
+                            android:textSize="17dp"
+                            android:layout_marginRight="15dp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/concerning_meals"
+                            android:text="мин до еды"
+                            android:textSize="17dp"
+                            />
+
+                    </LinearLayout>
+
+                </com.example.michel.mycalendar2.expandableLayout.ExpandableRelativeLayout>
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Время приёма"
+                android:layout_marginTop="5dp"
+                android:textSize="17dp"
+                android:textColor="#000"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="3dp">
+                <!--<ListView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/times_of_taking_medicine"
+                    />-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/times_of_taking_medicine"
+                    android:orientation="vertical">
+
+                </LinearLayout>
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Добавить время"
+                    android:textSize="15dp"
+                    android:paddingHorizontal="10dp"
+                    android:onClick="add_reminder_time"
+                    />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Примечание"
+                android:textSize="17dp"
+                android:layout_marginTop="3dp"
+                android:textColor="#000"/>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp">
+                <EditText
+                    android:id="@+id/annotation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textMultiLine"
+                    android:hint="Любая доп. информация"
+                    android:textSize="17dp"/>
+            </android.support.design.widget.TextInputLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

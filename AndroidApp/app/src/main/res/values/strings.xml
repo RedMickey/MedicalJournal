@@ -1,0 +1,146 @@
+<resources>
+    <string name="app_name">myCalendar2</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_add_treatment">AddTreatmentActivity</string>
+
+    <string name="rb_every_day">Каждый день</string>
+    <string name="rb_specific_days">По определённыйм дням</string>
+    <string name="rb_day_interval">Дневной интервал</string>
+
+    <string name="delete_data">Удалить данные...</string>
+    <string name="delete_pill_message">Вместе с удалением этой информации также будут удалены
+    все данные о запланированных и уже принятых в соответствии с данным раписанием препаратом.
+    Вы уверены, что хотите удалить эти данные?</string>
+    <string name="delete_measurement_message">Вместе с удалением этой информации также будут удалены
+    все данные о запланированных и уже произведённых в соответствии с данным раписанием измерениях.
+    Вы уверены, что хотите удалить эти данные?</string>
+    <string name="d_agree">ОК</string>
+    <string name="cancel">ОТМЕНА</string>
+
+    <string-array name="dose_type">
+        <item id="1">шт</item>
+        <item>мл</item>
+        <item>гр</item>
+        <item>мг</item>
+        <item>капли</item>
+    </string-array>
+
+    <string-array name="date_type">
+        <item>дн.</item>
+        <item>нед.</item>
+        <item>мес.</item>
+    </string-array>
+    <string name="title_activity_add_measurement">AddMeasurementActivity</string>
+
+    <string-array name="time_intervals">
+        <item id="0">Последние 7 дней</item>
+        <item>Последние 30 дней</item>
+        <item>Последние 90 дней</item>
+        <item>Весь период</item>
+    </string-array>
+
+    <string-array name="quantity_intervals">
+        <item id="0">10 записей</item>
+        <item>30 записей</item>
+        <item>90 записей</item>
+        <item>Все записи</item>
+    </string-array>
+    <string name="title_activity_measurement_chart">MeasurementChartActivity</string>
+
+    <string-array name="genders">
+        <item id="0">Пол</item>
+        <item>Мужской</item>
+        <item>Женский</item>
+    </string-array>
+
+    <string-array name="periods_of_day">
+        <item id="0">Утро</item>
+        <item>День</item>
+        <item>Вечер</item>
+        <item>Ночь</item>
+        <item>За весь день</item>
+    </string-array>
+
+    <string name="title_activity_add_one_time_treatment">AddOneTimeTreatmentActivity</string>
+    <string name="title_activity_add_one_time_measurement">AddOneTimeMeasurementActivity</string>
+    <string name="title_activity_login">Sign in</string>
+
+    <string name="title_activity_registration">Регистрация</string>
+    <string name="activity_choosing_measurement_course">Выбор курса</string>
+
+    <string name="def_user_email">def@email</string>
+    <string name="def_username">Я</string>
+
+    <!--<string name="server_address">http://10.0.2.2:8090</string>-->
+    <string name="server_address">http://185.178.46.244:8090</string>
+
+    <!--fragment's titles-->
+    <string name="reminder_fragment_title">Курсы напоминанй</string>
+    <string name="history_fragment_title">История</string>
+    <string name="statistic_fragment_title">Статистика</string>
+    <string name="main_fragment_title">Дневник здоровья</string>
+    <string name="google_fit_fragment_title">Google Fit</string>
+    <string name="settings_fragment_title">Настройки</string>
+    <string name="help_fragment_title">Помощь</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Пароль</string>
+    <string name="action_sign_in">Войти</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">Неверный email адрес</string>
+    <string name="error_invalid_password">Введённый пароль слишком короткий</string>
+    <string name="error_incorrect_password">Неверный пароль</string>
+    <string name="error_field_required">Это поле является обязательным</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+    <string name="title_activity_gfit_details">GFitDetailsActivity</string>
+
+    <!-- Strings related to help -->
+
+    <string-array name="help_main_questions">
+        <item>Как добавить новый курс принятия лекарств</item>
+        <item>Как добавить новый курс снятия измерений</item>
+        <item>Как добавить единичный прием лекарства</item>
+    </string-array>
+
+    <string-array name="help_answers">
+        <item>
+            На странице «Медикаменты» необходимо нажать на красную
+            круглую кнопку со знаком «+» и перейти на страницу создания курса принятия лекарства.
+            Далее нужно ввести название лекарства, выбрать дозу, цикл, установить значение,
+            если необходимо, о принятии лекарства относительно приёма пищи. Далее нужно добавить
+            время напоминания и по желанию ввести любую дополнительную информацию. Также можно
+            изменить дату начала курса, нажав на неё. Для сохранения нажать на красную кнопку с
+            галочкой.
+        </item>
+        <item>
+            Для того чтобы добавить курс, сначала необходимо выбрать тип измерения. Для этого
+            на странице «Измерения» нажать на красную кнопку «+», в появившемся диалоговом
+            окне выбрать нужный тип измерения. Далее на странице создания курса можно выбрать тип цикла,
+            установить значение, если необходимо, о снятии измерения относительно приёма пищи. Далее
+            нужно добавить время напоминания и по желанию ввести любую дополнительную информацию.
+            Также можно изменить дату начала курса, нажав на неё. Для сохранения нажать на красную
+            кнопку с галочкой.
+        </item>
+        <item>
+            Для того чтобы добавить единичный приём лекарства необходимо на главной странице нажать
+            красную кнопку «+», из выпадающего меню выбрать пункт «Одиночный приём» (красная кнопка с
+            изображением пилюли). Далее на странице создания единичного приёма лекарства необходимо
+            ввести название медикамента, дозу, при необходимости дату, время и значение, относительно
+            приёма пищи. Также можно нажать на кнопку «Без рецепта» со значком выпадающего списка.
+            Появится диалоговое окно с уже созданными курсами приёмов лекарств. В нем можно выбрать
+            шаблонное значение для единичного приёма лекарства. Для сохранения нажать на красную
+            кнопку с галочкой.
+        </item>
+    </string-array>
+
+
+
+</resources>

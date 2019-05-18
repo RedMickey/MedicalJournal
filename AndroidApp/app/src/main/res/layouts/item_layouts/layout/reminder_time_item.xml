@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+    <android.support.design.widget.TextInputLayout
+        android:layout_weight=".70"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/reminder_time_InputLayout">
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:id="@+id/reminder_time"
+            android:hint="Время напоминания"
+            android:focusable="false"
+            android:textSize="17dp"/>
+    </android.support.design.widget.TextInputLayout>
+
+    <ImageButton
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:src="@drawable/ic_clear"
+        android:background="@android:color/transparent"
+        android:layout_gravity="center_vertical"
+        android:onClick="delete_reminder_time"
+        >
+
+    </ImageButton>
+
+</LinearLayout>

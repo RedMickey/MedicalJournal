@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.example.michel.mycalendar2.activities.MeasurementChartActivity"
+    tools:showIn="@layout/activity_measurement_chart">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingVertical="5dp"
+        android:paddingHorizontal="10dp"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageButton
+                android:layout_width="35dp"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_navigate_before"
+                android:paddingHorizontal="0dp"
+                android:layout_alignParentLeft="true"
+                android:id="@+id/button_month_before"
+                android:onClick="onButtonBeforeClick"
+                style="@style/Widget.AppCompat.Button.Borderless"/>
+            <ImageButton
+                android:layout_width="35dp"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_navigate_next"
+                android:paddingHorizontal="0dp"
+                android:layout_alignParentRight="true"
+                android:id="@+id/button_month_next"
+                android:onClick="onButtonNextClick"
+                style="@style/Widget.AppCompat.Button.Borderless"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:id="@+id/text_current_date"
+                android:text="date date"
+                android:textSize="18dp"
+                android:textColor="#000"/>
+        </RelativeLayout>
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/measurement_chart"
+            android:layout_width="match_parent"
+            android:layout_height="300dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@drawable/line_separator"
+            android:layout_marginVertical="3dp"
+            android:layout_marginHorizontal="10dp"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Текущее среднее значение"
+            android:inputType="textMultiLine"
+            android:textSize="17dp"
+            android:textColor="#000"
+            android:background="?android:colorBackground"
+            android:textAlignment="center"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="ваыва"
+            android:inputType="textMultiLine"
+            android:textSize="17dp"
+            android:textColor="#000"
+            android:background="?android:colorBackground"
+            android:textAlignment="center"
+            android:id="@+id/current_value_tv"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/standard_value_layout"
+            android:orientation="vertical">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@drawable/line_separator"
+                android:layout_marginVertical="3dp"
+                android:layout_marginHorizontal="10dp"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Нормативное значение"
+                android:textSize="17dp"
+                android:textColor="#000"
+                android:background="?android:colorBackground"
+                android:textAlignment="center"
+                />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="dgdgd"
+                android:textSize="17dp"
+                android:textColor="#000"
+                android:background="?android:colorBackground"
+                android:id="@+id/standard_value_tv"
+                android:textAlignment="center"
+                />
+        </LinearLayout>
+    </LinearLayout>
+
+</android.support.v4.widget.NestedScrollView>

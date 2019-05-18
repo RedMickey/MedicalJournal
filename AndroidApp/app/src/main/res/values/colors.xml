@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--<color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>-->
+
+    <color name="colorPrimary">#1e88e5</color>
+    <color name="colorPrimaryDark">#005cb2</color>
+    <color name="colorPrimaryLight">#6ab7ff</color>
+    <color name="colorAccent">#ff8a80</color>
+
+    <color name="add_timeBT_BG">#ECEFF1</color>
+    <color name="line_BG">#dedede</color>
+    <color name="green_accept">#00FF00</color>
+    <color name="alarm_act_bg">#C5CAE9</color>
+    <color name="alarm_act_bg_acc">#00E676</color>
+    <color name="alarm_act_bg_rej">#F00</color>
+    <color name="meas_remind_ent_bg">#CCECD7</color>
+    <color name="transparent">#00000000</color>
+
+    <color name="inbox_primary">#4285f4</color>
+    <color name="inbox_accent">#db4437</color>
+
+    <color name="material_green_200">#A5D6A7</color>
+    <color name="material_green_500">#4CAF50</color>
+    <color name="material_orange_500">#FF9800</color>
+    <color name="material_white_1000">#ffffff</color>
+    <color name="material_indigo_300">#7986CB</color>
+    <color name="material_test1">#43A047</color>
+    <color name="material_test3">#BA68C8</color>
+    <color name="material_test2">#66BB6A</color>
+
+    <color name="hint_text_color">#ababab</color>
+</resources>

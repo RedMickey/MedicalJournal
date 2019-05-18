@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_main"
+            android:icon="@drawable/ic_home"
+            android:title="Главная"
+            android:checked="true"/>
+        <item
+            android:id="@+id/nav_medicines"
+            android:icon="@drawable/ic_pill_100"
+            android:title="Медикаменты" />
+        <item
+            android:id="@+id/nav_statistic"
+            android:icon="@drawable/ic_chart"
+            android:title="Статистика измерений" />
+        <item
+            android:id="@+id/nav_history"
+            android:icon="@drawable/ic_history"
+            android:title="История" />
+        <item
+            android:id="@+id/nav_google_fit"
+            android:icon="@drawable/ic_google_fit_heart"
+            android:title="Google Fit" />
+    </group>
+
+    <group
+        android:id="@+id/menu_bottom"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_settings"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Настроки" >
+        </item>
+        <item
+            android:id="@+id/nav_help"
+            android:icon="@drawable/ic_help"
+            android:title="Помощь" >
+        </item>
+    </group>
+
+</menu>
