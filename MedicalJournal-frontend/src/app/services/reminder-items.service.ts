@@ -10,6 +10,7 @@ import { CycleDBInsertEntry } from '../models/CycleDBInsertEntry';
 import { PillReminderCourse } from '../models/PillReminderCourse';
 import { MeasurementReminderCourse } from '../models/MeasurementReminderCourse';
 import { AuthService } from './auth.service';
+import { environment } from '../../environments/environment.prod';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -19,7 +20,7 @@ const httpOptions = {
   providedIn: 'root'
 })
 export class ReminderItemsService {
-  private ReminderItemsUrl = 'http://localhost:8090/reminders';  // URL to web api
+  private ReminderItemsUrl = environment.APIAddress + '/reminders';  // URL to web api
 
   user: any;
 

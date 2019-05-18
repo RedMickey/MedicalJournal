@@ -4,6 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthService } from './auth.service';
 import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
+import { environment } from '../../environments/environment.prod';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -13,7 +14,7 @@ const httpOptions = {
   providedIn: 'root'
 })
 export class UserService {
-  private UserUrl = 'http://localhost:8090/user';  // URL to web api
+  private UserUrl = environment.APIAddress + '/user';  // URL to web api
 
   userLS: any;
 

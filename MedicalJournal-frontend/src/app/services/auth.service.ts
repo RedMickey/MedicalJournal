@@ -40,7 +40,7 @@ export class AuthService {
   }
 
   login(email:string, password:string) {
-    return this.http.post('http://localhost:8090/login', 
+    return this.http.post(environment.APIAddress + '/login', 
     {
       "username": email,
       "password": password
@@ -77,7 +77,7 @@ export class AuthService {
   }
 
   refreshAccessToken(){
-    return this.http.post('http://localhost:8090/auth/refreshToken', 
+    return this.http.post(environment.APIAddress + '/auth/refreshToken', 
     {
       "refreshToken": localStorage.getItem('refresh_token')
     },
@@ -91,7 +91,7 @@ export class AuthService {
   }
 
   register(user: User){
-    return this.http.post<User>("http://localhost:8090/user/sign-up", 
+    return this.http.post<User>(environment.APIAddress + "/user/sign-up", 
         user,
       )
       .pipe(
