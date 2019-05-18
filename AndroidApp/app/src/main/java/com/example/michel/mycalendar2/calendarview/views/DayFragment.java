@@ -1,5 +1,6 @@
 package com.example.michel.mycalendar2.calendarview.views;
 
+import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -48,6 +49,7 @@ public class DayFragment extends Fragment{
         //((TextView) view.findViewById(R.id.text_day_of_week)).setText(CalendarUtil.getDayOfWeekRusName(currentData));
         ((TextView) view.findViewById(R.id.text_day_of_week)).setText(CalendarUtil.getDayOfWeekRusName(currentData));
         TasksViewCreationTask tv = new TasksViewCreationTask(view);
-        tv.execute(currentData);
+        //tv.execute(currentData);
+        tv.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, currentData);
     }
 }

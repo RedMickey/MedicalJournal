@@ -1,9 +1,11 @@
 package com.example.michel.mycalendar2.activities;
 
+import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -23,6 +25,7 @@ import com.example.michel.mycalendar2.app_async_tasks.PillNotificationsCreationT
 import com.example.michel.mycalendar2.app_async_tasks.UserGlobalUpdateTask;
 import com.example.michel.mycalendar2.app_async_tasks.UserLocalUpdateTask;
 import com.example.michel.mycalendar2.app_async_tasks.UserSignUpTask;
+import com.example.michel.mycalendar2.app_async_tasks.synchronization.DownloadUserDataTask;
 import com.example.michel.mycalendar2.authentication.AccountGeneralUtils;
 import com.example.michel.mycalendar2.models.User;
 
@@ -31,7 +34,7 @@ import java.util.Calendar;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class UserActivity extends AppCompatActivity {
+public class UserActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
     private Spinner birthdayYearSpinner;
     private Spinner gendersSpinner;
     private EditText usernameRegEt;
@@ -39,6 +42,7 @@ public class UserActivity extends AppCompatActivity {
     private EditText emailEt;
     private Button changePasswordButton;
     private String password = "";
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +51,15 @@ public class UserActivity extends AppCompatActivity {
 
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("Профиль");
 
+        swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
+        swipeRefreshLayout.setOnRefreshListener(this);
+        swipeRefreshLayout.setColorSchemeResources(
+                android.R.color.holo_blue_dark,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
         password ="";
         birthdayYearSpinner = (Spinner) findViewById(R.id.birthday_year_spinner);
         ArrayList<String> years = new ArrayList<String>();
@@ -130,6 +142,8 @@ public class UserActivity extends AppCompatActivity {
                 PillNotificationsCreationTask prePnct = new PillNotificationsCreationTask(
                         1, AccountGeneralUtils.curUser.getId());
                 prePnct.execute(this);
+                AccountManager accountManager = AccountManager.get(this);
+                accountManager.removeAccountExplicitly(AccountGeneralUtils.curAccount);
                 AccountGeneralUtils.curUser = new User();
                 AccountGeneralUtils.curToken = null;
                 AccountGeneralUtils.curAccount = null;
@@ -150,6 +164,7 @@ public class UserActivity extends AppCompatActivity {
 
     public void onSaveConfigButtonClick(View view) {
         User updatedUser = new User();
+        updatedUser.setIsCurrent(1);
 
         boolean isCorrect = validateInputForm(updatedUser);
         if (isCorrect) {
@@ -270,5 +285,35 @@ public class UserActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    public Spinner getBirthdayYearSpinner() {
+        return birthdayYearSpinner;
+    }
+
+    public Spinner getGendersSpinner() {
+        return gendersSpinner;
+    }
+
+    public EditText getEmailEt() {
+        return emailEt;
+    }
+
+    public EditText getUsernameRegEt() {
+        return usernameRegEt;
+    }
+
+    public EditText getUserSurnameRegEt() {
+        return userSurnameRegEt;
+    }
+
+    public SwipeRefreshLayout getSwipeRefreshLayout() {
+        return swipeRefreshLayout;
+    }
+
+    @Override
+    public void onRefresh() {
+        DownloadUserDataTask downloadUserDataTask = new DownloadUserDataTask(this);
+        downloadUserDataTask.execute();
     }
 }

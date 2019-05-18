@@ -148,9 +148,8 @@ public class SynchronizationMeasurementReminderTask extends AsyncTask<Void, Void
             catch(Exception e){
 
                 resCode = -2;
-                //Log.e("URL", e.getMessage());
-                Log.e("URL", String.valueOf(-2));
-                //return new String("\"Exception\": \"" + e.getMessage()+"\"");
+                requestAttempts = 2;
+                Log.e("URL", e.toString() + " " + this.getClass());
             }
         }
 

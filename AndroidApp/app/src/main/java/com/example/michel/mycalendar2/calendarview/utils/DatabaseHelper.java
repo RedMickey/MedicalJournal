@@ -43,7 +43,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         OutputStream myOutput = null;
         try {
             File file = new File(DB_PATH);
-          //  if (!file.exists()) {
+            if (!file.exists()) {
                 this.getReadableDatabase();
                 //получаем локальную бд как поток
                 myInput = myContext.getAssets().open(DB_NAME);
@@ -63,7 +63,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 myOutput.flush();
                 myOutput.close();
                 myInput.close();
-           // }
+            }
         }
         catch(IOException ex){
             Log.d("DatabaseHelper", ex.getMessage());

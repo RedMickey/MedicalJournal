@@ -37,6 +37,22 @@ public class UserDao {
         return userId;
     }
 
+    public int insertOrReplaceUser(User user){
+        ContentValues userValues = new ContentValues();
+        userValues.put("_id_user", user.getId());
+        userValues.put("synchronization_time", ConvertingUtils.convertDateToString(user.getSynchronizationTime(),1));
+        userValues.put("name", user.getName());
+        userValues.put("surname", user.getSurname());
+        userValues.put("email", user.getEmail());
+        userValues.put("_id_gender", user.getGenderId());
+        userValues.put("birthday_year", user.getBirthdayYear());
+        userValues.put("role_id", user.getRoleId());
+        userValues.put("is_current", user.getIsCurrent());
+        int userId = (int) database.insertWithOnConflict("user", null,
+                userValues, SQLiteDatabase.CONFLICT_REPLACE);
+        return userId;
+    }
+
     public List<User> getAllUsers(){
         List<User> users = new ArrayList<>();
         String rawQuery = "select * FROM user";

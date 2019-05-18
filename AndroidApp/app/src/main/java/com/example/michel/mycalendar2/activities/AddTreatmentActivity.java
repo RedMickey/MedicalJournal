@@ -79,7 +79,6 @@ public class AddTreatmentActivity extends AppCompatActivity {
 
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Добавить лекарство");
 
 // Declaration
 
@@ -315,6 +314,7 @@ public class AddTreatmentActivity extends AppCompatActivity {
         if (arguments == null){
             //active_ind_tv.setText("Empty");
             ((LinearLayout)findViewById(R.id.active_status_layout)).setVisibility(View.GONE);
+            getSupportActionBar().setTitle("Добавить лекарство");
 
             cal = Calendar.getInstance();
             time.add(String.valueOf(cal.get(Calendar.HOUR_OF_DAY))+":00");
@@ -327,6 +327,7 @@ public class AddTreatmentActivity extends AppCompatActivity {
             }
         }
         else {
+            getSupportActionBar().setTitle("Редактировать курс");
             UUID id = UUID.fromString(arguments.getString("PillReminderID"));
             AddTreatmentActivityCreationTask addTreatmentActivityCreationTask = new AddTreatmentActivityCreationTask(
                     this, pickDateButtonDateData, timesOfTakingMedicineAdapter);

@@ -2,9 +2,15 @@ package com.example.michel.mycalendar2.app_async_tasks;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.accounts.AccountManagerCallback;
+import android.accounts.AccountManagerFuture;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Bundle;
+import android.support.design.widget.NavigationView;
+import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,7 +22,11 @@ import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
 import com.example.michel.mycalendar2.dao.UserDao;
 import com.example.michel.mycalendar2.models.User;
 
-public class SetUpCurrentUserTask extends AsyncTask<Void, Void, Integer> {
+import de.hdodenhof.circleimageview.CircleImageView;
+
+import static android.accounts.AccountManager.KEY_AUTHTOKEN;
+
+public class SetUpCurrentUserTask extends AsyncTask<Void, User, Integer> {
     private Context context;
     private AccountManager accountManager;
     private Account account = null;
@@ -41,10 +51,6 @@ public class SetUpCurrentUserTask extends AsyncTask<Void, Void, Integer> {
     @Override
     protected Integer doInBackground(Void... voids) {
         DatabaseAdapter databaseAdapter = new DatabaseAdapter();
-        /*databaseAdapter.open();
-
-
-        databaseAdapter.close();*/
 
         if (user == null){
             UserDao userDao = new UserDao(databaseAdapter.open().getDatabase());
@@ -52,9 +58,14 @@ public class SetUpCurrentUserTask extends AsyncTask<Void, Void, Integer> {
             databaseAdapter.close();
             if (user == null){
                 Log.e("UERR", "There is not the current user!");
+                AccountGeneralUtils.curUser = user = new User();
+                publishProgress(user);
                 return -1;
             }
         }
+
+        AccountGeneralUtils.curUser = user;
+        publishProgress(user);
 
         if (account == null){
             accountManager = AccountManager.get(context);
@@ -72,13 +83,31 @@ public class SetUpCurrentUserTask extends AsyncTask<Void, Void, Integer> {
                 accountManager = AccountManager.get(context);
             try {
                 authToken = accountManager.blockingGetAuthToken(account, AccountGeneralUtils.AUTHTOKEN_TYPE_USER_ACCESS, true);
+                /*accountManager.getAuthToken(account, AccountGeneralUtils.AUTHTOKEN_TYPE_USER_ACCESS, null,
+                        true,
+                        new AccountManagerCallback<Bundle>() {
+                            @Override
+                            public void run(AccountManagerFuture<Bundle> future) {
+                                try {
+                                    AccountGeneralUtils.curToken = future.getResult().getString(KEY_AUTHTOKEN);
+                                    String d = future.getResult().getString(KEY_AUTHTOKEN);
+                                    if (AccountGeneralUtils.curToken.equals(d)){
+                                        int i = 5;
+                                    }
+                                    int i = 5;
+                                }
+                                catch (Exception e){
+                                    Log.e("AEX", e.toString());
+                                }
+                            }
+                        }, null);*/
             }catch (Exception e){
-                Log.e("GetAuthToken", e.getMessage());
+                Log.e("GetAuthToken", "blockingGetAuthToken Exception");
                 return -2;
             }
         }
 
-        AccountGeneralUtils.curUser = user;
+
         AccountGeneralUtils.curAccount = account;
         AccountGeneralUtils.curToken = authToken;
 
@@ -86,12 +115,34 @@ public class SetUpCurrentUserTask extends AsyncTask<Void, Void, Integer> {
     }
 
     @Override
+    protected void onProgressUpdate(User... users) {
+        if (mainActivity!=null){
+            LinearLayout headerView = (LinearLayout) mainActivity.getNavigationView().getHeaderView(0);
+            ((TextView) headerView.findViewById(R.id.username_tv)).setText(user.getName());
+            ((TextView) headerView.findViewById(R.id.profile_config_tv)).setText("Редактировать профиль");
+            switch (user.getGenderId()){
+                case 1:
+                    ((CircleImageView)headerView.findViewById(R.id.profile_image))
+                            .setImageResource(R.drawable.avatar2);
+                    break;
+                case 2:
+                    ((CircleImageView)headerView.findViewById(R.id.profile_image))
+                            .setImageResource(R.drawable.boy_avatar);
+                    break;
+                case 3:
+                    ((CircleImageView)headerView.findViewById(R.id.profile_image))
+                            .setImageResource(R.drawable.girl_avatar);
+                    break;
+            }
+        }
+    }
+
+    @Override
     protected void onPostExecute(Integer status) {
         if (status > 0){
             //Toast.makeText(context, user.getEmail() + " " + account.name + "\n" + authToken, Toast.LENGTH_LONG).show();
-            if (mainActivity!=null){
-                ((TextView) mainActivity.getNavigationView().findViewById(R.id.username_tv)).setText(user.getName());
-                ((TextView) mainActivity.getNavigationView().findViewById(R.id.profile_config_tv)).setText("Редактировать профиль");
+            Log.i("USER", user.getEmail() + " " + account.name + "\n" + authToken);
+            if (mainActivity!=null) {
                 GettingDataFromServerTask gettingDataFromServerTask = new GettingDataFromServerTask(
                         mainActivity
                 );
@@ -99,8 +150,8 @@ public class SetUpCurrentUserTask extends AsyncTask<Void, Void, Integer> {
             }
         }
         else{
-            AccountGeneralUtils.curUser = new User();
-            Toast.makeText(context, "An error has occurred", Toast.LENGTH_LONG).show();
+            //AccountGeneralUtils.curUser = new User();
+            //Toast.makeText(context, "An error has occurred", Toast.LENGTH_LONG).show();
         }
         if (notificationsCreationWorkable){
             PillNotificationsCreationTask pnct = new PillNotificationsCreationTask();

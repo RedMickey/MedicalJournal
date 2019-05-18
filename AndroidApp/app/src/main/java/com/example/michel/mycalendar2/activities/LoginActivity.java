@@ -16,7 +16,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Base64;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
@@ -204,10 +203,6 @@ public class LoginActivity extends AppCompatActivity {
             i++;*/
         }
 
-        /*showProgress(true);
-        mAuthTask = new UserLoginTask("", "");
-        mAuthTask.execute((Void) null);*/
-
     }
 
     public void submit(final String email, final String password){
@@ -263,6 +258,7 @@ public class LoginActivity extends AppCompatActivity {
             // (Not setting the auth token will cause another call to the server to authenticate the user)
             mAccountManager.addAccountExplicitly(account, accountPassword, null);
             mAccountManager.setAuthToken(account, authtokenType, authtoken);
+            mAccountManager.setPassword(account, accountPassword);
 
         } else {
             Log.d("MedicalJournal", TAG + "> finishLogin > setPassword");

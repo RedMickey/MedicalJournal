@@ -54,13 +54,6 @@ public class UserSignUpTask extends AsyncTask<User, Void, User> {
 
     @Override
     protected User doInBackground(User... users) {
-        /*try {
-            // Simulate network access.
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-
-        }*/
-
         String response = "";
 
         try {
@@ -107,15 +100,13 @@ public class UserSignUpTask extends AsyncTask<User, Void, User> {
                 Log.e("RC", "Exception: " + responseCode);
                 users[0].setId(-2);
                 return users[0];
-                //return new String("\"Exception\": \"" + responseCode+"\"");
             }
 
         }
         catch(Exception e){
-            Log.e("URL", e.getMessage());
+            Log.e("URL", e.toString() + " " + this.getClass());
             users[0].setId(-1);
             return users[0];
-            //return new String("\"Exception\": \"" + e.getMessage()+"\"");
         }
 
         try {

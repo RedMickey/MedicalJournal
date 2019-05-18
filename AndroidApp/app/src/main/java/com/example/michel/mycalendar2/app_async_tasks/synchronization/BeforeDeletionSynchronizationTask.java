@@ -159,8 +159,8 @@ public class BeforeDeletionSynchronizationTask extends AsyncTask<Void, Void, Int
             }
             catch(Exception e){
                 resCode = -2;
-                //Log.e("URL", e.getMessage());
-                Log.e("URL", String.valueOf(-2));
+                requestAttempts = 2;
+                Log.e("URL", e.toString() + " " + this.getClass());
             }
         }
 

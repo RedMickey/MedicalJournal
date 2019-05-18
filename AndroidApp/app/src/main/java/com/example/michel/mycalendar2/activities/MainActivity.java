@@ -40,6 +40,7 @@ import com.example.michel.mycalendar2.main_fragments.MainFragment;
 import com.example.michel.mycalendar2.main_fragments.ReminderFragment;
 import com.example.michel.mycalendar2.main_fragments.SettingsFragment;
 import com.example.michel.mycalendar2.main_fragments.StatisticListFragment;
+import com.example.michel.mycalendar2.models.User;
 import com.example.michel.mycalendar2.utils.DBStaticEntries;
 
 import java.text.SimpleDateFormat;
@@ -76,12 +77,6 @@ public class MainActivity extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-
-        MainFragment mainFragment = MainFragment.newInstance();
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction()
-                .add(R.id.frame_container, mainFragment, curFragmentTag)
-                .commit();
 
         toolbarLinearLayout1 = (LinearLayout)findViewById(R.id.toolbar_linear_layout1);
         toolbarLinearLayout2 = (LinearLayout)findViewById(R.id.toolbar_linear_layout2);
@@ -150,6 +145,8 @@ public class MainActivity extends AppCompatActivity
             DBStaticEntries.doseTypes = databaseAdapter.getDoseTypes();
             DBStaticEntries.measurementTypes = databaseAdapter.getMeasurementTypes();
 
+
+
             //databaseAdapter.insertTestTable();
 
             databaseAdapter.close();
@@ -180,6 +177,12 @@ public class MainActivity extends AppCompatActivity
                 setUpCurrentUserTask.execute();
             }
         }
+
+        MainFragment mainFragment = MainFragment.newInstance();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .add(R.id.frame_container, mainFragment, curFragmentTag)
+                .commit();
     }
 
     @Override

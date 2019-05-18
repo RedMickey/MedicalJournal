@@ -21,7 +21,7 @@ public class ParseComServerAuthenticate implements ServerAuthenticate {
         String authtoken = null;
 
         try {
-            URL url = new URL("http://10.0.2.2:8090/login");
+            URL url = new URL("http://185.178.46.244:8090/login");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
             conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
@@ -51,10 +51,14 @@ public class ParseComServerAuthenticate implements ServerAuthenticate {
 
         }
         catch(Exception e){
-            Log.e("URL", e.getMessage());
+            Log.e("URL", e.getMessage() + " ParseComServerAuthenticate");
             //return new String("\"Exception\": \"" + e.getMessage()+"\"");
         }
 
         return authtoken;
+    }
+
+    private void updatePassword(){
+
     }
 }

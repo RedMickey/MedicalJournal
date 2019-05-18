@@ -2,12 +2,18 @@ package com.example.michel.mycalendar2.authentication;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.accounts.AccountManagerCallback;
+import android.accounts.AccountManagerFuture;
 import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
+import android.os.Bundle;
+import android.util.Log;
 
 import com.example.michel.mycalendar2.models.User;
 
 import java.io.IOException;
+
+import static android.accounts.AccountManager.KEY_AUTHTOKEN;
 
 public class AccountGeneralUtils {
 
@@ -40,6 +46,23 @@ public class AccountGeneralUtils {
     public static void updateTokenSync(AccountManager accountManager) throws AuthenticatorException,
             OperationCanceledException, IOException {
         accountManager.invalidateAuthToken(AccountGeneralUtils.ACCOUNT_TYPE, AccountGeneralUtils.curToken);
-        curToken = accountManager.blockingGetAuthToken(curAccount, ACCOUNT_TYPE, true);
+
+        /*accountManager.getAuthToken(curAccount, AccountGeneralUtils.AUTHTOKEN_TYPE_USER_ACCESS, null, false,
+                new AccountManagerCallback<Bundle>() {
+                    @Override
+                    public void run(AccountManagerFuture<Bundle> future) {
+                        try {
+                            Bundle bundle = future.getResult();
+                            curToken = future.getResult().getString(KEY_AUTHTOKEN);
+                            int i = 5;
+                        }
+                        catch (Exception e){
+                            Log.e("AEX", e.toString());
+                        }
+
+                        int i = 5;
+                    }
+                }, null);*/
+        curToken = accountManager.blockingGetAuthToken(curAccount, AUTHTOKEN_TYPE_USER_ACCESS, true);
     }
 }

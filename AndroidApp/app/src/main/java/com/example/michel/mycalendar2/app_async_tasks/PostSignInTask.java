@@ -95,7 +95,7 @@ public class PostSignInTask extends AsyncTask<String, Void, Integer> {
 
         }
         catch(Exception e){
-            Log.e("URL", e.getMessage());
+            Log.e("URL", e.toString() + " " + this.getClass());
             return -1;
             //return new String("\"Exception\": \"" + e.getMessage()+"\"");
         }
@@ -115,7 +115,8 @@ public class PostSignInTask extends AsyncTask<String, Void, Integer> {
         Date synchronizationTimestamp = userDao.ifUserExists(user.getEmail());
         if (synchronizationTimestamp == null){
             user.setSynchronizationTime(new Date(10000));
-            userDao.insertUser(user);
+            //userDao.insertUser(user);
+            userDao.insertOrReplaceUser(user);
         }
         else {
             user.setSynchronizationTime(synchronizationTimestamp);

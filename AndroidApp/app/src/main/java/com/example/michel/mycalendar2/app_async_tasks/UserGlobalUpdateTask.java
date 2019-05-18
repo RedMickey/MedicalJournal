@@ -1,6 +1,9 @@
 package com.example.michel.mycalendar2.app_async_tasks;
 
+import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.accounts.AccountManagerCallback;
+import android.accounts.AccountManagerFuture;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -98,10 +101,10 @@ public class UserGlobalUpdateTask extends AsyncTask<User, Void, User> {
 
             }
             catch(Exception e){
-                Log.e("URL", e.getMessage());
+                requestAttempts = 2;
+                Log.e("URL", e.toString() + " " + this.getClass());
                 users[0].setId(-2);
                 return users[0];
-                //return new String("\"Exception\": \"" + e.getMessage()+"\"");
             }
         }
 
@@ -117,22 +120,61 @@ public class UserGlobalUpdateTask extends AsyncTask<User, Void, User> {
     }
 
     @Override
-    protected void onPostExecute(User user) {
+    protected void onPostExecute(final User user) {
         if (user.getId()>0){
-            AccountGeneralUtils.curUser.setName(user.getName());
-            AccountGeneralUtils.curUser.setSurname(user.getSurname());
-            AccountGeneralUtils.curUser.setGenderId(user.getGenderId());
-            AccountGeneralUtils.curUser.setBirthdayYear(user.getBirthdayYear());
-            AccountGeneralUtils.curUser.setEmail(user.getEmail());
-            AccountGeneralUtils.curUser.setSynchronizationTime(new Date());
+            if (!AccountGeneralUtils.curUser.getEmail().equals(user.getEmail())){
+                accountManager.renameAccount(AccountGeneralUtils.curAccount, user.getEmail(),
+                        new AccountManagerCallback<Account>() {
+                    @Override
+                    public void run(AccountManagerFuture<Account> future) {
+                        try {
+                            AccountGeneralUtils.curAccount = future.getResult();
+                        }
+                        catch (Exception ex){
+                            //ex.printStackTrace();
+                            Log.e("CUE", ex.getMessage());
+                        }
+                        AccountGeneralUtils.curUser.setName(user.getName());
+                        AccountGeneralUtils.curUser.setSurname(user.getSurname());
+                        AccountGeneralUtils.curUser.setGenderId(user.getGenderId());
+                        AccountGeneralUtils.curUser.setBirthdayYear(user.getBirthdayYear());
+                        AccountGeneralUtils.curUser.setEmail(user.getEmail());
+                        AccountGeneralUtils.curUser.setSynchronizationTime(new Date());
 
-            accountManager.setPassword(AccountGeneralUtils.curAccount, user.getPassword());
+                        accountManager.setPassword(AccountGeneralUtils.curAccount, user.getPassword());
 
-            UserLocalUpdateTask userLocalUpdateTask = new UserLocalUpdateTask(0);
-            userLocalUpdateTask.execute(user);
+                        UserLocalUpdateTask userLocalUpdateTask = new UserLocalUpdateTask(0);
+                        userLocalUpdateTask.execute(user);
+                    }
+                }, null);
+            }
+            else {
+                AccountGeneralUtils.curUser.setName(user.getName());
+                AccountGeneralUtils.curUser.setSurname(user.getSurname());
+                AccountGeneralUtils.curUser.setGenderId(user.getGenderId());
+                AccountGeneralUtils.curUser.setBirthdayYear(user.getBirthdayYear());
+                AccountGeneralUtils.curUser.setEmail(user.getEmail());
+                AccountGeneralUtils.curUser.setSynchronizationTime(new Date());
+
+                accountManager.setPassword(AccountGeneralUtils.curAccount, user.getPassword());
+
+                UserLocalUpdateTask userLocalUpdateTask = new UserLocalUpdateTask(0);
+                userLocalUpdateTask.execute(user);
+            }
         }
         else if (user.getId()==-1){
             Toast.makeText(context, "Данный Email уже используется", Toast.LENGTH_LONG).show();
-        }
+            }
+            else {
+                Toast.makeText(context, "Ошибка сети. Пароль и Email не изменены.", Toast.LENGTH_LONG).show();
+                AccountGeneralUtils.curUser.setName(user.getName());
+                AccountGeneralUtils.curUser.setSurname(user.getSurname());
+                AccountGeneralUtils.curUser.setGenderId(user.getGenderId());
+                AccountGeneralUtils.curUser.setBirthdayYear(user.getBirthdayYear());
+                AccountGeneralUtils.curUser.setSynchronizationTime(new Date());
+
+                UserLocalUpdateTask userLocalUpdateTask = new UserLocalUpdateTask(0);
+                userLocalUpdateTask.execute(AccountGeneralUtils.curUser);
+            }
     }
 }

@@ -150,10 +150,8 @@ public class SynchronizationPillReminderTask extends AsyncTask<Void, Void, Integ
             catch(Exception e){
 
                 resCode = -2;
-                //Log.e("URL", e.getMessage());
-                Log.e("URL", String.valueOf(-2));
-                //return users[0];
-                //return new String("\"Exception\": \"" + e.getMessage()+"\"");
+                requestAttempts = 2;
+                Log.e("URL", e.toString() + " " + this.getClass());
             }
         }
 
