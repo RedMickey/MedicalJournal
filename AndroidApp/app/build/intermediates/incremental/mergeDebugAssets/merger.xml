@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger version="3"><dataSet config="main"><source path="E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\assets"><file name="test.db" path="E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\assets\test.db"/></source><source path="E:\android_studio_projects\MedicalJournal\AndroidApp\app\build\generated\assets\shaders\debug"/></dataSet><dataSet config="debug"><source path="E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\debug\assets"/></dataSet></merger>

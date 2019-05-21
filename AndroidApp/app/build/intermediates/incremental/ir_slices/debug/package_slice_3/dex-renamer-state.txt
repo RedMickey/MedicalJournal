@@ -1,0 +1,4 @@
+#Sat Jan 26 21:02:54 MSK 2019
+base.0=E\:\\android_studio_projects\\MedicalJournal\\AndroidApp\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\4
+path.0=classes.dex
+renamed.0=classes.dex
