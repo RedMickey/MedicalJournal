@@ -1,0 +1,66 @@
+package com.example.michel.rest_api.services;
+
+import com.example.michel.rest_api.models.Pill;
+import com.example.michel.rest_api.repositories.PillRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.sql.Timestamp;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+@Service
+public class PillService {
+    @Autowired
+    private PillRepository pillRepository;
+
+    public Iterable<Pill> saveAll(List<Pill> pillList) {
+        return pillRepository.saveAll(pillList);
+    }
+
+    public boolean updateOrDelete(List<Pill> pillList){
+        boolean hasDeletion = false;
+        for (Pill pill: pillList) {
+            if (pill.getChangeType()<3)
+                pillRepository.save(pill);
+            else{
+                pillRepository.delete(pill);
+                hasDeletion = true;
+            }
+        }
+        return hasDeletion;
+    }
+
+     public List<Pill> getPillsForSynchronization(Timestamp synchronizationTimestamp, Integer userId){
+        return pillRepository.getPillsForSynchronization(synchronizationTimestamp, userId);
+    }
+
+    public Map<Boolean, List<Pill>> getSeparatedPillsForSynchronization(
+            Timestamp synchronizationTimestamp, Integer userId){
+        List<Pill> pillList = pillRepository.getPillsForSynchronization(synchronizationTimestamp, userId);
+        return pillList.stream().collect(Collectors
+                .partitioningBy(p -> p.getChangeType()<3));
+    }
+
+    @Transactional
+    public void updateAndMarkAsDeleted(List<UUID> uuidList) {
+        Timestamp synchronizationTimestamp = new Timestamp(new Date().getTime());
+        uuidList.forEach(id -> pillRepository.updateAndMarkAsDeletedById(id, synchronizationTimestamp));
+    }
+
+    public UUID createAndSavePill(String pillName, String description){
+        UUID id = UUID.randomUUID();
+        Pill pill = new Pill(id, pillName, description,
+                new Timestamp(new Date().getTime()), 1);
+        pillRepository.save(pill);
+        return id;
+    }
+
+    public Pill getPillByPillReminderId(UUID idPillReminder){
+        return pillRepository.getPillByPillReminderId(idPillReminder);
+    }
+}
