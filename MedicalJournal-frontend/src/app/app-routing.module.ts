@@ -1,17 +1,17 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { LoginComponent } from './authentication/login/login.component';
-import { RegistrationComponent } from './authentication/registration/registration.component';
-import { TodayComponent } from './today/today.component';
-import { PillsComponent } from './pills/pills.component';
-import { AddPillComponent } from './pills/add-pill/add-pill.component';
-import { MeasurementsComponent } from './measurements/measurements.component';
-import { AddMeasurementComponent } from './measurements/add-measurement/add-measurement.component';
-import { AddOneTimeMeasurementComponent } from './measurements/add-one-time-measurement/add-one-time-measurement.component';
-import { AddOneTimePillComponent } from './pills/add-one-time-pill/add-one-time-pill.component';
+import { LoginComponent } from './components/authentication/login/login.component';
+import { RegistrationComponent } from './components/authentication/registration/registration.component';
+import { TodayComponent } from './components/today/today.component';
+import { PillsComponent } from './components/pills/pills.component';
+import { AddPillComponent } from './components/pills/add-pill/add-pill.component';
+import { MeasurementsComponent } from './components/measurements/measurements.component';
+import { AddMeasurementComponent } from './components/measurements/add-measurement/add-measurement.component';
+import { AddOneTimeMeasurementComponent } from './components/measurements/add-one-time-measurement/add-one-time-measurement.component';
+import { AddOneTimePillComponent } from './components/pills/add-one-time-pill/add-one-time-pill.component';
 import { AuthGuard } from './guards/auth.guard';
-import { UserComponent } from './authentication/user/user.component';
+import { UserComponent } from './components/authentication/user/user.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/today', pathMatch: 'full' },
