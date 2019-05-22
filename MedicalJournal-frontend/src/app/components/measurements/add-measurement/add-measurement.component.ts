@@ -189,6 +189,7 @@ export class AddMeasurementComponent implements OnInit {
         break;
     }
     this.reminderTimeEntries = mrc.reminderTimes.map(timeStr => timeStr.slice(0,5));
+    this.startDate = new Date(mrc.startDate);
     this.annotation = mrc.annotation;
   }
 

@@ -12,6 +12,7 @@ import { AddOneTimeMeasurementComponent } from './components/measurements/add-on
 import { AddOneTimePillComponent } from './components/pills/add-one-time-pill/add-one-time-pill.component';
 import { AuthGuard } from './guards/auth.guard';
 import { UserComponent } from './components/authentication/user/user.component';
+import { HistoryComponent } from './components/history/history.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/today', pathMatch: 'full' },
@@ -34,6 +35,8 @@ const routes: Routes = [
   { path: 'measurements/course/:id', component: AddMeasurementComponent,
     canActivate: [AuthGuard] },
   { path: 'user', component: UserComponent,
+    canActivate: [AuthGuard] },
+  { path: 'history', component: HistoryComponent,
     canActivate: [AuthGuard] },
   { path: 'login', component: LoginComponent },
   { path: 'registration', component: RegistrationComponent },

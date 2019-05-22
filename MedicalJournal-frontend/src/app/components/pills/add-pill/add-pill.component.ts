@@ -193,6 +193,7 @@ export class AddPillComponent implements OnInit {
         break;
     }
     this.reminderTimeEntries = prc.reminderTimes.map(timeStr => timeStr.slice(0,5));
+    this.startDate = new Date(prc.startDate);
     this.annotation = prc.annotation;
   }
 

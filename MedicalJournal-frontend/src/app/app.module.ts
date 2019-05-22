@@ -48,6 +48,7 @@ import { MatButtonModule,
   MatTabsModule,
   MatTooltipModule,
   MatTreeModule,
+  MatPaginatorIntl,
 } from '@angular/material';
 
 import { ReminderEntriesService } from './services/reminder-entries.service';
@@ -73,6 +74,8 @@ import { UserComponent } from './components/authentication/user/user.component';
 //import { JwtInterceptor } from './authentication/jwt.interceptor';
 import { RefreshTokenInterceptor } from './components/authentication/refresh-token.interceptor';
 import { ChangingPasswordDialogComponent } from './components/authentication/user/changing-password-dialog/changing-password-dialog.component';
+import { HistoryComponent, HistoryMatPaginatorIntl } from './components/history/history.component';
+import { DayHistoryItemComponent } from './components/history/day-history-item/day-history-item.component';
 
 //import { JwtModule } from '@auth0/angular-jwt';
 
@@ -99,6 +102,8 @@ registerLocaleData(localeRu, 'ru');
     RegistrationComponent,
     UserComponent,
     ChangingPasswordDialogComponent,
+    HistoryComponent,
+    DayHistoryItemComponent,
   ],
   imports: [
     BrowserModule,
@@ -158,7 +163,7 @@ registerLocaleData(localeRu, 'ru');
     ReminderEntriesService,
     //{ provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: RefreshTokenInterceptor, multi: true },
-    
+    { provide: MatPaginatorIntl, useClass: HistoryMatPaginatorIntl}
   ],
   bootstrap: [AppComponent]
 })

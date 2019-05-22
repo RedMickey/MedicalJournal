@@ -1,0 +1,30 @@
+<div class="reminders-container"> 
+  <div class="paginator-outer-container">
+    <div class="paginator-container">
+      <div class="paginator-page-size">
+        <span>Период в днях</span>
+          <mat-form-field class="size-celect ml-10" >
+            <mat-select [(value)]="selectedSizeType">
+              <mat-option *ngFor="let sizeType of sizeTypes" [value]="sizeType.value">
+                {{sizeType.viewValue}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+      </div>
+      <div class="paginator-range-actions">
+        <div class="paginator-range-actions ml-10 mr-10">
+          с {{startDate | date:'d.MM.yyyy':'':'ru'}} по {{endDate | date:'d.MM.yyyy':'':'ru'}}
+        </div>
+        <button mat-icon-button disabled={{disNavBefore}} (click)="onNavBefore()">
+          <mat-icon>navigate_before</mat-icon>
+        </button>
+        <button mat-icon-button style="font-size: 14px;" disabled={{disNavNext}} (click)="onNavNext()">
+          <mat-icon>navigate_next</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <app-day-history-item *ngFor="let pillAndMeasurementReminderEntries of pillAndMeasurementReminderEntriesArr" 
+  [pillAndMeasurementReminderEntries]="pillAndMeasurementReminderEntries"></app-day-history-item>
+</div>

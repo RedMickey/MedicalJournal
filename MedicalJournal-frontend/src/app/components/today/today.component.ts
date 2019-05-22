@@ -14,7 +14,7 @@ import { ReminderItemsService } from '../../services/reminder-items.service';
   styleUrls: ['./today.component.css']
 })
 export class TodayComponent implements OnInit {
-  public today: Date
+  public today: Date;
   public animationMode = 'fling';
 
   pillReminderEntries: PillReminderEntry[];
