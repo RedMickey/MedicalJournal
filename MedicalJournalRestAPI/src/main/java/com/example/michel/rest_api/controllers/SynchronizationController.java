@@ -131,7 +131,31 @@ public class SynchronizationController {
     }
 
     @PostMapping(value = "/getAllDataForSynchronization", produces = "application/json")
-    public ReminderSynchronizationReqModule[] getAllDataForSynchronization(@RequestBody SynchronizationReq req){
+    public ReminderSynchronizationReqModule[] getAllDataForSynchronization(@RequestBody ReminderSynchronizationReqModule req){
+        Timestamp curUserTimestamp = userService.getUserSynchronizationTimeByUserId(req.getUserId());
+
+        if (Math.abs(curUserTimestamp.getTime()-req.getSynchronizationTimestamp().getTime())<1000){
+            Timestamp newEntriesTimestamp = new Timestamp(req.getSynchronizationTimestamp().getTime() - 5000);
+            System.out.println(curUserTimestamp.toString());
+            req.getCycleDBList().forEach(cycle -> cycle.setSynchTime(newEntriesTimestamp));
+            req.getWeekScheduleDBList().forEach(weekSchedule -> weekSchedule.setSynchTime(newEntriesTimestamp));
+            req.getMeasurementReminderDBList().forEach(measurementReminder -> measurementReminder.setSynchTime(newEntriesTimestamp));
+            req.getMeasurementReminderEntryDBList().forEach(measurementReminderEntry -> measurementReminderEntry.setSynchTime(newEntriesTimestamp));
+            req.getPillDBList().forEach(pill -> pill.setSynchTime(newEntriesTimestamp));
+            req.getPillReminderDBList().forEach(pillReminder -> pillReminder.setSynchTime(newEntriesTimestamp));
+            req.getPillReminderEntryDBList().forEach(pillReminderEntry -> pillReminderEntry.setSynchTime(newEntriesTimestamp));
+            req.getReminderTimeDBList().forEach(reminderTime -> reminderTime.setSynchTime(newEntriesTimestamp));
+
+            weekScheduleService.saveAll(req.getWeekScheduleDBList());
+            cycleService.saveAll(req.getCycleDBList());
+            pillService.saveAll(req.getPillDBList());
+            pillReminderService.saveAll(req.getPillReminderDBList());
+            measurementReminderService.saveAll(req.getMeasurementReminderDBList());
+            reminderTimeService.saveAll(req.getReminderTimeDBList());
+            pillReminderEntryService.saveAll(req.getPillReminderEntryDBList());
+            measurementReminderEntryService.saveAll(req.getMeasurementReminderEntryDBList());
+        }
+
         Timestamp oldSynchronizationTimestamp = new Timestamp(req.getSynchronizationTimestamp().getTime());
         ReminderSynchronizationReqModule rsrmUpAndIn = new ReminderSynchronizationReqModule();
         ReminderSynchronizationReqModule rsrmDel = new ReminderSynchronizationReqModule();

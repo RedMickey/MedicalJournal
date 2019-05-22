@@ -11,4 +11,6 @@ public interface IMeasurementReminderEntryFService {
     public List<MeasurementReminderEntryF> getMeasurementReminderEntriesByDate(Date date, int userId);
 
     public int updateIsDoneMeasurementReminderEntry(UpdateMeasurementReminderBody updateMeasurementReminderBody);
+
+    public MeasurementReminderEntryF[] getChunkMeasurementReminderEntries(Date startDate, Date endDate, int userId);
 }

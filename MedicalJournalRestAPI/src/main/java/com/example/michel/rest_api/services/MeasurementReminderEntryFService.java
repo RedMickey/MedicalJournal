@@ -28,4 +28,10 @@ public class MeasurementReminderEntryFService implements IMeasurementReminderEnt
         return measurementReminderEntryFDao.updateIsDoneMeasurementReminderEntry(updateMeasurementReminderBody);
     }
 
+    @Override
+    public MeasurementReminderEntryF[] getChunkMeasurementReminderEntries(Date startDate, Date endDate, int userId) {
+        return measurementReminderEntryFDao.getChunkMeasurementReminderEntries(startDate, endDate, userId).stream()
+                .toArray(MeasurementReminderEntryF[]::new);
+    }
 }
+
