@@ -1,7 +1,6 @@
-package com.example.michel.rest_api.mappers;
+package com.example.michel.rest_api.dao.mappers;
 
 import com.example.michel.rest_api.models.measurement.MeasurementReminderEntryF;
-import com.example.michel.rest_api.models.pill.PillReminderEntryF;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.nio.ByteBuffer;

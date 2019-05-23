@@ -1,17 +1,12 @@
-package com.example.michel.rest_api.mappers;
+package com.example.michel.rest_api.dao.mappers;
 
 import com.example.michel.rest_api.models.pill.PillReminderEntryF;
-import org.apache.commons.logging.Log;
 import org.springframework.jdbc.core.RowMapper;
 
-import java.io.Console;
 import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.TimeZone;
 import java.util.UUID;
 
 public class PillReminderEntryFRowMapper implements RowMapper<PillReminderEntryF> {

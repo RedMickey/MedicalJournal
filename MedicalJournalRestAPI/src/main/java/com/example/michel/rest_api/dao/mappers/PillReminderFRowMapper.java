@@ -1,4 +1,4 @@
-package com.example.michel.rest_api.mappers;
+package com.example.michel.rest_api.dao.mappers;
 
 import com.example.michel.rest_api.models.pill.PillReminderF;
 import org.springframework.jdbc.core.RowMapper;
@@ -6,7 +6,6 @@ import org.springframework.jdbc.core.RowMapper;
 import java.nio.ByteBuffer;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 

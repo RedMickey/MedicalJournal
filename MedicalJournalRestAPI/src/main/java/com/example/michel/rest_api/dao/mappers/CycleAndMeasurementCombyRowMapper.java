@@ -1,4 +1,4 @@
-package com.example.michel.rest_api.mappers;
+package com.example.michel.rest_api.dao.mappers;
 
 import com.example.michel.rest_api.models.auxiliary_models.CycleAndMeasurementComby;
 import com.example.michel.rest_api.models.auxiliary_models.CycleDBInsertEntry;

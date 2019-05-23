@@ -1,9 +1,8 @@
 package com.example.michel.rest_api.dao.implementations;
 
 import com.example.michel.rest_api.dao.interfaces.IMeasurementReminderFDao;
-import com.example.michel.rest_api.mappers.CycleAndMeasurementCombyRowMapper;
-import com.example.michel.rest_api.mappers.MeasurementReminderFRowMapper;
-import com.example.michel.rest_api.mappers.PillReminderFRowMapper;
+import com.example.michel.rest_api.dao.mappers.CycleAndMeasurementCombyRowMapper;
+import com.example.michel.rest_api.dao.mappers.MeasurementReminderFRowMapper;
 import com.example.michel.rest_api.models.auxiliary_models.CycleAndMeasurementComby;
 import com.example.michel.rest_api.models.measurement.MeasurementReminderF;
 import com.example.michel.rest_api.utils.ConvertingUtils;
