@@ -108,7 +108,7 @@ public class SetUpCurrentUserTask extends AsyncTask<Void, User, Integer> {
 
     @Override
     protected void onProgressUpdate(User... users) {
-        if (mainActivity!=null){
+        if (mainActivity!=null&&users[0].getId()!=1){
             LinearLayout headerView = (LinearLayout) mainActivity.getNavigationView().getHeaderView(0);
             ((TextView) headerView.findViewById(R.id.username_tv)).setText(user.getName());
             ((TextView) headerView.findViewById(R.id.profile_config_tv)).setText("Редактировать профиль");
