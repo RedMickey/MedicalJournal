@@ -76,8 +76,8 @@
     <string name="def_user_email">def@email</string>
     <string name="def_username">Я</string>
 
-    <!--<string name="server_address">http://10.0.2.2:8090</string>-->
-    <string name="server_address">http://185.178.46.244:8090</string>
+    <string name="server_address">http://10.0.2.2:8090</string>
+    <!--<string name="server_address">http://185.178.46.244:8090</string>-->
 
     <!--fragment's titles-->
     <string name="reminder_fragment_title">Курсы напоминанй</string>

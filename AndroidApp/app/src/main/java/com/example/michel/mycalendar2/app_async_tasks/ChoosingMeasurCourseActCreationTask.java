@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.example.michel.mycalendar2.activities.ChoosingMeasurementCourseActivity;
 import com.example.michel.mycalendar2.activities.R;
 import com.example.michel.mycalendar2.adapters.MeasurementReminderListAdapter;
-import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
+import com.example.michel.mycalendar2.dao.DatabaseAdapter;
 import com.example.michel.mycalendar2.dao.MeasurementReminderDao;
 import com.example.michel.mycalendar2.models.measurement.MeasurementReminder;
 

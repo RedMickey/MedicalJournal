@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import com.example.michel.mycalendar2.additional_views.swipe_button.OnStateChangeListener;
 import com.example.michel.mycalendar2.additional_views.swipe_button.SwipeButton;
-import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
+import com.example.michel.mycalendar2.dao.DatabaseAdapter;
 import com.example.michel.mycalendar2.dao.PillReminderDao;
 import com.example.michel.mycalendar2.models.measurement.MeasurementReminderEntry;
 import com.example.michel.mycalendar2.models.pill.PillReminderEntry;

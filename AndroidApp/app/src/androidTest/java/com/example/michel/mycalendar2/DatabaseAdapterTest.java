@@ -1,11 +1,10 @@
 package com.example.michel.mycalendar2;
 
-import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 
-import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
+import com.example.michel.mycalendar2.dao.DatabaseAdapter;
 import com.example.michel.mycalendar2.calendarview.data.DateData;
-import com.example.michel.mycalendar2.calendarview.utils.DatabaseHelper;
+import com.example.michel.mycalendar2.dao.DatabaseHelper;
 import com.example.michel.mycalendar2.models.CycleAndPillComby;
 import com.example.michel.mycalendar2.models.ReminderTime;
 import com.example.michel.mycalendar2.models.pill.PillReminderEntry;
@@ -14,9 +13,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 

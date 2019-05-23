@@ -10,7 +10,7 @@ import java.net.URL;
 
 import javax.net.ssl.HttpsURLConnection;
 
-public class ParseComServerAuthenticate implements ServerAuthenticate {
+public class ParseComIServerAuthenticate implements IServerAuthenticate {
     @Override
     public String userSignUp(String name, String email, String pass, String authType) throws Exception {
         return null;
@@ -21,7 +21,8 @@ public class ParseComServerAuthenticate implements ServerAuthenticate {
         String authtoken = null;
 
         try {
-            URL url = new URL("http://185.178.46.244:8090/login");
+            //URL url = new URL("http://185.178.46.244:8090/login");
+            URL url = new URL("http://10.0.2.2:8090/login");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
             conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
@@ -51,7 +52,7 @@ public class ParseComServerAuthenticate implements ServerAuthenticate {
 
         }
         catch(Exception e){
-            Log.e("URL", e.getMessage() + " ParseComServerAuthenticate");
+            Log.e("URL", e.getMessage() + " ParseComIServerAuthenticate");
             //return new String("\"Exception\": \"" + e.getMessage()+"\"");
         }
 

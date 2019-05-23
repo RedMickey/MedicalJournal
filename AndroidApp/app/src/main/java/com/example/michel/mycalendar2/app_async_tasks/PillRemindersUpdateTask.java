@@ -3,11 +3,10 @@ package com.example.michel.mycalendar2.app_async_tasks;
 import android.app.AlarmManager;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.example.michel.mycalendar2.app_async_tasks.synchronization.SynchronizationPillReminderTask;
 import com.example.michel.mycalendar2.authentication.AccountGeneralUtils;
-import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
+import com.example.michel.mycalendar2.dao.DatabaseAdapter;
 import com.example.michel.mycalendar2.calendarview.data.DateData;
 import com.example.michel.mycalendar2.dao.CycleDao;
 import com.example.michel.mycalendar2.dao.PillReminderDao;

@@ -2,7 +2,7 @@ package com.example.michel.mycalendar2.app_async_tasks;
 
 import android.os.AsyncTask;
 
-import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
+import com.example.michel.mycalendar2.dao.DatabaseAdapter;
 import com.example.michel.mycalendar2.dao.UserDao;
 import com.example.michel.mycalendar2.models.User;
 

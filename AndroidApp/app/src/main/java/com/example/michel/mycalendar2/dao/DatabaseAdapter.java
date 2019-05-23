@@ -1,43 +1,17 @@
-package com.example.michel.mycalendar2.calendarview.adapters;
+package com.example.michel.mycalendar2.dao;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
-import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.example.michel.mycalendar2.calendarview.data.DateData;
-import com.example.michel.mycalendar2.calendarview.utils.DatabaseHelper;
-import com.example.michel.mycalendar2.models.CycleAndMeasurementComby;
-import com.example.michel.mycalendar2.models.CycleAndPillComby;
-import com.example.michel.mycalendar2.models.CycleDBInsertEntry;
-import com.example.michel.mycalendar2.models.User;
-import com.example.michel.mycalendar2.models.measurement.MeasurementReminder;
-import com.example.michel.mycalendar2.models.measurement.MeasurementReminderDBEntry;
-import com.example.michel.mycalendar2.models.measurement.MeasurementReminderEntry;
-import com.example.michel.mycalendar2.models.measurement.MeasurementStatEntry;
-import com.example.michel.mycalendar2.models.pill.PillReminder;
-import com.example.michel.mycalendar2.models.pill.PillReminderDBInsertEntry;
-import com.example.michel.mycalendar2.models.pill.PillReminderEntry;
-import com.example.michel.mycalendar2.models.ReminderTime;
-import com.example.michel.mycalendar2.utils.ConvertingUtils;
-import com.example.michel.mycalendar2.utils.DBStaticEntries;
 import com.example.michel.mycalendar2.utils.utilModels.MeasurementType;
 
-import java.nio.ByteBuffer;
-import java.sql.Timestamp;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 public class DatabaseAdapter {
     private DatabaseHelper dbHelper;

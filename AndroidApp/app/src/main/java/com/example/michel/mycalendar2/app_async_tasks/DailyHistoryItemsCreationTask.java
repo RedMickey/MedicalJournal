@@ -16,11 +16,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.michel.mycalendar2.activities.R;
-import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
+import com.example.michel.mycalendar2.dao.DatabaseAdapter;
 import com.example.michel.mycalendar2.calendarview.data.DateData;
 import com.example.michel.mycalendar2.dao.MeasurementReminderDao;
 import com.example.michel.mycalendar2.dao.PillReminderDao;
-import com.example.michel.mycalendar2.models.measurement.MeasurementReminder;
 import com.example.michel.mycalendar2.models.measurement.MeasurementReminderEntry;
 import com.example.michel.mycalendar2.models.pill.PillReminderEntry;
 import com.example.michel.mycalendar2.utils.ConvertingUtils;
@@ -96,7 +95,6 @@ public class DailyHistoryItemsCreationTask extends AsyncTask<DateData, Void, Lis
             endDate.setMonth(cal1.get(Calendar.MONTH));
             endDate.setDay(cal1.get(Calendar.DAY_OF_MONTH));*/
 
-            int t = cal2.getTime().compareTo(endDate);
             while (cal2.getTime().compareTo(endDate)>=0){
                 PillAndMeasurementReminderEntries pamre = new PillAndMeasurementReminderEntries();
 

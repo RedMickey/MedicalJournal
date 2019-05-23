@@ -2,18 +2,12 @@ package com.example.michel.mycalendar2.authentication;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
-import android.accounts.AccountManagerCallback;
-import android.accounts.AccountManagerFuture;
 import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
-import android.os.Bundle;
-import android.util.Log;
 
 import com.example.michel.mycalendar2.models.User;
 
 import java.io.IOException;
-
-import static android.accounts.AccountManager.KEY_AUTHTOKEN;
 
 public class AccountGeneralUtils {
 
@@ -35,7 +29,7 @@ public class AccountGeneralUtils {
     public static final String AUTHTOKEN_TYPE_USER_ACCESS = "User access";
     public static final String AUTHTOKEN_TYPE_USER_ACCESS_LABEL = "User access to an medical journal user's account";
 
-    public static final ServerAuthenticate sServerAuthenticate = new ParseComServerAuthenticate();
+    public static final IServerAuthenticate S_I_SERVER_AUTHENTICATE = new ParseComIServerAuthenticate();
 
     public static String curToken = "";
 

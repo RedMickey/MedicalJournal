@@ -1,4 +1,4 @@
-package com.example.michel.mycalendar2.calendarview.utils;
+package com.example.michel.mycalendar2.dao;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

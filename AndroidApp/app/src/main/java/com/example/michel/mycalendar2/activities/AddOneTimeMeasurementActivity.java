@@ -29,11 +29,6 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import com.example.michel.mycalendar2.adapters.TimesOfTakingMedicineAdapter;
-import com.example.michel.mycalendar2.app_async_tasks.AddMeasurementActivityCreationTask;
-import com.example.michel.mycalendar2.app_async_tasks.MeasurementNotificationsCreationTask;
-import com.example.michel.mycalendar2.app_async_tasks.MeasurementRemindersInsertionTask;
-import com.example.michel.mycalendar2.app_async_tasks.MeasurementRemindersUpdateTask;
 import com.example.michel.mycalendar2.app_async_tasks.OneTimeMeasurementReminderInsertionTask;
 import com.example.michel.mycalendar2.calendarview.data.DateData;
 import com.example.michel.mycalendar2.calendarview.utils.CalendarUtil;

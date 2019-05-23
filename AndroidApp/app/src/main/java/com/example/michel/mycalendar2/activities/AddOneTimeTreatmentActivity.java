@@ -27,8 +27,6 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import com.example.michel.mycalendar2.adapters.TimesOfTakingMedicineAdapter;
-import com.example.michel.mycalendar2.app_async_tasks.AddTreatmentActivityCreationTask;
 import com.example.michel.mycalendar2.app_async_tasks.OneTimePillReminderInsertionTask;
 import com.example.michel.mycalendar2.app_async_tasks.PillRemListSpinnerCreationTask;
 import com.example.michel.mycalendar2.app_async_tasks.PillRemindersInsertionTask;

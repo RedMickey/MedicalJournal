@@ -5,7 +5,6 @@ import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -33,7 +32,7 @@ import com.example.michel.mycalendar2.app_async_tasks.PillRemindersInsertionTask
 import com.example.michel.mycalendar2.app_async_tasks.PillRemindersUpdateTask;
 import com.example.michel.mycalendar2.app_async_tasks.synchronization.BeforeDeletionSynchronizationTask;
 import com.example.michel.mycalendar2.authentication.AccountGeneralUtils;
-import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
+import com.example.michel.mycalendar2.dao.DatabaseAdapter;
 import com.example.michel.mycalendar2.calendarview.data.DateData;
 import com.example.michel.mycalendar2.calendarview.utils.CalendarUtil;
 import com.example.michel.mycalendar2.dao.CycleDao;

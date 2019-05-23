@@ -6,7 +6,7 @@ import android.os.AsyncTask;
 
 import com.example.michel.mycalendar2.app_async_tasks.synchronization.SynchronizationMeasurementReminderTask;
 import com.example.michel.mycalendar2.authentication.AccountGeneralUtils;
-import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
+import com.example.michel.mycalendar2.dao.DatabaseAdapter;
 import com.example.michel.mycalendar2.calendarview.data.DateData;
 import com.example.michel.mycalendar2.dao.CycleDao;
 import com.example.michel.mycalendar2.dao.MeasurementReminderDao;
@@ -15,7 +15,6 @@ import com.example.michel.mycalendar2.models.CycleAndMeasurementComby;
 import com.example.michel.mycalendar2.models.CycleDBInsertEntry;
 import com.example.michel.mycalendar2.models.measurement.MeasurementReminderDBEntry;
 import com.example.michel.mycalendar2.models.measurement.MeasurementReminderEntry;
-import com.example.michel.mycalendar2.models.pill.PillReminderEntry;
 import com.example.michel.mycalendar2.utils.utilModels.DataForDeletion;
 
 import java.text.SimpleDateFormat;

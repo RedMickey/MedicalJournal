@@ -55,7 +55,7 @@
                 android:resource="@xml/authenticator" />
         </service>
 
-        <receiver android:name="com.example.michel.mycalendar2.utils.AlarmReceiver">
+        <receiver android:name="com.example.michel.mycalendar2.services.AlarmReceiver">
             android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />

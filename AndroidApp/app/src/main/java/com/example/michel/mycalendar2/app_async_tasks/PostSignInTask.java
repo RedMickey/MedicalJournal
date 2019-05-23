@@ -8,7 +8,7 @@ import android.widget.TextView;
 import com.example.michel.mycalendar2.activities.MainActivity;
 import com.example.michel.mycalendar2.activities.R;
 import com.example.michel.mycalendar2.authentication.AccountGeneralUtils;
-import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
+import com.example.michel.mycalendar2.dao.DatabaseAdapter;
 import com.example.michel.mycalendar2.dao.UserDao;
 import com.example.michel.mycalendar2.models.User;
 import com.example.michel.mycalendar2.utils.DateTypeAdapter;
@@ -22,7 +22,6 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Date;
-import java.sql.Timestamp;
 
 import javax.net.ssl.HttpsURLConnection;
 

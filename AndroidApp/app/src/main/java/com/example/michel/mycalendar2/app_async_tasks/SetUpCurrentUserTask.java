@@ -2,29 +2,21 @@ package com.example.michel.mycalendar2.app_async_tasks;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
-import android.accounts.AccountManagerCallback;
-import android.accounts.AccountManagerFuture;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.os.Bundle;
-import android.support.design.widget.NavigationView;
-import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.michel.mycalendar2.activities.MainActivity;
 import com.example.michel.mycalendar2.activities.R;
 import com.example.michel.mycalendar2.app_async_tasks.synchronization.GettingDataFromServerTask;
 import com.example.michel.mycalendar2.authentication.AccountGeneralUtils;
-import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
+import com.example.michel.mycalendar2.dao.DatabaseAdapter;
 import com.example.michel.mycalendar2.dao.UserDao;
 import com.example.michel.mycalendar2.models.User;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-
-import static android.accounts.AccountManager.KEY_AUTHTOKEN;
 
 public class SetUpCurrentUserTask extends AsyncTask<Void, User, Integer> {
     private Context context;

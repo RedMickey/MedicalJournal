@@ -13,7 +13,7 @@ import android.text.TextUtils;
 import com.example.michel.mycalendar2.activities.LoginActivity;
 
 import static android.accounts.AccountManager.KEY_BOOLEAN_RESULT;
-import static com.example.michel.mycalendar2.authentication.AccountGeneralUtils.sServerAuthenticate;
+import static com.example.michel.mycalendar2.authentication.AccountGeneralUtils.S_I_SERVER_AUTHENTICATE;
 
 public class MedicalJournalAuthenticator extends AbstractAccountAuthenticator {
 
@@ -59,7 +59,7 @@ public class MedicalJournalAuthenticator extends AbstractAccountAuthenticator {
             final String password = am.getPassword(account);
             if (password != null) {
                 try {
-                    authToken = sServerAuthenticate.userSignIn(account.name, password);
+                    authToken = S_I_SERVER_AUTHENTICATE.userSignIn(account.name, password);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

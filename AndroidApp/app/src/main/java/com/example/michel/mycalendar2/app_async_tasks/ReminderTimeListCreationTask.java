@@ -11,11 +11,9 @@ import com.example.michel.mycalendar2.activities.R;
 import com.example.michel.mycalendar2.adapters.ReminderTimeListAdapter;
 import com.example.michel.mycalendar2.app_async_tasks.synchronization.SynchronizationReminderEntriesTask;
 import com.example.michel.mycalendar2.authentication.AccountGeneralUtils;
-import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
+import com.example.michel.mycalendar2.dao.DatabaseAdapter;
 import com.example.michel.mycalendar2.calendarview.data.DateData;
 import com.example.michel.mycalendar2.dao.MeasurementReminderDao;
-import com.example.michel.mycalendar2.dao.ReminderTimeDao;
-import com.example.michel.mycalendar2.models.ReminderTime;
 import com.example.michel.mycalendar2.models.measurement.MeasurementReminder;
 import com.example.michel.mycalendar2.models.measurement.MeasurementReminderEntry;
 

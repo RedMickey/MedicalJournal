@@ -7,7 +7,7 @@ import android.support.v4.content.ContextCompat;
 import com.example.michel.mycalendar2.activities.MeasurementChartActivity;
 import com.example.michel.mycalendar2.activities.R;
 import com.example.michel.mycalendar2.auxiliary_fragments.ChartMarkerView;
-import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
+import com.example.michel.mycalendar2.dao.DatabaseAdapter;
 import com.example.michel.mycalendar2.calendarview.utils.CalendarUtil;
 import com.example.michel.mycalendar2.dao.MeasurementReminderDao;
 import com.example.michel.mycalendar2.utils.DBStaticEntries;
@@ -21,7 +21,6 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 

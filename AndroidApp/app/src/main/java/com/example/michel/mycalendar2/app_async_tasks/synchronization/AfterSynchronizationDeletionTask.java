@@ -2,14 +2,12 @@ package com.example.michel.mycalendar2.app_async_tasks.synchronization;
 
 import android.os.AsyncTask;
 
-import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
+import com.example.michel.mycalendar2.dao.DatabaseAdapter;
 import com.example.michel.mycalendar2.dao.CycleDao;
 import com.example.michel.mycalendar2.dao.MeasurementReminderDao;
 import com.example.michel.mycalendar2.dao.PillReminderDao;
 import com.example.michel.mycalendar2.dao.ReminderTimeDao;
-import com.example.michel.mycalendar2.models.synchronization.MeasurementReminderDB;
 
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 

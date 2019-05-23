@@ -7,11 +7,10 @@ import android.view.View;
 
 import com.example.michel.mycalendar2.activities.R;
 import com.example.michel.mycalendar2.adapters.StatisticListAdapter;
-import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
+import com.example.michel.mycalendar2.dao.DatabaseAdapter;
 import com.example.michel.mycalendar2.dao.MeasurementReminderDao;
 import com.example.michel.mycalendar2.models.measurement.MeasurementStatEntry;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class StatisticListItemsCreationTask extends AsyncTask<Integer, Void, List<MeasurementStatEntry>> {

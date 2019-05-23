@@ -3,8 +3,6 @@ package com.example.michel.mycalendar2.app_async_tasks.synchronization;
 import android.accounts.AccountManager;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -14,29 +12,21 @@ import com.example.michel.mycalendar2.app_async_tasks.MeasurementNotificationsCr
 import com.example.michel.mycalendar2.app_async_tasks.PillNotificationsCreationTask;
 import com.example.michel.mycalendar2.app_async_tasks.UserLocalUpdateTask;
 import com.example.michel.mycalendar2.authentication.AccountGeneralUtils;
-import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
+import com.example.michel.mycalendar2.dao.DatabaseAdapter;
 import com.example.michel.mycalendar2.dao.CycleDao;
 import com.example.michel.mycalendar2.dao.MeasurementReminderDao;
 import com.example.michel.mycalendar2.dao.PillReminderDao;
 import com.example.michel.mycalendar2.dao.ReminderTimeDao;
-import com.example.michel.mycalendar2.main_fragments.HistoryFragment;
-import com.example.michel.mycalendar2.main_fragments.MainFragment;
-import com.example.michel.mycalendar2.main_fragments.ReminderFragment;
-import com.example.michel.mycalendar2.main_fragments.StatisticListFragment;
 import com.example.michel.mycalendar2.models.synchronization.ReminderSynchronizationReqModule;
 import com.example.michel.mycalendar2.utils.DateTypeAdapter;
 import com.google.gson.GsonBuilder;
-
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.sql.Timestamp;
 import java.util.Date;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -69,19 +59,45 @@ public class GettingDataFromServerTask extends AsyncTask<Void, Void, Integer> {
     @Override
     protected Integer doInBackground(Void... voids) {
         int resCode = 1;
+        DatabaseAdapter dbAdapter = new DatabaseAdapter();
 
-        //Calendar cal = Calendar.getInstance();
-        //cal.set(2019, 2, 16, 18, 00);
+        ReminderTimeDao reminderTimeDao = new ReminderTimeDao(dbAdapter.open().getDatabase());
+        PillReminderDao pillReminderDao = new PillReminderDao(dbAdapter.getDatabase());
+        MeasurementReminderDao measurementReminderDao = new MeasurementReminderDao(dbAdapter.getDatabase());
+        CycleDao cycleDao = new CycleDao(dbAdapter.getDatabase());
 
-        SynchronizationReq synchronizationReq = new SynchronizationReq(
+        /*SynchronizationReq synchronizationReq = new SynchronizationReq(
                 AccountGeneralUtils.curUser.getId(),
                 //cal.getTime()
                 AccountGeneralUtils.curUser.getSynchronizationTime()
-        );
+        );*/
+
+        ReminderSynchronizationReqModule startReminderSynchronizationReqModule = new ReminderSynchronizationReqModule();
+        startReminderSynchronizationReqModule.setUserId(AccountGeneralUtils.curUser.getId());
+        startReminderSynchronizationReqModule.setSynchronizationTimestamp(AccountGeneralUtils.curUser.getSynchronizationTime());
+
+        startReminderSynchronizationReqModule.setCycleDBList(cycleDao
+                .getCycleDBEntriesForSynchronization(AccountGeneralUtils.curUser.getSynchronizationTime()));
+        startReminderSynchronizationReqModule.setWeekScheduleDBList(cycleDao
+                .getWeekScheduleDBEntriesForSynchronization(AccountGeneralUtils.curUser.getSynchronizationTime()));
+        startReminderSynchronizationReqModule.setMeasurementReminderDBList(measurementReminderDao
+                .getMeasurementReminderDBEntriesForSynchronization(AccountGeneralUtils.curUser.getSynchronizationTime()));
+        startReminderSynchronizationReqModule.setMeasurementReminderEntryDBList(measurementReminderDao
+                .getMeasurementReminderEntryDBEntriesForSynchronization(AccountGeneralUtils.curUser.getSynchronizationTime()));
+        startReminderSynchronizationReqModule.setPillDBList(pillReminderDao
+                .getPillDBEntriesForSynchronization(AccountGeneralUtils.curUser.getSynchronizationTime()));
+        startReminderSynchronizationReqModule.setPillReminderDBList(pillReminderDao
+                .getPillReminderDBEntriesForSynchronization(AccountGeneralUtils.curUser.getSynchronizationTime()));
+        startReminderSynchronizationReqModule.setPillReminderEntryDBList(pillReminderDao
+                .getPillReminderEntryDBEntriesForSynchronization(AccountGeneralUtils.curUser.getSynchronizationTime()));
+        startReminderSynchronizationReqModule.setReminderTimeDBList(reminderTimeDao
+                .getReminderTimeDBEntriesForSynchronization(AccountGeneralUtils.curUser.getSynchronizationTime()));
 
         String response = "";
+        /*String JSONStr = new GsonBuilder().registerTypeAdapter(Date.class,new DateTypeAdapter())
+                .create().toJson(synchronizationReq);*/
         String JSONStr = new GsonBuilder().registerTypeAdapter(Date.class,new DateTypeAdapter())
-                .create().toJson(synchronizationReq);
+                .create().toJson(startReminderSynchronizationReqModule);
         int requestAttempts = 0;
 
         while (requestAttempts<2){
@@ -154,12 +170,6 @@ public class GettingDataFromServerTask extends AsyncTask<Void, Void, Integer> {
 
             synchronizationTimestamp = reminderSynchronizationReqModule[0].getSynchronizationTimestamp();
 
-            DatabaseAdapter dbAdapter = new DatabaseAdapter();
-            ReminderTimeDao reminderTimeDao = new ReminderTimeDao(dbAdapter.open().getDatabase());
-            PillReminderDao pillReminderDao = new PillReminderDao(dbAdapter.getDatabase());
-            MeasurementReminderDao measurementReminderDao = new MeasurementReminderDao(dbAdapter.getDatabase());
-            CycleDao cycleDao = new CycleDao(dbAdapter.getDatabase());
-
             pillReminderDao.deletePillReminderEntries(reminderSynchronizationReqModule[1].getPillReminderEntryDBList());
             measurementReminderDao.deleteMeasurementReminderEntries(
                     reminderSynchronizationReqModule[1].getMeasurementReminderEntryDBList());
@@ -187,7 +197,6 @@ public class GettingDataFromServerTask extends AsyncTask<Void, Void, Integer> {
             measurementReminderDao.insertOrReplaceMeasurementReminderEntriesAfterSynchronization(
                     reminderSynchronizationReqModule[0].getMeasurementReminderEntryDBList());
 
-            dbAdapter.close();
 
             if (reminderSynchronizationReqModule[0].getMeasurementReminderEntryDBList().size()>0){
                 MeasurementNotificationsCreationTask mnct = new MeasurementNotificationsCreationTask();
@@ -199,12 +208,15 @@ public class GettingDataFromServerTask extends AsyncTask<Void, Void, Integer> {
             }
         }
 
+        dbAdapter.close();
+
         return resCode;
     }
 
     @Override
     protected void onPostExecute(Integer resCode) {
         if (resCode>0){
+            Timestamp d = new Timestamp(synchronizationTimestamp.getTime());
             AccountGeneralUtils.curUser.setSynchronizationTime(synchronizationTimestamp);
             UserLocalUpdateTask userLocalUpdateTask = new UserLocalUpdateTask(2);
             userLocalUpdateTask.execute(AccountGeneralUtils.curUser);
