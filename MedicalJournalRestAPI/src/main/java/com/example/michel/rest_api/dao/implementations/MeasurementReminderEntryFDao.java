@@ -1,7 +1,7 @@
 package com.example.michel.rest_api.dao.implementations;
 
 import com.example.michel.rest_api.dao.interfaces.IMeasurementReminderEntryFDao;
-import com.example.michel.rest_api.mappers.MeasurementReminderEntryFRowMapper;
+import com.example.michel.rest_api.dao.mappers.MeasurementReminderEntryFRowMapper;
 import com.example.michel.rest_api.models.auxiliary_models.request_bodies.UpdateMeasurementReminderBody;
 import com.example.michel.rest_api.models.measurement.MeasurementReminderEntryF;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +53,22 @@ public class MeasurementReminderEntryFDao implements IMeasurementReminderEntryFD
                 preparedStatement.setTimestamp(6, new Timestamp(new Date().getTime()));
                 preparedStatement.setBytes(7, uuid);
             }
+        });
+    }
+
+    @Override
+    public List<MeasurementReminderEntryF> getChunkMeasurementReminderEntries(Date startDate, Date endDate, int userId){
+        String sql = "select mre._id_measur_remind_entry, mr._id_measurement_type, mvt.type_value_name, mt.type_name, mre.value1, mre.value2, mre.is_done, mr._id_having_meals_type," +
+                " mr.having_meals_time, mre.reminder_date" +
+                " from measurement_reminder_entry mre inner join measurement_reminder mr on mre._id_measurement_reminder=mr._id_measurement_reminder inner join measurement_type mt on" +
+                " mr._id_measurement_type=mt._id_measurement_type inner join measurement_value_type mvt on mt._id_measur_value_type=mvt._id_measur_value_type" +
+                " where DATE(mre.reminder_date) between ? and ? and (mr.is_active=1 or mre.is_done=1) and mre.change_type<3 and mr.user_id=? ORDER BY mre.reminder_date DESC," +
+                " mre.reminder_time DESC";
+
+        return jdbcTemplate.query(sql, new MeasurementReminderEntryFRowMapper(), new Object[]{
+                new java.sql.Date(endDate.getTime()),
+                new java.sql.Date(startDate.getTime()),
+                userId
         });
     }
 }

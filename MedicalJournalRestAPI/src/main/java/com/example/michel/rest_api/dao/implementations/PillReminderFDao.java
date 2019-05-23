@@ -1,19 +1,16 @@
 package com.example.michel.rest_api.dao.implementations;
 
 import com.example.michel.rest_api.dao.interfaces.IPillReminderFDao;
-import com.example.michel.rest_api.mappers.CycleAndPillCombyRowMapper;
-import com.example.michel.rest_api.mappers.PillReminderFRowMapper;
+import com.example.michel.rest_api.dao.mappers.CycleAndPillCombyRowMapper;
+import com.example.michel.rest_api.dao.mappers.PillReminderFRowMapper;
 import com.example.michel.rest_api.models.auxiliary_models.CycleAndPillComby;
 import com.example.michel.rest_api.models.pill.PillReminderF;
-import com.example.michel.rest_api.utils.CalculationUtils;
 import com.example.michel.rest_api.utils.ConvertingUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
 

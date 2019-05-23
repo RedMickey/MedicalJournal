@@ -1297,13 +1297,11 @@
     <column id="315" parent="238" name="standard_min_value">
       <Position>4</Position>
       <DataType>double|0s</DataType>
-      <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
     <column id="316" parent="238" name="standard_max_value">
       <Position>5</Position>
       <DataType>double|0s</DataType>
-      <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
     <index id="317" parent="238" name="_id_measur_value_type">

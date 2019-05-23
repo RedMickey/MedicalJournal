@@ -30,4 +30,11 @@ public class PillReminderEntryFService implements IPillReminderEntryFService {
     public int updateIsDonePillReminderEntry(UpdatePillReminderBody updatePillReminderBody) {
         return pillReminderEntryFDao.updateIsDonePillReminderEntry(updatePillReminderBody);
     }
+
+    @Override
+    public PillReminderEntryF[] getChunkPillReminderEntries(Date startDate, Date endDate, int userId) {
+        return pillReminderEntryFDao.getChunkPillReminderEntries(startDate, endDate, userId).stream()
+                .toArray(PillReminderEntryF[]::new);
+    }
+
 }

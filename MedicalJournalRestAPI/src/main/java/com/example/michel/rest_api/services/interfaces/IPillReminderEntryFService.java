@@ -11,4 +11,6 @@ public interface IPillReminderEntryFService {
     public List<PillReminderEntryF> getPillReminderEntriesByDate(Date date, int userId);
 
     public int updateIsDonePillReminderEntry(UpdatePillReminderBody updatePillReminderBody);
+
+    public PillReminderEntryF[] getChunkPillReminderEntries(Date startDate, Date endDate, int userId);
 }

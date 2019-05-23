@@ -11,4 +11,6 @@ public interface IPillReminderEntryFDao {
     public List<PillReminderEntryF> getPillReminderEntriesByDate(Date date, int userId);
 
     public int updateIsDonePillReminderEntry(UpdatePillReminderBody updatePillReminderBody);
+
+    public List<PillReminderEntryF> getChunkPillReminderEntries(Date startDate, Date endDate, int userId);
 }

@@ -16,6 +16,10 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    public Timestamp getUserSynchronizationTimeByUserId(Integer userId){
+        return userRepository.getUserSynchronizationTimeByUserId(userId);
+    }
+
     @Transactional
     public Date updateUserSynchronizationTime(Integer userId){
         Timestamp synchronizationTimestamp = new Timestamp(new Date().getTime());

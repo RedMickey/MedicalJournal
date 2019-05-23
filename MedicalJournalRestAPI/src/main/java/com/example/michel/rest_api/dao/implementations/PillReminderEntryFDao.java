@@ -1,7 +1,7 @@
 package com.example.michel.rest_api.dao.implementations;
 
 import com.example.michel.rest_api.dao.interfaces.IPillReminderEntryFDao;
-import com.example.michel.rest_api.mappers.PillReminderEntryFRowMapper;
+import com.example.michel.rest_api.dao.mappers.PillReminderEntryFRowMapper;
 import com.example.michel.rest_api.models.auxiliary_models.request_bodies.UpdatePillReminderBody;
 import com.example.michel.rest_api.models.pill.PillReminderEntryF;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +51,20 @@ public class PillReminderEntryFDao implements IPillReminderEntryFDao {
                 preparedStatement.setBytes(5, uuid);
 
             }
+        });
+    }
+
+    @Override
+    public List<PillReminderEntryF> getChunkPillReminderEntries(Date startDate, Date endDate, int userId){
+        String sql = "select pre._id_pill_reminder_entry, pre.is_done, pr._id_having_meals_type, pr.having_meals_time, pr.pill_count, pct.type_name," +
+                " pre.reminder_date, pi.pill_name from pill_reminder_entry pre inner join pill_reminder pr on pre._id_pill_reminder=pr._id_pill_reminder inner join pill pi on" +
+                " pi._id_pill=pr._id_pill inner join pill_count_type pct on pr._id_pill_count_type=pct._id_pill_count_type where DATE(pre.reminder_date) between ? and ? and" +
+                " (pr.is_active=1 or pre.is_done=1) and pre.change_type<3 and pr.user_id=? ORDER BY pre.reminder_date DESC, pre.reminder_time DESC";
+
+        return jdbcTemplate.query(sql, new PillReminderEntryFRowMapper(), new Object[]{
+                new java.sql.Date(endDate.getTime()),
+                new java.sql.Date(startDate.getTime()),
+                userId
         });
     }
 }

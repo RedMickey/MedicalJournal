@@ -1,4 +1,4 @@
-package com.example.michel.rest_api.mappers;
+package com.example.michel.rest_api.dao.mappers;
 
 import com.example.michel.rest_api.models.measurement.MeasurementReminderF;
 import org.springframework.jdbc.core.RowMapper;

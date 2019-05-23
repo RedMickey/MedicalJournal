@@ -18,6 +18,11 @@ public interface UserRepository extends CrudRepository<User, Integer> {
 
     User findUserById(int userId);
 
+    @Query(
+            value = "SELECT synchronization_time FROM user WHERE user_id = :user_id",
+            nativeQuery = true)
+    Timestamp getUserSynchronizationTimeByUserId(@Param("user_id") Integer userId);
+
     @Modifying
     @Query(
             value = "UPDATE user SET synchronization_time = :timestamp WHERE user_id = :id",

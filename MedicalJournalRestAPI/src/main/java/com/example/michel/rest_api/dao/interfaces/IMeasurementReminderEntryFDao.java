@@ -11,4 +11,6 @@ public interface IMeasurementReminderEntryFDao {
     public List<MeasurementReminderEntryF> getMeasurementReminderEntriesByDate(Date date, int userId);
 
     public int updateIsDoneMeasurementReminderEntry(UpdateMeasurementReminderBody updateMeasurementReminderBody);
+
+    public List<MeasurementReminderEntryF> getChunkMeasurementReminderEntries(Date startDate, Date endDate, int userId);
 }
