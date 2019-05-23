@@ -1,0 +1,7 @@
+#Internal package file, do not edit.
+#Tue Jan 22 22:58:55 MSK 2019
+0.baseType=DIRECTORY
+0.base=E\:\\android_studio_projects\\MedicalJournal\\AndroidApp\\app\\build\\intermediates\\assets\\debug
+0.path=test.db
+0.set=ASSET
+count=1

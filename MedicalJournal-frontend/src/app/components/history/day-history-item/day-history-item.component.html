@@ -1,0 +1,27 @@
+<div >
+  <div class="title" *ngIf="isToday; else unset">
+    Сегодня
+  </div>
+  <ng-template #unset>  
+    <div class="title">
+      {{historyDate | date:'d.MM.yyyy':'':'ru'}}
+    </div>
+  </ng-template> 
+  <div>
+    <div fxLayout="row" fxLayout.lt-lg="column" fxFlex>
+      <div fxFlex>
+        <mat-list style="padding-top: 0px;">
+          <app-reminder-entry *ngFor="let pillReminderEntry of pillAndMeasurementReminderEntries.pillReminderEntries" 
+          [reminderEntry]="pillReminderEntry" [type]=0></app-reminder-entry>
+        </mat-list>
+      </div>
+      <div fxFlex="20px" fxShow="false" fxShow.gt-md></div>
+      <div fxFlex> 
+        <mat-list style="padding-top: 0px;">
+          <app-reminder-entry *ngFor="let measurementReminderEntry of pillAndMeasurementReminderEntries.measurementReminderEntries" 
+          [reminderEntry]="measurementReminderEntry" [type]=1 class="meas-remind-bg"></app-reminder-entry>
+        </mat-list>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,85 @@
+<div class="abs-container">
+    <div fxFlexFill fxlayout="column" fxLayoutAlign="center center">
+      <div>
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>Регистрация</mat-card-title>
+          </mat-card-header>
+          <mat-card-content >
+            <div fxlayout="column">
+              <div fxlayout="row">
+                <div fxFlex="30%">
+                  <img class="user-ava img-circle" src="assets/additional_icons/{{avatar_urn}}">
+                </div>
+                <div fxFlex style="margin-left:15px;" fxLayout="column" fxLayoutAlign="space-around start">
+                  <mat-form-field class="w-100p">
+                    <input matInput placeholder="Ваше имя" [formControl]="formControls['userNameFormControl']" required>
+                    <mat-error *ngIf="formControls['userNameFormControl'].hasError('required')">
+                      Введите значение
+                    </mat-error>
+                  </mat-form-field>
+                  <mat-form-field class="w-100p">
+                    <input matInput placeholder="Ваше фамилия" [formControl]="formControls['userSurnameFormControl']">
+                    <!--<mat-error *ngIf="formControls['dayIntPerFormControl'].hasError('required')">
+                      Введите значение
+                    </mat-error>
+                    <mat-error *ngIf="formControls['dayIntPerFormControl'].hasError('pattern')">
+                      Недопустимое значение
+                    </mat-error>-->
+                  </mat-form-field>
+                </div>
+              </div>
+              <div fxlayout="row" class="mt-10">
+                <div fxFlex>
+                  <mat-form-field>
+                    <mat-label>Ваш пол</mat-label>
+                    <mat-select [(value)]="selectedGenderType" (selectionChange)="onGenderSelectionChanged($event)">
+                      <mat-option *ngFor="let genderType of genderTypes" [value]="genderType.value">
+                        {{genderType.viewValue}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div fxFlex>
+                  <mat-form-field>
+                    <mat-label>Год рождения</mat-label>
+                    <mat-select [(value)]="selectedYear">
+                      <mat-option *ngFor="let year of years" [value]="year.value">
+                        {{year.viewValue}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>          
+              <mat-form-field class="w-100p">
+                <input matInput placeholder="Введите ваш email" [formControl]="formControls['emailFormControl']" required>
+                <mat-error *ngIf="formControls['emailFormControl'].invalid">{{getEmailErrorMessage()}}</mat-error>
+              </mat-form-field>       
+              <mat-form-field class="w-100p">
+                <input matInput placeholder="Введите ваш пароль" [type]="hidePassword ? 'password' : 'text'" 
+                  [formControl]="formControls['passwordFormControl']" required>
+                <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" [attr.aria-label]="'Hide password'">
+                <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+                </button>
+                <mat-error *ngIf="formControls['passwordFormControl'].hasError('required')">
+                  Введите значение
+                </mat-error>
+                <mat-error *ngIf="formControls['passwordFormControl'].hasError('minlength')">
+                  Пароль слишком короткий
+                </mat-error>
+              </mat-form-field>
+              <div *ngIf="hasReqError" class="error">
+                Пользователь с таким email адресом уже существует.
+              </div>             
+            </div>
+          </mat-card-content>
+          <mat-card-actions>
+            <div fxLayout="row" fxLayoutAlign="space-between center" >
+              <button mat-raised-button color="primary" (click)="submit()">Зарегистрироваться</button>
+              <button mat-button color="primary" (click)="backClicked()">Отмена</button>
+            </div>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+    </div>
+  </div>

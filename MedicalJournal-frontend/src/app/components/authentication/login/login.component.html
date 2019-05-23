@@ -1,0 +1,47 @@
+<div class="abs-container">
+  <div fxFlexFill fxlayout="column" fxLayoutAlign="center center">
+    <div>
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Login</mat-card-title>
+        </mat-card-header>
+        <mat-card-content >
+          <div fxlayout="column">          
+            <mat-form-field class="w-100p">
+              <input matInput placeholder="Введите ваш email" [formControl]="emailFormControl" required>
+              <mat-error *ngIf="emailFormControl.invalid">{{getEmailErrorMessage()}}</mat-error>
+            </mat-form-field>
+            <div style="display:inline-block;" class="w-100p">
+              <div fxlayout="row" fxLayoutAlign="start center">
+                <div fxFlex>    
+                  <mat-form-field class="w-100p">
+                    <input matInput placeholder="Введите ваш пароль" [type]="hidePassword ? 'password' : 'text'"
+                      [formControl]="passwordFormControl" required>
+                    <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" [attr.aria-label]="'Hide password'">
+                    <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+                    </button>
+                    <mat-error *ngIf="passwordFormControl.hasError('required')">
+                      Введите значение
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div fxFlex="none">
+                  <button mat-button>Забыли?</button>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="hasReqError" class="error">
+              Неверный Email или пароль.
+            </div>         
+          </div>
+        </mat-card-content>
+        <mat-card-actions>
+          <div fxLayout="row" fxLayoutAlign="space-between center" >
+            <button mat-raised-button color="primary" (click)="submit()">Войти</button>
+            <a mat-button color="primary" routerLink="/registration">Зарегистрироваться</a>
+          </div>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </div>
+</div>

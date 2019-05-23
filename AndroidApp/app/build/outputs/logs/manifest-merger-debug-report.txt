@@ -1,0 +1,332 @@
+-- Merging decision tree log ---
+manifest
+ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:2:1-97:12
+INJECTED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:2:1-97:12
+INJECTED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:2:1-97:12
+INJECTED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:2:1-97:12
+MERGED from [com.leinardi.android:speed-dial:2.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\speed-dial-2.0.0.aar\b303f1bab02ec26e6e803e10af24a018\AndroidManifest.xml:17:1-26:12
+MERGED from [com.android.support:design:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\design-28.0.0.aar\5db31a79e2265c586d8a0726672789cf\AndroidManifest.xml:17:1-24:12
+MERGED from [com.android.support:appcompat-v7:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\appcompat-v7-28.0.0.aar\c14f5fc40fcfd884edb04513174361b8\AndroidManifest.xml:17:1-22:12
+MERGED from [com.sothree.slidinguppanel:library:3.4.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\library-3.4.0.aar\97564e6a97d010e7b98a6a7e3f9f0a48\AndroidManifest.xml:2:1-11:12
+MERGED from [com.android.support:recyclerview-v7:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\recyclerview-v7-28.0.0.aar\0bc4ad70932314902738e9cbe4f3fcd7\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-v4:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\support-v4-28.0.0.aar\0776e254ecc390b020a8e69816423720\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-media-compat:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\support-media-compat-28.0.0.aar\72b30fa4dea711fb3faefd7dd26f1f48\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support.constraint:constraint-layout:1.1.3] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\constraint-layout-1.1.3.aar\3b0e0c1dd9eda0493bde8db0d8fba05a\AndroidManifest.xml:2:1-11:12
+MERGED from [com.android.support:transition:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\transition-28.0.0.aar\bb7fcff2d3ffdb604268af7462ba1477\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-fragment:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\support-fragment-28.0.0.aar\496303707f42390c2a021647b736c4ff\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:animated-vector-drawable:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\animated-vector-drawable-28.0.0.aar\794e73ee5b665a13862412ee0894741d\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-core-ui:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\support-core-ui-28.0.0.aar\802b85b28b3fd359f9ee6ef29394e579\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-core-utils:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\support-core-utils-28.0.0.aar\ef267b1081d2d940d0082492fae03c2c\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:loader:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\loader-28.0.0.aar\710b85d3179815627291dafa4259a394\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:viewpager:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\viewpager-28.0.0.aar\2de65ae9d2a7baaae429c9093100609b\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:coordinatorlayout:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\coordinatorlayout-28.0.0.aar\740f5b5642c543f45b63b73a7eabfcc8\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:drawerlayout:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\drawerlayout-28.0.0.aar\11f85fe2d9c38a8dd8187ae3887596a9\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:slidingpanelayout:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\slidingpanelayout-28.0.0.aar\3306f6aa30e18b9212b847608df2056d\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:customview:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\customview-28.0.0.aar\90f7d9a1da194002bfa2206216fa60d4\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:swiperefreshlayout:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\swiperefreshlayout-28.0.0.aar\037d04c30e972c97a866de33323f2df6\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:asynclayoutinflater:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\asynclayoutinflater-28.0.0.aar\18a97787536cc188b499ba285016651a\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-vector-drawable:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\support-vector-drawable-28.0.0.aar\4648008df3c1d2a5298c15c2f01a3f1b\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-compat:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\support-compat-28.0.0.aar\a5d8b5bda8051a0d59cfe0707b1ac6e5\AndroidManifest.xml:17:1-24:12
+MERGED from [com.android.support:versionedparcelable:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\versionedparcelable-28.0.0.aar\a033d1e58c8b742eabcd73e1081c6cd4\AndroidManifest.xml:17:1-25:12
+MERGED from [com.android.support:cardview-v7:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\cardview-v7-28.0.0.aar\047d9723d1ffc01f5d2b02325296c1e5\AndroidManifest.xml:17:1-22:12
+MERGED from [android.arch.lifecycle:runtime:1.1.1] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\runtime-1.1.1.aar\48ffc229463dc83118b90d5d2d78999a\AndroidManifest.xml:17:1-22:12
+MERGED from [android.arch.lifecycle:livedata:1.1.1] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\livedata-1.1.1.aar\f0e7b75f3085a2722e12e9c9f6c27c88\AndroidManifest.xml:17:1-22:12
+MERGED from [android.arch.lifecycle:livedata-core:1.1.1] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\livedata-core-1.1.1.aar\9c1179051414ac240c51e335e9c53488\AndroidManifest.xml:17:1-22:12
+MERGED from [android.arch.core:runtime:1.1.1] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\runtime-1.1.1.aar\453a4399820550df2774065119c786dd\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:documentfile:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\documentfile-28.0.0.aar\0eb992472a81b26392f366432de53f33\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:localbroadcastmanager:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\localbroadcastmanager-28.0.0.aar\e23aa076a51e8b5ffba9f22ba754415b\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:print:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\print-28.0.0.aar\f178e8b40b0ce0cc985930c2e75fdff5\AndroidManifest.xml:17:1-22:12
+MERGED from [android.arch.lifecycle:viewmodel:1.1.1] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\viewmodel-1.1.1.aar\ad21622d6c8588915a93c94cffbcae0a\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:interpolator:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\interpolator-28.0.0.aar\07075a0efbc4c7022dc0a922849541fd\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:cursoradapter:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\cursoradapter-28.0.0.aar\fbe98462a8058a5729390bb9a6770fdc\AndroidManifest.xml:17:1-22:12
+INJECTED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:2:1-97:12
+INJECTED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:2:1-97:12
+INJECTED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:2:1-97:12
+	package
+		ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:3:5-56
+		INJECTED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml
+		INJECTED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml
+	android:versionName
+		INJECTED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml
+		ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:2:1-97:12
+		INJECTED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml
+	android:versionCode
+		INJECTED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml
+		ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:2:1-97:12
+		INJECTED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml
+	xmlns:android
+		ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:2:11-69
+uses-permission#android.permission.AUTHENTICATE_ACCOUNTS
+ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:5:5-80
+	android:name
+		ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:5:22-77
+uses-permission#android.permission.MANAGE_ACCOUNTS
+ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:6:5-8:38
+	android:maxSdkVersion
+		ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:8:9-35
+	android:name
+		ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:7:9-58
+uses-permission#android.permission.USE_CREDENTIALS
+ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:9:5-74
+	android:name
+		ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:9:22-71
+uses-permission#android.permission.WAKE_LOCK
+ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:10:5-68
+	android:name
+		ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:10:22-65
+uses-permission#android.permission.GET_ACCOUNTS
+ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:13:5-71
+	android:name
+		ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:13:22-68
+uses-permission#android.permission.READ_PROFILE
+ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:14:5-71
+	android:name
+		ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:14:22-68
+uses-permission#android.permission.READ_CONTACTS
+ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:15:5-72
+	android:name
+		ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:15:22-69
+uses-permission#android.permission.INTERNET
+ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:16:5-67
+	android:name
+		ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:16:22-64
+application
+ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:18:5-95:19
+MERGED from [com.android.support:design:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\design-28.0.0.aar\5db31a79e2265c586d8a0726672789cf\AndroidManifest.xml:22:5-20
+MERGED from [com.android.support:design:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\design-28.0.0.aar\5db31a79e2265c586d8a0726672789cf\AndroidManifest.xml:22:5-20
+MERGED from [com.sothree.slidinguppanel:library:3.4.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\library-3.4.0.aar\97564e6a97d010e7b98a6a7e3f9f0a48\AndroidManifest.xml:9:5-20
+MERGED from [com.sothree.slidinguppanel:library:3.4.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\library-3.4.0.aar\97564e6a97d010e7b98a6a7e3f9f0a48\AndroidManifest.xml:9:5-20
+MERGED from [com.android.support.constraint:constraint-layout:1.1.3] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\constraint-layout-1.1.3.aar\3b0e0c1dd9eda0493bde8db0d8fba05a\AndroidManifest.xml:9:5-20
+MERGED from [com.android.support.constraint:constraint-layout:1.1.3] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\constraint-layout-1.1.3.aar\3b0e0c1dd9eda0493bde8db0d8fba05a\AndroidManifest.xml:9:5-20
+MERGED from [com.android.support:support-compat:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\support-compat-28.0.0.aar\a5d8b5bda8051a0d59cfe0707b1ac6e5\AndroidManifest.xml:22:5-94
+MERGED from [com.android.support:support-compat:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\support-compat-28.0.0.aar\a5d8b5bda8051a0d59cfe0707b1ac6e5\AndroidManifest.xml:22:5-94
+MERGED from [com.android.support:versionedparcelable:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\versionedparcelable-28.0.0.aar\a033d1e58c8b742eabcd73e1081c6cd4\AndroidManifest.xml:22:5-23:19
+MERGED from [com.android.support:versionedparcelable:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\versionedparcelable-28.0.0.aar\a033d1e58c8b742eabcd73e1081c6cd4\AndroidManifest.xml:22:5-23:19
+	android:appComponentFactory
+		ADDED from [com.android.support:support-compat:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\support-compat-28.0.0.aar\a5d8b5bda8051a0d59cfe0707b1ac6e5\AndroidManifest.xml:22:18-91
+	android:supportsRtl
+		ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:23:9-35
+	android:label
+		ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:21:9-41
+	android:roundIcon
+		ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:22:9-54
+	android:icon
+		ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:20:9-43
+	android:allowBackup
+		ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:19:9-35
+	android:theme
+		ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:24:9-40
+activity#com.example.michel.mycalendar2.activities.MainActivity
+ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:25:9-35:20
+	android:screenOrientation
+		ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:28:13-49
+	android:label
+		ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:27:13-45
+	android:theme
+		ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:29:13-56
+	android:name
+		ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:26:13-41
+intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
+ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:30:13-34:29
+action#android.intent.action.MAIN
+ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:31:17-69
+	android:name
+		ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:31:25-66
+category#android.intent.category.LAUNCHER
+ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:33:17-77
+	android:name
+		ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:33:27-74
+activity#com.example.michel.mycalendar2.activities.AddTreatmentActivity
+ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:36:9-40:60
+	android:screenOrientation
+		ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:39:13-49
+	android:label
+		ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:38:13-65
+	android:theme
+		ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:40:13-57
+	android:name
+		ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:37:13-49
+activity#com.example.michel.mycalendar2.activities.AlarmActivity
+ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:41:9-43:52
+	android:screenOrientation
+		ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:43:13-49
+	android:name
+		ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:42:13-42
+service#com.example.michel.mycalendar2.services.AlarmService
+ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:45:9-47:38
+	android:enabled
+		ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:47:13-35
+	android:name
+		ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:46:13-80
+service#com.example.michel.mycalendar2.authentication.MedicalJournalAuthenticatorService
+ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:48:9-56:19
+	android:name
+		ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:48:18-113
+intent-filter#action:name:android.accounts.AccountAuthenticator
+ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:49:13-51:29
+action#android.accounts.AccountAuthenticator
+ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:50:17-80
+	android:name
+		ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:50:25-77
+meta-data#android.accounts.AccountAuthenticator
+ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:53:13-55:57
+	android:resource
+		ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:55:17-54
+	android:name
+		ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:54:17-69
+receiver#com.example.michel.mycalendar2.utils.AlarmReceiver
+ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:58:9-65:20
+	android:name
+		ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:58:19-84
+intent-filter#action:name:android.intent.action.BOOT_COMPLETED+category:name:android.intent.category.DEFAULT
+ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:60:13-64:29
+action#android.intent.action.BOOT_COMPLETED
+ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:61:17-79
+	android:name
+		ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:61:25-76
+category#android.intent.category.DEFAULT
+ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:63:17-76
+	android:name
+		ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:63:27-73
+activity#com.example.michel.mycalendar2.activities.AddMeasurementActivity
+ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:67:9-71:60
+	android:screenOrientation
+		ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:70:13-49
+	android:label
+		ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:69:13-67
+	android:theme
+		ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:71:13-57
+	android:name
+		ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:68:13-51
+activity#com.example.michel.mycalendar2.activities.MeasurementChartActivity
+ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:72:9-76:59
+	android:screenOrientation
+		ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:75:13-49
+	android:label
+		ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:74:13-69
+	android:theme
+		ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:76:13-56
+	android:name
+		ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:73:13-53
+activity#com.example.michel.mycalendar2.activities.AddOneTimeTreatmentActivity
+ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:77:9-81:60
+	android:screenOrientation
+		ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:80:13-49
+	android:label
+		ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:79:13-74
+	android:theme
+		ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:81:13-57
+	android:name
+		ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:78:13-56
+activity#com.example.michel.mycalendar2.activities.AddOneTimeMeasurementActivity
+ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:82:9-86:60
+	android:screenOrientation
+		ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:85:13-49
+	android:label
+		ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:84:13-76
+	android:theme
+		ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:86:13-57
+	android:name
+		ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:83:13-58
+activity#com.example.michel.mycalendar2.activities.LoginActivity
+ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:87:9-90:71
+	android:label
+		ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:89:13-57
+	android:windowSoftInputMode
+		ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:90:13-68
+	android:name
+		ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:88:13-42
+activity#com.example.michel.mycalendar2.activities.RegistrationActivity
+ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:91:9-93:67
+	android:label
+		ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:93:13-64
+	android:name
+		ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:92:13-49
+activity#com.example.michel.mycalendar2.activities.UserActivity
+ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:94:9-59
+	android:name
+		ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml:94:19-47
+uses-sdk
+INJECTED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml
+INJECTED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml
+MERGED from [com.leinardi.android:speed-dial:2.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\speed-dial-2.0.0.aar\b303f1bab02ec26e6e803e10af24a018\AndroidManifest.xml:22:5-24:41
+MERGED from [com.leinardi.android:speed-dial:2.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\speed-dial-2.0.0.aar\b303f1bab02ec26e6e803e10af24a018\AndroidManifest.xml:22:5-24:41
+MERGED from [com.android.support:design:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\design-28.0.0.aar\5db31a79e2265c586d8a0726672789cf\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:design:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\design-28.0.0.aar\5db31a79e2265c586d8a0726672789cf\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:appcompat-v7:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\appcompat-v7-28.0.0.aar\c14f5fc40fcfd884edb04513174361b8\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:appcompat-v7:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\appcompat-v7-28.0.0.aar\c14f5fc40fcfd884edb04513174361b8\AndroidManifest.xml:20:5-44
+MERGED from [com.sothree.slidinguppanel:library:3.4.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\library-3.4.0.aar\97564e6a97d010e7b98a6a7e3f9f0a48\AndroidManifest.xml:7:5-44
+MERGED from [com.sothree.slidinguppanel:library:3.4.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\library-3.4.0.aar\97564e6a97d010e7b98a6a7e3f9f0a48\AndroidManifest.xml:7:5-44
+MERGED from [com.android.support:recyclerview-v7:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\recyclerview-v7-28.0.0.aar\0bc4ad70932314902738e9cbe4f3fcd7\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:recyclerview-v7:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\recyclerview-v7-28.0.0.aar\0bc4ad70932314902738e9cbe4f3fcd7\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-v4:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\support-v4-28.0.0.aar\0776e254ecc390b020a8e69816423720\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-v4:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\support-v4-28.0.0.aar\0776e254ecc390b020a8e69816423720\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-media-compat:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\support-media-compat-28.0.0.aar\72b30fa4dea711fb3faefd7dd26f1f48\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-media-compat:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\support-media-compat-28.0.0.aar\72b30fa4dea711fb3faefd7dd26f1f48\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support.constraint:constraint-layout:1.1.3] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\constraint-layout-1.1.3.aar\3b0e0c1dd9eda0493bde8db0d8fba05a\AndroidManifest.xml:5:5-7:41
+MERGED from [com.android.support.constraint:constraint-layout:1.1.3] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\constraint-layout-1.1.3.aar\3b0e0c1dd9eda0493bde8db0d8fba05a\AndroidManifest.xml:5:5-7:41
+MERGED from [com.android.support:transition:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\transition-28.0.0.aar\bb7fcff2d3ffdb604268af7462ba1477\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:transition:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\transition-28.0.0.aar\bb7fcff2d3ffdb604268af7462ba1477\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-fragment:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\support-fragment-28.0.0.aar\496303707f42390c2a021647b736c4ff\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-fragment:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\support-fragment-28.0.0.aar\496303707f42390c2a021647b736c4ff\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:animated-vector-drawable:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\animated-vector-drawable-28.0.0.aar\794e73ee5b665a13862412ee0894741d\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:animated-vector-drawable:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\animated-vector-drawable-28.0.0.aar\794e73ee5b665a13862412ee0894741d\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-core-ui:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\support-core-ui-28.0.0.aar\802b85b28b3fd359f9ee6ef29394e579\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-core-ui:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\support-core-ui-28.0.0.aar\802b85b28b3fd359f9ee6ef29394e579\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-core-utils:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\support-core-utils-28.0.0.aar\ef267b1081d2d940d0082492fae03c2c\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-core-utils:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\support-core-utils-28.0.0.aar\ef267b1081d2d940d0082492fae03c2c\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:loader:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\loader-28.0.0.aar\710b85d3179815627291dafa4259a394\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:loader:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\loader-28.0.0.aar\710b85d3179815627291dafa4259a394\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:viewpager:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\viewpager-28.0.0.aar\2de65ae9d2a7baaae429c9093100609b\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:viewpager:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\viewpager-28.0.0.aar\2de65ae9d2a7baaae429c9093100609b\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:coordinatorlayout:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\coordinatorlayout-28.0.0.aar\740f5b5642c543f45b63b73a7eabfcc8\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:coordinatorlayout:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\coordinatorlayout-28.0.0.aar\740f5b5642c543f45b63b73a7eabfcc8\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:drawerlayout:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\drawerlayout-28.0.0.aar\11f85fe2d9c38a8dd8187ae3887596a9\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:drawerlayout:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\drawerlayout-28.0.0.aar\11f85fe2d9c38a8dd8187ae3887596a9\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:slidingpanelayout:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\slidingpanelayout-28.0.0.aar\3306f6aa30e18b9212b847608df2056d\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:slidingpanelayout:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\slidingpanelayout-28.0.0.aar\3306f6aa30e18b9212b847608df2056d\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:customview:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\customview-28.0.0.aar\90f7d9a1da194002bfa2206216fa60d4\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:customview:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\customview-28.0.0.aar\90f7d9a1da194002bfa2206216fa60d4\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:swiperefreshlayout:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\swiperefreshlayout-28.0.0.aar\037d04c30e972c97a866de33323f2df6\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:swiperefreshlayout:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\swiperefreshlayout-28.0.0.aar\037d04c30e972c97a866de33323f2df6\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:asynclayoutinflater:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\asynclayoutinflater-28.0.0.aar\18a97787536cc188b499ba285016651a\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:asynclayoutinflater:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\asynclayoutinflater-28.0.0.aar\18a97787536cc188b499ba285016651a\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-vector-drawable:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\support-vector-drawable-28.0.0.aar\4648008df3c1d2a5298c15c2f01a3f1b\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-vector-drawable:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\support-vector-drawable-28.0.0.aar\4648008df3c1d2a5298c15c2f01a3f1b\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-compat:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\support-compat-28.0.0.aar\a5d8b5bda8051a0d59cfe0707b1ac6e5\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-compat:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\support-compat-28.0.0.aar\a5d8b5bda8051a0d59cfe0707b1ac6e5\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:versionedparcelable:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\versionedparcelable-28.0.0.aar\a033d1e58c8b742eabcd73e1081c6cd4\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:versionedparcelable:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\versionedparcelable-28.0.0.aar\a033d1e58c8b742eabcd73e1081c6cd4\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:cardview-v7:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\cardview-v7-28.0.0.aar\047d9723d1ffc01f5d2b02325296c1e5\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:cardview-v7:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\cardview-v7-28.0.0.aar\047d9723d1ffc01f5d2b02325296c1e5\AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:runtime:1.1.1] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\runtime-1.1.1.aar\48ffc229463dc83118b90d5d2d78999a\AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:runtime:1.1.1] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\runtime-1.1.1.aar\48ffc229463dc83118b90d5d2d78999a\AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:livedata:1.1.1] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\livedata-1.1.1.aar\f0e7b75f3085a2722e12e9c9f6c27c88\AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:livedata:1.1.1] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\livedata-1.1.1.aar\f0e7b75f3085a2722e12e9c9f6c27c88\AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:livedata-core:1.1.1] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\livedata-core-1.1.1.aar\9c1179051414ac240c51e335e9c53488\AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:livedata-core:1.1.1] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\livedata-core-1.1.1.aar\9c1179051414ac240c51e335e9c53488\AndroidManifest.xml:20:5-44
+MERGED from [android.arch.core:runtime:1.1.1] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\runtime-1.1.1.aar\453a4399820550df2774065119c786dd\AndroidManifest.xml:20:5-44
+MERGED from [android.arch.core:runtime:1.1.1] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\runtime-1.1.1.aar\453a4399820550df2774065119c786dd\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:documentfile:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\documentfile-28.0.0.aar\0eb992472a81b26392f366432de53f33\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:documentfile:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\documentfile-28.0.0.aar\0eb992472a81b26392f366432de53f33\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:localbroadcastmanager:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\localbroadcastmanager-28.0.0.aar\e23aa076a51e8b5ffba9f22ba754415b\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:localbroadcastmanager:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\localbroadcastmanager-28.0.0.aar\e23aa076a51e8b5ffba9f22ba754415b\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:print:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\print-28.0.0.aar\f178e8b40b0ce0cc985930c2e75fdff5\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:print:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\print-28.0.0.aar\f178e8b40b0ce0cc985930c2e75fdff5\AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:viewmodel:1.1.1] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\viewmodel-1.1.1.aar\ad21622d6c8588915a93c94cffbcae0a\AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:viewmodel:1.1.1] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\viewmodel-1.1.1.aar\ad21622d6c8588915a93c94cffbcae0a\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:interpolator:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\interpolator-28.0.0.aar\07075a0efbc4c7022dc0a922849541fd\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:interpolator:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\interpolator-28.0.0.aar\07075a0efbc4c7022dc0a922849541fd\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:cursoradapter:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\cursoradapter-28.0.0.aar\fbe98462a8058a5729390bb9a6770fdc\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:cursoradapter:28.0.0] C:\Users\Michael\.gradle\caches\transforms-1\files-1.1\cursoradapter-28.0.0.aar\fbe98462a8058a5729390bb9a6770fdc\AndroidManifest.xml:20:5-44
+INJECTED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml
+INJECTED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml
+	android:targetSdkVersion
+		INJECTED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml
+		ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml
+		INJECTED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml
+		ADDED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml
+		INJECTED from E:\android_studio_projects\MedicalJournal\AndroidApp\app\src\main\AndroidManifest.xml

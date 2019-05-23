@@ -1,0 +1,38 @@
+.size-celect{
+    font-size: 12px;
+    width: 50px;
+}
+
+.paginator-outer-container{
+    display: flex;
+    font-size: 15px;
+    background: white;
+    margin-bottom: 10px;
+}
+
+.paginator-container{
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    min-height: 36px;
+    padding: 0 8px;
+    flex-wrap: wrap-reverse;
+    width: 100%;
+}
+
+.paginator-page-size{
+    display: flex;
+    align-items: baseline;
+    margin-right: 8px;
+}
+
+.paginator-range-actions{
+    display: flex;
+    align-items: baseline;
+    margin-right: 8px;
+}
+
+.mat-paginator-range-actions{
+    display: flex;
+    align-items: center;
+}

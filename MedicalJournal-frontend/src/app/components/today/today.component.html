@@ -1,0 +1,45 @@
+<div class="today-container">
+    <div fxLayout="row" fxLayoutAlign="space-between center" class="today-header black-87" >
+      <div>
+        {{today | date:'d MMMM':'':'ru'}}
+      </div>
+      <div>
+        {{today | date:'EEEE':'':'ru'}}
+      </div>
+    </div>
+    <mat-divider class="mb-8"></mat-divider>
+    <div>
+      <div fxLayout="row" fxLayout.lt-lg="column" fxFlex>
+        <div fxFlex>
+          <mat-list style="padding-top: 0px;">
+            <app-reminder-entry *ngFor="let pillReminderEntry of pillReminderEntries" 
+            [reminderEntry]="pillReminderEntry" [type]=0></app-reminder-entry>
+          </mat-list>
+        </div>
+        <div fxFlex="20px" fxShow="false" fxShow.gt-md></div>
+        <div fxFlex> 
+          <mat-list style="padding-top: 0px;">
+            <app-reminder-entry *ngFor="let measurementReminderEntry of measurementReminderEntries" 
+            [reminderEntry]="measurementReminderEntry" [type]=1 class="meas-remind-bg"></app-reminder-entry>
+          </mat-list>
+        </div>
+      </div>
+    </div>
+  
+    <eco-fab-speed-dial class="fab-menu" [animationMode]="animationMode">
+      <eco-fab-speed-dial-trigger spin=true>
+        <button mat-fab (click)="doAction('trigger')" class="fab-button-text-color"><mat-icon class="spin180">add</mat-icon></button>
+      </eco-fab-speed-dial-trigger>
+   
+      <eco-fab-speed-dial-actions>
+        <button mat-mini-fab (click)="doAction('pillCrs')" matTooltip="График приёмов"
+          matTooltipPosition="left" class="fab-button-text-color"><mat-icon>assignment</mat-icon></button>
+        <button mat-mini-fab (click)="doAction('pillOnce')" matTooltip="Одиночный приём"
+          matTooltipPosition="left" class="fab-button-text-color"><mat-icon svgIcon="pill" ></mat-icon></button>
+        <button mat-mini-fab color="primary" (click)="doAction('measCrs')" matTooltip="График измерений"
+          matTooltipPosition="left" class="fab-button-text-color"><mat-icon>assignment</mat-icon></button>
+        <button mat-mini-fab color="primary" (click)="doAction('measOnce')" matTooltip="Измерение"
+          matTooltipPosition="left" class="fab-button-text-color"><mat-icon svgIcon="ruler"></mat-icon></button>
+      </eco-fab-speed-dial-actions>
+    </eco-fab-speed-dial>
+  </div>
