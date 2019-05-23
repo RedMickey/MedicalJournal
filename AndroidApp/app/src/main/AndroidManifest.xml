@@ -45,7 +45,7 @@
         <service
             android:name="com.example.michel.mycalendar2.services.AlarmService"
             android:enabled="true" />
-        <service android:name="com.example.michel.mycalendar2.authentication.MedicalJournalAuthenticatorService">
+        <service android:name="com.example.michel.mycalendar2.services.authentication.MedicalJournalAuthenticatorService">
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator" />
             </intent-filter>

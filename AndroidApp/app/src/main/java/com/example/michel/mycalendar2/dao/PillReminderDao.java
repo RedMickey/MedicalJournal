@@ -6,8 +6,8 @@ import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.Nullable;
 
-import com.example.michel.mycalendar2.authentication.AccountGeneralUtils;
-import com.example.michel.mycalendar2.calendarview.data.DateData;
+import com.example.michel.mycalendar2.services.authentication.AccountGeneralUtils;
+import com.example.michel.mycalendar2.view.custom_views.calendarview.data.DateData;
 import com.example.michel.mycalendar2.models.CycleAndPillComby;
 import com.example.michel.mycalendar2.models.CycleDBInsertEntry;
 import com.example.michel.mycalendar2.models.ReminderTime;

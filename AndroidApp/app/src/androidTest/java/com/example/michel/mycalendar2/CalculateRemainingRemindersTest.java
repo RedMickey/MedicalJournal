@@ -1,6 +1,6 @@
 package com.example.michel.mycalendar2;
 
-import com.example.michel.mycalendar2.calendarview.utils.CalendarUtil;
+import com.example.michel.mycalendar2.view.custom_views.calendarview.utils.CalendarUtil;
 import com.example.michel.mycalendar2.models.pill.PillReminderEntry;
 
 import org.junit.Test;

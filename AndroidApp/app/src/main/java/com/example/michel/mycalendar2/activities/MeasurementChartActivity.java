@@ -1,8 +1,5 @@
 package com.example.michel.mycalendar2.activities;
 
-import android.graphics.Color;
-import android.icu.util.LocaleData;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -11,14 +8,12 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.michel.mycalendar2.app_async_tasks.MeasurementChartCreationTask;
-import com.example.michel.mycalendar2.calendarview.data.DateData;
-import com.example.michel.mycalendar2.calendarview.utils.CalendarUtil;
+import com.example.michel.mycalendar2.controllers.app_async_tasks.MeasurementChartCreationTask;
+import com.example.michel.mycalendar2.view.custom_views.calendarview.data.DateData;
+import com.example.michel.mycalendar2.view.custom_views.calendarview.utils.CalendarUtil;
 import com.example.michel.mycalendar2.models.measurement.MeasurementStatEntry;
 import com.example.michel.mycalendar2.utils.ConvertingUtils;
 import com.example.michel.mycalendar2.utils.DBStaticEntries;

@@ -153,7 +153,7 @@
                         android:textSize="17dp"/>
                 </RadioGroup>
 
-                <com.example.michel.mycalendar2.expandableLayout.ExpandableRelativeLayout
+                <com.example.michel.mycalendar2.view.custom_views.expandableLayout.ExpandableRelativeLayout
                     android:id="@+id/expandableLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -206,7 +206,7 @@
                             android:id="@+id/day_interval_period"/>
 
                     </LinearLayout>
-                </com.example.michel.mycalendar2.expandableLayout.ExpandableRelativeLayout>
+                </com.example.michel.mycalendar2.view.custom_views.expandableLayout.ExpandableRelativeLayout>
 
             </LinearLayout>
 
@@ -273,7 +273,7 @@
                     </RadioGroup>
                 </LinearLayout>
 
-                <com.example.michel.mycalendar2.expandableLayout.ExpandableRelativeLayout
+                <com.example.michel.mycalendar2.view.custom_views.expandableLayout.ExpandableRelativeLayout
                     android:id="@+id/expandableLayout2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -308,7 +308,7 @@
 
                     </LinearLayout>
 
-                </com.example.michel.mycalendar2.expandableLayout.ExpandableRelativeLayout>
+                </com.example.michel.mycalendar2.view.custom_views.expandableLayout.ExpandableRelativeLayout>
 
             </LinearLayout>
 

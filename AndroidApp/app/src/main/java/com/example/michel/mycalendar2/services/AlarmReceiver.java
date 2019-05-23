@@ -13,13 +13,12 @@ import android.widget.Toast;
 
 import com.example.michel.mycalendar2.activities.MainActivity;
 import com.example.michel.mycalendar2.activities.R;
-import com.example.michel.mycalendar2.app_async_tasks.synchronization.SynchronizationReminderEntriesTask;
-import com.example.michel.mycalendar2.authentication.AccountGeneralUtils;
+import com.example.michel.mycalendar2.controllers.app_async_tasks.synchronization.SynchronizationReminderEntriesTask;
+import com.example.michel.mycalendar2.services.authentication.AccountGeneralUtils;
 import com.example.michel.mycalendar2.dao.DatabaseAdapter;
 import com.example.michel.mycalendar2.dao.MeasurementReminderDao;
 import com.example.michel.mycalendar2.models.measurement.MeasurementReminderEntry;
 import com.example.michel.mycalendar2.models.pill.PillReminderEntry;
-import com.example.michel.mycalendar2.services.AlarmService;
 import com.example.michel.mycalendar2.utils.ConvertingUtils;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.fitness.Fitness;

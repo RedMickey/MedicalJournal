@@ -28,7 +28,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.michel.mycalendar2.authentication.AccountGeneralUtils;
+import com.example.michel.mycalendar2.services.authentication.AccountGeneralUtils;
 import com.example.michel.mycalendar2.dao.DatabaseAdapter;
 import com.example.michel.mycalendar2.dao.UserDao;
 import com.example.michel.mycalendar2.models.User;
@@ -36,7 +36,7 @@ import com.example.michel.mycalendar2.models.User;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.michel.mycalendar2.authentication.AccountGeneralUtils.S_I_SERVER_AUTHENTICATE;
+import static com.example.michel.mycalendar2.services.authentication.AccountGeneralUtils.S_I_SERVER_AUTHENTICATE;
 
 /**
  * A login screen that offers login via email/password.

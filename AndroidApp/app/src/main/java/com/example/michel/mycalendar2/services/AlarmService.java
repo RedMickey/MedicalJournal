@@ -8,8 +8,8 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 
 import com.example.michel.mycalendar2.activities.MainActivity;
-import com.example.michel.mycalendar2.app_async_tasks.synchronization.SynchronizationReminderEntriesTask;
-import com.example.michel.mycalendar2.authentication.AccountGeneralUtils;
+import com.example.michel.mycalendar2.controllers.app_async_tasks.synchronization.SynchronizationReminderEntriesTask;
+import com.example.michel.mycalendar2.services.authentication.AccountGeneralUtils;
 import com.example.michel.mycalendar2.dao.DatabaseAdapter;
 import com.example.michel.mycalendar2.dao.PillReminderDao;
 

@@ -9,13 +9,13 @@
     android:paddingHorizontal="20dp"
     android:id="@+id/layout_alarm">
 
-    <com.example.michel.mycalendar2.additional_views.swipe_button.SwipeButton
+    <com.example.michel.mycalendar2.view.custom_views.swipe_button.SwipeButton
         android:id="@+id/swipe_btn"
         android:layout_width="match_parent"
         android:layout_height="110dp"
         android:layout_marginBottom="40dp"
         android:layout_alignParentBottom="true">
-    </com.example.michel.mycalendar2.additional_views.swipe_button.SwipeButton>
+    </com.example.michel.mycalendar2.view.custom_views.swipe_button.SwipeButton>
 
     <TextView
         android:id="@+id/alarm_result"

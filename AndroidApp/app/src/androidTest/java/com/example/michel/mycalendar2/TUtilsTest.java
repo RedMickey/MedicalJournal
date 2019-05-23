@@ -3,7 +3,7 @@ package com.example.michel.mycalendar2;
 import android.support.test.InstrumentationRegistry;
 
 import com.example.michel.mycalendar2.dao.DatabaseAdapter;
-import com.example.michel.mycalendar2.calendarview.data.DateData;
+import com.example.michel.mycalendar2.view.custom_views.calendarview.data.DateData;
 import com.example.michel.mycalendar2.dao.DatabaseHelper;
 import com.example.michel.mycalendar2.models.CycleDBInsertEntry;
 import com.example.michel.mycalendar2.models.ReminderTime;
