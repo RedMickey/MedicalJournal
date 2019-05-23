@@ -1,6 +1,5 @@
 package com.example.michel.mycalendar2.activities;
 
-import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -20,13 +19,12 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.example.michel.mycalendar2.app_async_tasks.MeasurementNotificationsCreationTask;
-import com.example.michel.mycalendar2.app_async_tasks.PillNotificationsCreationTask;
-import com.example.michel.mycalendar2.app_async_tasks.UserGlobalUpdateTask;
-import com.example.michel.mycalendar2.app_async_tasks.UserLocalUpdateTask;
-import com.example.michel.mycalendar2.app_async_tasks.UserSignUpTask;
-import com.example.michel.mycalendar2.app_async_tasks.synchronization.DownloadUserDataTask;
-import com.example.michel.mycalendar2.authentication.AccountGeneralUtils;
+import com.example.michel.mycalendar2.controllers.app_async_tasks.MeasurementNotificationsCreationTask;
+import com.example.michel.mycalendar2.controllers.app_async_tasks.PillNotificationsCreationTask;
+import com.example.michel.mycalendar2.controllers.app_async_tasks.UserGlobalUpdateTask;
+import com.example.michel.mycalendar2.controllers.app_async_tasks.UserLocalUpdateTask;
+import com.example.michel.mycalendar2.controllers.app_async_tasks.synchronization.DownloadUserDataTask;
+import com.example.michel.mycalendar2.services.authentication.AccountGeneralUtils;
 import com.example.michel.mycalendar2.models.User;
 
 import java.util.ArrayList;

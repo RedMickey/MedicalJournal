@@ -1,52 +1,35 @@
 package com.example.michel.mycalendar2.activities;
 
-import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.GridLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RadioGroup;
-import android.widget.Spinner;
-import android.widget.Switch;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import com.example.michel.mycalendar2.adapters.TimesOfTakingMedicineAdapter;
-import com.example.michel.mycalendar2.app_async_tasks.AddMeasurementActivityCreationTask;
-import com.example.michel.mycalendar2.app_async_tasks.MeasurementNotificationsCreationTask;
-import com.example.michel.mycalendar2.app_async_tasks.MeasurementRemindersInsertionTask;
-import com.example.michel.mycalendar2.app_async_tasks.MeasurementRemindersUpdateTask;
-import com.example.michel.mycalendar2.app_async_tasks.OneTimeMeasurementReminderInsertionTask;
-import com.example.michel.mycalendar2.calendarview.data.DateData;
-import com.example.michel.mycalendar2.calendarview.utils.CalendarUtil;
-import com.example.michel.mycalendar2.expandableLayout.ExpandableRelativeLayout;
-import com.example.michel.mycalendar2.models.CycleAndMeasurementComby;
-import com.example.michel.mycalendar2.models.CycleDBInsertEntry;
+import com.example.michel.mycalendar2.controllers.app_async_tasks.OneTimeMeasurementReminderInsertionTask;
+import com.example.michel.mycalendar2.view.custom_views.calendarview.data.DateData;
+import com.example.michel.mycalendar2.view.custom_views.calendarview.utils.CalendarUtil;
+import com.example.michel.mycalendar2.view.custom_views.expandableLayout.ExpandableRelativeLayout;
 import com.example.michel.mycalendar2.models.ReminderTime;
 import com.example.michel.mycalendar2.models.measurement.MeasurementReminderDBEntry;
 import com.example.michel.mycalendar2.utils.DBStaticEntries;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.concurrent.ExecutionException;
 
 
 public class AddOneTimeMeasurementActivity extends AppCompatActivity {

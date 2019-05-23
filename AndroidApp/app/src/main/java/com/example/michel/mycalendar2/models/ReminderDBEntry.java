@@ -2,7 +2,7 @@ package com.example.michel.mycalendar2.models;
 
 import android.support.annotation.Nullable;
 
-import com.example.michel.mycalendar2.calendarview.data.DateData;
+import com.example.michel.mycalendar2.view.custom_views.calendarview.data.DateData;
 
 import java.util.UUID;
 

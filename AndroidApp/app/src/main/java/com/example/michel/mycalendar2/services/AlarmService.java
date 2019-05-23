@@ -6,13 +6,12 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-import android.widget.Toast;
 
-import com.example.michel.mycalendar2.activities.AddTreatmentActivity;
 import com.example.michel.mycalendar2.activities.MainActivity;
-import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
+import com.example.michel.mycalendar2.controllers.app_async_tasks.synchronization.SynchronizationReminderEntriesTask;
+import com.example.michel.mycalendar2.services.authentication.AccountGeneralUtils;
+import com.example.michel.mycalendar2.dao.DatabaseAdapter;
 import com.example.michel.mycalendar2.dao.PillReminderDao;
-import com.example.michel.mycalendar2.utils.AlarmReceiver;
 
 import java.util.UUID;
 
@@ -47,6 +46,12 @@ public class AlarmService extends Service {
                 PillReminderDao pillReminderDao = new PillReminderDao(databaseAdapter.open().getDatabase());
                 pillReminderDao.updateIsDonePillReminderEntry( 1, UUID.fromString(pillReminderEntryID), "");
                 databaseAdapter.close();
+                if (AccountGeneralUtils.curUser.getId()!=1) {
+                    SynchronizationReminderEntriesTask synchronizationReminderEntriesTask = new SynchronizationReminderEntriesTask(
+                            this, UUID.fromString(pillReminderEntryID), 1
+                    );
+                    synchronizationReminderEntriesTask.execute();
+                }
             }
 
             if (!measurementReminderEntryID.equals("")){

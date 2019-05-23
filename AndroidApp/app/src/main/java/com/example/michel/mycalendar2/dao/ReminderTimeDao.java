@@ -2,10 +2,9 @@ package com.example.michel.mycalendar2.dao;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.example.michel.mycalendar2.authentication.AccountGeneralUtils;
+import com.example.michel.mycalendar2.services.authentication.AccountGeneralUtils;
 import com.example.michel.mycalendar2.models.ReminderTime;
 import com.example.michel.mycalendar2.models.synchronization.ReminderTimeDB;
 import com.example.michel.mycalendar2.utils.ConvertingUtils;

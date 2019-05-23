@@ -1,28 +1,22 @@
 package com.example.michel.mycalendar2.activities;
 
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.InputType;
 import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.ToggleButton;
 
-import com.example.michel.mycalendar2.app_async_tasks.UserLocalUpdateTask;
-import com.example.michel.mycalendar2.app_async_tasks.UserSignUpTask;
-import com.example.michel.mycalendar2.authentication.AccountGeneralUtils;
+import com.example.michel.mycalendar2.controllers.app_async_tasks.UserSignUpTask;
 import com.example.michel.mycalendar2.models.User;
 
 import java.util.ArrayList;

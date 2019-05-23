@@ -4,8 +4,8 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
-import com.example.michel.mycalendar2.calendarview.views.BaseCellView;
-import com.example.michel.mycalendar2.calendarview.data.DayData;
+import com.example.michel.mycalendar2.view.custom_views.calendarview.views.BaseCellView;
+import com.example.michel.mycalendar2.view.custom_views.calendarview.data.DayData;
 
 /**
  * Created by bob.sun on 15/8/30.

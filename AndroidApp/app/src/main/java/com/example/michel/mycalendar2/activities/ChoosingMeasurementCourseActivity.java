@@ -2,10 +2,9 @@ package com.example.michel.mycalendar2.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
-import com.example.michel.mycalendar2.app_async_tasks.ChoosingMeasurCourseActCreationTask;
+import com.example.michel.mycalendar2.controllers.app_async_tasks.ChoosingMeasurCourseActCreationTask;
 
 import java.util.Date;
 

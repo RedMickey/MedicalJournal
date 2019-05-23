@@ -40,12 +40,12 @@
                 android:focusable="false"
                 android:focusableInTouchMode="true"
                 android:textSize="16sp" />-->
-            <com.example.michel.mycalendar2.calendarview.views.WeekDayViewPager
+            <com.example.michel.mycalendar2.view.custom_views.calendarview.views.WeekDayViewPager
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/day_view">
 
-            </com.example.michel.mycalendar2.calendarview.views.WeekDayViewPager>
+            </com.example.michel.mycalendar2.view.custom_views.calendarview.views.WeekDayViewPager>
 
             <!--
             <android.support.design.widget.FloatingActionButton
@@ -92,7 +92,7 @@
                     android:layout_height="1px"
                     android:background="#ccc" />
 
-                <com.example.michel.mycalendar2.calendarview.views.WeekColumnView
+                <com.example.michel.mycalendar2.view.custom_views.calendarview.views.WeekColumnView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingBottom="12dp"
@@ -103,7 +103,7 @@
                     android:layout_height="1px"
                     android:background="#ccc" />
 
-                <com.example.michel.mycalendar2.calendarview.views.ExpCalendarView
+                <com.example.michel.mycalendar2.view.custom_views.calendarview.views.ExpCalendarView
                     android:id="@+id/calendar_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

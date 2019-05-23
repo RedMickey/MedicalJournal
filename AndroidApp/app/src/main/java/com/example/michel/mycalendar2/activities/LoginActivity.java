@@ -3,7 +3,6 @@ package com.example.michel.mycalendar2.activities;
 import android.accounts.Account;
 import android.accounts.AccountAuthenticatorResponse;
 import android.accounts.AccountManager;
-import android.accounts.AccountManagerFuture;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
@@ -29,17 +28,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.michel.mycalendar2.app_async_tasks.PostSignInTask;
-import com.example.michel.mycalendar2.app_async_tasks.UserLocalUpdateTask;
-import com.example.michel.mycalendar2.authentication.AccountGeneralUtils;
-import com.example.michel.mycalendar2.calendarview.adapters.DatabaseAdapter;
+import com.example.michel.mycalendar2.services.authentication.AccountGeneralUtils;
+import com.example.michel.mycalendar2.dao.DatabaseAdapter;
 import com.example.michel.mycalendar2.dao.UserDao;
 import com.example.michel.mycalendar2.models.User;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.michel.mycalendar2.authentication.AccountGeneralUtils.sServerAuthenticate;
+import static com.example.michel.mycalendar2.services.authentication.AccountGeneralUtils.S_I_SERVER_AUTHENTICATE;
 
 /**
  * A login screen that offers login via email/password.
@@ -215,7 +212,7 @@ public class LoginActivity extends AppCompatActivity {
                 String authtoken = null;
                 Bundle data = new Bundle();
                 try {
-                    authtoken = sServerAuthenticate.userSignIn(email, password);
+                    authtoken = S_I_SERVER_AUTHENTICATE.userSignIn(email, password);
 
                     data.putString(AccountManager.KEY_ACCOUNT_NAME, email);
                     data.putString(AccountManager.KEY_ACCOUNT_TYPE, accountType);
