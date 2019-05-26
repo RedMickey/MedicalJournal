@@ -69,6 +69,7 @@ export class UserComponent implements OnInit {
         this.formControls["emailFormControl"].setValue(this.user.email);
         this.selectedGenderType = this.user.genderId;
         this.selectedYear = this.user.birthdayYear;
+        this.authService.updateCurrentUser(this.user);
       }
     );
   }
