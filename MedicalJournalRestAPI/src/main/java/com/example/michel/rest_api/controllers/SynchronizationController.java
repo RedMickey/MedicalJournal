@@ -136,7 +136,6 @@ public class SynchronizationController {
 
         if (Math.abs(curUserTimestamp.getTime()-req.getSynchronizationTimestamp().getTime())<1000){
             Timestamp newEntriesTimestamp = new Timestamp(req.getSynchronizationTimestamp().getTime() - 5000);
-            System.out.println(curUserTimestamp.toString());
             req.getCycleDBList().forEach(cycle -> cycle.setSynchTime(newEntriesTimestamp));
             req.getWeekScheduleDBList().forEach(weekSchedule -> weekSchedule.setSynchTime(newEntriesTimestamp));
             req.getMeasurementReminderDBList().forEach(measurementReminder -> measurementReminder.setSynchTime(newEntriesTimestamp));

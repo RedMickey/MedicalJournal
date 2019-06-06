@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -61,5 +62,10 @@ public class AuthController {
         String token = jwtTokenFactory.createAccessJwtToken(customUserPrincipal);
 
         httpServletResponse.addHeader(jwtConfig.getHeader(), jwtConfig.getPrefix() + token);
+    }
+
+    @PostMapping(value = "/checkToken", produces = "application/json")
+    public Map ref(){
+        return Collections.singletonMap("workable", true);
     }
 }
